@@ -1,0 +1,30 @@
+# окружение
+.venv/
+__pycache__/
+*.pyc
+.env
+
+# веса и большие артефакты — не в git
+models/**
+!models/README.md
+*.onnx
+*.gguf
+*.pt
+*.pth
+*.safetensors
+*.bin
+
+# аудио-дампы и результаты прогонов
+*.wav
+*.mp3
+research/**/results/**
+!research/**/results/.gitkeep
+!research/**/results/*.md
+
+# персона: датасет по умолчанию приватный (см. persona/README.md)
+persona/dataset/**
+!persona/dataset/README.md
+
+# локальное
+*.log
+.DS_Store

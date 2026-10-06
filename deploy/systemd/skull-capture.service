@@ -1,0 +1,11 @@
+[Unit]
+Description=Skull: audio capture to Redis
+After=redis-server.service
+
+[Service]
+ExecStart=@REPO@/.venv/bin/python @REPO@/services/audio_capture/capture.py
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=default.target

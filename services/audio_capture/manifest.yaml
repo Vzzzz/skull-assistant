@@ -1,0 +1,21 @@
+name: audio_capture
+unit: skull-capture
+backend: cpu
+cuda_context: false
+budget:
+  vram_mb: null          # ПИК, заполнить из docs/MEMORY_BUDGET.md
+  ram_mb: null
+  measured_on: null      # stand | jetson — без этого поля admission control не пустит
+residency:
+  A: resident
+  B: resident
+  C: resident
+lifecycle:
+  freeze: kill
+  thaw: start
+  thaw_budget_s: null
+bus:
+  in:  []
+  out: [audio:mic]
+healthcheck: null        # TODO: http или systemd notify
+never_evict: false

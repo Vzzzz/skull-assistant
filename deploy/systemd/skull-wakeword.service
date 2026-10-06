@@ -1,0 +1,11 @@
+[Unit]
+Description=Skull: wake word detector
+After=skull-capture.service
+
+[Service]
+ExecStart=@REPO@/.venv/bin/python @REPO@/services/wakeword/detector.py
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,12 @@
+[Unit]
+Description=Skull: speech-to-text (faster-whisper)
+After=skull-wakeword.service
+
+[Service]
+ExecStart=@REPO@/.venv/bin/python @REPO@/services/stt/transcriber.py
+Restart=on-failure
+RestartSec=2
+Environment="PYTHONUNBUFFERED=1"
+
+[Install]
+WantedBy=default.target

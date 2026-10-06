@@ -1,0 +1,13 @@
+[Unit]
+Description=Skull: text-to-speech (piper + sox)
+After=skull-stt.service
+
+[Service]
+WorkingDirectory=@REPO@
+ExecStart=@REPO@/.venv/bin/python @REPO@/services/tts/speaker.py
+Restart=on-failure
+RestartSec=2
+Environment="PYTHONUNBUFFERED=1"
+
+[Install]
+WantedBy=default.target
