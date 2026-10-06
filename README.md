@@ -38,6 +38,15 @@ systemctl --user status 'skull-*'
 
 Требуется запущенный `redis-server` и `ollama` с моделью из `services/brain/manifest.yaml`.
 
+## Две копии репозитория
+
+| Где | Роль | Путь |
+|---|---|---|
+| WSL Ubuntu-22.04 | рабочая: отсюда запускаются юниты, здесь .venv и модели | `~/skull-assistant` |
+| Windows | зеркало и точка публикации (GitHub позже) | `C:/Users/valer/git/skull-assistant` |
+
+Синхронизация только через git, не копированием: коммит в WSL → `deploy/sync-win.sh` (из WSL) подтягивает зеркало. Правки, сделанные в Windows-копии, забираются обратно `git pull win main` в WSL. Windows-git не открывает WSL-репозиторий по UNC без `safe.directory`, поэтому все sync-команды выполняются из WSL.
+
 ## Статус
 
 См. `docs/ROADMAP.md` §0. Голосовое ядро (wake word → STT → VLM → TTS) работает на стенде; следующий этап — замеры на устройстве (M5).
