@@ -67,6 +67,7 @@
 | P-000a | Wyoming protocol (Home Assistant) | A-04, A-10 | использован как паттерн в M1–M4; оформить как запись |
 | P-000b | Pipecat — логика interruption | A-10 | использован в M4; оформить как запись |
 | P-000c | jetson-ai-lab benchmarks (W4A16, ISL/OSL 2048/128) | A-02, M5 | протокол сопоставимости замеров |
+| P-000d | bitladder `docs/hardware.md`: SC7, хедер J14, источники пробуждения, проблема 36.3, ReSpeaker Lite (ссылки на форум/доки NVIDIA) | A-14, D-013, M5 | смежный проект; первоисточники там |
 
 ---
 
