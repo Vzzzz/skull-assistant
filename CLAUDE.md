@@ -31,7 +31,7 @@ persona/           system_prompt.md; dataset/ приватный
 - GPU получают только сервисы с тяжёлыми вычислениями (VLM, детектор). Голосовой стек и эмбеддер — CPU-only: каждый CUDA-контекст на процесс стоит сотни МБ из тех же 8 ГБ.
 - Инвариант: wake word/KWS не выгружается никогда (с D-013 переезжает на MCU, на Jetson остаётся fallback).
 - Публикации разбираются по протоколу `docs/PUBLICATIONS.md`; архитектура меняется только после замера.
-- Рабочее железо (4090) и рабочие данные в проекте не участвуют.
+- Основная консоль пользователя на Windows — **Git Bash**, не PowerShell. Рабочее железо (4090) и рабочие данные в проекте не участвуют.
 
 ## Две копии репозитория
 
@@ -45,7 +45,7 @@ deploy/systemd/install.sh
 systemctl --user start skull-capture skull-wakeword skull-stt skull-brain skull-tts
 ```
 
-Весь стенд: `systemctl --user start|stop skull.target`. **Сервисный режим** (WSL без skull-сервисов и ollama — скачать модели, пакеты): флаг `%USERPROFILE%\.skull-maintenance`, удобнее через `deploy/stand/skull-stand.ps1 service|normal|status|stop`.
+Весь стенд: `systemctl --user start|stop skull.target`. **Сервисный режим** (WSL без skull-сервисов и ollama — скачать модели, пакеты): флаг `$HOME/.skull-maintenance` на Windows-стороне, удобнее через `deploy/stand/skull-stand.sh service|normal|status|stop` из Git Bash.
 
 Нужны запущенные `redis-server` и `ollama` (override: flash attention, KV q8_0, keep_alive -1).
 

@@ -50,15 +50,15 @@ systemctl --user status 'skull-*'
 
 ## Сервисный режим стенда
 
-Иногда WSL нужен без сервисов: скачать модели, обновить пакеты, не включая ollama и тем более захват микрофона. Механизм: флаг-файл на Windows-стороне `%USERPROFILE%\.skull-maintenance` (в WSL — `/mnt/c/Users/valer/.skull-maintenance`). Все `skull-*` юниты и `skull.target` имеют `ConditionPathExists=!<флаг>`, системный `ollama.service` — такой же drop-in (`deploy/systemd/install-ollama-dropin.sh`, нужен sudo). Флаг ставится и снимается при выключенном WSL, гонки со стартом нет.
+Иногда WSL нужен без сервисов: скачать модели, обновить пакеты, не включая ollama и тем более захват микрофона. Механизм: флаг-файл на Windows-стороне `%USERPROFILE%\.skull-maintenance` (в Git Bash — `$HOME/.skull-maintenance`, в WSL — `/mnt/c/Users/valer/.skull-maintenance`). Все `skull-*` юниты и `skull.target` имеют `ConditionPathExists=!<флаг>`, системный `ollama.service` — такой же drop-in (`deploy/systemd/install-ollama-dropin.sh`, нужен sudo). Флаг ставится и снимается при выключенном WSL, гонки со стартом нет.
 
-Из PowerShell (`deploy/stand/skull-stand.ps1`):
+Из Git Bash на Windows (`deploy/stand/skull-stand.sh`):
 
-```powershell
-.\deploy\stand\skull-stand.ps1 service   # флаг + WSL без сервисов
-.\deploy\stand\skull-stand.ps1 normal    # снять флаг + WSL с сервисами
-.\deploy\stand\skull-stand.ps1 status
-.\deploy\stand\skull-stand.ps1 stop      # остановить WSL целиком
+```bash
+deploy/stand/skull-stand.sh service   # флаг + WSL без сервисов
+deploy/stand/skull-stand.sh normal    # снять флаг + WSL с сервисами
+deploy/stand/skull-stand.sh status
+deploy/stand/skull-stand.sh stop      # остановить WSL целиком
 ```
 
 Внутри WSL весь стенд управляется одним target: `systemctl --user start|stop skull.target`, статус `systemctl --user list-units 'skull*'`.

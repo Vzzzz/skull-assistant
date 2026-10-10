@@ -1,6 +1,5 @@
-# Репозиторий исполняется в Linux (WSL/Jetson): переводы строк LF везде, кроме PowerShell.
+# Репозиторий исполняется в Linux (WSL/Jetson): переводы строк LF везде (Git Bash на Windows тоже).
 * text=auto eol=lf
-*.ps1 text eol=crlf
 *.onnx binary
 *.gguf binary
 *.wav binary
