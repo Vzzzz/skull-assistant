@@ -45,7 +45,7 @@ deploy/systemd/install.sh
 systemctl --user start skull-capture skull-wakeword skull-stt skull-brain skull-tts
 ```
 
-Весь стенд: `systemctl --user start|stop skull.target`. **Сервисный режим** (WSL без skull-сервисов и ollama — скачать модели, пакеты): флаг `%USERPROFILE%.skull-maintenance`, удобнее через `deploy/stand/skull-stand.ps1 service|normal|status|stop`.
+Весь стенд: `systemctl --user start|stop skull.target`. **Сервисный режим** (WSL без skull-сервисов и ollama — скачать модели, пакеты): флаг `%USERPROFILE%\.skull-maintenance`, удобнее через `deploy/stand/skull-stand.ps1 service|normal|status|stop`.
 
 Нужны запущенные `redis-server` и `ollama` (override: flash attention, KV q8_0, keep_alive -1).
 
