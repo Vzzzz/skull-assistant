@@ -1,4 +1,6 @@
 [Unit]
+ConditionPathExists=!/mnt/c/Users/valer/.skull-maintenance
+PartOf=skull.target
 Description=Skull: speech-to-text (faster-whisper)
 After=skull-wakeword.service
 
@@ -9,4 +11,4 @@ RestartSec=2
 Environment="PYTHONUNBUFFERED=1"
 
 [Install]
-WantedBy=default.target
+WantedBy=skull.target

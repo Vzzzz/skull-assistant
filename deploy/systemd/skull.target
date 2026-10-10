@@ -1,0 +1,9 @@
+[Unit]
+Description=Skull: all stand services (capture, wakeword, stt, brain, tts)
+Documentation=file:@REPO@/README.md
+# Сервисный режим: если на Windows-стороне есть флаг, ни один skull-юнит не стартует
+# (условие продублировано в каждом юните: условие на target не блокирует его Wants).
+ConditionPathExists=!/mnt/c/Users/valer/.skull-maintenance
+
+[Install]
+WantedBy=default.target

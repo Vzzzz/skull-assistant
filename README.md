@@ -47,6 +47,22 @@ systemctl --user status 'skull-*'
 
 Синхронизация только через git, не копированием: коммит в WSL → `deploy/sync-win.sh` (из WSL) подтягивает зеркало. Правки, сделанные в Windows-копии, забираются обратно `git pull win main` в WSL. Windows-git не открывает WSL-репозиторий по UNC без `safe.directory`, поэтому все sync-команды выполняются из WSL.
 
+
+## Сервисный режим стенда
+
+Иногда WSL нужен без сервисов: скачать модели, обновить пакеты, не включая ollama и тем более захват микрофона. Механизм: флаг-файл на Windows-стороне `%USERPROFILE%\.skull-maintenance` (в WSL — `/mnt/c/Users/valer/.skull-maintenance`). Все `skull-*` юниты и `skull.target` имеют `ConditionPathExists=!<флаг>`, системный `ollama.service` — такой же drop-in (`deploy/systemd/install-ollama-dropin.sh`, нужен sudo). Флаг ставится и снимается при выключенном WSL, гонки со стартом нет.
+
+Из PowerShell (`deploy/stand/skull-stand.ps1`):
+
+```powershell
+.\deploy\stand\skull-stand.ps1 service   # флаг + WSL без сервисов
+.\deploy\stand\skull-stand.ps1 normal    # снять флаг + WSL с сервисами
+.\deploy\stand\skull-stand.ps1 status
+.\deploy\stand\skull-stand.ps1 stop      # остановить WSL целиком
+```
+
+Внутри WSL весь стенд управляется одним target: `systemctl --user start|stop skull.target`, статус `systemctl --user list-units 'skull*'`.
+
 ## Статус
 
 См. `docs/ROADMAP.md` §0. Голосовое ядро (wake word → STT → VLM → TTS) работает на стенде; следующий этап — замеры на устройстве (M5).

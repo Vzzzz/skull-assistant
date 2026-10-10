@@ -1,4 +1,6 @@
 [Unit]
+ConditionPathExists=!/mnt/c/Users/valer/.skull-maintenance
+PartOf=skull.target
 Description=Skull: wake word detector
 After=skull-capture.service
 
@@ -8,4 +10,4 @@ Restart=on-failure
 RestartSec=2
 
 [Install]
-WantedBy=default.target
+WantedBy=skull.target
