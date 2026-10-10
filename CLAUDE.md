@@ -15,7 +15,7 @@
 ```
 services/<name>/   прод: код + manifest.yaml (бюджет по пикам, резидентность A/B/C, freeze/thaw, топики)
 core/              общий код; диспетчер появится в M8
-deploy/systemd/    юниты с плейсхолдером @REPO@, install.sh; sync-win.sh — зеркало на Windows
+deploy/systemd/    skull.target + юниты (@REPO@), install.sh, drop-in ollama; deploy/stand/ — запуск стенда из Git Bash; sync-win.sh — зеркало
 research/          bench/ (замеры), eval/ (оценочный набор), tts/ — ничего отсюда не запускается юнитом
 docs/              ROADMAP, DECISION_LOG, MEMORY_BUDGET, PUBLICATIONS, ISSUES, TTS_TRACK, roadmap-v1
 persona/           system_prompt.md; dataset/ приватный
@@ -37,15 +37,15 @@ persona/           system_prompt.md; dataset/ приватный
 
 Рабочая — WSL Ubuntu-22.04 `~/skull-assistant` (здесь .venv, модели, юниты). Зеркало — `C:/Users/valer/git/skull-assistant`. Синхронизация только через git: коммит в WSL → `deploy/sync-win.sh`. Юниты установлены в `~/.config/systemd/user/`; статус: `systemctl --user status "skull-*"`.
 
-## Как запускать на стенде
+## Стенд: обычный и сервисный режим
 
 ```bash
 .venv/bin/pip install -r requirements.txt
-deploy/systemd/install.sh
-systemctl --user start skull-capture skull-wakeword skull-stt skull-brain skull-tts
+deploy/systemd/install.sh && deploy/systemd/install-ollama-dropin.sh
+systemctl --user start skull.target        # stop — погасить всё
 ```
 
-Весь стенд: `systemctl --user start|stop skull.target`. **Сервисный режим** (WSL без skull-сервисов и ollama — скачать модели, пакеты): флаг `$HOME/.skull-maintenance` на Windows-стороне, удобнее через `deploy/stand/skull-stand.sh service|normal|status|stop` из Git Bash.
+При старте WSL `skull.target` поднимается сам. Чтобы WSL стартовал **без** сервисов и ollama (скачать модели, замеры), ставится флаг `$HOME/.skull-maintenance` на Windows-стороне — юниты имеют `ConditionPathExists=!` на него. Из Git Bash: `deploy/stand/skull-stand.sh service|normal|status|stop`. Перед любым действием, которое не должно слышать микрофон или занимать GPU, проверять `skull-stand.sh status`.
 
 Нужны запущенные `redis-server` и `ollama` (override: flash attention, KV q8_0, keep_alive -1).
 
