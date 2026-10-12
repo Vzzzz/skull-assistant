@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# Загрузка кандидатов для замеров. Запуск из WSL (или на Orin) в сервисном режиме стенда:
+#   deploy/fetch_models.sh stand     # кандидаты режима A + текстовые альтернативы (~25 ГБ)
+#   deploy/fetch_models.sh tts       # TTS/omni-кандидаты с Hugging Face (~15 ГБ, нужен huggingface_hub)
+#   deploy/fetch_models.sh modeb     # режим B: MoE со стримингом экспертов и MTP (~40 ГБ; на Orin с NVMe)
+#   deploy/fetch_models.sh all
+# Требуется запущенный ollama (sudo systemctl start ollama). HF: .venv/bin/pip install -U huggingface_hub
+set -u
+HF_DIR="${HF_DIR:-$(cd "$(dirname "$0")/.." && pwd)/models/hf}"
+what="${1:-stand}"
+
+pull() { for m in "$@"; do echo "=== ollama pull $m"; ollama pull "$m" 2>&1 | tr '\r' '\n' | grep -vE '^pulling [0-9a-f]+.*%|^$' | tail -2; done; }
+hf()   { for r in "$@"; do echo "=== hf download $r"; huggingface-cli download "$r" --local-dir "$HF_DIR/${r#*/}" 2>&1 | tail -1; done; }
+
+case "$what" in
+  stand|all)
+    # Режим A: мультимодальные 2–4B (кандидаты M5). QAT-варианты — официальные int4-чекпойнты (ROADMAP M9).
+    pull gemma4:e2b-it-qat gemma4:e4b-it-qat minicpm-v4.6:q4
+    # Текстовые альтернативы (без зрения): сравнить качество персоны/JSON при том же бюджете
+    pull ministral-3:3b ministral-3:8b phi4-mini:3.8b smollm2:1.7b
+    # MiniCPM5-2B есть только как GGUF на HF (ollama умеет hf.co/…); тег квантизации проверить на странице репо
+    pull hf.co/openbmb/MiniCPM5-2B-GGUF:Q4_K_M || echo "MiniCPM5-2B: уточнить имя GGUF-файла на huggingface.co/openbmb/MiniCPM5-2B-GGUF"
+    ;;&
+  tts|all)
+    command -v huggingface-cli >/dev/null || { echo "нет huggingface-cli: .venv/bin/pip install -U huggingface_hub; source .venv/bin/activate"; exit 1; }
+    mkdir -p "$HF_DIR"
+    # Qwen3-TTS: русский, стриминг; 0.6B — кандидат в рантайм (GPU) / через qwentts.cpp (CPU); 1.7B-VoiceDesign — офлайн-учитель (голос по описанию)
+    hf Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign Qwen/Qwen3-TTS-Tokenizer-12Hz Serveurperso/Qwen3-TTS-GGUF
+    # Chatterbox Multilingual (0.5B, ru, контроль эмоций); ONNX-сборка — для CPU-теста
+    hf ResembleAI/chatterbox-multilingual onnx-community/chatterbox-multilingual-ONNX
+    # OpenAudio S1-mini (0.5B, ru) — CC-BY-NC-SA, gated: нужен huggingface-cli login и принятые условия
+    hf fishaudio/openaudio-s1-mini || echo "openaudio-s1-mini: gated — huggingface-cli login + принять условия на странице модели"
+    # MiniCPM-o 4.5 GGUF (9B omni, full-duplex речь) — «голос внутри VLM», тест на стенде; на Orin — отдельно
+    hf openbmb/MiniCPM-o-4_5-gguf
+    # Эмоции в речи (фоновый режим, AMBIENT_MODE.md): emotion2vec+ large (~300M), через funasr/modelscope
+    hf emotion2vec/emotion2vec_plus_large emotion2vec/emotion2vec_plus_base
+    ;;&
+  modeb|all)
+    # Режим B: MoE со стримингом экспертов. -mtp-q4 = multi-token prediction (встроенная спекуляция, P-015)
+    pull gemma4:26b-a4b-it-q4 gemma4:26b-a4b-it-mtp-q4 qwen3.6:35b-a3b-q4 qwen3.6:35b-a3b-mtp-q4
+    ;;
+esac
+echo "готово: $what"; ollama list 2>/dev/null | head -30
