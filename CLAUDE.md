@@ -17,7 +17,7 @@ services/<name>/   прод: код + manifest.yaml (бюджет по пика�
 core/              общий код; диспетчер появится в M8
 deploy/systemd/    skull.target + юниты (@REPO@), install.sh, drop-in ollama; deploy/stand/ — запуск стенда из Git Bash; sync-win.sh — зеркало
 research/          bench/ (замеры), eval/ (оценочный набор), tts/ — ничего отсюда не запускается юнитом
-docs/              ROADMAP, DECISION_LOG, MEMORY_BUDGET, PUBLICATIONS, ISSUES, TASKS, TTS_TRACK, AMBIENT_MODE, JETSON_BRINGUP, roadmap-v1
+docs/              ROADMAP, DECISION_LOG, MEMORY_BUDGET, PUBLICATIONS, ISSUES, TASKS, UX_BACKLOG, TTS_TRACK, AMBIENT_MODE, JETSON_BRINGUP, roadmap-v1
 persona/           system_prompt.md; dataset/ приватный
 ```
 
