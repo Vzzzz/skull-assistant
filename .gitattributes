@@ -1,0 +1,5 @@
+# Репозиторий исполняется в Linux (WSL/Jetson): переводы строк LF везде (Git Bash на Windows тоже).
+* text=auto eol=lf
+*.onnx binary
+*.gguf binary
+*.wav binary
