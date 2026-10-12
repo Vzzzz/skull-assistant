@@ -2,7 +2,9 @@
 # Перезамер памяти VLM под ollama: модель × num_ctx × тип KV × flash-attention.
 # Запускается в WSL. Поднимает ОТДЕЛЬНЫЙ ollama на порту 11435 с нужными env,
 # чтобы не трогать системный юнит и не требовать sudo.
-# Пишет CSV: model,num_ctx,kv,flash,vram_idle_mb,vram_peak_mb,ollama_ps_size,rss_runner_mb,ttft_s,tok_s
+# Пишет CSV: model,num_ctx,kv,flash,vram_idle_mb,vram_peak_mb,vram_delta_mb,ollama_ps_size,ollama_ps_proc,rss_runner_mb,ttft_s,tok_s
+# vram_delta = peak - idle (реальная цена модели+KV+контекста на GPU); ollama_ps_size — ОЦЕНКА ollama, сравнивать с delta.
+# ollama_ps_proc: "100%GPU" — всё на GPU; "NN%/MM%CPU/GPU" — часть слоёв на CPU, VRAM-цифра занижена.
 #
 # Использование: bash bench_vlm_mem.sh [out.csv]
 # Перед запуском: убедиться, что системный ollama ничего не держит (ollama ps пуст),
@@ -20,7 +22,7 @@ PROMPT="Ты череп. Ответь одним коротким предлож
 
 vram_used() { nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits | head -1 | tr -d ' '; }
 
-echo "model,num_ctx,kv,flash,vram_idle_mb,vram_peak_mb,ollama_ps_size,rss_runner_mb,ttft_s,tok_s" > "$OUT"
+echo "model,num_ctx,kv,flash,vram_idle_mb,vram_peak_mb,vram_delta_mb,ollama_ps_size,ollama_ps_proc,rss_runner_mb,ttft_s,tok_s" > "$OUT"
 
 for FLASH in $FLASHES; do
 for KV in $KVS; do
@@ -51,7 +53,9 @@ for KV in $KVS; do
     }")
     T1=$(date +%s.%N)
 
-    PS_SIZE=$(ollama ps 2>/dev/null | awk -v m="$M" '$1==m {print $3$4}')
+    PS_LINE=$(ollama ps 2>/dev/null | awk -v m="$M" '$1==m')
+    PS_SIZE=$(echo "$PS_LINE" | awk '{print $3$4}')
+    PS_PROC=$(echo "$PS_LINE" | awk '{print $5$6}')
     RUNNER_PID=$(pgrep -f "ollama runner" | head -1)
     RSS=$( [ -n "${RUNNER_PID:-}" ] && awk '/VmRSS/ {printf "%d", $2/1024}' /proc/$RUNNER_PID/status 2>/dev/null || echo NA )
     sleep 0.3
@@ -68,7 +72,7 @@ try:
 except Exception as e:
     print("ERR ERR")')"
 
-    echo "$M,$CTX,$KV,$FLASH,$IDLE,$PEAK,${PS_SIZE:-NA},$RSS,$TTFT,$TOKS" | tee -a "$OUT"
+    echo "$M,$CTX,$KV,$FLASH,$IDLE,$PEAK,$((PEAK-IDLE)),${PS_SIZE:-NA},${PS_PROC:-NA},$RSS,$TTFT,$TOKS" | tee -a "$OUT"
 
     # выгрузить модель, убить CUDA-контекст между прогонами (правило протокола)
     curl -s "http://$OLLAMA_HOST/api/generate" -d "{\"model\":\"$M\",\"keep_alive\":0}" >/dev/null
