@@ -14,6 +14,8 @@ set -u
 OUT="${1:-vlm_mem_$(date +%Y%m%d_%H%M).csv}"
 PORT=11435
 export OLLAMA_HOST="127.0.0.1:$PORT"
+# модели системного сервиса (ollama pull кладёт их туда); у второго сервера иначе будет 404
+export OLLAMA_MODELS="${OLLAMA_MODELS:-/usr/share/ollama/.ollama/models}"
 MODELS="${MODELS:-gemma3:4b gemma4:e2b gemma4:e4b}"
 CTXS="${CTXS:-2048 4096 8192 16384}"
 KVS="${KVS:-f16 q8_0}"

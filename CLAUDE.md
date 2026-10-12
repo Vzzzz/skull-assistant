@@ -23,6 +23,14 @@ persona/           system_prompt.md; dataset/ приватный
 
 Шина: Redis Streams `audio:mic` → `events:wakeword` → `events:transcript` → `events:reply`; флаг `tts:speaking`. Каждый сервис — отдельный systemd user-юнит; изоляция процессов = механизм свопа моделей (память GPU возвращается только со смертью процесса).
 
+## Протокол работы агентов
+
+Две роли: **ядро** (сессия планирования: архитектура, публикации, docs, обзор результатов) и **исполнитель** (VS Code + Claude Code в WSL: код, отладка, замеры). Единственный канал между ними — git.
+
+- Исполнитель: начало сессии — прочитать этот файл и `docs/TASKS.md`, взять верхнюю открытую задачу (или названную). Конец — коммит в ветке `feat/T-NNN-…`, мерж в `main`, статус в TASKS.md, запись в DECISION_LOG / MEMORY_BUDGET / ISSUES, если что-то выбрано или измерено. Без записи задача не закрыта.
+- Владение файлами: исполнитель — `services/`, `core/`, `deploy/`, скрипты в `research/`; ядро — `docs/`, сводки `research/**/results/*.md`. Чужое не править без задачи.
+- Стенд перед работой: `deploy/stand/skull-stand.sh status`; замеры GPU — при погашенном `skull.target`.
+
 ## Правила
 
 - **Docs и decision-log на русском**; код, идентификаторы и комментарии в коде — на английском.
@@ -51,4 +59,4 @@ systemctl --user start skull.target        # stop — погасить всё
 
 ## Ближайшие шаги
 
-См. `docs/ROADMAP.md` §7. Коротко: перезамер памяти VLM (`research/bench/bench_vlm_mem.sh`), быстрые правки из `docs/ISSUES.md` (I-01 двойной transcribe, I-05 история в Redis), старт M5 на Jetson, включая проверку SC7 для D-013.
+Очередь исполнителя — `docs/TASKS.md` (T-001…). План — `docs/ROADMAP.md` §7: после задач T-001…T-005 — старт M5 на Jetson, включая проверку SC7 для D-013. Замер памяти VLM на стенде сделан 2026-10-12 (`research/bench/results/`, D-015).

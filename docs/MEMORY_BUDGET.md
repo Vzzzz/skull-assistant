@@ -10,17 +10,21 @@
 
 | Сервис | Backend | CUDA ctx | Пик VRAM, МБ | Пик RAM, МБ | Без модели / загружена / после freeze | Где замерено | Дата | Манифест |
 |---|---|---|---|---|---|---|---|---|
-| wake word (openWakeWord) | cpu | нет | 0 | | / / | стенд | | services/wakeword |
+| wake word (openWakeWord) | cpu | нет | 0 | 176 (пик 176) | — / 176 / — ; CPU 5 % в простое | стенд, 2026-10-12 | 2026-10-12 | services/wakeword |
 | KWS быстрых команд | cpu | нет | 0 | | / / | стенд | | services/kws |
 | VAD (Silero) | cpu | нет | 0 | | / / | стенд | | services/vad |
-| STT (whisper.cpp / faster-whisper) | cpu | нет | 0 | | / / | стенд | | services/stt |
-| TTS (Piper) | cpu | нет | 0 | | / / | стенд | | services/tts |
-| VLM основная (модель: ___) | llama.cpp | да | | | / / | стенд (болванка 2.5 ГБ) | | services/vlm-main |
+| STT (faster-whisper base int8) | cpu | нет | 0 | 186 (пик 321 при загрузке) | — / 186 / — ; транскрипция не замерена (нужен звук) | стенд, 2026-10-12 | 2026-10-12 | services/stt |
+| TTS (Piper dmitri-medium) | cpu | нет | 0 | 144 сервис; в бенче 132 загружен / 486 пик синтеза | RT 0.055–0.09, первое аудио = синтез всего предложения (0.05–0.83 с), sox 0.02–0.06 с | стенд, 2026-10-12 | 2026-10-12 | services/tts |
+| VLM основная (gemma3:4b, ollama) | llama.cpp | да | 3784 (2k) … 4080 (16k) | | 0 / 3784 / 0 (выгрузка = kill раннера) | стенд, 2026-10-12 | 2026-10-12 | services/brain |
 | YOLOv8n | tensorrt | да | | | / / | — | | services/vision |
+| audio_capture (soundcard→Redis) | cpu | нет | 0 | 44 | CPU 4 % | стенд, 2026-10-12 | 2026-10-12 | services/audio_capture |
+| brain (клиент ollama) | cpu | нет | 0 | 30 | модель — в строке VLM | стенд, 2026-10-12 | 2026-10-12 | services/brain |
 | Память (SQLite) | cpu | нет | 0 | | / / | — | | services/memory |
-| Диспетчер + Redis | cpu | нет | 0 | | / / | — | | core |
+| Диспетчер + Redis | cpu | нет | 0 | redis 10 | / / | стенд, 2026-10-12 | | core |
 | Пустой след системы (JetPack, X off) | — | — | | | | устройство | | — |
 | Пустой CUDA-контекст: процесс с одной cudaFree(0) (а) голый, (б) + cuBLAS/llama.cpp, (в) + torch | — | да | | | | устройство | | — (надбавка в бюджет каждого GPU-сервиса) |
+
+Итог голосового стека на стенде (простой, модели загружены): **≈580 МБ RSS, пик ≈715 МБ** (capture 44 + wakeword 176 + stt 186/321 + tts 144 + brain 30) — в плановой вилке 0.7–1 ГБ. Сырые: `research/bench/results/voice_rss_2026-10-12.csv`, `research/tts/results/piper_rt_2026-10-12.csv`.
 
 ## 2. Бюджеты режимов (устройство, 8 ГБ unified)
 
@@ -36,11 +40,15 @@
 
 Протокол сопоставимости с jetson-ai-lab: W4A16, ISL/OSL 2048/128. Гейт: со-резидентно с запасом под KV → tok/s ≥ 8–10 и TTFT ≤ ~1.5 с → tool-calling → зрение → персона/лицензия.
 
-| Модель | Память INT4 | Со-резидентно | tok/s C=1 | TTFT | img-ток/кадр | KV 512/4k/8k FP16 | KV INT8 | JSON valid % (15 кейсов, с/без грамматики) | Персона 40+ реплик | Зрение pass/fail | Лицензия | Вердикт |
+Стендовые значения (2026-10-12, RTX 3080 Laptop, ollama, flash-attn, KV f16; подробно — `research/bench/results/vlm_mem_stand_2026-10-12.md`): «Память INT4» = пик VRAM при ctx 2k, включая ~1 ГБ надбавки CUDA-контекста и буферов раннера; «KV» = прирост пика 2k→16k. Финальные значения — с Orin.
+
+| Модель | Память INT4 (стенд, пик) | Со-резидентно | tok/s C=1 (стенд) | TTFT | img-ток/кадр | KV рост 2k→16k f16 | KV INT8 (16k) | JSON valid % (15 кейсов, с/без грамматики) | Персона 40+ реплик | Зрение pass/fail | Лицензия | Вердикт |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| Gemma 3 4B | | | | | | | | | | | | |
-| Gemma 4 E2B | | | | | | | | | | | | |
-| Qwen3.5 4B | | | | | | | | | | | | |
+| Gemma 3 4B | 3.78 ГБ | | 91 | | | +300 МБ | −220 МБ | | | | Gemma | |
+| Gemma 4 E2B | 2.88 ГБ (файл 7.2: PLE на CPU/mmap) | | 111 | | | +100 МБ | −50 МБ | | | | Gemma | RSS на unified memory — вопрос M5 |
+| Gemma 4 E4B | 4.35 ГБ (файл 9.6) | | 74 | | | +240 МБ | −100 МБ | | | | Gemma | |
+| Qwen3.5 4B | 3.76 ГБ (без flash-attn 7.96!) | | 83 | | | +540 МБ | −200 МБ | | | | Apache-2 | flash-attn обязателен |
+| Qwen3.5 9B (B-lite) | 6.35 ГБ; offload с 8k | | 54 | | | упёрлись в VRAM | — | | | | Apache-2 | на 8 ГБ с голосом не проходит (D-015) |
 | Ministral 3 3B | | | | | | | | | | | | |
 | Cosmos Reason 2 2B | | | | | | | | | | | | |
 | *(новые из PUBLICATIONS)* | | | | | | | | | | | | |
