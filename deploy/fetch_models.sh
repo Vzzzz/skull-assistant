@@ -4,13 +4,19 @@
 #   deploy/fetch_models.sh tts       # TTS/omni-кандидаты с Hugging Face (~15 ГБ, нужен huggingface_hub)
 #   deploy/fetch_models.sh modeb     # режим B: MoE со стримингом экспертов и MTP (~40 ГБ; на Orin с NVMe)
 #   deploy/fetch_models.sh all
-# Требуется запущенный ollama (sudo systemctl start ollama). HF: .venv/bin/pip install -U huggingface_hub
+# Требуется запущенный ollama (sudo systemctl start ollama). HF: .venv/bin/pip install -U huggingface_hub (CLI: hf)
 set -u
 HF_DIR="${HF_DIR:-$(cd "$(dirname "$0")/.." && pwd)/models/hf}"
 what="${1:-stand}"
 
 pull() { for m in "$@"; do echo "=== ollama pull $m"; ollama pull "$m" 2>&1 | tr '\r' '\n' | grep -vE '^pulling [0-9a-f]+.*%|^$' | tail -2; done; }
-hf()   { for r in "$@"; do echo "=== hf download $r"; huggingface-cli download "$r" --local-dir "$HF_DIR/${r#*/}" 2>&1 | tail -1; done; }
+# CLI Hugging Face: в huggingface_hub >= 1.0 команда называется hf (huggingface-cli устарел); у нас она в .venv/bin
+REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+if [ -x "$REPO_DIR/.venv/bin/hf" ]; then HF_CLI="$REPO_DIR/.venv/bin/hf"
+elif command -v hf >/dev/null; then HF_CLI=hf
+elif command -v huggingface-cli >/dev/null; then HF_CLI=huggingface-cli
+else HF_CLI=""; fi
+hf()   { for r in "$@"; do echo "=== hf download $r"; "$HF_CLI" download "$r" --local-dir "$HF_DIR/${r#*/}" 2>&1 | tail -1; done; }
 
 case "$what" in
   stand|all)
@@ -22,14 +28,15 @@ case "$what" in
     pull hf.co/openbmb/MiniCPM5-2B-GGUF:Q4_K_M || echo "MiniCPM5-2B: уточнить имя GGUF-файла на huggingface.co/openbmb/MiniCPM5-2B-GGUF"
     ;;&
   tts|all)
-    command -v huggingface-cli >/dev/null || { echo "нет huggingface-cli: .venv/bin/pip install -U huggingface_hub; source .venv/bin/activate"; exit 1; }
+    [ -n "$HF_CLI" ] || { echo "нет CLI Hugging Face: .venv/bin/pip install -U huggingface_hub (команда hf)"; exit 1; }
+    "$HF_CLI" auth whoami >/dev/null 2>&1 || echo "hf не аутентифицирован: $HF_CLI auth login (нужно для gated-репозиториев)"
     mkdir -p "$HF_DIR"
     # Qwen3-TTS: русский, стриминг; 0.6B — кандидат в рантайм (GPU) / через qwentts.cpp (CPU); 1.7B-VoiceDesign — офлайн-учитель (голос по описанию)
     hf Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign Qwen/Qwen3-TTS-Tokenizer-12Hz Serveurperso/Qwen3-TTS-GGUF
     # Chatterbox Multilingual (0.5B, ru, контроль эмоций); ONNX-сборка — для CPU-теста
     hf ResembleAI/chatterbox-multilingual onnx-community/chatterbox-multilingual-ONNX
-    # OpenAudio S1-mini (0.5B, ru) — CC-BY-NC-SA, gated: нужен huggingface-cli login и принятые условия
-    hf fishaudio/openaudio-s1-mini || echo "openaudio-s1-mini: gated — huggingface-cli login + принять условия на странице модели"
+    # OpenAudio S1-mini (0.5B, ru) — CC-BY-NC-SA, gated: нужен hf auth login и принятые условия
+    hf fishaudio/openaudio-s1-mini || echo "openaudio-s1-mini: gated — hf auth login + принять условия на странице модели"
     # MiniCPM-o 4.5 GGUF (9B omni, full-duplex речь) — «голос внутри VLM», тест на стенде; на Orin — отдельно
     hf openbmb/MiniCPM-o-4_5-gguf
     # Эмоции в речи (фоновый режим, AMBIENT_MODE.md): emotion2vec+ large (~300M), через funasr/modelscope
