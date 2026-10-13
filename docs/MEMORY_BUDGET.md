@@ -15,7 +15,7 @@
 | VAD (Silero) | cpu | нет | 0 | | / / | стенд | | services/vad |
 | STT (faster-whisper base int8) | cpu | нет | 0 | 186 (пик 321 при загрузке) | — / 186 / — ; транскрипция не замерена (нужен звук) | стенд, 2026-10-12 | 2026-10-12 | services/stt |
 | TTS (Piper dmitri-medium) | cpu | нет | 0 | 144 сервис; в бенче 132 загружен / 486 пик синтеза | RT 0.055–0.09, первое аудио = синтез всего предложения (0.05–0.83 с), sox 0.02–0.06 с | стенд, 2026-10-12 | 2026-10-12 | services/tts |
-| VLM основная (gemma3:4b, ollama) | llama.cpp | да | 3784 (2k) … 4080 (16k) | | 0 / 3784 / 0 (выгрузка = kill раннера) | стенд, 2026-10-12 | 2026-10-12 | services/brain |
+| VLM основная (gemma3:4b, ollama; **num_ctx 8192 по D-016** → пик 4056) | llama.cpp | да | 3784 (2k) … 4056 (8k) … 4080 (16k) | | 0 / 3784 / 0 (выгрузка = kill раннера) | стенд, 2026-10-12 | 2026-10-12 | services/brain |
 | YOLOv8n | tensorrt | да | | | / / | — | | services/vision |
 | audio_capture (soundcard→Redis) | cpu | нет | 0 | 44 | CPU 4 % | стенд, 2026-10-12 | 2026-10-12 | services/audio_capture |
 | brain (клиент ollama) | cpu | нет | 0 | 30 | модель — в строке VLM | стенд, 2026-10-12 | 2026-10-12 | services/brain |
