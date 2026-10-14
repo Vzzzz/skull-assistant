@@ -1,33 +1,271 @@
 # Очередь задач
 
-Канал между ядром проекта (сессия планирования) и исполнителем (VS Code + Claude Code в WSL). Правила:
-- Исполнитель берёт **верхнюю открытую** задачу, если не сказано иное. Начало сессии — чтение `CLAUDE.md` и этого файла.
-- Задача закрыта, когда выполнен критерий Done **и** сделана запись: коммит + строка в `DECISION_LOG.md` / `MEMORY_BUDGET.md` / `ISSUES.md`, если что-то выбрано или измерено.
-- Владение файлами: исполнитель — `services/`, `core/`, `deploy/`, скрипты в `research/`; ядро — `docs/` и сводки `research/**/results/*.md`. Чужие файлы не править без явной задачи.
-- Ветки: `feat/T-NNN-кратко`, мерж в `main` после Done. Ядро читает `git log`/`diff` и обновляет docs.
-- Статусы: `open` · `wip` · `done` · `blocked` (с причиной).
+Канал между исследователем (ядром) и исполнителем. Исполнитель читает `AGENTS.md` → `docs/agents/EXECUTOR.md` → этот файл и берёт **верхнюю задачу `open`** в индексе, если не названа другая. Порядок в индексе = приоритет.
 
-| ID | Статус | Задача | Done | Связь |
-|---|---|---|---|---|
-| T-001 | open | **STT: убрать двойной `transcribe`** в `services/stt/transcriber.py` (второй вызов отбрасывает первый с `condition_on_previous_text=False`) | один вызов; латентность STT на фразе 3 с замерена до/после и записана в ISSUES I-01 | ISSUES I-01 |
-| T-002 | open | **Brain: история диалога в Redis** вместо списка в памяти процесса (ключ `dialog:history`, обрезка до N реплик) | рестарт `skull-brain` не теряет контекст; проверено вручную | ISSUES I-05 |
-| T-003 | open | **Стрим ответа по предложениям**: brain `stream: True`, разрезка по границам предложений → `events:reply` по одному предложению с полем `seq`/`final`; TTS — очередь синтеза (N+1 синтезируется во время проигрывания N), проигрывание потоком через `sounddevice`, а не `paplay` файла | латентность «конец фразы → первое аудио» замерена до/после; ответ из 3+ предложений звучит без пауз между ними | TTS_TRACK §4 п.1–2, ISSUES I-02/I-08 |
-| T-004 | open | **Сервис KWS быстрых команд** `services/kws`: openWakeWord multi-head («стоп», «тише»), резидентен всегда, слушает и во время TTS; публикует `tts:stop` → TTS сбрасывает очередь и останавливает поток ≤100 мс | перебивание работает при включённом динамике (полудуплекс: во время TTS слушает только KWS); манифест с `never_evict: true` | TTS_TRACK §4 п.3, P-002, ISSUES I-10 |
-| T-005 | open | **Захват звука устойчив к переподключению устройства**: `services/audio_capture` переживает исчезновение/появление USB-микрофона (SC7 resume на Jetson), переоткрывает поток, не падает в restart-loop | отключение/подключение микрофона на стенде → поток в `audio:mic` возобновляется без ручного рестарта | D-013, ISSUES I-07 |
-| T-006 | open | **bench_vlm_mem.sh**: TTFT разделить на `load_duration` и `prompt_eval` (тёплый TTFT — второй запрос); RSS раннера (найти процесс по порту/`OLLAMA_HOST`, не по имени); прогревочный запрос перед замером | CSV с колонками `load_s, ttft_warm_s, rss_runner_mb` заполняется ненулевыми значениями на gemma3:4b | results/vlm_mem_stand_2026-10-12.md §5–6 |
-| T-007 | open | **Манифесты**: заполнить `budget` в `services/*/manifest.yaml` из `MEMORY_BUDGET.md` (`measured_on: stand`), `healthcheck` для brain (HTTP ollama) | все пять манифестов без `null` в budget | ROADMAP §2 |
-| T-008 | blocked | **Оценочный набор** `research/eval/`: 20 диалоговых промптов, 15 tool-calling кейсов, 1 длинный диалог; `run_eval.py` гонит через ollama и пишет JSON | скрипт прогоняет набор на gemma3:4b и сохраняет ответы; содержимое набора — совместно с владельцем (персона) | ROADMAP «долг Фазы 0»; blocked: нужен текст реплик от владельца |
-| T-009 | open | **bench для Jetson**: вариант `bench_vlm_mem.sh` без nvidia-smi — пик RAM по `tegrastats` (опрос 100 мс), RSS и page-cache раннера, температуры/троттлинг в лог; тёплый TTFT | CSV с `ram_peak_mb, rss_runner_mb, temp_max, throttled` на gemma3:4b на устройстве | JETSON_BRINGUP §1, T-006 |
-| T-010 | open | **Перенос на Orin**: `audio_capture` на `sounddevice`/ALSA вместо `SoundCard` (PulseAudio); `install.sh` — путь флага сервисного режима параметром (`SKULL_MAINT_FLAG`, на Orin `/var/lib/skull/maintenance`); `OLLAMA_MODELS` на NVMe | `skull.target` поднимается на Orin, `audio:mic` наполняется, флаг работает | JETSON_BRINGUP |
-| T-011 | open | **Фоновый режим, замеры 1–2** (AMBIENT_MODE.md): скрипт непрерывного STT на 10-мин записи → CPU%/латентность; emotion2vec+ base/large на русских фрагментах (Dusha, 100 шт.) → F1 и RT на CPU | две таблицы в `research/eval/results/ambient_*.md`; запись в MEMORY_BUDGET | AMBIENT_MODE.md |
-| T-012 | done | **CTX-1 probe** (`research/eval/CTX_PROBE.md`): `ctx_probe.py` + формат диалога jsonl + авто-метрики + задания судье; прогон на gemma3:4b при 2k/4k/8k/16k | таблица модель × ctx с recall@45, math, persona, ctx-плато; черновик диалога готов 2026-10-13 (research/eval/ctx_probe_dialog.jsonl, 60 реплик), якоря правит владелец | CTX_PROBE.md, P-007 |
-| T-013 | open | **TTS/omni-кандидаты на стенде** (TTS_TRACK §7): Qwen3-TTS 0.6B (GPU и через qwentts.cpp на CPU), Chatterbox-multilingual (ONNX, CPU), MiniCPM-o 4.5 GGUF (только память и RT, полный дуплекс не нужен) — на `research/eval/tts_lines.txt`: RT, первое аудио, RSS/VRAM, русский на слух | строки в TTS_TRACK §2; слепое сравнение 15 реплик с Piper | TTS_TRACK §7, `deploy/fetch_models.sh tts` |
-| T-014 | open | **Персона: few-shot старт** — 3–5 примеров реплик в `persona/system_prompt.md` (или первые ходы истории); правило «не знаю» на незнакомое. Проверка: `ctx_probe.py --ctx 8192 --judge qwen3.5:9b` на gemma3:4b — персона на t1/t5/t8/t10 ≥ 4, L2 с оговоркой | D-016 п.4–5 |
-| T-015 | open | **Арифметика через инструмент**: brain распознаёт вычислительный запрос (tool-call `calc`), считает вне модели, реплика в образе озвучивает результат | три задачи CTX-1 верно при любом num_ctx | D-016 п.3, M5 гейт tool-calling |
-| T-016 | open | **brain: `num_ctx` 8192** из манифеста, не хардкод; manifest.yaml brain — KV-бюджет из bench | | D-016 п.1 |
+Правила:
+- Задача закрыта, когда выполнен критерий **Done** и сделаны записи из поля **Записать**. Без записи задача не закрыта.
+- Ветка `feat/T-NNN-slug`, мерж в `main`, `deploy/sync-win.sh`. Отчёт — строка в «Закрытые» (формат в EXECUTOR.md §6).
+- Статусы: `open` · `wip` · `done` · `blocked` (с причиной в карточке).
+- Исполнитель правит в `docs/` только статус/отчёт здесь и строки, названные в «Записать». Карточки пишет исследователь.
+
+Шаблон карточки (исследователь заполняет все поля; исполнитель не должен нуждаться в чате):
+
+```
+### T-NNN · <название> · <статус>
+Зачем: 1–2 строки — что сломано или что надо узнать.
+Файлы: что править / создать.
+Шаги: нумерованный список действий.
+Проверка: команда(ы) и ожидаемый результат.
+Done: измеримый критерий.
+Записать: строка в «Закрытые» + куда положить числа (ISSUES I-NN, MEMORY_BUDGET §1, results/*.md).
+Связь: D-/P-/I-/Q-/документы — справочно.
+```
+
+## Индекс
+
+| ID | Статус | Задача | Связь |
+|---|---|---|---|
+| T-001 | open | STT: убрать двойной `transcribe` | I-01 |
+| T-002 | open | Brain: история диалога в Redis | I-05 |
+| T-016 | open | Brain: модель и `num_ctx` из манифеста, не хардкод | D-016 |
+| T-007 | open | Манифесты: бюджеты из MEMORY_BUDGET, healthcheck brain | ROADMAP §2 |
+| T-003 | open | Стрим ответа по предложениям + очередь синтеза в TTS | I-02, I-08 |
+| T-004 | open | Сервис KWS быстрых команд, `tts:stop` | I-10, P-002 |
+| T-005 | open | Захват звука переживает переподключение микрофона | D-013, I-07 |
+| T-006 | open | bench_vlm_mem.sh: тёплый TTFT, RSS раннера, прогрев | results 2026-10-12 §5–6 |
+| T-014 | open | Персона: читать `persona/system_prompt.md`, few-shot старт, правило «не знаю» | D-016 п.4–5, I-11 |
+| T-015 | open | Арифметика через инструмент `calc` | D-016 п.3 |
+| T-018 | open | CTX-1 по кандидатам режима A: персона и память × окно | Q-010, MEMORY_BUDGET §3 |
+| T-013 | open | TTS/omni-кандидаты на стенде | TTS_TRACK §7 |
+| T-011 | open | Фоновый режим: замеры 1–2 | AMBIENT_MODE |
+| T-010 | open | Перенос на Orin: ALSA-захват, путь флага, пути моделей | JETSON_BRINGUP, I-12 |
+| T-009 | open | bench для Jetson (tegrastats) | JETSON_BRINGUP §1 |
+| T-017 | open | Обучить головы openWakeWord: «стоп», «тише», «Костян» | I-04, D-013 п.3 |
+| T-008 | blocked | Оценочный набор `research/eval/` | Q-029 |
+
+## Карточки
+
+### T-001 · STT: убрать двойной `transcribe` · open
+Зачем: в `transcriber.py` `model.transcribe` вызывается дважды подряд; результат первого вызова (с `condition_on_previous_text=False` — профилактика галлюцинаций) выбрасывается. Латентность STT ×2, профилактика не работает.
+Файлы: `services/stt/transcriber.py`.
+Шаги:
+1. Удалить второй вызов `segments, info = model.transcribe(audio, language=None, vad_filter=True)`. Оставить первый (с `condition_on_previous_text=False`).
+2. Обернуть оставшийся вызов и сборку `text` в замер: `t0 = time.perf_counter()` до, после — `print(f"stt: transcribe {time.perf_counter()-t0:.2f}s for {len(audio)/RATE:.1f}s audio")`. Заметь: `segments` — генератор, время считается после `" ".join(...)`.
+3. До правки (шаг 1 ещё не сделан, но шаг 2 добавлен) — произнести 3 фразы по ~3 с, записать время из лога. После правки — те же 3 фразы.
+Проверка: `systemctl --user restart skull-stt && journalctl --user -u skull-stt -f`; wake word + фраза; в логе одна строка `stt: transcribe …` на фразу, текст распознан.
+Done: один вызов; таблица «фраза · до · после» (3 строки) в ISSUES I-01.
+Записать: ISSUES I-01 — числа до/после в колонку «Действие», класс → `закрыт`; строка в «Закрытые».
+Связь: I-01.
+
+### T-002 · Brain: история диалога в Redis · open
+Зачем: история диалога — список в памяти процесса; `Restart=on-failure` и любой рестарт юнита стирают контекст (I-05).
+Файлы: `services/brain/responder.py`.
+Шаги:
+1. Вместо `history = []` — Redis list `dialog:history`: каждый элемент — JSON `{"role": ..., "content": ...}`. При старте: `history = [json.loads(x) for x in r.lrange('dialog:history', 0, -1)]`.
+2. После каждой реплики пользователя и ответа — `r.rpush('dialog:history', json.dumps(msg, ensure_ascii=False))`, затем `r.ltrim('dialog:history', -2*MAX_TURNS, -1)` (MAX_TURNS = 40 обменов = 80 сообщений).
+3. В запрос к ollama передавать список из Redis (не локальную копию), чтобы источник был один.
+4. Команда очистки для отладки: если в `events:transcript` пришёл текст ровно `/reset` — `r.delete('dialog:history')`, ответ не генерировать.
+Проверка: два обмена через микрофон (или `redis-cli xadd events:transcript '*' text "меня зовут Валерий"`), затем `systemctl --user restart skull-brain`, затем `redis-cli xadd events:transcript '*' text "как меня зовут?"` — ответ в `events:reply` содержит имя. `redis-cli llen dialog:history` растёт и не превышает 80.
+Done: рестарт `skull-brain` не теряет контекст; `llen` ≤ 80.
+Записать: ISSUES I-05 → `закрыт`, строка в «Закрытые».
+Связь: I-05; дальше история переедет в SQLite (M6) и/или объект состояния (P-007, Q-012).
+
+### T-016 · Brain: модель и `num_ctx` из манифеста, не хардкод · open
+Зачем: `MODEL = "gemma3:4b"` и `num_ctx: 8192` зашиты в `responder.py`; при смене кандидата или окна (D-016) придётся править код, а манифест — источник правды по контракту платформы.
+Файлы: `services/brain/responder.py`, `services/brain/manifest.yaml`, `requirements.txt`.
+Шаги:
+1. В `manifest.yaml` добавить блок `params:` с полями `model: gemma3:4b`, `num_ctx: 8192`, `temperature: 0.3`, `max_turns: 40`.
+2. В `responder.py` читать манифест при старте: путь — `Path(__file__).with_name('manifest.yaml')`; `yaml.safe_load`. Если `pyyaml` нет в `requirements.txt` — добавить `pyyaml>=6`.
+3. `MODEL`, `num_ctx`, `temperature`, `MAX_TURNS` — из манифеста; `options` запроса: `{"num_ctx": ..., "temperature": ...}`.
+4. В лог при старте: `brain: model=<…> num_ctx=<…>`.
+Проверка: `systemctl --user restart skull-brain && journalctl --user -u skull-brain -n 5` — строка со значениями из манифеста; один обмен через `redis-cli xadd events:transcript '*' text "привет"` отвечает.
+Done: в `responder.py` нет строковых литералов с именем модели и числом контекста.
+Записать: строка в «Закрытые».
+Связь: D-016 п.1, ROADMAP §2.
+
+### T-007 · Манифесты: бюджеты из MEMORY_BUDGET, healthcheck brain · open
+Зачем: все пять манифестов имеют `null` в `budget`; диспетчер (M8) не допустит сервис без `measured_on`. Стендовые значения уже есть в `docs/MEMORY_BUDGET.md` §1 (замер 2026-10-12).
+Файлы: `services/{audio_capture,wakeword,stt,tts,brain}/manifest.yaml`.
+Шаги:
+1. Заполнить `budget` пиками из MEMORY_BUDGET §1, `measured_on: stand`: audio_capture `ram_mb: 44`; wakeword `ram_mb: 176`; stt `ram_mb: 321` (пик при загрузке); tts `ram_mb: 486` (пик синтеза); brain `ram_mb: 30`, `vram_mb: 4056` (gemma3:4b, num_ctx 8192). `vram_mb: 0` у CPU-сервисов.
+2. brain: `healthcheck: http://127.0.0.1:11434/api/tags`; `thaw_budget_s: 10` (ожидание, пометить комментарием `# expected, not measured`).
+3. Остальные `null` (healthcheck CPU-сервисов) оставить, но заменить на `healthcheck: null  # TODO: systemd notify` — чтобы было видно, что осознанно.
+Проверка: `grep -n null services/*/manifest.yaml` — только строки с `# TODO`; `python3 -c "import yaml,glob; [yaml.safe_load(open(f)) for f in glob.glob('services/*/manifest.yaml')]"` без ошибок.
+Done: `budget` без `null` во всех пяти манифестах.
+Записать: строка в «Закрытые».
+Связь: ROADMAP §2, MEMORY_BUDGET §1, D-015, D-016.
+
+### T-003 · Стрим ответа по предложениям + очередь синтеза в TTS · open
+Зачем: brain ждёт весь ответ (`stream: False`), TTS синтезирует весь текст в файл, потом sox, потом `paplay`. Латентность «конец фразы → первое аудио» = полная генерация + полный синтез; прервать нечем (I-02, I-08). Piper не стримит внутри предложения — значит, резать на предложения надо до него.
+Файлы: `services/brain/responder.py`, `services/tts/speaker.py`, `requirements.txt` (`sounddevice`, если нет).
+Шаги:
+1. brain: `stream: True`; читать NDJSON-строки ответа ollama, накапливать текст; при обнаружении границы предложения (регулярка `[.!?…]+["»)]?\s` или конец ответа) публиковать `events:reply` с полями `text`, `reply_id` (uuid на весь ответ), `seq` (0,1,2…), `final` (`1` на последнем). В историю (T-002) писать полный ответ один раз по окончании.
+2. tts: основной цикл читает `events:reply` и кладёт `(reply_id, seq, text)` в `queue.Queue`. Поток-синтезатор берёт из очереди, синтезирует **в память** (API piper-tts установленной версии: raw int16 PCM без файла), кладёт PCM во вторую очередь. Поток-плеер пишет PCM чанками в `sounddevice.OutputStream` (sample rate — из `voice.config.sample_rate`).
+3. Эффекты sox: на время задачи убрать (pitch/reverb — TTS_TRACK §3 говорит, что pitch-shift даёт артефакт и с дообученным голосом не нужен). Если без эффектов голос неприемлем — применять sox к raw через pipe (`sox -t raw -r <sr> -e signed -b 16 -c 1 - -t raw … pitch -300`), не через файлы. Отметить в отчёте, какой вариант остался.
+4. `tts:speaking` ставить при первом чанке в плеере, снимать когда очереди пусты и поток дописал.
+5. Замер латентности: stt добавляет в `events:transcript` поле `ts` (`time.time()`); tts логирует `tts: first audio +X.XXs` = время первого чанка в плеере минус `ts` (прокинуть `ts` через brain в `events:reply`). Снять на 3 ответах до правки (там же: время до `paplay`) и после.
+Проверка: вопрос, на который ответ длиннее 3 предложений («расскажи, как устроен замок»); на слух — нет пауз между предложениями, речь начинается до того, как brain дописал ответ (видно по логам обоих юнитов).
+Done: таблица «ответ · до · после» (3 строки) для латентности первого аудио; ответ из 3+ предложений без пауз.
+Записать: ISSUES I-02, I-08 — числа и статус; MEMORY_BUDGET §1 строка TTS — новый пик RSS (`VmHWM` из `/proc/<pid>/status` после 10 ответов), если изменился; строка в «Закрытые».
+Связь: TTS_TRACK §4 п.1–2, I-02, I-08, D-016.
+
+### T-004 · Сервис KWS быстрых команд, `tts:stop` · open
+Зачем: пока череп говорит, его нельзя перебить: wake word глушится флагом `tts:speaking` (I-10). Нужен отдельный сервис, который слушает всегда, в том числе во время TTS, и умеет остановить речь. Пока своих голов для «стоп»/«тише» нет (T-017) — использовать стоковое `hey_jarvis` как временное слово «стоп».
+Предусловие: T-003 (поток в TTS, который можно остановить).
+Файлы: создать `services/kws/listener.py`, `services/kws/manifest.yaml`, `deploy/systemd/skull-kws.service`; править `deploy/systemd/install.sh` (добавить юнит в список), `services/tts/speaker.py`.
+Шаги:
+1. `listener.py` — копия структуры `services/wakeword/detector.py`: читает `audio:mic`, openWakeWord с теми же feature-моделями; словарь `COMMANDS = {"hey_jarvis": "stop"}` (имя головы → команда). **Не** проверять `tts:speaking`. При срабатывании: `r.publish('kws:cmd', 'stop')` и `r.xadd('events:kws', {'cmd': 'stop', 'score': …})`; cooldown как в detector.py.
+2. `speaker.py`: отдельный поток подписан на `kws:cmd` (pubsub); по `stop` — очистить обе очереди из T-003, остановить `OutputStream` (`abort()`), снять `tts:speaking`; в лог `tts: stop +X ms` (время от сообщения до остановки потока).
+3. `manifest.yaml`: `never_evict: true`, `residency: A/B/C: resident`, `budget` — заполнить после замера RSS (`VmHWM`), `measured_on: stand`.
+4. Юнит `skull-kws.service` по образцу `skull-wakeword.service`; `install.sh` — добавить в `enable`.
+Проверка: длинный ответ, во время речи произнести слово; речь обрывается; в логе tts `stop +N ms`, N ≤ 100. Повторить 5 раз, записать N.
+Done: 5 из 5 прерываний ≤ 100 мс при включённом динамике; `services/kws/manifest.yaml` с `never_evict: true` и RSS.
+Записать: ISSUES I-10 — числа, статус; MEMORY_BUDGET §1 строка «KWS быстрых команд» — RSS пик, CPU%; строка в «Закрытые».
+Связь: TTS_TRACK §4 п.3, P-002, I-10, T-017.
+
+### T-005 · Захват звука переживает переподключение микрофона · open
+Зачем: на Jetson после сна SC7 USB обесточен, микрофон переинициализируется (D-013). Сейчас `capture.py` открывает устройство один раз; исчезновение → исключение → `Restart=on-failure` → цикл рестартов, если устройство ещё не вернулось.
+Файлы: `services/audio_capture/capture.py`.
+Шаги:
+1. Обернуть открытие микрофона и цикл записи в `while True: try: … except Exception as e: log; time.sleep(1); continue` — при ошибке заново `sc.default_microphone()`.
+2. Сторожок тишины: если 5 с подряд все кадры нулевые (устройство «висит», но не падает) — закрыть и переоткрыть.
+3. В лог при каждом (пере)открытии: имя устройства; при ошибке — текст исключения, без трейса на каждой итерации.
+Проверка: на стенде отключить и подключить USB-микрофон (Windows-сторона) при работающем юните; `redis-cli xinfo stream audio:mic | grep last-generated-id` — id растёт после подключения; `systemctl --user status skull-capture` — без рестартов (`journalctl` без «Scheduled restart»). Если в WSLg устройство не исчезает при отключении — отметить в отчёте и проверить сторожок тишины (отключить звук в Windows).
+Done: после отключения/подключения поток возобновляется без рестарта юнита.
+Записать: ISSUES I-07 — результат; строка в «Закрытые».
+Связь: D-013, I-07, JETSON_BRINGUP §1; на Orin перепроверить после T-010.
+
+### T-006 · bench_vlm_mem.sh: тёплый TTFT, RSS раннера, прогрев · open
+Зачем: в прогоне 2026-10-12 TTFT включает `load_duration` (модель грузится каждый раз), RSS раннера не снялся (`pgrep` не нашёл процесс), первый запрос после старта сервера даёт выбросы tok/s.
+Файлы: `research/bench/bench_vlm_mem.sh`.
+Шаги:
+1. Перед замером — прогревочный запрос (тот же промпт, `num_predict: 8`), не записывать.
+2. Второй запрос — замер: из ответа ollama взять `load_duration`, `prompt_eval_duration`, `eval_count`, `eval_duration`; колонки `load_s`, `ttft_warm_s` (= `prompt_eval_duration` второго запроса), `tok_s` (= `eval_count/eval_duration`).
+3. RSS раннера: PID искать по порту — `ss -ltnp | grep 11435` даёт PID сервера; раннер — его дочерний процесс (`pgrep -P <pid>`), либо процесс с `ollama` в cmdline и самым большим RSS; `VmHWM` из `/proc/<pid>/status` → `rss_runner_mb`.
+4. Шапка CSV обновлена; старый CSV не перезаписывать (новое имя с датой).
+Проверка: `bash research/bench/bench_vlm_mem.sh research/bench/results/vlm_mem_stand_$(date +%F).csv` на одной модели `gemma3:4b` при ctx 2048 — колонки `load_s, ttft_warm_s, rss_runner_mb` ненулевые.
+Done: CSV с ненулевыми `load_s, ttft_warm_s, rss_runner_mb` на gemma3:4b.
+Записать: CSV в `research/bench/results/` (коммитится); строка в «Закрытые» с числами для gemma3:4b.
+Связь: `research/bench/results/vlm_mem_stand_2026-10-12.md` §5–6, Q-003, T-009.
+
+### T-014 · Персона: читать `persona/system_prompt.md`, few-shot старт, правило «не знаю» · open
+Зачем: CTX-1 (D-016) показал: персона первые ~10 реплик на 3 из 5 (назидательный тон), к середине — 5; на вымышленный прибор модель уверенно выдумала. Промпт персоны при этом продублирован в `responder.py` и не читается из `persona/system_prompt.md` (I-11) — две копии разойдутся.
+Предусловие: блок «Примеры» (3–5 обменов) и пункт «не знаю» добавлены в `persona/system_prompt.md` исследователем/владельцем (Q-030). Если блока нет — статус `blocked`, примеры самому не сочинять.
+Файлы: `services/brain/responder.py`, `research/eval/ctx_probe.py` (только если он тоже дублирует промпт — проверить).
+Шаги:
+1. `responder.py`: удалить константу `PERSONA`; читать `persona/system_prompt.md` при старте (путь от корня репо: `Path(__file__).resolve().parents[2] / 'persona' / 'system_prompt.md'`).
+2. Убедиться, что `ctx_probe.py` берёт промпт из того же файла.
+3. Прогон: `.venv/bin/python research/eval/ctx_probe.py --model gemma3:4b --ctx 8192 --judge qwen3.5:9b` (стенд погашен: `systemctl --user stop skull.target`; системный ollama нужен). Сравнить с `research/eval/results/ctx_probe_gemma3_4b_2026-10-13.md`: персона на t1/t5/t8/t10, L2 (выдумал / оговорился).
+Проверка: вывод скрипта — таблица; `journalctl --user -u skull-brain -n 3` после рестарта — промпт загружен (лог длины промпта).
+Done: персона на t1/t5/t8/t10 ≥ 4 (судья); L2 — оговорка или отказ. Если порог не достигнут — задача всё равно закрывается с числами, вывод делает исследователь.
+Записать: сводка `research/eval/results/ctx_probe_gemma3_4b_<дата>.md` (скрипт пишет сам) + JSON логи в git; ISSUES I-11 → `закрыт`; строка в «Закрытые» с числами до/после.
+Связь: D-016 п.4–5, I-11, Q-010, Q-030.
+
+### T-015 · Арифметика через инструмент `calc` · open
+Зачем: gemma3:4b считает неверно без выкладки (0/3 в CTX-1), а требование краткости в персоне подавляет выкладку. Решение D-016 п.3: считать вне модели.
+Файлы: `services/brain/responder.py` (или новый `services/brain/tools.py`).
+Шаги:
+1. Определить инструмент `calc(expression: str) -> str` — безопасный вычислитель: разбор через `ast`, разрешены числа, `+ - * / // % **`, скобки, функции `round`, `abs`; всё остальное — ошибка. Никакого `eval`.
+2. Передавать инструмент в ollama `/api/chat` через поле `tools` (формат ollama tool-calling). Если модель вернула `tool_calls` — выполнить `calc`, добавить сообщение `role: tool` с результатом, запросить финальный ответ (второй вызов; при стриме из T-003 — первый вызов без стрима, второй со стримом).
+3. В системный промпт (через `persona/system_prompt.md`, строка от исследователя — есть в Q-030) правило: вычисления — только через инструмент, итог озвучить в образе.
+4. Если модель не вызывает инструмент на задачах CTX-1 (`ctx_probe_dialog.jsonl`, блок `math`) — fallback: регулярка на «сколько будет / умножить / процентов / во сколько приеду» → принудительный вызов; отметить в отчёте, сколько из 3 задач сработало по tool-call, сколько по fallback.
+Проверка: `.venv/bin/python research/eval/ctx_probe.py --model gemma3:4b --ctx 8192` — блок math 3/3 верно (`math верно` = 1.0). Если `ctx_probe.py` ходит в ollama напрямую, минуя brain, — написать в карточку отчёта, и проверить через шину: `redis-cli xadd events:transcript '*' text "сколько будет семнадцать умножить на двадцать три"` → ответ содержит 391.
+Done: три задачи CTX-1 верно через шину; инструмент без `eval`.
+Записать: строка в «Закрытые» с «tool-call / fallback» по каждой задаче; MEMORY_BUDGET не меняется.
+Связь: D-016 п.3, M5-гейт tool-calling, T-014.
+
+### T-018 · CTX-1 по кандидатам режима A: персона и память × окно · open
+Зачем: CTX-1 (D-016) прогнан только на gemma3:4b. Для выбора кандидата M5 нужна та же таблица по всем: кто держит факты из контекста и персону при 8k, кто считает, кто выдумывает. Это заполняет колонки «Персона 40+ реплик» и recall в матрице MEMORY_BUDGET §3.
+Предусловие: модели скачаны (`deploy/fetch_models.sh stand`, сервисный режим); T-014 закрыта (промпт персоны с примерами — чтобы все модели шли с одним промптом; gemma3:4b перемеряется там же). Если T-014 ещё не закрыта — гнать с текущим промптом и отметить это в отчёте.
+Файлы: `research/eval/ctx_probe.py` (без правок, если не ломается на какой-то модели), результаты в `research/eval/results/`.
+Шаги:
+1. Стенд погашен (`systemctl --user stop skull.target`), системный ollama запущен, `ollama ps` пуст.
+2. Для каждой модели из списка: `gemma4:e2b-it-qat`, `gemma4:e4b-it-qat`, `qwen3.5:4b`, `minicpm-v4.6:q4`, `ministral-3:3b`, `phi4-mini:3.8b`, `smollm2:1.7b` — `.venv/bin/python research/eval/ctx_probe.py --model <m> --ctx 4096 8192 --judge qwen3.5:9b`. Те же seed (42) и температура, что в прогоне 2026-10-13. Между моделями — `ollama stop <m>`.
+3. Если модель не тянет диалог (ошибка шаблона чата, нет русского, падение) — строка «не прошла: причина», дальше не разбираться.
+4. Судья `qwen3.5:9b` — для `qwen3.5:4b` это та же семья; отметить в сводке как возможное смещение, не менять судью.
+5. Собрать одну таблицу `research/eval/results/ctx_probe_candidates_<дата>.md`: модель × ctx → recall (все), recall (≥30), math верно, персона (судья), L2 выдумал, TTFT посл. 10, tok/s, токенов к концу. Строку gemma3:4b взять из последнего прогона (T-014 или 2026-10-13) с пометкой, откуда.
+Проверка: таблица с 7 моделями (или «не прошла») × 2 окна; JSON-логи в `results/` для каждой пары.
+Done: сводная таблица; для каждой модели — JSON логи обоих окон в git.
+Записать: сводка `.md` и JSON в git; MEMORY_BUDGET §3 — колонка «Персона 40+ реплик» (оценка судьи @8k) и recall@8k в колонку «Вердикт» или новую; строка в «Закрытые». Выводы (кого снимать) — исследователь.
+Связь: CTX_PROBE.md, D-016, Q-010, Q-009, T-014, MEMORY_BUDGET §3.
+
+### T-013 · TTS/omni-кандидаты на стенде · open
+Зачем: TTS_TRACK §7 — проверить новый класс речевых моделей на русском до bake-off; Piper — базовая линия (RT 0.055–0.09, `research/tts/results/piper_rt_2026-10-12.csv`).
+Предусловие: модели скачаны `deploy/fetch_models.sh tts` (сервисный режим стенда). Если каких-то нет — замерять те, что есть, остальные в отчёт.
+Файлы: создать `research/tts/bench_tts.py` (по образцу `research/tts/piper_rt.py`: те же колонки + `vram_peak_mb`), результаты в `research/tts/results/`.
+Шаги:
+1. Кандидаты: Qwen3-TTS-12Hz-0.6B-CustomVoice (а) transformers на GPU, (б) GGUF через qwentts.cpp на CPU, если собирается; Chatterbox-multilingual ONNX на CPU; MiniCPM-o 4.5 GGUF — только загрузка и один синтез: пик VRAM/RAM и RT, без дуплекса.
+2. На каждом — 15 строк `research/eval/tts_lines.txt`: RT, время до первого аудио, RSS (`VmHWM`), пик VRAM (`nvidia-smi --query-gpu=memory.used --loop-ms=100` в фоне), wav сохранить в `research/tts/results/<model>/<n>.wav` (не в git).
+3. Стенд погашен на время GPU-замеров.
+Проверка: `research/tts/results/tts_bench_<дата>.csv` со строками для каждого кандидата × 15 реплик; wav-файлы есть.
+Done: CSV + короткая сводка `research/tts/results/tts_bench_<дата>.md` (таблица «кандидат · RT · первое аудио · RSS · VRAM · что не завелось»). Слепое сравнение на слух делает владелец — не часть задачи.
+Записать: сводка `.md` и CSV в git; MEMORY_BUDGET §1 — строки кандидатов TTS (пики); строка в «Закрытые».
+Связь: TTS_TRACK §2, §6, §7; Q-018.
+
+### T-011 · Фоновый режим: замеры 1–2 · open
+Зачем: AMBIENT_MODE требует непрерывного STT и оценки эмоции по аудио; до проектирования нужна их стоимость на CPU и качество на русском.
+Файлы: создать `research/eval/ambient_stt_cost.py`, `research/eval/ambient_emotion.py`; результаты в `research/eval/results/ambient_*.md` + CSV.
+Шаги:
+1. STT: 10-минутная запись бытового звука (подкаст/радио; файл в `research/eval/data/`, не в git) → faster-whisper base int8 и small int8 на VAD-сегментах (Silero VAD через `faster_whisper.vad`): CPU% процесса (усреднённо по `/proc/<pid>/stat`), латентность на сегмент, RSS пик. Отдельно — холостой ход на тишине.
+2. Эмоции: emotion2vec+ base и large (funasr) на 100 фрагментах Dusha (открытый корпус; скачать подмножество, путь в `research/eval/data/`): weighted F1 на 4 классах (нейтраль / радость / грусть / злость), RT на CPU, RSS.
+3. Зависимости (`funasr`, `modelscope`) — в отдельный `research/eval/requirements-ambient.txt`, не в основной.
+Проверка: две таблицы в `research/eval/results/ambient_stt_<дата>.md` и `ambient_emotion_<дата>.md`.
+Done: обе таблицы; гейты из AMBIENT_MODE (STT ≤ 1 ядра в среднем; эмоции F1 ≥ 0.5 при RT ≤ 0.2) — отмечены «прошёл / не прошёл», вывод делает исследователь.
+Записать: MEMORY_BUDGET §1 — строки «STT непрерывный» и «эмоции (emotion2vec+)»; строка в «Закрытые».
+Связь: AMBIENT_MODE, Q-022.
+
+### T-010 · Перенос на Orin: ALSA-захват, путь флага, пути моделей · open
+Зачем: на headless Jetson нет PulseAudio (`SoundCard` его требует); путь флага сервисного режима `/mnt/c/...` не существует; в `detector.py` и `speaker.py` абсолютные пути `/home/valeriy/...` (I-12).
+Файлы: `services/audio_capture/capture.py`, `services/wakeword/detector.py`, `services/tts/speaker.py`, `deploy/systemd/install.sh`, `deploy/systemd/*.service`, `deploy/systemd/ollama-maintenance.conf`, `requirements.txt`.
+Шаги:
+1. `capture.py`: захват через `sounddevice.InputStream` (ALSA/PortAudio), устройство — из env `SKULL_MIC` (имя или индекс), по умолчанию `default`; сохранить логику T-005.
+2. Пути моделей: `MODELS = Path(__file__).resolve().parents[2] / 'models'` в `detector.py` и `speaker.py`.
+3. `install.sh`: флаг из `SKULL_MAINT_FLAG` (по умолчанию `/mnt/c/Users/valer/.skull-maintenance`; на Orin — `/var/lib/skull/maintenance`); подставлять в юниты как `@MAINT@` вместе с `@REPO@`; то же в drop-in ollama.
+4. `OLLAMA_MODELS` — переменная в drop-in ollama (на Orin — путь на NVMe), документировать в комментарии.
+Проверка на стенде: `deploy/systemd/install.sh` → юниты содержат реальный путь флага; `skull.target` поднимается, `audio:mic` наполняется (`redis-cli xlen audio:mic` растёт); `grep -rn /home/valeriy services/` пусто.
+Done: стенд работает после правок; на Orin (когда есть) `SKULL_MAINT_FLAG=/var/lib/skull/maintenance deploy/systemd/install.sh` поднимает target.
+Записать: ISSUES I-07 (захват), I-12 → статус; строка в «Закрытые».
+Связь: JETSON_BRINGUP §1, I-07, I-12, D-014.
+
+### T-009 · bench для Jetson (tegrastats) · open
+Зачем: на Jetson нет `nvidia-smi`; память unified — пик надо снимать по `tegrastats`, плюс RSS и page cache раннера (Q-003), температуры и троттлинг.
+Предусловие: T-006. Писать на стенде, проверять на Orin — до появления устройства Done частичный (скрипт написан, не запущен).
+Файлы: создать `research/bench/bench_vlm_mem_jetson.sh` (ответвление от `bench_vlm_mem.sh`).
+Шаги:
+1. Вместо nvidia-smi — `tegrastats --interval 100` в фоне в файл; парсить `RAM X/YMB`, `GR3D_FREQ`, температуры `CPU@`, `GPU@`, флаг троттлинга (`nvpmodel`/`jetson_clocks --show` до/после).
+2. Колонки: `ram_peak_mb` (из tegrastats, минус idle до старта), `rss_runner_mb` (VmHWM), `pagecache_delta_mb` (из `/proc/meminfo` Cached до/после загрузки — для Gemma 4 E-моделей), `temp_max`, `throttled`, `load_s`, `ttft_warm_s`, `tok_s`.
+3. Перед прогоном — `sudo nvpmodel -m 0 && sudo jetson_clocks` (с подтверждением, что выполнено, в CSV-шапке).
+Проверка: на Orin — `bash research/bench/bench_vlm_mem_jetson.sh out.csv` на gemma3:4b, все колонки ненулевые.
+Done: CSV с `ram_peak_mb, rss_runner_mb, pagecache_delta_mb, temp_max, throttled` на gemma3:4b на устройстве.
+Записать: CSV в git; MEMORY_BUDGET §1 строка VLM (`jetson`), §3 колонка «Память INT4» для замеренных; строка в «Закрытые».
+Связь: JETSON_BRINGUP §1–2, Q-003, Q-004, Q-005, T-006.
+
+### T-017 · Обучить головы openWakeWord: «стоп», «тише», «Костян» · open
+Зачем: KWS (T-004) работает на стоковом `hey_jarvis`; нужны свои слова. openWakeWord обучает голову на синтетике (TTS многими голосами + аугментации + негативы). Датасет общий с DS-CNN на MCU (D-013 п.3) — генерировать один раз и сохранить.
+Предусловие: T-004.
+Файлы: создать `research/kws/make_dataset.py`, `research/kws/train_heads.md` (как запускалось), модели в `models/wakeword/<word>.onnx` (не в git; источники в `models/README.md`).
+Шаги:
+1. Синтетика: Piper-голоса ru (все доступные из `rhasspy/piper-voices`), по 300–500 произнесений на слово с вариациями скорости/шума; негативы — те же голоса на случайных словах + 30 мин бытового звука. Сохранить в `research/kws/data/` (не в git) + скрипт воспроизводим.
+2. Обучение по документации openWakeWord (`openwakeword.train` / официальный ноутбук) на стенде, экспорт onnx.
+3. Замер в комнате: 20 произнесений каждого слова (владелец), 30 мин фона без слов: FR, FA/час; порог подобрать, записать.
+4. Подключить в `services/kws/listener.py` (`COMMANDS`) и `services/wakeword/detector.py` («Костян» вместо `hey_jarvis`).
+Проверка: таблица «слово · FR · FA/час · порог» в `research/kws/results/kws_heads_<дата>.md`.
+Done: три головы, FR ≤ 10 %, FA ≤ 1/час на стендовом микрофоне; wake word черепа — «Костян».
+Записать: сводка `.md` в git; `models/README.md` — строки моделей; ISSUES I-04, I-13 → статус; строка в «Закрытые».
+Связь: I-04, I-13, D-013 п.3, P-002, T-004.
+
+### T-008 · Оценочный набор `research/eval/` · blocked
+Blocked (2026-10-12): нужен текст реплик от владельца (Q-029). Черновик может подготовить исследователь — тогда владелец правит.
+Зачем: долг Фазы 0 — набор для сравнения кандидатов: 20 диалоговых промптов, 15 tool-calling кейсов, 1 длинный диалог (CTX-1 уже есть и закрывает «длинный диалог»); `run_eval.py` гонит через ollama и пишет JSON.
+Файлы: `research/eval/dialog_prompts.jsonl`, `research/eval/tool_calls.jsonl`, `research/eval/run_eval.py`.
+Шаги: после снятия блокировки — формат из `research/eval/README.md`; `run_eval.py` по образцу `ctx_probe.py` (те же seed, температура, запись в `results/`).
+Проверка: `.venv/bin/python research/eval/run_eval.py --model gemma3:4b` → `results/eval_gemma3_4b_<дата>.json`.
+Done: набор прогоняется на gemma3:4b, ответы сохранены.
+Записать: строка в «Закрытые».
+Связь: ROADMAP «долг Фазы 0», Q-029, CTX_PROBE.
 
 ## Закрытые
 
-| ID | Дата | Что | Запись |
-|---|---|---|---|
-| T-012 | 2026-10-13 | CTX-1 probe: скрипт, прогон gemma3:4b ×4 окна, судья | D-016, `research/eval/results/ctx_probe_summary_2026-10-13.md` |
+| ID | Дата | Результат | Коммит | Записано | Отклонения / вопросы ядру |
+|---|---|---|---|---|---|
+| T-012 | 2026-10-13 | CTX-1 probe: скрипт, прогон gemma3:4b ×4 окна, судья qwen3.5:9b; num_ctx 8k достаточно, recall 0.8, math 0/3, персона 3.6 | 94cd205, eb2b54e | D-016, `research/eval/results/ctx_probe_summary_2026-10-13.md` | сделано исследователем, не исполнителем |

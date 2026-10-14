@@ -6,12 +6,15 @@
 
 ## Структура
 
+Для агентов (любой инструмент): `AGENTS.md` → `docs/agents/RESEARCHER.md` или `EXECUTOR.md` по роли; состояние — `docs/JOURNAL.md`, очередь — `docs/TASKS.md`, нерешённое — `docs/OPEN_QUESTIONS.md`.
+
 ```
+AGENTS.md     контекст и протокол ролей для агентов (CLAUDE.md — обёртка для Claude Code)
 services/     прод: один сервис = папка с кодом + manifest.yaml (бюджет, резидентность, lifecycle)
 core/         общий код: шина, конфиг, диспетчер режимов (появится в M8)
 deploy/       systemd/ — skull.target + юниты, install.sh, drop-in для ollama; stand/ — запуск стенда из Git Bash (обычный и сервисный режим); sync-win.sh — зеркало
 research/     воспроизводимые замеры и эксперименты: bench/, eval/, tts/
-docs/         roadmap, decision-log, бюджеты памяти, журнал публикаций
+docs/         журнал сессий, очередь задач, открытые вопросы, roadmap, decision-log, бюджеты памяти, журнал публикаций; agents/ — онбординг ролей
 persona/      system-prompt и материалы персоны (датасет — см. persona/README)
 models/       веса (не в git) + README с источниками
 ```

@@ -14,12 +14,16 @@ models/**
 *.safetensors
 *.bin
 
-# аудио-дампы и результаты прогонов
+# аудио-дампы и результаты прогонов: в git — сводки .md и сырые CSV/JSON до ~1 МБ
+# (данные для статей; раньше жили только в WSL). Аудио и большие дампы — нет.
 *.wav
 *.mp3
 research/**/results/**
 !research/**/results/.gitkeep
 !research/**/results/*.md
+!research/**/results/*.csv
+!research/**/results/*.json
+research/**/data/**
 
 # персона: датасет по умолчанию приватный (см. persona/README.md)
 persona/dataset/**
