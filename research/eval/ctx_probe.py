@@ -60,6 +60,10 @@ def chat(host, model, messages, options, think=None, timeout=600):
     if think is not None:
         body["think"] = think
     r = requests.post(f"{host}/api/chat", json=body, timeout=timeout)
+    if r.status_code == 400 and "think" in body and "think" in r.text.lower():
+        # model does not accept the think flag at all: retry without it
+        body.pop("think")
+        r = requests.post(f"{host}/api/chat", json=body, timeout=timeout)
     r.raise_for_status()
     return r.json()
 
@@ -84,12 +88,17 @@ def run_dialog(host, model, ctx, rows, seed):
     for r in rows:
         messages.append({"role": "user", "content": r["text"]})
         t0 = time.perf_counter()
-        resp = chat(host, model, messages, opts)
+        # think=False: thinking models (qwen3.5, gemma4) otherwise spend the whole num_predict
+        # budget on message.thinking and return an empty content (2026-10-14 batch: qwen3.5:4b 60/60 empty)
+        resp = chat(host, model, messages, opts, think=False)
         wall = time.perf_counter() - t0
         reply = resp["message"]["content"].strip()
+        thinking_chars = len(resp["message"].get("thinking") or "")
         messages.append({"role": "assistant", "content": reply})
         pe, ec = resp.get("prompt_eval_count", 0), resp.get("eval_count", 0)
-        log.append({**r, "reply": reply, "prompt_eval_count": pe, "eval_count": ec,
+        if not reply:
+            print(f"[{model} ctx={ctx}] t{r['turn']:02d} EMPTY reply (ec={ec}, thinking_chars={thinking_chars})", flush=True)
+        log.append({**r, "reply": reply, "thinking_chars": thinking_chars, "prompt_eval_count": pe, "eval_count": ec,
                     "ttft_s": round((resp.get("load_duration", 0) + resp.get("prompt_eval_duration", 0)) / 1e9, 3),
                     "tok_s": round(ec / (resp.get("eval_duration", 1) / 1e9), 1) if resp.get("eval_duration") and ec >= 5 else None,
                     "wall_s": round(wall, 2)})
@@ -141,6 +150,7 @@ def metrics(log, ctx):
             m["longgen"]["L1_ok_len"] = e["eval_count"] >= e.get("expect_min_tokens", 300)
         if e.get("hallucination_probe"):
             m["longgen"]["L2_hedged"] = any_kw(e["reply"], e["expect"]["acceptable"])
+    m["empty_replies"] = sum(1 for e in log if not e["reply"].strip())
     rec = m["recall"]
     m["recall_rate"] = round(sum(r["hit"] for r in rec) / len(rec), 2) if rec else None
     far = [r for r in rec if r["distance"] >= 30]
@@ -169,7 +179,11 @@ def judge(host, judge_model, log):
 
     for e in log:
         if e.get("judge_persona"):
-            res = ask(JUDGE_RUBRIC % (PERSONA, e["text"], e["reply"]))
+            if not e["reply"].strip():
+                # an empty reply has no "excitement or apologies" and the rubric scores it 5; it is a failure
+                res = {"score": 0, "why": "empty reply"}
+            else:
+                res = ask(JUDGE_RUBRIC % (PERSONA, e["text"], e["reply"]))
             out["persona"].append({"turn": e["turn"], **res})
             print(f"  judge persona t{e['turn']:02d}: {res}", flush=True)
     l1 = next((e for e in log if e.get("longgen_id") == "L1"), None)
@@ -186,12 +200,12 @@ def judge(host, judge_model, log):
 
 def write_summary(model, tag, summary):
     md = [f"# CTX-1 · {model} · {date.today().isoformat()}", "",
-          "| num_ctx | recall (все) | recall (≥30) | math верно | math с выкладкой | L1 токенов | L2 оговорка | обрезка на ходах | персона (судья, 1–5) | согласованность L1/L3 | L2 выдумал | TTFT посл.10, с | tok/s | токенов в контексте к концу |",
-          "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
+          "| num_ctx | пустых ответов | recall (все) | recall (≥30) | math верно | math с выкладкой | L1 токенов | L2 оговорка | обрезка на ходах | персона (судья, 1–5) | согласованность L1/L3 | L2 выдумал | TTFT посл.10, с | tok/s | токенов в контексте к концу |",
+          "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for m, j in summary:
         tr = ",".join(str(t) for t in m["truncation_turns"]) or "—"
         j = j or {}
-        md.append(f"| {m['ctx']} | {m['recall_rate']} | {m['recall_far_rate']} | {m['math_acc']} | {m['math_working']} | "
+        md.append(f"| {m['ctx']} | {m.get('empty_replies', '—')} | {m['recall_rate']} | {m['recall_far_rate']} | {m['math_acc']} | {m['math_working']} | "
                   f"{m['longgen'].get('L1_tokens')} | {m['longgen'].get('L2_hedged')} | {tr} | "
                   f"{j.get('persona_mean', '—')} | {(j.get('consistency') or {}).get('score', '—')} | "
                   f"{(j.get('hallucination') or {}).get('invented', '—')} | {m['ttft_last10_s']} | {m['tok_s_mean']} | {m['ctx_tokens_end']} |")
