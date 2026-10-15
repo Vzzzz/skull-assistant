@@ -52,7 +52,7 @@ models/            веса (не в git) + README с источниками
 
 ## Две копии репозитория и стенд
 
-Рабочая копия — WSL Ubuntu-22.04 `~/skull-assistant` (здесь .venv, модели, юниты, сырые результаты). Зеркало — `C:/Users/valer/git/skull-assistant` (здесь работает исследователь; `origin` зеркала указывает на WSL-копию). Синхронизация только через git: коммит в WSL → `deploy/sync-win.sh`; правки зеркала → `git pull win main` в WSL.
+Рабочая копия — WSL Ubuntu-22.04 `~/skull-assistant` (здесь .venv, модели, юниты, сырые результаты). Зеркало — `C:/Users/valer/git/skull-assistant` (здесь работает исследователь). С 2026-10-16 источник правды — **приватный GitHub `Vzzzz/skull-assistant`**: у обеих копий `origin` → GitHub; в зеркале дополнительно remote `wsl` (локальный путь WSL), в WSL — `win` (зеркало). Поток: коммит в любой копии → `git push origin main` → в другой `git pull --ff-only origin main`. История переписана 2026-10-16 (авторство на личную почту); `deploy/sync-win.sh` устарел, после Q-032 копия в Windows может быть убрана.
 
 Стенд: RTX 3080 Laptop 8 ГБ в WSL2. При старте WSL `skull.target` поднимается сам (микрофон, wake word, STT, ollama, TTS). **Сервисный режим** (без сервисов и ollama — для загрузки моделей и замеров) — флаг `$HOME/.skull-maintenance` на Windows-стороне, из Git Bash: `deploy/stand/skull-stand.sh service|normal|status|stop` (D-014). Перед действием, которое не должно слышать микрофон или занимать GPU, — `skull-stand.sh status`.
 
