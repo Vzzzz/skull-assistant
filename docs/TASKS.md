@@ -176,7 +176,14 @@ Done: три задачи CTX-1 верно через шину; инструме
 
 ### T-018 · CTX-1 по кандидатам режима A: персона и память × окно · open
 Зачем: CTX-1 (D-016) прогнан только на gemma3:4b. Для выбора кандидата M5 нужна та же таблица по всем: кто держит факты из контекста и персону при 8k, кто считает, кто выдумывает. Это заполняет колонки «Персона 40+ реплик» и recall в матрице MEMORY_BUDGET §3.
-Состояние (2026-10-15): владелец уже прогнал батчем (`results/ctx_probe_batch.log`, 2026-10-13/14, текущий промпт): gemma4:e2b, e2b-it-qat, e4b — по 4 окна; e4b-it-qat — 2k/4k/8k; **qwen3.5:4b при 2k/4k — брак**: 60/60 пустых ответов (модель думала весь `num_predict`, скрипт не передавал `think: false`), судья ставил пустым ответам 5. Скрипт исправлен в `6371d45+` (think=false, счётчик пустых ответов, судья ставит 0 пустому). Эти JSON/MD ещё не в git — закоммитить вместе с результатами задачи.
+Состояние (2026-10-16): **сделано** gemma3:4b, gemma4 e2b / e2b-it-qat / e4b / e4b-it-qat (по 4 окна), qwen3.5:4b (2k/4k/8k, перегон с think=false) — оценены, сводка `results/ctx_probe_candidates_2026-10-16.md`, выводы D-018. **Осталось**: ministral-3:3b, ministral-3:8b, phi4-mini:3.8b, smollm2:1.7b, MiniCPM5-2B (все уже в ollama), minicpm-v4.6:q4 и Nanbeige4.2-3B (P-016) — скачать. Команда (стенд погашен, системный ollama запущен):
+```bash
+ollama pull minicpm-v4.6:q4; ollama pull hf.co/owao/Nanbeige4.2-3B-GGUF:Q4_K_M
+for m in ministral-3:3b ministral-3:8b phi4-mini:3.8b smollm2:1.7b hf.co/openbmb/MiniCPM5-2B-GGUF:Q4_K_M minicpm-v4.6:q4 hf.co/owao/Nanbeige4.2-3B-GGUF:Q4_K_M; do
+  .venv/bin/python research/eval/ctx_probe.py --model "$m" --ctx 4096 8192 --judge qwen3.5:9b 2>&1 | tee -a research/eval/results/ctx_probe_batch2.log; ollama stop "$m"
+done
+```
+Если Nanbeige не стартует в ollama (looped-архитектура может не поддерживаться stock llama.cpp) — строка «не прошла: причина» и дальше. После прогона сообщить исследователю список новых JSON — он оценит персону (D-017) и дополнит сводку. Результаты в WSL ещё не в git — `git add research/eval/results` при закрытии.
 Предусловие: модели скачаны (`deploy/fetch_models.sh stand`, сервисный режим); T-014 закрыта (промпт персоны с примерами — чтобы все модели шли с одним промптом; gemma3:4b перемеряется там же). Если T-014 ещё не закрыта — гнать с текущим промптом и отметить это в отчёте.
 Файлы: `research/eval/ctx_probe.py` (без правок, если не ломается на какой-то модели), результаты в `research/eval/results/`.
 Шаги:

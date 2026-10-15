@@ -17,6 +17,9 @@ elif command -v hf >/dev/null; then HF_CLI=hf
 elif command -v huggingface-cli >/dev/null; then HF_CLI=huggingface-cli
 else HF_CLI=""; fi
 hf()   { for r in "$@"; do echo "=== hf download $r"; "$HF_CLI" download "$r" --local-dir "$HF_DIR/${r#*/}" 2>&1 | tail -1; done; }
+# hf_inc REPO PATTERN... — only the listed files. Without --include a GGUF repo pulls every quantization
+# (2026-10-16: Qwen3-TTS-GGUF 64 GB, MiniCPM-o 75 GB for ~9 GB actually needed).
+hf_inc() { r="$1"; shift; echo "=== hf download $r ($*)"; "$HF_CLI" download "$r" --local-dir "$HF_DIR/${r#*/}" --include "$@" 2>&1 | tail -1; }
 
 case "$what" in
   stand|all)
@@ -32,16 +35,30 @@ case "$what" in
     "$HF_CLI" auth whoami >/dev/null 2>&1 || echo "hf не аутентифицирован: $HF_CLI auth login (нужно для gated-репозиториев)"
     mkdir -p "$HF_DIR"
     # Qwen3-TTS: русский, стриминг; 0.6B — кандидат в рантайм (GPU) / через qwentts.cpp (CPU); 1.7B-VoiceDesign — офлайн-учитель (голос по описанию)
-    hf Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign Qwen/Qwen3-TTS-Tokenizer-12Hz Serveurperso/Qwen3-TTS-GGUF
+    hf Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign Qwen/Qwen3-TTS-Tokenizer-12Hz
+    # GGUF only for the CPU runtime candidate (0.6B CustomVoice) + tokenizer; the 1.7B teacher runs from safetensors on GPU
+    hf_inc Serveurperso/Qwen3-TTS-GGUF "qwen-talker-0.6b-customvoice-Q4_K_M.gguf" "qwen-talker-0.6b-customvoice-Q8_0.gguf" "qwen-tokenizer-12hz-Q8_0.gguf" "*.md" "*.json"
     # Chatterbox Multilingual (0.5B, ru, контроль эмоций); ONNX-сборка — для CPU-теста
     hf ResembleAI/chatterbox-multilingual onnx-community/chatterbox-multilingual-ONNX
     # OpenAudio S1-mini (0.5B, ru) — CC-BY-NC-SA, gated: нужен hf auth login и принятые условия
     hf fishaudio/openaudio-s1-mini || echo "openaudio-s1-mini: gated — hf auth login + принять условия на странице модели"
     # MiniCPM-o 4.5 GGUF (9B omni, full-duplex речь) — «голос внутри VLM», тест на стенде; на Orin — отдельно
-    hf openbmb/MiniCPM-o-4_5-gguf
+    # Only Q4_K_M of the LLM + the F16 sub-models it needs (audio/vision/tts/token2wav); other quants and CoreML are not used
+    hf_inc openbmb/MiniCPM-o-4_5-gguf "MiniCPM-o-4_5-Q4_K_M.gguf" "audio/*.gguf" "vision/*.gguf" "tts/*.gguf" "token2wav-gguf/*" "*.md" "*.json"
     # Эмоции в речи (фоновый режим, AMBIENT_MODE.md): emotion2vec+ large (~300M), через funasr/modelscope
     hf emotion2vec/emotion2vec_plus_large emotion2vec/emotion2vec_plus_base
     ;;&
+  prune)
+    # Remove the variants fetched before hf_inc existed (2026-10-13..15); keeps what the tts section above would download.
+    cd "$HF_DIR" || exit 1
+    du -sh Qwen3-TTS-GGUF MiniCPM-o-4_5-gguf 2>/dev/null
+    find Qwen3-TTS-GGUF -maxdepth 1 -name '*.gguf' \
+      ! -name 'qwen-talker-0.6b-customvoice-Q4_K_M.gguf' ! -name 'qwen-talker-0.6b-customvoice-Q8_0.gguf' ! -name 'qwen-tokenizer-12hz-Q8_0.gguf' \
+      -print -delete
+    find MiniCPM-o-4_5-gguf -maxdepth 1 -name '*.gguf' ! -name 'MiniCPM-o-4_5-Q4_K_M.gguf' -print -delete
+    rm -rf MiniCPM-o-4_5-gguf/vision/*.mlmodelc Qwen3-TTS-GGUF/.cache MiniCPM-o-4_5-gguf/.cache
+    du -sh Qwen3-TTS-GGUF MiniCPM-o-4_5-gguf
+    ;;
   modeb|all)
     # Режим B: MoE со стримингом экспертов. -mtp-q4 = multi-token prediction (встроенная спекуляция, P-015)
     pull gemma4:26b-a4b-it-q4 gemma4:26b-a4b-it-mtp-q4 qwen3.6:35b-a3b-q4 qwen3.6:35b-a3b-mtp-q4
