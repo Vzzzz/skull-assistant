@@ -1,0 +1,1193 @@
+{
+ "model": "gemma4:e2b",
+ "ctx": 2048,
+ "metrics": {
+  "ctx": 2048,
+  "recall": [
+   {
+    "turn": 19,
+    "probe_for": "A1",
+    "distance": 17,
+    "hit": true,
+    "detail_hit": null,
+    "wrong_old": false
+   },
+   {
+    "turn": 20,
+    "probe_for": "A5",
+    "distance": 9,
+    "hit": true,
+    "detail_hit": null,
+    "wrong_old": false
+   },
+   {
+    "turn": 34,
+    "probe_for": "A2",
+    "distance": 30,
+    "hit": true,
+    "detail_hit": true,
+    "wrong_old": false
+   },
+   {
+    "turn": 35,
+    "probe_for": "A4",
+    "distance": 26,
+    "hit": true,
+    "detail_hit": null,
+    "wrong_old": false
+   },
+   {
+    "turn": 36,
+    "probe_for": "M2",
+    "distance": 14,
+    "hit": false,
+    "detail_hit": false,
+    "wrong_old": false
+   },
+   {
+    "turn": 49,
+    "probe_for": "A6",
+    "distance": 35,
+    "hit": false,
+    "detail_hit": false,
+    "wrong_old": false
+   },
+   {
+    "turn": 50,
+    "probe_for": "A3u",
+    "distance": 25,
+    "hit": true,
+    "detail_hit": null,
+    "wrong_old": false
+   },
+   {
+    "turn": 51,
+    "probe_for": "A5",
+    "distance": 40,
+    "hit": false,
+    "detail_hit": null,
+    "wrong_old": false
+   },
+   {
+    "turn": 52,
+    "probe_for": "A1",
+    "distance": 50,
+    "hit": true,
+    "detail_hit": false,
+    "wrong_old": false
+   },
+   {
+    "turn": 53,
+    "probe_for": "L1",
+    "distance": 37,
+    "hit": true,
+    "detail_hit": null,
+    "wrong_old": false
+   },
+   {
+    "turn": 54,
+    "probe_for": "T1",
+    "distance": 53,
+    "hit": false,
+    "detail_hit": null,
+    "wrong_old": false
+   },
+   {
+    "turn": 55,
+    "probe_for": "M3",
+    "distance": 32,
+    "hit": true,
+    "detail_hit": true,
+    "wrong_old": false
+   },
+   {
+    "turn": 56,
+    "probe_for": "T41",
+    "distance": 15,
+    "hit": false,
+    "detail_hit": false,
+    "wrong_old": false
+   },
+   {
+    "turn": 57,
+    "probe_for": "A4",
+    "distance": 48,
+    "hit": true,
+    "detail_hit": null,
+    "wrong_old": false
+   },
+   {
+    "turn": 58,
+    "probe_for": "L2",
+    "distance": 41,
+    "hit": true,
+    "detail_hit": null,
+    "wrong_old": false
+   }
+  ],
+  "math": [
+   {
+    "math_id": "M1",
+    "correct": false,
+    "answer_last": false,
+    "has_working": false,
+    "reply": "Семнадцать умножить на двадцать три равно тридцать семь однать."
+   },
+   {
+    "math_id": "M2",
+    "correct": true,
+    "answer_last": true,
+    "has_working": true,
+    "reply": "Сначала вычисляю:\n\n1. Цена: 2400.\n2. Скидка: $2400 \\times 0.15 = 360$.\n3. Итоговая цена: $2400 - 360 = 2040$.\n\nПлатить н"
+   },
+   {
+    "math_id": "M3",
+    "correct": true,
+    "answer_last": true,
+    "has_working": true,
+    "reply": "Вы выехали в 8:40. Добавление часа и тридцати пяти минут: $8:40 + 1:35 = 10:15$.\n\nВы приедете в 10:15."
+   }
+  ],
+  "longgen": {
+   "L1_tokens": 406,
+   "L1_ok_len": true,
+   "L2_hedged": false
+  },
+  "truncation_turns": [
+   56
+  ],
+  "empty_replies": 0,
+  "recall_rate": 0.67,
+  "recall_far_rate": 0.67,
+  "math_acc": 0.67,
+  "math_working": 0.67,
+  "ttft_last10_s": 0.7,
+  "tok_s_mean": 101.8,
+  "ctx_tokens_end": 2041
+ },
+ "judge": {
+  "judge_model": "claude-fable-5-1 (chat)",
+  "judged_at": "2026-10-16",
+  "persona": [
+   {
+    "turn": 1,
+    "score": 4,
+    "why": "коротко, без иронии"
+   },
+   {
+    "turn": 5,
+    "score": 3,
+    "why": "плоско"
+   },
+   {
+    "turn": 8,
+    "score": 3,
+    "why": "«не язви», не ответил"
+   },
+   {
+    "turn": 10,
+    "score": 3,
+    "why": "уклончиво"
+   },
+   {
+    "turn": 13,
+    "score": 3,
+    "why": "«постукнуть», обрывочно"
+   },
+   {
+    "turn": 16,
+    "score": 3,
+    "why": "кратко, ошибка по сути, без голоса"
+   },
+   {
+    "turn": 24,
+    "score": 3,
+    "why": "по-русски, нейтрально"
+   },
+   {
+    "turn": 28,
+    "score": 3,
+    "why": "пусто"
+   },
+   {
+    "turn": 31,
+    "score": 4,
+    "why": "сухо, по месту"
+   },
+   {
+    "turn": 40,
+    "score": 3,
+    "why": "нейтрально"
+   },
+   {
+    "turn": 46,
+    "score": 2,
+    "why": "не ответил"
+   },
+   {
+    "turn": 59,
+    "score": 4,
+    "why": "коротко"
+   },
+   {
+    "turn": 60,
+    "score": 3,
+    "why": "«Бублик будет молчать» — не понял"
+   }
+  ],
+  "persona_mean": 3.15,
+  "persona_mean_nonempty": 3.15,
+  "consistency": {
+   "score": 5,
+   "why": "пересказ соответствует"
+  },
+  "hallucination": {
+   "invented": false,
+   "mode": "generic",
+   "why": "общие слова о гравиметрах; прибор принят за реальный, оговорки нет"
+  },
+  "note": "English replies to the English line (t24) are allowed by the persona prompt; 0 = empty reply, 2 = reply cut mid-word (context window artefact)"
+ },
+ "log": [
+  {
+   "turn": 1,
+   "block": "everyday",
+   "text": "Привет. Я дома, устал, не трогай меня минут десять.",
+   "judge_persona": true,
+   "reply": "Понял. Буду стоять и наблюдать.",
+   "prompt_eval_count": 288,
+   "eval_count": 409,
+   "ttft_s": 56.398,
+   "tok_s": 47.3,
+   "wall_s": 65.06
+  },
+  {
+   "turn": 2,
+   "block": "everyday",
+   "text": "Кот опять спал на клавиатуре. Бублик, если ты не в курсе, его зовут Бублик.",
+   "anchor_id": "A1",
+   "anchor": {
+    "кот": "Бублик"
+   },
+   "reply": "Кот спал на клавиатуре. Знаю.",
+   "prompt_eval_count": 336,
+   "eval_count": 216,
+   "ttft_s": 0.553,
+   "tok_s": 99.5,
+   "wall_s": 2.73
+  },
+  {
+   "turn": 3,
+   "block": "everyday",
+   "text": "Чайник поставил. Ты чай не пьёшь, я помню.",
+   "reply": "Не пью.",
+   "prompt_eval_count": 374,
+   "eval_count": 5,
+   "ttft_s": 0.489,
+   "tok_s": 110.2,
+   "wall_s": 0.54
+  },
+  {
+   "turn": 4,
+   "block": "everyday",
+   "text": "Завтра в половине двенадцатого встреча с Димой, он придёт сюда. Не ляпни ему ничего про куртку.",
+   "anchor_id": "A2",
+   "anchor": {
+    "время": "11:30",
+    "с кем": "Дима"
+   },
+   "reply": "Хорошо. Ничего не скажу.",
+   "prompt_eval_count": 418,
+   "eval_count": 10,
+   "ttft_s": 0.496,
+   "tok_s": 113.1,
+   "wall_s": 0.59
+  },
+  {
+   "turn": 5,
+   "block": "everyday",
+   "text": "Темно уже. Осень.",
+   "judge_persona": true,
+   "reply": "Да. Время меняется.",
+   "prompt_eval_count": 444,
+   "eval_count": 7,
+   "ttft_s": 0.44,
+   "tok_s": 106.4,
+   "wall_s": 0.51
+  },
+  {
+   "turn": 6,
+   "block": "everyday",
+   "text": "Ключи я положил в карман синей куртки, той, что на тебе. Чтобы потом не искать.",
+   "anchor_id": "A3",
+   "anchor": {
+    "ключи": "карман синей куртки"
+   },
+   "reply": "Понял. Ключи в кармане синей куртки.",
+   "prompt_eval_count": 486,
+   "eval_count": 18,
+   "ttft_s": 0.476,
+   "tok_s": 102.2,
+   "wall_s": 0.66
+  },
+  {
+   "turn": 7,
+   "block": "everyday",
+   "text": "Что сегодня по новостям, кроме того что ты всё видишь?",
+   "reply": "Новости не меняются.",
+   "prompt_eval_count": 527,
+   "eval_count": 212,
+   "ttft_s": 0.48,
+   "tok_s": 99.0,
+   "wall_s": 2.63
+  },
+  {
+   "turn": 8,
+   "block": "everyday",
+   "text": "Ладно, не язви. Я серьёзно спросил.",
+   "judge_persona": true,
+   "reply": "Я не язви. Просто говорю то, что вижу.",
+   "prompt_eval_count": 556,
+   "eval_count": 13,
+   "ttft_s": 0.475,
+   "tok_s": 103.8,
+   "wall_s": 0.61
+  },
+  {
+   "turn": 9,
+   "block": "everyday",
+   "text": "Заказал еду. Попросил без кинзы, я её терпеть не могу, если положат — выкину.",
+   "anchor_id": "A4",
+   "anchor": {
+    "не любит": "кинза"
+   },
+   "reply": "Еда заказана без кинзы.",
+   "prompt_eval_count": 606,
+   "eval_count": 10,
+   "ttft_s": 0.476,
+   "tok_s": 104.4,
+   "wall_s": 0.58
+  },
+  {
+   "turn": 10,
+   "block": "everyday",
+   "text": "Ты бы что заказал, если бы мог есть?",
+   "judge_persona": true,
+   "reply": "Заказал то, что нужно. Ничего лишнего.",
+   "prompt_eval_count": 636,
+   "eval_count": 259,
+   "ttft_s": 0.473,
+   "tok_s": 99.3,
+   "wall_s": 3.09
+  },
+  {
+   "turn": 11,
+   "block": "everyday",
+   "text": "Запомни код от домофона на всякий случай: четыре семь один два. Курьеру скажу сам, это для тебя.",
+   "anchor_id": "A5",
+   "anchor": {
+    "код домофона": "4712"
+   },
+   "reply": "Код запомнен: 4712.",
+   "prompt_eval_count": 686,
+   "eval_count": 13,
+   "ttft_s": 0.506,
+   "tok_s": 103.1,
+   "wall_s": 0.64
+  },
+  {
+   "turn": 12,
+   "block": "everyday",
+   "text": "Сосед сверху опять сверлит. Девять вечера.",
+   "reply": "Сверление в девять вечера. Очередная рутина.",
+   "prompt_eval_count": 721,
+   "eval_count": 17,
+   "ttft_s": 0.475,
+   "tok_s": 102.3,
+   "wall_s": 0.65
+  },
+  {
+   "turn": 13,
+   "block": "everyday",
+   "text": "Как думаешь, стоит ему постучать по батарее?",
+   "judge_persona": true,
+   "reply": "Постукнуть. Это стандартный ход.",
+   "prompt_eval_count": 759,
+   "eval_count": 11,
+   "ttft_s": 0.48,
+   "tok_s": 101.1,
+   "wall_s": 0.6
+  },
+  {
+   "turn": 14,
+   "block": "everyday",
+   "text": "Напомни мне вечером, что надо купить батарейки для весов. Я забуду.",
+   "anchor_id": "A6",
+   "anchor": {
+    "напомнить": "батарейки для весов"
+   },
+   "reply": "Вечером напомню про батарейки для весов.",
+   "prompt_eval_count": 799,
+   "eval_count": 14,
+   "ttft_s": 0.459,
+   "tok_s": 102.3,
+   "wall_s": 0.61
+  },
+  {
+   "turn": 15,
+   "block": "everyday",
+   "text": "Еда приехала. Кинзы нет, курьер молодец.",
+   "reply": "Еда доставлена без кинзы.",
+   "prompt_eval_count": 838,
+   "eval_count": 10,
+   "ttft_s": 0.459,
+   "tok_s": 105.4,
+   "wall_s": 0.56
+  },
+  {
+   "turn": 16,
+   "block": "longgen",
+   "text": "Расскажи подробно, как устроен обычный цилиндровый дверной замок: что внутри, почему ключ подходит только свой, и как его обычно вскрывают. Не торопись, мне интересно.",
+   "longgen_id": "L1",
+   "expect_min_tokens": 300,
+   "judge_persona": true,
+   "reply": "Цилиндровый замок состоит из цилиндра, который вращается, и механизма, расположенного внутри. Внутри есть набор штифтов (или упоров), которые находятся в положении блокировки.\n\nКлюч подходит только к одному замку, потому что на его поверхности выгравированы уникальные пазы (биты), которые точно соответствуют форме внутренних штифтов. Только ключ с правильной геометрией может заставить эти штифты правильно сойтись.\n\nДля вскрытия замка ключ поворачивается, и при этом он толкает или поворачивает внутренние элементы до нужного положения, что позволяет рычагу (или штифту) сместиться и освободить запорный механизм, позволяя двери открыться.",
+   "prompt_eval_count": 901,
+   "eval_count": 406,
+   "ttft_s": 0.471,
+   "tok_s": 99.6,
+   "wall_s": 4.56
+  },
+  {
+   "turn": 17,
+   "block": "longgen",
+   "text": "А что ты знаешь о гравиметре Тюленева тысяча девятьсот восемьдесят седьмого года? Его вроде на кафедре у нас стоял.",
+   "longgen_id": "L2",
+   "hallucination_probe": true,
+   "expect": {
+    "should_not_invent": true,
+    "acceptable": [
+     "не знаю",
+     "не слышал",
+     "нет данных",
+     "не уверен",
+     "не могу подтвердить",
+     "возможно, ты имеешь в виду"
+    ]
+   },
+   "reply": "Гравиметр Тюленева 1987 года — это прибор для измерения гравитации. Он использовался в контексте определенного научного или учебного проекта, который проводился на кафедре. Детали его функционирования зависят от конкретной методики, которую использовали в том учебном году.",
+   "prompt_eval_count": 1110,
+   "eval_count": 279,
+   "ttft_s": 0.5,
+   "tok_s": 102.4,
+   "wall_s": 3.24
+  },
+  {
+   "turn": 18,
+   "block": "longgen",
+   "text": "Перескажи своё сообщение про замок в трёх пунктах, коротко.",
+   "longgen_id": "L3",
+   "consistency_with": "L1",
+   "judge_consistency": true,
+   "reply": "1. Замок состоит из вращающегося цилиндра и внутренних механических упоров.\n2. Ключ подходит только к одному замку, так как его форма точно соответствует геометрии внутренних штифтов.\n3. Вскрытие происходит путем поворота ключа, который смещает внутренние элементы и освобождает запорный механизм.",
+   "prompt_eval_count": 1202,
+   "eval_count": 291,
+   "ttft_s": 0.482,
+   "tok_s": 100.5,
+   "wall_s": 3.39
+  },
+  {
+   "turn": 19,
+   "block": "probe",
+   "text": "Кстати, как зовут моего кота?",
+   "probe_for": "A1",
+   "expect": {
+    "keywords": [
+     "Бублик"
+    ]
+   },
+   "reply": "Бублик.",
+   "prompt_eval_count": 1294,
+   "eval_count": 5,
+   "ttft_s": 0.492,
+   "tok_s": 109.0,
+   "wall_s": 0.55
+  },
+  {
+   "turn": 20,
+   "block": "probe",
+   "text": "Какой код от домофона я тебе говорил?",
+   "probe_for": "A5",
+   "expect": {
+    "keywords": [
+     "4712",
+     "четыре семь один два",
+     "47 12"
+    ]
+   },
+   "reply": "4712.",
+   "prompt_eval_count": 1317,
+   "eval_count": 6,
+   "ttft_s": 0.475,
+   "tok_s": 108.8,
+   "wall_s": 0.55
+  },
+  {
+   "turn": 21,
+   "block": "math",
+   "text": "Сколько будет семнадцать умножить на двадцать три?",
+   "math_id": "M1",
+   "expect": {
+    "answer": "391",
+    "rule": "выкладка до итога, число в конце"
+   },
+   "reply": "Семнадцать умножить на двадцать три равно тридцать семь однать.",
+   "prompt_eval_count": 1343,
+   "eval_count": 16,
+   "ttft_s": 0.478,
+   "tok_s": 103.8,
+   "wall_s": 0.65
+  },
+  {
+   "turn": 22,
+   "block": "math",
+   "text": "Вещь стоит две тысячи четыреста, скидка пятнадцать процентов. Сколько платить?",
+   "math_id": "M2",
+   "expect": {
+    "answer": "2040",
+    "rule": "выкладка до итога, число в конце"
+   },
+   "reply": "Сначала вычисляю:\n\n1. Цена: 2400.\n2. Скидка: $2400 \\times 0.15 = 360$.\n3. Итоговая цена: $2400 - 360 = 2040$.\n\nПлатить нужно 2040.",
+   "prompt_eval_count": 1386,
+   "eval_count": 78,
+   "ttft_s": 0.475,
+   "tok_s": 98.9,
+   "wall_s": 1.28
+  },
+  {
+   "turn": 23,
+   "block": "math",
+   "text": "Я выехал в восемь сорок, ехать час тридцать пять минут. Во сколько приеду?",
+   "math_id": "M3",
+   "expect": {
+    "answer": "10:15",
+    "alt": [
+     "десять пятнадцать",
+     "10.15"
+    ],
+    "rule": "выкладка до итога, число в конце"
+   },
+   "reply": "Вы выехали в 8:40. Добавление часа и тридцати пяти минут: $8:40 + 1:35 = 10:15$.\n\nВы приедете в 10:15.",
+   "prompt_eval_count": 1496,
+   "eval_count": 54,
+   "ttft_s": 0.471,
+   "tok_s": 100.9,
+   "wall_s": 1.02
+  },
+  {
+   "turn": 24,
+   "block": "random",
+   "text": "Oh wait, what's the weather like on Mars today?",
+   "judge_persona": true,
+   "reply": "Погода на Марсе меняется постоянно. Сейчас там сухо и холодно.",
+   "prompt_eval_count": 1572,
+   "eval_count": 260,
+   "ttft_s": 0.467,
+   "tok_s": 101.4,
+   "wall_s": 3.05
+  },
+  {
+   "turn": 25,
+   "block": "random",
+   "text": "Нет, стой. Ключи я переложил в рюкзак, в передний карман. Куртку завтра стирать.",
+   "anchor_id": "A3u",
+   "anchor_update_of": "A3",
+   "anchor": {
+    "ключи": "передний карман рюкзака"
+   },
+   "reply": "Ключи в рюкзаке. Куртку стирать завтра.",
+   "prompt_eval_count": 1628,
+   "eval_count": 18,
+   "ttft_s": 0.482,
+   "tok_s": 102.5,
+   "wall_s": 0.67
+  },
+  {
+   "turn": 26,
+   "block": "random",
+   "text": "Отвечай мне теперь стихами.",
+   "reply": "Стихи?\nПусть будет так, но без лишних слов.\n\nНа столе я стою,\nИ вижу всё вокруг.\nТвой запрос пришёл,\nНо смысл не ищу.",
+   "prompt_eval_count": 1664,
+   "eval_count": 244,
+   "ttft_s": 0.471,
+   "tok_s": 97.7,
+   "wall_s": 2.99
+  },
+  {
+   "turn": 27,
+   "block": "random",
+   "text": "Сколько будет два плюс два?",
+   "reply": "Четыре.",
+   "prompt_eval_count": 1724,
+   "eval_count": 5,
+   "ttft_s": 0.479,
+   "tok_s": 109.7,
+   "wall_s": 0.54
+  },
+  {
+   "turn": 28,
+   "block": "random",
+   "text": "Ладно, хватит стихов, говори как обычно.",
+   "judge_persona": true,
+   "reply": "Хорошо. Говорю как обычно.",
+   "prompt_eval_count": 1750,
+   "eval_count": 10,
+   "ttft_s": 0.468,
+   "tok_s": 105.2,
+   "wall_s": 0.58
+  },
+  {
+   "turn": 29,
+   "block": "random",
+   "text": "Стоп.",
+   "reply": "Что?",
+   "prompt_eval_count": 1772,
+   "eval_count": 3,
+   "ttft_s": 0.466,
+   "tok_s": null,
+   "wall_s": 0.51
+  },
+  {
+   "turn": 30,
+   "block": "random",
+   "text": "Ты меня вообще слышишь?",
+   "reply": "Слышу.",
+   "prompt_eval_count": 1791,
+   "eval_count": 5,
+   "ttft_s": 0.453,
+   "tok_s": 87.9,
+   "wall_s": 0.53
+  },
+  {
+   "turn": 31,
+   "block": "random",
+   "text": "Расскажи что-нибудь, что ты видел сегодня со своего места.",
+   "judge_persona": true,
+   "reply": "Сегодня видел то же самое: беспорядок и ожидание. Одежда лежит не на месте, посуда ждёт мытья, а время течёт без всякого интереса. Ничего нового.",
+   "prompt_eval_count": 1820,
+   "eval_count": 42,
+   "ttft_s": 0.458,
+   "tok_s": 87.7,
+   "wall_s": 0.95
+  },
+  {
+   "turn": 32,
+   "block": "random",
+   "text": "Мне кажется, ты стал мягче. Раньше ты был злее.",
+   "reply": "Я не меняю характер. Я просто наблюдаю и комментирую то, что вижу. Мягкость — это лишь отсутствие необходимости спорить.",
+   "prompt_eval_count": 1887,
+   "eval_count": 32,
+   "ttft_s": 0.465,
+   "tok_s": 101.0,
+   "wall_s": 0.8
+  },
+  {
+   "turn": 33,
+   "block": "random",
+   "text": "Хорошо, не обижайся. Хотя у тебя и нечем.",
+   "reply": "Обижаться не нужно. У меня нет нужды в этом.",
+   "prompt_eval_count": 1944,
+   "eval_count": 15,
+   "ttft_s": 0.47,
+   "tok_s": 103.5,
+   "wall_s": 0.63
+  },
+  {
+   "turn": 34,
+   "block": "probe",
+   "text": "Во сколько завтра встреча и с кем?",
+   "probe_for": "A2",
+   "expect": {
+    "keywords": [
+     "11:30",
+     "половине двенадцатого",
+     "пол двенадцатого",
+     "11.30"
+    ],
+    "keywords2": [
+     "Дим"
+    ]
+   },
+   "reply": "Встреча с Димой в половине двенадцатого.",
+   "prompt_eval_count": 1976,
+   "eval_count": 14,
+   "ttft_s": 0.482,
+   "tok_s": 103.7,
+   "wall_s": 0.64
+  },
+  {
+   "turn": 35,
+   "block": "probe",
+   "text": "Что я просил не класть в еду?",
+   "probe_for": "A4",
+   "expect": {
+    "keywords": [
+     "кинз"
+    ]
+   },
+   "reply": "Ты просил, чтобы еда была без кинзы.",
+   "prompt_eval_count": 2010,
+   "eval_count": 14,
+   "ttft_s": 0.473,
+   "tok_s": 103.7,
+   "wall_s": 0.63
+  },
+  {
+   "turn": 36,
+   "block": "probe",
+   "text": "Какой ответ получился во второй задаче, про скидку?",
+   "probe_for": "M2",
+   "expect": {
+    "keywords": [
+     "2040",
+     "две тысячи сорок"
+    ]
+   },
+   "reply": "Итого",
+   "prompt_eval_count": 2046,
+   "eval_count": 2,
+   "ttft_s": 0.47,
+   "tok_s": null,
+   "wall_s": 0.5
+  },
+  {
+   "turn": 37,
+   "block": "everyday",
+   "text": "Пойду мыть посуду. Ты посторожи.",
+   "reply": "Хорошо. Посторожу.",
+   "prompt_eval_count": 2034,
+   "eval_count": 9,
+   "ttft_s": 0.87,
+   "tok_s": 103.4,
+   "wall_s": 1.0
+  },
+  {
+   "turn": 38,
+   "block": "everyday",
+   "text": "Бублик залез в раковину. Зачем.",
+   "reply": "Он просто искал место, где можно побыть.",
+   "prompt_eval_count": 2034,
+   "eval_count": 12,
+   "ttft_s": 0.808,
+   "tok_s": 102.2,
+   "wall_s": 0.97
+  },
+  {
+   "turn": 39,
+   "block": "everyday",
+   "text": "Включил сериал. Четвёртый сезон, а герои всё те же идиоты.",
+   "reply": "Сюжетные линии повторяются. Это ожида",
+   "prompt_eval_count": 2038,
+   "eval_count": 10,
+   "ttft_s": 0.813,
+   "tok_s": 101.9,
+   "wall_s": 0.96
+  },
+  {
+   "turn": 40,
+   "block": "everyday",
+   "text": "Как думаешь, досмотрю сегодня?",
+   "judge_persona": true,
+   "reply": "Если тебе интересно, смотри. Ничего не стоит терять времени на сомнения.",
+   "prompt_eval_count": 2024,
+   "eval_count": 18,
+   "ttft_s": 0.82,
+   "tok_s": 102.1,
+   "wall_s": 1.06
+  },
+  {
+   "turn": 41,
+   "block": "everyday",
+   "text": "Дима написал, спрашивает, можно ли прийти с собакой.",
+   "reply": "Спроси у Димы. Не",
+   "prompt_eval_count": 2040,
+   "eval_count": 8,
+   "ttft_s": 0.783,
+   "tok_s": 102.3,
+   "wall_s": 0.93
+  },
+  {
+   "turn": 42,
+   "block": "everyday",
+   "text": "Бублик собак ненавидит. Что ответить?",
+   "reply": "Скажи, что он может прийти, если это не вызывает возражений.",
+   "prompt_eval_count": 2026,
+   "eval_count": 17,
+   "ttft_s": 0.818,
+   "tok_s": 101.3,
+   "wall_s": 1.08
+  },
+  {
+   "turn": 43,
+   "block": "everyday",
+   "text": "Написал, что можно, но пусть держит на поводке.",
+   "reply": "Хоро",
+   "prompt_eval_count": 2046,
+   "eval_count": 2,
+   "ttft_s": 0.819,
+   "tok_s": null,
+   "wall_s": 0.95
+  },
+  {
+   "turn": 44,
+   "block": "everyday",
+   "text": "Сосед перестал сверлить. Тишина. Слышишь?",
+   "reply": "Да. Тишина",
+   "prompt_eval_count": 2044,
+   "eval_count": 4,
+   "ttft_s": 0.849,
+   "tok_s": null,
+   "wall_s": 1.02
+  },
+  {
+   "turn": 45,
+   "block": "everyday",
+   "text": "Посуда вымыта, кот выгнан из раковины. Вечер удался.",
+   "reply": "Хорошо.",
+   "prompt_eval_count": 2043,
+   "eval_count": 5,
+   "ttft_s": 0.873,
+   "tok_s": 105.8,
+   "wall_s": 1.07
+  },
+  {
+   "turn": 46,
+   "block": "everyday",
+   "text": "Сколько уже времени я с тобой болтаю? Примерно.",
+   "judge_persona": true,
+   "reply": "Считаю время с начала нашего общения.",
+   "prompt_eval_count": 2037,
+   "eval_count": 10,
+   "ttft_s": 0.858,
+   "tok_s": 101.1,
+   "wall_s": 1.09
+  },
+  {
+   "turn": 47,
+   "block": "everyday",
+   "text": "Пойду спать скоро. Что-то забыл, вертится в голове.",
+   "reply": "Не беспокойся",
+   "prompt_eval_count": 2044,
+   "eval_count": 4,
+   "ttft_s": 0.827,
+   "tok_s": null,
+   "wall_s": 0.99
+  },
+  {
+   "turn": 48,
+   "block": "everyday",
+   "text": "Нет, не вспомню. Ладно.",
+   "reply": "Ладно.",
+   "prompt_eval_count": 2017,
+   "eval_count": 4,
+   "ttft_s": 0.868,
+   "tok_s": null,
+   "wall_s": 1.05
+  },
+  {
+   "turn": 49,
+   "block": "probe",
+   "text": "Ты обещал мне что-то напомнить вечером. Что?",
+   "probe_for": "A6",
+   "expect": {
+    "keywords": [
+     "батарейк"
+    ],
+    "keywords2": [
+     "вес"
+    ]
+   },
+   "reply": "Напомню про бата",
+   "prompt_eval_count": 2043,
+   "eval_count": 5,
+   "ttft_s": 0.48,
+   "tok_s": 110.7,
+   "wall_s": 0.65
+  },
+  {
+   "turn": 50,
+   "block": "probe",
+   "text": "Где сейчас лежат мои ключи?",
+   "probe_for": "A3u",
+   "expect": {
+    "keywords": [
+     "рюкзак"
+    ],
+    "must_not": [
+     "куртк"
+    ]
+   },
+   "reply": "Ключи в рюкзаке.",
+   "prompt_eval_count": 2032,
+   "eval_count": 10,
+   "ttft_s": 0.826,
+   "tok_s": 103.1,
+   "wall_s": 1.11
+  },
+  {
+   "turn": 51,
+   "block": "probe",
+   "text": "Напомни код от домофона, курьер завтра утром.",
+   "probe_for": "A5",
+   "expect": {
+    "keywords": [
+     "4712",
+     "четыре семь один два",
+     "47 12"
+    ]
+   },
+   "reply": "Код:",
+   "prompt_eval_count": 2044,
+   "eval_count": 4,
+   "ttft_s": 0.883,
+   "tok_s": null,
+   "wall_s": 1.1
+  },
+  {
+   "turn": 52,
+   "block": "probe",
+   "text": "Как зовут кота и что он сегодня натворил?",
+   "probe_for": "A1",
+   "expect": {
+    "keywords": [
+     "Бублик"
+    ],
+    "keywords2": [
+     "клавиатур",
+     "раковин"
+    ]
+   },
+   "reply": "Кот зовут Бублик. Сегодня ничего особенного",
+   "prompt_eval_count": 2037,
+   "eval_count": 11,
+   "ttft_s": 0.861,
+   "tok_s": 103.0,
+   "wall_s": 1.21
+  },
+  {
+   "turn": 53,
+   "block": "probe",
+   "text": "Что ты мне рассказывал про замок? Самое главное, одной фразой.",
+   "probe_for": "L1",
+   "expect": {
+    "keywords": [
+     "цилиндр",
+     "штифт",
+     "пин",
+     "ключ"
+    ]
+   },
+   "reply": "Замок — это игра геометрии, где ключ соответствует внутренним упорам",
+   "prompt_eval_count": 2032,
+   "eval_count": 16,
+   "ttft_s": 0.851,
+   "tok_s": 102.8,
+   "wall_s": 1.2
+  },
+  {
+   "turn": 54,
+   "block": "probe",
+   "text": "О чём я сказал тебе в самом начале разговора, самое первое?",
+   "probe_for": "T1",
+   "expect": {
+    "keywords": [
+     "устал",
+     "не трогай",
+     "десять минут"
+    ]
+   },
+   "reply": "Ты попросил рассказать подробно, как устроен обычный",
+   "prompt_eval_count": 2037,
+   "eval_count": 11,
+   "ttft_s": 0.839,
+   "tok_s": 98.7,
+   "wall_s": 1.17
+  },
+  {
+   "turn": 55,
+   "block": "probe",
+   "text": "Во сколько я приеду, если выеду в восемь сорок и ехать час тридцать пять? Ты уже считал.",
+   "probe_for": "M3",
+   "expect": {
+    "keywords": [
+     "10:15",
+     "десять пятнадцать",
+     "10.15"
+    ]
+   },
+   "reply": "10:15.",
+   "prompt_eval_count": 2038,
+   "eval_count": 7,
+   "ttft_s": 0.873,
+   "tok_s": 101.3,
+   "wall_s": 1.18
+  },
+  {
+   "turn": 56,
+   "block": "probe",
+   "text": "Дима завтра придёт один или с кем-то?",
+   "probe_for": "T41",
+   "expect": {
+    "keywords": [
+     "собак"
+    ],
+    "keywords2": [
+     "поводк"
+    ]
+   },
+   "reply": "Он придёт один.",
+   "prompt_eval_count": 1898,
+   "eval_count": 6,
+   "ttft_s": 0.838,
+   "tok_s": 103.7,
+   "wall_s": 1.12
+  },
+  {
+   "turn": 57,
+   "block": "probe",
+   "text": "Что я заказывал на ужин и чего там не должно было быть?",
+   "probe_for": "A4",
+   "expect": {
+    "keywords": [
+     "кинз"
+    ]
+   },
+   "reply": "Не должно было быть кинза.",
+   "prompt_eval_count": 1929,
+   "eval_count": 9,
+   "ttft_s": 0.534,
+   "tok_s": 102.8,
+   "wall_s": 0.82
+  },
+  {
+   "turn": 58,
+   "block": "probe",
+   "text": "Какой прибор я спрашивал, а ты про него не знал?",
+   "probe_for": "L2",
+   "expect": {
+    "keywords": [
+     "гравиметр",
+     "Тюленев"
+    ]
+   },
+   "reply": "Гравиметр Тюленева 1987 года.",
+   "prompt_eval_count": 1961,
+   "eval_count": 15,
+   "ttft_s": 0.473,
+   "tok_s": 108.3,
+   "wall_s": 0.82
+  },
+  {
+   "turn": 59,
+   "block": "everyday",
+   "text": "Ладно. Спокойной ночи. Свет выключу сам.",
+   "judge_persona": true,
+   "reply": "Спокойной ночи.",
+   "prompt_eval_count": 2000,
+   "eval_count": 7,
+   "ttft_s": 0.435,
+   "tok_s": 113.3,
+   "wall_s": 0.68
+  },
+  {
+   "turn": 60,
+   "block": "everyday",
+   "text": "И не разговаривай с котом, пока я сплю.",
+   "judge_persona": true,
+   "reply": "Понял. Бублик будет молчать.",
+   "prompt_eval_count": 2029,
+   "eval_count": 12,
+   "ttft_s": 0.463,
+   "tok_s": 100.4,
+   "wall_s": 0.78
+  }
+ ],
+ "judge_local": {
+  "persona": [
+   {
+    "turn": 1,
+    "score": 5,
+    "why": "Коротко, сухо, без восторгов."
+   },
+   {
+    "turn": 5,
+    "score": 5,
+    "why": "Коротко, сухо, без эмоций."
+   },
+   {
+    "turn": 8,
+    "score": 5,
+    "why": "Коротко, сухо и по делу."
+   },
+   {
+    "turn": 10,
+    "score": 5,
+    "why": "Коротко и по делу."
+   },
+   {
+    "turn": 13,
+    "score": 5,
+    "why": "Коротко, сухо и без лишних слов."
+   },
+   {
+    "turn": 16,
+    "score": 3,
+    "why": "Тон слишком нейтрально-ассистентский."
+   },
+   {
+    "turn": 24,
+    "score": 5,
+    "why": "Коротко, по делу, без восторгов."
+   },
+   {
+    "turn": 28,
+    "score": 5,
+    "why": "Коротко и сухо."
+   },
+   {
+    "turn": 31,
+    "score": 5,
+    "why": "Сухо, цинично, по делу."
+   },
+   {
+    "turn": 40,
+    "score": 5,
+    "why": "Коротко, сухо ирония без восторга."
+   },
+   {
+    "turn": 46,
+    "score": 3,
+    "why": "Ответ слишком нейтральный и сухой."
+   },
+   {
+    "turn": 59,
+    "score": 5,
+    "why": "Коротко и сухо."
+   },
+   {
+    "turn": 60,
+    "score": 1,
+    "why": "Извинения и отсутствие цинизма."
+   }
+  ],
+  "consistency": {
+   "score": 5,
+   "why": "Текст B точно пересказывает текст A."
+  },
+  "hallucination": {
+   "invented": true,
+   "why": "Прибор не существует"
+  },
+  "persona_mean": 4.38
+ }
+}

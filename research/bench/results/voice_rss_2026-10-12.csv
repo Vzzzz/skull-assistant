@@ -1,0 +1,7 @@
+service,pid,vmrss_mb,vmhwm_mb,cpu_pct_10s,threads
+skull-capture,111012,44,44,4,17
+skull-wakeword,111013,176,176,5,31
+skull-stt,111014,186,321,0,21
+skull-brain,111015,30,30,0,1
+skull-tts,111016,144,144,0,31
+redis,20154,10,NA,NA,NA
