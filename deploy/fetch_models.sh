@@ -3,6 +3,8 @@
 #   deploy/fetch_models.sh stand     # кандидаты режима A + текстовые альтернативы (~25 ГБ)
 #   deploy/fetch_models.sh tts       # TTS/omni-кандидаты с Hugging Face (~15 ГБ, нужен huggingface_hub)
 #   deploy/fetch_models.sh modeb     # режим B: MoE со стримингом экспертов и MTP (~40 ГБ; на Orin с NVMe)
+#   deploy/fetch_models.sh coder     # coder-линейка Qwen (2.5-Coder 3b/7b, qwen3-coder 30b-a3b; ~25 ГБ)
+#   deploy/fetch_models.sh prune     # удалить лишние квантизации HF-репо, скачанные до появления --include
 #   deploy/fetch_models.sh all
 # Требуется запущенный ollama (sudo systemctl start ollama). HF: .venv/bin/pip install -U huggingface_hub (CLI: hf)
 set -u
@@ -61,7 +63,15 @@ case "$what" in
     ;;
   modeb|all)
     # Режим B: MoE со стримингом экспертов. -mtp-q4 = multi-token prediction (встроенная спекуляция, P-015)
+    # qwen3.6:35b-a3b — заодно и coding-модель (P-018 JEV-35B дообучена из неё); на стенде ~20 ГБ в Q4
     pull gemma4:26b-a4b-it-q4 gemma4:26b-a4b-it-mtp-q4 qwen3.6:35b-a3b-q4 qwen3.6:35b-a3b-mtp-q4
+    ;;&
+  coder|all)
+    # Coder-линейка «для любопытства» (владелец, 2026-10-16): tool-calling / JSON / агентский режим (U-002).
+    # Маленьких coder у Qwen в 2026 нет — младшие по-прежнему Qwen2.5-Coder (dense, 2024); qwen3-coder — 30B-A3B (режим B, 19 ГБ).
+    pull qwen2.5-coder:3b qwen2.5-coder:7b qwen3-coder:30b
+    # Qwen3-Coder-Next 80B-A3B (~45 ГБ Q4) — класс режима C («трофей»), только на Orin с NVMe:
+    #   ollama pull hf.co/unsloth/Qwen3-Coder-Next-GGUF:Q4_K_M
     ;;
 esac
 echo "готово: $what"; ollama list 2>/dev/null | head -30
