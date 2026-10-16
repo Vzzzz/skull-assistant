@@ -65,7 +65,7 @@
 |---|---|---|---|---|---|---|---|
 | голый MoE | Gemma 4 26B-A4B | | | | | | |
 | голый MoE | Qwen3.6 35B-A3B (q4 / mtp-q4; coding-модель, база JEV-35B) | | | | | | |
-| coder (агентский режим, U-002) | qwen3-coder 30B-A3B | | | | | | |
+| coder (агентский режим, U-002) | qwen3.6 35B-A3B-coding (mtp); qwen3-coder 30B-A3B | | | | | | |
 | MoE + голос | | | | | | | |
 | MoE + голос + YOLO | | | | | | | |
 | B-lite | Qwen3.5-9B Q4 | | | | | | |

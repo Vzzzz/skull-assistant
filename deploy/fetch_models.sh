@@ -11,7 +11,19 @@ set -u
 HF_DIR="${HF_DIR:-$(cd "$(dirname "$0")/.." && pwd)/models/hf}"
 what="${1:-stand}"
 
-pull() { for m in "$@"; do echo "=== ollama pull $m"; ollama pull "$m" 2>&1 | tr '\r' '\n' | grep -vE '^pulling [0-9a-f]+.*%|^$' | tail -2; done; }
+# ollama pull resumes a partial download, so on a flaky connection we just retry (2026-10-17: 26b-a4b took
+# several attempts by hand). PULL_TRIES=0 disables retries.
+PULL_TRIES="${PULL_TRIES:-6}"
+pull() {
+  for m in "$@"; do
+    echo "=== ollama pull $m"
+    n=0
+    until ollama pull "$m" 2>&1 | tr '\r' '\n' | grep -vE '^pulling [0-9a-f]+.*%|^$' | tail -2; test "${PIPESTATUS[0]}" -eq 0; do
+      n=$((n+1)); [ "$n" -ge "$PULL_TRIES" ] && { echo "!!! $m: giving up after $n tries"; break; }
+      echo "... retry $n/$PULL_TRIES in 15s"; sleep 15
+    done
+  done
+}
 # CLI Hugging Face: в huggingface_hub >= 1.0 команда называется hf (huggingface-cli устарел); у нас она в .venv/bin
 REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 if [ -x "$REPO_DIR/.venv/bin/hf" ]; then HF_CLI="$REPO_DIR/.venv/bin/hf"
@@ -62,14 +74,16 @@ case "$what" in
     du -sh Qwen3-TTS-GGUF MiniCPM-o-4_5-gguf
     ;;
   modeb|all)
-    # Режим B: MoE со стримингом экспертов. -mtp-q4 = multi-token prediction (встроенная спекуляция, P-015)
-    # qwen3.6:35b-a3b — заодно и coding-модель (P-018 JEV-35B дообучена из неё); на стенде ~20 ГБ в Q4
-    pull gemma4:26b-a4b-it-q4 gemma4:26b-a4b-it-mtp-q4 qwen3.6:35b-a3b-q4 qwen3.6:35b-a3b-mtp-q4
+    # Режим B: MoE со стримингом экспертов. -mtp- = multi-token prediction (встроенная спекуляция, P-015).
+    # Точные теги библиотеки (проверено 2026-10-17): суффикс q4_K_M, сокращённых "-q4" не существует.
+    # gemma4 26b-a4b: 17 ГБ модель + 1.2 ГБ проектор + 0.5 ГБ draft; qwen3.6 35b-a3b: ~20–23 ГБ.
+    pull gemma4:26b-a4b-it-q4_K_M gemma4:26b-a4b-it-mtp-q4_K_M qwen3.6:35b-a3b-q4_K_M qwen3.6:35b-a3b-mtp-q4_K_M
     ;;&
   coder|all)
     # Coder-линейка «для любопытства» (владелец, 2026-10-16): tool-calling / JSON / агентский режим (U-002).
-    # Маленьких coder у Qwen в 2026 нет (младшие — Qwen2.5-Coder 2024, старое поколение не берём); qwen3-coder — 30B-A3B (режим B, 19 ГБ).
-    pull qwen3-coder:30b
+    # Маленьких coder у Qwen в 2026 нет (младшие — Qwen2.5-Coder 2024, старое поколение не берём).
+    # qwen3.6 coding-вариант той же 35b-a3b (с MTP) и qwen3-coder 30b-a3b — оба класс режима B, ~20 ГБ каждый.
+    pull qwen3.6:35b-a3b-coding-mtp-q4_K_M qwen3-coder:30b
     # Qwen3-Coder-Next 80B-A3B (~45 ГБ Q4) — класс режима C («трофей»), только на Orin с NVMe:
     #   ollama pull hf.co/unsloth/Qwen3-Coder-Next-GGUF:Q4_K_M
     ;;
