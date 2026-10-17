@@ -268,7 +268,11 @@ Done: три головы, FR ≤ 10 %, FA ≤ 1/час на стендовом 
 Файлы: `deploy/fetch_models.sh` (добавить режим `clean` рядом с `prune`), `models/README.md`.
 Шаги:
 1. `ollama list` и `du -sh models/hf/*` → таблица «что есть, размер» в отчёт (до).
-2. Оставить: ollama — короткий список режима A по D-018 (`gemma4:e4b-it-qat`, `gemma4:e2b-it-qat`), `gemma3:4b` (текущий прод, пока T-016 не переключил), судья `qwen3.5:9b`, модели режима B/coder (`gemma4:26b-a4b-*`, `qwen3.6:35b-a3b-*`, `qwen3-coder:30b`) — если M8b ещё впереди; HF — только то, что перечислено в секции `tts` после `hf_inc` + emotion2vec. Всё остальное (`gemma4:e2b`, `gemma4:e4b`, `qwen3.5:4b`, текстовые альтернативы, MiniCPM5, вайлдкарды, не прошедшие) — `ollama rm`. Если исследователь к моменту старта обновил список в карточке — брать его.
+2. Список от исследователя (2026-10-17, после D-018/D-019 — окончательный для режима A):
+   - **Оставить (ollama)**: `gemma4:e4b-it-qat`, `gemma4:e2b-it-qat` (короткий список A); `gemma3:4b` (прод, пока T-016 не переключил); `qwen3.5:9b` (судья-fallback); `qwen3.5:4b` (эталон скорости в bench — до bench QAT-вариантов, потом удалить); `ministral-3:8b` (единственный возможный B-lite, до M8b); режим B и coder — `gemma4:26b-a4b-it-*`, `qwen3.6:35b-a3b-*`, `qwen3-coder:30b`; minicpm-v4.6 и Nanbeige — по итогам их прогона (T-018).
+   - **Удалить (ollama)**: `gemma4:e2b`, `gemma4:e4b` (base — QAT лучше по персоне), `ministral-3:3b`, `phi4-mini:3.8b`, `smollm2:1.7b`, `hf.co/openbmb/MiniCPM5-2B-GGUF:Q4_K_M`.
+   - **HF**: оставить только то, что перечислено в секции `tts` после `hf_inc` + emotion2vec (после `prune` так и есть); `openaudio-s1-mini` — пустая папка (gated), удалить.
+   Если к моменту старта в карточке обновлённый список — брать его.
 3. Режим `clean` в `fetch_models.sh`: `ollama rm` по списку «удалить», `rm -rf` лишних папок `models/hf`; список «оставить» — массив в начале скрипта с комментарием-датой, чтобы следующий раз правился в одном месте.
 4. `models/README.md`: таблица актуальных моделей с датой отбора и ссылкой на D-NNN.
 Проверка: `ollama list` и `du -sh models/hf` после; `skull.target` поднимается, brain отвечает на `redis-cli xadd events:transcript '*' text "привет"`.
