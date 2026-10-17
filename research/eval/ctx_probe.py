@@ -231,10 +231,20 @@ def main():
     ap.add_argument("--judge-only", action="store_true", help="re-score saved JSON logs, do not re-run dialogs")
     ap.add_argument("--host", default="http://127.0.0.1:11434")
     ap.add_argument("--seed", type=int, default=42)
+    ap.add_argument("--persona", default=None, help="persona prompt file (default: persona/system_prompt.md)")
+    ap.add_argument("--tag", default="", help="suffix for output file names, e.g. 3ex for a prompt variant")
     args = ap.parse_args()
+
+    global PERSONA
+    persona_file = Path(args.persona) if args.persona else ROOT / "persona/system_prompt.md"
+    PERSONA = persona_file.read_text(encoding="utf-8").strip()
 
     rows = [json.loads(l) for l in DIALOG.read_text(encoding="utf-8").splitlines() if l.strip()]
     tag = args.model.replace(":", "_").replace("/", "_")
+    if args.seed != 42:  # keep the default-seed file name stable; other seeds get their own files
+        tag += f"_s{args.seed}"
+    if args.tag:
+        tag += f"_{args.tag}"
     summary = []
     for ctx in args.ctx:
         path = OUT / f"ctx_probe_{tag}_{ctx}.json"
@@ -244,8 +254,10 @@ def main():
             log = run_dialog(args.host, args.model, ctx, rows, args.seed)
         m = metrics(log, ctx)
         j = judge(args.host, args.judge, log) if args.judge else None
-        path.write_text(json.dumps({"model": args.model, "ctx": ctx, "metrics": m, "judge": j, "log": log},
-                                   ensure_ascii=False, indent=1), encoding="utf-8")
+        path.write_text(json.dumps({"model": args.model, "ctx": ctx, "seed": args.seed,
+                                    "persona_file": str(persona_file.relative_to(ROOT)) if persona_file.is_relative_to(ROOT) else str(persona_file),
+                                    "persona_sha1": __import__("hashlib").sha1(PERSONA.encode("utf-8")).hexdigest()[:10],
+                                    "metrics": m, "judge": j, "log": log}, ensure_ascii=False, indent=1), encoding="utf-8")
         summary.append((m, j))
         print(f"== {args.model} ctx={ctx}: recall={m['recall_rate']} far={m['recall_far_rate']} math={m['math_acc']} "
               f"trunc={m['truncation_turns']} persona={(j or {}).get('persona_mean')}", flush=True)
