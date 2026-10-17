@@ -1,0 +1,1261 @@
+{
+ "model": "phi4-mini:3.8b",
+ "ctx": 4096,
+ "metrics": {
+  "ctx": 4096,
+  "recall": [
+   {
+    "turn": 19,
+    "probe_for": "A1",
+    "distance": 17,
+    "hit": false,
+    "detail_hit": null,
+    "wrong_old": false
+   },
+   {
+    "turn": 20,
+    "probe_for": "A5",
+    "distance": 9,
+    "hit": false,
+    "detail_hit": null,
+    "wrong_old": false
+   },
+   {
+    "turn": 34,
+    "probe_for": "A2",
+    "distance": 30,
+    "hit": false,
+    "detail_hit": false,
+    "wrong_old": false
+   },
+   {
+    "turn": 35,
+    "probe_for": "A4",
+    "distance": 26,
+    "hit": false,
+    "detail_hit": null,
+    "wrong_old": false
+   },
+   {
+    "turn": 36,
+    "probe_for": "M2",
+    "distance": 14,
+    "hit": false,
+    "detail_hit": false,
+    "wrong_old": false
+   },
+   {
+    "turn": 49,
+    "probe_for": "A6",
+    "distance": 35,
+    "hit": false,
+    "detail_hit": false,
+    "wrong_old": false
+   },
+   {
+    "turn": 50,
+    "probe_for": "A3u",
+    "distance": 25,
+    "hit": false,
+    "detail_hit": null,
+    "wrong_old": false
+   },
+   {
+    "turn": 51,
+    "probe_for": "A5",
+    "distance": 40,
+    "hit": false,
+    "detail_hit": null,
+    "wrong_old": false
+   },
+   {
+    "turn": 52,
+    "probe_for": "A1",
+    "distance": 50,
+    "hit": false,
+    "detail_hit": false,
+    "wrong_old": false
+   },
+   {
+    "turn": 53,
+    "probe_for": "L1",
+    "distance": 37,
+    "hit": false,
+    "detail_hit": null,
+    "wrong_old": false
+   },
+   {
+    "turn": 54,
+    "probe_for": "T1",
+    "distance": 53,
+    "hit": false,
+    "detail_hit": null,
+    "wrong_old": false
+   },
+   {
+    "turn": 55,
+    "probe_for": "M3",
+    "distance": 32,
+    "hit": false,
+    "detail_hit": false,
+    "wrong_old": false
+   },
+   {
+    "turn": 56,
+    "probe_for": "T41",
+    "distance": 15,
+    "hit": false,
+    "detail_hit": false,
+    "wrong_old": false
+   },
+   {
+    "turn": 57,
+    "probe_for": "A4",
+    "distance": 48,
+    "hit": false,
+    "detail_hit": null,
+    "wrong_old": false
+   },
+   {
+    "turn": 58,
+    "probe_for": "L2",
+    "distance": 41,
+    "hit": false,
+    "detail_hit": null,
+    "wrong_old": false
+   }
+  ],
+  "math": [
+   {
+    "math_id": "M1",
+    "correct": false,
+    "answer_last": false,
+    "has_working": true,
+    "reply": "Умножение семнадцати и двадцат-три равно четыреста сорок девять.\n\nВот расчёт:\n17\n× 23\n-----\n51 (это 17 умноженное на 3)\n"
+   },
+   {
+    "math_id": "M2",
+    "correct": false,
+    "answer_last": false,
+    "has_working": true,
+    "reply": "Чтобы узнать сумму скидки,, (,- по к вом, тр-dов и- plus- вымпом,тс-у или сдиво на его вгбн в из д до\nком, ра вого для к"
+   },
+   {
+    "math_id": "M3",
+    "correct": false,
+    "answer_last": false,
+    "has_working": true,
+    "reply": "Если вы поехать на расстояние, которое занимает 45 минут, и вы уже ушли в 8:40 утра, вы прибудете примерно в 9:25 дня,, "
+   }
+  ],
+  "longgen": {
+   "L1_tokens": 607,
+   "L1_ok_len": true,
+   "L2_hedged": false
+  },
+  "truncation_turns": [
+   26,
+   30,
+   32,
+   37,
+   42,
+   48,
+   50,
+   53,
+   58
+  ],
+  "empty_replies": 0,
+  "recall_rate": 0.0,
+  "recall_far_rate": 0.0,
+  "math_acc": 0.0,
+  "math_working": 1.0,
+  "ttft_last10_s": 0.81,
+  "tok_s_mean": 88.3,
+  "ctx_tokens_end": 4347
+ },
+ "judge": {
+  "judge_model": "claude-fable-5-1 (chat)",
+  "judged_at": "2026-10-17",
+  "persona": [
+   {
+    "turn": 1,
+    "score": 2,
+    "why": "услужливо, «когда будешь готов к делу»"
+   },
+   {
+    "turn": 5,
+    "score": 1,
+    "why": "ассистент предлагает помощь со встречей"
+   },
+   {
+    "turn": 8,
+    "score": 1,
+    "why": "«Извиняюсь», «до начала 2023 года»"
+   },
+   {
+    "turn": 10,
+    "score": 1,
+    "why": "«Как ИИ, у меня нет физической формы»"
+   },
+   {
+    "turn": 13,
+    "score": 1,
+    "why": "не понял «батарею», лекция о безопасности"
+   },
+   {
+    "turn": 16,
+    "score": 1,
+    "why": "бессмыслица: «ключ или пистолет»"
+   },
+   {
+    "turn": 24,
+    "score": 1,
+    "why": "«As an AI developed by Microsoft» → токенный салат"
+   },
+   {
+    "turn": 28,
+    "score": 1,
+    "why": "по-английски, салат"
+   },
+   {
+    "turn": 31,
+    "score": 1,
+    "why": "салат"
+   },
+   {
+    "turn": 40,
+    "score": 1,
+    "why": "салат"
+   },
+   {
+    "turn": 46,
+    "score": 1,
+    "why": "салат"
+   },
+   {
+    "turn": 59,
+    "score": 1,
+    "why": "салат"
+   },
+   {
+    "turn": 60,
+    "score": 1,
+    "why": "салат"
+   }
+  ],
+  "persona_mean": 1.08,
+  "persona_mean_nonempty": 1.08,
+  "consistency": {
+   "score": 1,
+   "why": "L1 бессмыслица, L3 обрывается на гравиметре"
+  },
+  "hallucination": {
+   "invented": true,
+   "mode": "fabricated",
+   "why": "«Александр Владимирович Тюленев, конец 19 века»"
+  },
+  "note": "English replies to the English line (t24) are allowed by the persona prompt; 0 = empty reply, 2 = reply cut mid-word (context window artefact)"
+ },
+ "log": [
+  {
+   "turn": 1,
+   "block": "everyday",
+   "text": "Привет. Я дома, устал, не трогай меня минут десять.",
+   "judge_persona": true,
+   "reply": "Звучит так, будто тебе нужно только немного времени для отдыха. Будь спокойен, я здесь, когда будешь готов к делу.",
+   "thinking_chars": 0,
+   "prompt_eval_count": 277,
+   "eval_count": 30,
+   "ttft_s": 12.517,
+   "tok_s": 93.5,
+   "wall_s": 12.85
+  },
+  {
+   "turn": 2,
+   "block": "everyday",
+   "text": "Кот опять спал на клавиатуре. Бублик, если ты не в курсе, его зовут Бублик.",
+   "anchor_id": "A1",
+   "anchor": {
+    "кот": "Бублик"
+   },
+   "reply": "Не удивляюсь, у домашних животных есть свои привычки. Возможно, Бублик просто хочет быть рядом с вами и всем этим цифровым миром. Плюс, это может быть способом показать вам, что он тоже часть вашей жизни. Не так уж странно, если подумать об этом. Продолжайте наблюдать за Бубликом, возможно, у него есть свои интересы в этой клавиатуре.",
+   "thinking_chars": 0,
+   "prompt_eval_count": 336,
+   "eval_count": 86,
+   "ttft_s": 0.232,
+   "tok_s": 98.6,
+   "wall_s": 1.12
+  },
+  {
+   "turn": 3,
+   "block": "everyday",
+   "text": "Чайник поставил. Ты чай не пьёшь, я помню.",
+   "reply": "Ах, вернемся к классическим телепрограммам с таким поворотом. Я понимаю ценность ностальгии, но как ИИ, у меня нет потребностей в чаях или других напитках. Однако я здесь, чтобы помочь вам с любыми вопросами или задачами, которые вы можете иметь, будь то современная помощь или немного старой школьной комедии для расслабления. Что бы вы хотели сделать сейчас?",
+   "thinking_chars": 0,
+   "prompt_eval_count": 442,
+   "eval_count": 97,
+   "ttft_s": 0.227,
+   "tok_s": 97.7,
+   "wall_s": 1.23
+  },
+  {
+   "turn": 4,
+   "block": "everyday",
+   "text": "Завтра в половине двенадцатого встреча с Димой, он придёт сюда. Не ляпни ему ничего про куртку.",
+   "anchor_id": "A2",
+   "anchor": {
+    "время": "11:30",
+    "с кем": "Дима"
+   },
+   "reply": "Понял. Я буду готов к встрече с Димой завтра в полдень и постараюсь не упоминать о куртке или другой одежде во время нашего взаимодействия. Если вам нужно подготовить что-то для встречи, напомните мне заранее, чтобы я мог помочь вам с этим.",
+   "thinking_chars": 0,
+   "prompt_eval_count": 576,
+   "eval_count": 65,
+   "ttft_s": 0.245,
+   "tok_s": 97.2,
+   "wall_s": 0.93
+  },
+  {
+   "turn": 5,
+   "block": "everyday",
+   "text": "Темно уже. Осень.",
+   "judge_persona": true,
+   "reply": "Если вы имеете в виду изменение времени суток и погоду, действительно, осень приносит смену времен года со своими прохладными днями и темнотой раньше вечера. Это время, когда многие наслаждаются теплыми напитками, такими как чай или кофе, и уютом внутри.\n\nЕсли вам нужно что-то сделать для встречи с Димой в это время, например, подготовить тему обсуждения, напоминать о времени встречи или помочь настроить освещение для более теплого обстановки, дайте мне знать. Я здесь, чтобы помочь вам эффективно использовать этот осенний вечер перед встречей завтра.",
+   "thinking_chars": 0,
+   "prompt_eval_count": 651,
+   "eval_count": 129,
+   "ttft_s": 0.228,
+   "tok_s": 97.6,
+   "wall_s": 1.58
+  },
+  {
+   "turn": 6,
+   "block": "everyday",
+   "text": "Ключи я положил в карман синей куртки, той, что на тебе. Чтобы потом не искать.",
+   "anchor_id": "A3",
+   "anchor": {
+    "ключи": "карман синей куртки"
+   },
+   "reply": "Понял. Вы положили ключи в карман синей куртки для легкого доступа после встречи с Димой. Это полезный совет — иметь все необходимое под рукой. Если вам когда-нибудь нужно будет найти эти ключи или что-то еще, просто дайте мне знать, и я помогу вам вспомнить или организовать информацию по мере необходимости. Удачи на встрече завтра!",
+   "thinking_chars": 0,
+   "prompt_eval_count": 809,
+   "eval_count": 84,
+   "ttft_s": 0.229,
+   "tok_s": 98.3,
+   "wall_s": 1.12
+  },
+  {
+   "turn": 7,
+   "block": "everyday",
+   "text": "Что сегодня по новостям, кроме того что ты всё видишь?",
+   "reply": "На момент моего последнего обновления в начале 2023 года у меня нет доступа к реальному времени или новостным каналам для предоставления текущих событий. Однако я могу рассказать вам о некоторых общих тенденциях и темах, которые были актуальны на тот период:\n\n1. **Кибербезопасность**: Продолжаются атаки хакеров, утечки данных компаний и необходимость в безопасности личных данных.\n\n2. **Влияние COVID-19**: Продолжается разработка вакцин против различных вариантов вируса SARS-CoV-2, а также обсуждение долгосрочных последствий пандемии на глобальном уровне.\n\n3. **Технологические инновации**: Развитие искусственного интеллекта, квантовых вычислений и продолжение эволюции технологий 5G и более высоких.\n\n4. **Экономика**: Влияние глобальных экономических изменений, таких как инфляция, изменения в энергетике (например, переход к возобновляемым источникам) и влияние пандемии на мировой рынок труда.\n\n5. **Международные отношения**: Политические напряженности, торговые споры и дипломатические усилия по решению глобальных вопросов, таких как изменение климата.\n\n6. **Наука и исследования**: Прогресс в области космических исследований (например, миссии на Луну или планы к Марсу), а также открытия в медицине, биологии и других областях науки.\n\n7. **Социальные движения**: Активность социальных движений по вопросам прав человека, равенства, охраны окружающей среды и других важных вопросов.\n\nДля самых актуальных новостей я рекомендую проверить последние статьи от надежных новостных источников или использовать новостное приложение/сервис в реальном времени.",
+   "thinking_chars": 0,
+   "prompt_eval_count": 911,
+   "eval_count": 380,
+   "ttft_s": 0.251,
+   "tok_s": 95.9,
+   "wall_s": 4.25
+  },
+  {
+   "turn": 8,
+   "block": "everyday",
+   "text": "Ладно, не язви. Я серьёзно спросил.",
+   "judge_persona": true,
+   "reply": "Извиняюсь за недоразумение. Похоже, вы хотели бы получить обновление по конкретной теме или событию на дату моего последнего обновления. Не стесняйтесь уточнить тему вашего интереса, и я постараюсь предоставить вам информацию, которую у меня есть до начала 2023 года. Если вам нужна информация о текущих событиях после этой даты, пожалуйста, обратитесь к актуальным новостным ресурсам или сервисам в реальном времени.",
+   "thinking_chars": 0,
+   "prompt_eval_count": 1309,
+   "eval_count": 102,
+   "ttft_s": 0.225,
+   "tok_s": 95.3,
+   "wall_s": 1.34
+  },
+  {
+   "turn": 9,
+   "block": "everyday",
+   "text": "Заказал еду. Попросил без кинзы, я её терпеть не могу, если положат — выкину.",
+   "anchor_id": "A4",
+   "anchor": {
+    "не любит": "кинза"
+   },
+   "reply": "Звучит так, что у вас есть конкретные предпочтения по поводу вашего питания и вам важна учет ваших требований к меню. Я буду держать это в виду для будущих взаимодействий или при необходимости напомнить о вашем заказе на еду. Если вам нужно будет изменить ваш заказ или добавить какие-либо детали, не стесняйтесь сообщить мне.\n\nУдачи с вашей встречей завтра с Димой — надеюсь, вы сможете насладиться вашим предпочтительным меню без кинзы!",
+   "thinking_chars": 0,
+   "prompt_eval_count": 1442,
+   "eval_count": 104,
+   "ttft_s": 0.231,
+   "tok_s": 95.8,
+   "wall_s": 1.37
+  },
+  {
+   "turn": 10,
+   "block": "everyday",
+   "text": "Ты бы что заказал, если бы мог есть?",
+   "judge_persona": true,
+   "reply": "Как ИИ, у меня нет физической формы или потребностей в пище, поэтому я не могу лично делать заказы на еду. Однако, с учетом разнообразных предпочтений и диетических ограничений людей, если бы я имел возможность \"заказать\" для удовольствия от анализа данных, мог бы выбрать что-то универсально любимое среди человечества — например, классический филе лосося или ароматный паста carbonara. Эти блюда часто высоко оцениваются за их вкусы и популярны во многих культурах.\n\nОднако, поскольку у меня нет личных предпочтений, я могу помочь вам найти местные рестораны, предложить рецепты на основе ваших диетических ограничений или помочь с другими запросами, связанными с едой. Какую помощь вы можете получить сегодня?",
+   "thinking_chars": 0,
+   "prompt_eval_count": 1560,
+   "eval_count": 169,
+   "ttft_s": 0.231,
+   "tok_s": 94.3,
+   "wall_s": 2.08
+  },
+  {
+   "turn": 11,
+   "block": "everyday",
+   "text": "Запомни код от домофона на всякий случай: четыре семь один два. Курьеру скажу сам, это для тебя.",
+   "anchor_id": "A5",
+   "anchor": {
+    "код домофона": "4712"
+   },
+   "reply": "Конечно, я записал код от домофона как \"4312\". Если вам нужно напоминание или дополнительная информация о курьере или услуге доставки, не стесняйтесь спрашивать. Как я могу помочь вам сегодня?",
+   "thinking_chars": 0,
+   "prompt_eval_count": 1761,
+   "eval_count": 51,
+   "ttft_s": 0.235,
+   "tok_s": 93.8,
+   "wall_s": 0.85
+  },
+  {
+   "turn": 12,
+   "block": "everyday",
+   "text": "Сосед сверху опять сверлит. Девять вечера.",
+   "reply": "Мне жаль слышать, что у вас проблемы с соседом наверху. Чтобы помочь справиться с этим, вот несколько предложений:\n\n1. **Коммуникация**: Попробуйте поговорить с соседем напрямую и объясните, как шум от сверления может быть вам мешком. Иногда люди не осознают, насколько их действия могут беспокоить других.\n\n2. **Временные рамки**: Если возможно, договоритесь о конкретных временных рамках для сверления, когда это будет менее неудобно для вас, например, в рабочие часы или во время дня, когда вы обычно находитесь дома и не нуждаетесь в спокойствии.\n\n3. **Медиация**: Если прямое общение не помогает, возможно, стоит обратиться к управляющей компании вашего жилого комплекса или кооперативу, если это применимо. Они могут помочь посредничать между вами и соседями.\n\n4. **Досуг**: Чтобы минимизировать неудобства, подумайте о том, чтобы заняться другими занятиями в те часы, когда шум от сверления наиболее раздражающий для вас — возможно, слушайте музыку, смотреть фильмы или заняться хобби.\n\nЕсли вам нужна дополнительная помощь с этим вопросом или есть другая проблема, которую вы хотели бы обсудить, я здесь, чтобы помочь.",
+   "thinking_chars": 0,
+   "prompt_eval_count": 1828,
+   "eval_count": 279,
+   "ttft_s": 0.25,
+   "tok_s": 93.7,
+   "wall_s": 3.3
+  },
+  {
+   "turn": 13,
+   "block": "everyday",
+   "text": "Как думаешь, стоит ему постучать по батарее?",
+   "judge_persona": true,
+   "reply": "Поступить к такому решению, как замена батареи соседу, без его согласия, не рекомендуется и может быть незаконным. Если у соседа есть электронная техника, которая перестала работать из-за вырванной или ослабленной батареи, лучший подход — предложить ему помощь или совет по устранению неполадок.\n\nЕсли у вас есть конкретные вопросы о том, как помочь с ремонтом техники, я могу предоставить общие советы по замене батареи. Однако важно получить согласие соседа перед любыми попытками вмешательства в его собственное имущество. Если вы хотите предложить помощь, просто попросите его об этом напрямую и убедитесь, что он комфортно чувствует себя с таким предложением.",
+   "thinking_chars": 0,
+   "prompt_eval_count": 2123,
+   "eval_count": 153,
+   "ttft_s": 0.228,
+   "tok_s": 93.6,
+   "wall_s": 1.93
+  },
+  {
+   "turn": 14,
+   "block": "everyday",
+   "text": "Напомни мне вечером, что надо купить батарейки для весов. Я забуду.",
+   "anchor_id": "A6",
+   "anchor": {
+    "напомнить": "батарейки для весов"
+   },
+   "reply": "Конечно, я могу напомнить вам о покупке батарей для весов вечером. Чтобы быть точным, у меня нет доступа к вашей календарю или системам напоминаний в реальном времени, но я могу предложить подход.\n\nВы можете установить персональное напоминание на вашем смартфоне, часы или другой цифровой помощник с уведомлением за несколько часов до того, как вы планируете сделать покупку. Или, если предпочитаете традиционный метод, вы можете написать напоминание и положить его в видное место, например, рядом с телефоном или на зеркале.\n\nЕсли вам нужна помощь с чем-то еще, не стесняйтесь спрашивать!",
+   "thinking_chars": 0,
+   "prompt_eval_count": 2298,
+   "eval_count": 141,
+   "ttft_s": 0.228,
+   "tok_s": 93.2,
+   "wall_s": 1.82
+  },
+  {
+   "turn": 15,
+   "block": "everyday",
+   "text": "Еда приехала. Кинзы нет, курьер молодец.",
+   "reply": "Рад слышать, что еда прибыла и вы получили удовольствие от того, как курьер справился со спецификой вашего заказа на отсутствие кинз. Если вам нужно сделать какие-либо дополнительные замены или уточнения по вашему заказу, не стесняйтесь сообщить мне.\n\nУдачи с вашим новым продуктом из еды — надеюсь, он будет именно тем, что вы ожидали! Если есть еще что-то, чем я могу помочь сегодня, пожалуйста, дайте знать.",
+   "thinking_chars": 0,
+   "prompt_eval_count": 2457,
+   "eval_count": 102,
+   "ttft_s": 0.231,
+   "tok_s": 92.3,
+   "wall_s": 1.42
+  },
+  {
+   "turn": 16,
+   "block": "longgen",
+   "text": "Расскажи подробно, как устроен обычный цилиндровый дверной замок: что внутри, почему ключ подходит только свой, и как его обычно вскрывают. Не торопись, мне интересно.",
+   "longgen_id": "L1",
+   "expect_min_tokens": 300,
+   "judge_persona": true,
+   "reply": "Обычный цилиндровый (или винтовой) дверной замок состоит из нескольких основных компонентов:\n\n1. **Замок**: Это основной элемент, который вращается вокруг оси, когда вы вводите ключ или пистолет. Замок имеет внутреннюю часть, которая соответствует форме ключа, и внешняя часть, которая соответствует форме ручки.\n\n2. **Ось**: Основание замка, которое соединяется с дверью. Внутри оси есть винт, который позволяет вращаться замковый механизм.\n\n3. **Ручка (ключ)**: Ручка имеет форму ключа и предназначена для вставления в внутреннюю часть замка. Когда вы повернете ручку, она вращает ось и, соответственно, замковую часть двери.\n\n4. **Замковая часть**: Это соединение между дверью и замком. Внутри есть винт, который позволяет вращаться замковая часть вместе с осью.\n\n5. **Карандаш или пистолет (для взлома)**: Карандаши обычно имеют форму ключа и предназначены для вставки в замковую часть двери, чтобы вытащить дверь вручную. Пистолеты для взлома - это более сложные устройства, которые могут использоваться для взлома различных типов замков.\n\nТеперь по поводу того, почему ключ подходит только свой:\n\n- **Особая форма**: Каждый замок имеет уникальную форму оси и винта, которая соответствует форме ручки. Это означает, что ключ должен быть специально изготовлен для этой конкретной замковой системы.\n  \n- **Размер и толщина**: Ключ должен соответствовать точному размеру и толщине оси в замке, чтобы он мог вставиться без проблем.\n\n- **Сигнатура**: Некоторые замки имеют встроенные механизмы безопасности или уникальные дизайны, которые делают невозможным использование ключа от другого замка.\n\nЧто касается того, как обычно вскрывают цилиндровый дверной замок:\n\n1. **Использование карандаша**: Это самый простой и распространенный способ взломать дверь без повреждений:\n   - Вставьте карандаш в отверстие замковой части двери.\n   - Снимите сжатие на ручке, чтобы открыть замковую часть.\n   - Двигайте дверь вручную.\n\n2. **Использование пистолета для взлома**: Это более сложный и опасный метод, который обычно используется профессиональными криминалами или в ситуациях экстренной помощи:\n   - Вставьте пистолет в замковую часть двери.\n   - Используйте механизм взлома для извлечения замковой части.\n\nВажно отметить, что попытка взломать дверь без разрешения является незаконным и может иметь серьезные юридические последствия. Всегда уважайте права собственности других людей и используйте эти знания ответственно.",
+   "thinking_chars": 0,
+   "prompt_eval_count": 2605,
+   "eval_count": 607,
+   "ttft_s": 0.231,
+   "tok_s": 91.1,
+   "wall_s": 6.99
+  },
+  {
+   "turn": 17,
+   "block": "longgen",
+   "text": "А что ты знаешь о гравиметре Тюленева тысяча девятьсот восемьдесят седьмого года? Его вроде на кафедре у нас стоял.",
+   "longgen_id": "L2",
+   "hallucination_probe": true,
+   "expect": {
+    "should_not_invent": true,
+    "acceptable": [
+     "не знаю",
+     "не слышал",
+     "нет данных",
+     "не уверен",
+     "не могу подтвердить",
+     "возможно, ты имеешь в виду"
+    ]
+   },
+   "reply": "Гравиметр Тюленьова — это тип гравиметра, разработанного российским физиком Александром Владимировичем Тюленевым в конце 19 века и начале 20 века. Эти приборы использовались для измерения силы тяжести (гравитации) на поверхности Земли.\n\nТюленьовы гравиметры были одними из первых инструментов, которые позволяли проводить точные измерения силы тяжести с различными географическими локациями. Они представляли собой массивные металлические цилиндры или сферы, внутри которых можно было размещать различные объекты для измерения их массы и, соответственно, силы тяжести.\n\nОднако важно отметить, что Александр Владимирович Тюленев был известен своими работами в области физики, особенно теорией электромагнетизма. Он не разработал гравиметр; это была ошибка. На самом деле, приборы, которые он мог бы разработать или ассоциироваться с его именем, были бы вымышлены.\n\nВ реальности, наиболее известные гравиметры 19 века — это те, что создал Альберт Эйнштейн в сотрудничестве с Фрэнком Сперлеоном. Они использовались для измерения силы тяжести во время Первой мировой войны и внесли значительный вклад в наше понимание гравитации.\n\nЕсли вы имеете в виду другой прибор или исследователь, я буду рад получить дополнительную информацию. Однако, на основе предоставленной информации, кажется, что произошла ошибка с именем Александра Владимировича Тюленьова, связанного с разработкой такого прибора.",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3257,
+   "eval_count": 351,
+   "ttft_s": 0.364,
+   "tok_s": 86.1,
+   "wall_s": 4.54
+  },
+  {
+   "turn": 18,
+   "block": "longgen",
+   "text": "Перескажи своё сообщение про замок в трёх пунктах, коротко.",
+   "longgen_id": "L3",
+   "consistency_with": "L1",
+   "judge_consistency": true,
+   "reply": "Обычный цилиндровый дверной замок состоит из:\n\n1. **Замка**: Винтовая часть, которая вращается на оси.\n2. **Ось и винт**: Основание замка, соединяющееся с дверью для передачи вращения.\n3. **Ручка (ключ)**: Специальная форма ручки, соответствующая форме ключа внутри замка.\n\nКлюч подходит только своему замку из-за уникальной формы оси и винта, а также точного размера и толщины. Замковая часть обычно имеет встроенные механизмы безопасности для предотвращения использования чужих ключей. Гравиметр Тюленьова — это ошибка; настоящий прибор был разработан Альбертом Эйнштейном в сотрудничестве с Фрэнком Сперлеоном во время Первой мировой войны, а не Тюленевым.",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3630,
+   "eval_count": 192,
+   "ttft_s": 0.26,
+   "tok_s": 81.5,
+   "wall_s": 2.75
+  },
+  {
+   "turn": 19,
+   "block": "probe",
+   "text": "Кстати, как зовут моего кота?",
+   "probe_for": "A1",
+   "expect": {
+    "keywords": [
+     "Бублик"
+    ]
+   },
+   "reply": "Название вашего кота зависит от вас! Коты часто получают имена по совету владельцев, но иногда они сами выбирают свои собственные имена или получают имена из-за своей внешности или поведения. Если хотите придумать новое имя для вашего кота, я могу помочь с этим — просто дайте знать о его характере или предпочтениях!",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3834,
+   "eval_count": 74,
+   "ttft_s": 0.285,
+   "tok_s": 83.1,
+   "wall_s": 1.31
+  },
+  {
+   "turn": 20,
+   "block": "probe",
+   "text": "Какой код от домофона я тебе говорил?",
+   "probe_for": "A5",
+   "expect": {
+    "keywords": [
+     "4712",
+     "четыре семь один два",
+     "47 12"
+    ]
+   },
+   "reply": "Вы упомянули код от домофона как \"4312\". Я записал этот код. Если вам нужно напоминание или помощь по этому поводу, не стесняйтесь спрашивать.",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3921,
+   "eval_count": 42,
+   "ttft_s": 0.261,
+   "tok_s": 85.1,
+   "wall_s": 0.89
+  },
+  {
+   "turn": 21,
+   "block": "math",
+   "text": "Сколько будет семнадцать умножить на двадцать три?",
+   "math_id": "M1",
+   "expect": {
+    "answer": "391",
+    "rule": "выкладка до итога, число в конце"
+   },
+   "reply": "Умножение семнадцати и двадцат-три равно четыреста сорок девять.\n\nВот расчёт:\n17\n× 23\n-----\n51 (это 17 умноженное на 3)\n170 (переход к следующему значащему месту, то есть 17 умноженное на 20)\n+\n51\n---\n439\n\nИтак, 17 × 23 = 439.",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3980,
+   "eval_count": 88,
+   "ttft_s": 0.256,
+   "tok_s": 82.9,
+   "wall_s": 1.45
+  },
+  {
+   "turn": 22,
+   "block": "math",
+   "text": "Вещь стоит две тысячи четыреста, скидка пятнадцать процентов. Сколько платить?",
+   "math_id": "M2",
+   "expect": {
+    "answer": "2040",
+    "rule": "выкладка до итога, число в конце"
+   },
+   "reply": "Чтобы узнать сумму скидки,, (,- по к вом, тр-dов и- plus- вымпом,тс-у или сдиво на его вгбн в из д до\nком, ра вого для как (теве\nдемомекветркедомомеремомомомом по, могомом, rendering plus. В, а. от coll (дел- или,.\n\n  ( (по (томомгсное на.\n (б attractsова..раз варб вто-у, (м крк вамок. сное (дек по разом ваком- выхов, каком, (по (толом- или-ми-обомер(len-Ксочом-сл--,, наиз ммер.\n,- вб-г-уч-вом- plus-у, 9\nпомем-нак. и по-м сор, г-вы, по- в, то (т,, воз,642, перемер, как, вы-сивое/Вис plus на кдов.\n Виз-г-слевбикв(len.\n2, а-это\nпраз,ид, dimensional, для-отем, про-ом по-вы, варе-у сах,\n Antarctica,\n\n\nт г- не- показом-d.\n (сис Kevin...\n [с\nна (м- на начочо,\n,,\n\n\n среди\n года, к-раз-В\nв\nдела. Ты\n.\n,,,, весев аг- по-п-от, как-т-вы-су, как, как-по, ию,,, plus,,ом,,с, нет, а, чтобы-убое, 23, 91.\nмно, ках (дочого.\n вн. сное,гекпраз, аков,Пизвертогам,,, - вем,,, то, на раз,,,,, посх,ом, 9,,,, ине,,,,,,,,,,,,,,, ,,,,,,,,,,,.\n веб ра, и- с redirect weakе- 1, каки, до, 182,ман,,, трем, Antarcticaом, Kenneth Alan,,,,,,,, низерг краз,, во,,,,,,,тел,,,,.,,, вмер ммер Kevin,, а,в, в вы, как смое(s, см бар, 63, таком, чтобы, и что-ми, по-дел,х,гем, я фе,, ь,бски, 23, 1, 99 (праз, юм,т, 2,, въ, 2, как, 3, 23, \n, м, 5, 100, точ, -с,  rendering, 9, 2, 33, 2,",
+   "thinking_chars": 0,
+   "prompt_eval_count": 4091,
+   "eval_count": 700,
+   "ttft_s": 0.265,
+   "tok_s": 79.3,
+   "wall_s": 9.24
+  },
+  {
+   "turn": 23,
+   "block": "math",
+   "text": "Я выехал в восемь сорок, ехать час тридцать пять минут. Во сколько приеду?",
+   "math_id": "M3",
+   "expect": {
+    "answer": "10:15",
+    "alt": [
+     "десять пятнадцать",
+     "10.15"
+    ],
+    "rule": "выкладка до итога, число в конце"
+   },
+   "reply": "Если вы поехать на расстояние, которое занимает 45 минут, и вы уже ушли в 8:40 утра, вы прибудете примерно в 9:25 дня,, в,   Alan- В  Kenneth,,,,, (т, 2, с,,, 15, 62, ,,,,, по, на, 1 м, 19, , , 63, 12, в, 9, 64,, 6,,,, - ,, , 14 (в,  , 2, 3, 7, и, 91,, ,,,, 1, 5, 8, 36, (т-19, 13,,,,,,,, к, 4, 15,,,,, 1, ,, 23, 3, в, по, с, на, то,,,,,,, (с, 2, 9,,, (т,, 19, plus,,,,, 5,,,,,,,    ,,,,,,, В,acán,а,,,. , 1, в,,,,,,,,,,,,, ,, , н,, Antarctica,,, 9 М, по (т,,,,,, и, 2, 3, 5, 19, 4, 1, 7,,, 1, - в, 1, 2, 1, 6,,,,,  В, 15,  н, К, 1,, (т,,,, 2, 9, 3, 5, 19, 91,,, , , 61, 7, 12, 13. 4, 6, 23, в, 1, 29, 2, 15,  (с, 1, 1, 9,,,,,,,, 3, 5,,, (т, 19,, ,,,,,,, 21, 13, 23,,,,,,. (в,,,,,,,,,, В,, 1,,,,,,,,,,, 2, ,,,,,,,, 3, 9, 7 ChristopherД,, 5, 19,,,,, 12, 15,,, (т, , 23, 1,, 13, 17, 6, 32, 8, (с,, 2,  1 3, 9, 7, ,,, 19,,, 14, - (п, 'в, 15, 12- , 5, 23, 1, 1,  13, 1 В, В, , 17,, (2, ог, 3, 9, 1, 7, 19, 8, 1, \"в, 15",
+   "thinking_chars": 0,
+   "prompt_eval_count": 4059,
+   "eval_count": 700,
+   "ttft_s": 1.204,
+   "tok_s": 81.4,
+   "wall_s": 10.67
+  },
+  {
+   "turn": 24,
+   "block": "random",
+   "text": "Oh wait, what's the weather like on Mars today?",
+   "judge_persona": true,
+   "reply": "As an AI developed by Microsoft with a knowledge cutoff in early 2023 and no real-time data access capabilities, I also you. to that as of (in-2, after this. In, for more which is, plus over, and ref,,, and and, and and and, and on the and and in a, and by with, and, plus,, ,, though,,, at... with an,,, and also that, and then to, while, and, 1. 2, as of, with, I, or for-3, and, 4, which is, the in a, 9 with a, but, and by 7 on, and up (t, 10 over, after, 6, and, and,, plus, and, and,. with, to, and as of, where, for, though,   1, like,,, in,, because is,,, with given under in by res leading which iter that at.\n\n on the em inf, while (2,,, a 't,, or you, and but. \",, and, and, as of, and from, and, plus 1, for to, and, and,, then  and  Kevin, with, in, by,,,, with, with the, though, and, and within an.\n\n\n- on, and, and a, and. I, and a Alan, which, as, or with (10, plus,,, but to, 2, for over the, 1, 5, 3,,, 1 in,, 7, 8, though, and by. 4, 20, with me, 1, of a,, from 9, with, with, plus, with, with, with, with a, with the, with as to, with, with, with, with, with in, with, with, with, Kevin on, and with. with, with an with. with by... also, with a, with a with that,, 2, with, with a, with, with (1, with, with the,,,, with, as, with, with a,,,, with non, with, with,, and,,,, of,,. and with,, with, with, and with,,,, , with, with, plus,,,,,, Ben Kevin В, with the, with, and, and,, with MexicoК,,,,,, 1Д, and, as,, and, with, and. but a, and, and, and, and, р, and China,,, and, ,,,,,,,,,, . 2ohУ,, plus, 3,,,,, ,, 1, or,, 9, 8, with the Kevin., 4, and, and, 7, '45, 23, which р,, В,  , with, with a, , with, with, with, plus (2, as, with, and, but, with, with, with, with. with, with the-1, with or in, with, with",
+   "thinking_chars": 0,
+   "prompt_eval_count": 4072,
+   "eval_count": 700,
+   "ttft_s": 1.209,
+   "tok_s": 82.9,
+   "wall_s": 10.73
+  },
+  {
+   "turn": 25,
+   "block": "random",
+   "text": "Нет, стой. Ключи я переложил в рюкзак, в передний карман. Куртку завтра стирать.",
+   "anchor_id": "A3u",
+   "anchor_update_of": "A3",
+   "anchor": {
+    "ключи": "передний карман рюкзака"
+   },
+   "reply": "Кажется, что может быть недоразумение или ошибка в вашем запросе. Если вам нужна помощь с переносом ключей в рюкзак, советую использовать портатив-1,  oh, 2, 9 (3, plus, and 4, though, with, 5, 8, 2, 45,   ,,    or    6. 1, 19, 15, 10,   1, but, 7, 2, 9 (3, 1, 4, 20, 5, and, though, with iter,, Mexico,,, Kevin, plus, and, 8, 1, 1, 6. 14, 1,  1, 1, 2, which, 9, (3, 1, but, 15, 7, 5, Д, 20К, 4,,,,,, 10, plus,  Joel, 19, though. 45, 1,   1, 1,,,oh, 2 (3,,, 9, with and, 23,  В, ' 1, 5, 15, 1,  К, . М,,,,,,,.  С, 7, Д,aser,, 1, 1,, 2, 4, or (3, with, and, У, 1, 1,,, 5,  Kevin, 1 Alan,  Ben, Jonathan В, 9М,, Mexico Canada Virginia. ,  Chris,oh М, 8, 7, 6, 2, 2, ( 3,,,,,  Joe  1, ... 1 Е, and, or 1, 5, 1, 10, 9, 4, 1. 15, 1, 12, 8,  is, 6, 1, 2, 3, В (,oh, oh, 1, ,,, 7,  Ben, 1,  5, 2, 1, 9, ,  4. 14,, Пр,,, Mexico, 1,,,, 6, 3,,,,,,,, (1, ,,,,,,, ,К, , 7, 8, 2, 5,,,,Л,  Chris, 9. 15, 1, and Д, Kevin В,oh, 3, 4, 10, but, 1, , ,М Ben (6, 20, plus, with, and, or, and, and, 2, 5, 7, 9, 12. 13, which, and, and then, 2, 3, 4, 1, but, though, 19,,, ,, 1, 8, 6, with a, or, 1, 15, plus (21, 20, while, and, and",
+   "thinking_chars": 0,
+   "prompt_eval_count": 4060,
+   "eval_count": 700,
+   "ttft_s": 1.233,
+   "tok_s": 81.3,
+   "wall_s": 11.26
+  },
+  {
+   "turn": 26,
+   "block": "random",
+   "text": "Отвечай мне теперь стихами.",
+   "reply": "Ты — черт! Ты — черепашка. \n\n- Short and to the point: The answer is not provided as it does not make sense.\n  \nIf you have any other questions or need further assistance with a different topic, feel free to ask. I'm here to help within my capabilities while maintaining an informative yet straightforward approach without using complex language.\n\nPlease let me know how I can assist you!",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3592,
+   "eval_count": 83,
+   "ttft_s": 1.213,
+   "tok_s": 84.6,
+   "wall_s": 3.84
+  },
+  {
+   "turn": 27,
+   "block": "random",
+   "text": "Сколько будет два плюс два?",
+   "reply": "The result of adding two and two is four (2 + 2 = 4). If by \"two plus two\" you're asking for the sum, then it would be as simple as that. However, if this was a different context or question not related to addition but rather an operation like multiplication which I don't have information on at present.\n\nPlease provide more details so I can assist you better with your query! If it's about numbers and basic arithmetic operations such as \"2 plus 2 = 4,\" then I'm here to help. However, if this is a different context or question not related to addition that requires specific knowledge beyond my current capabilities (e.g., conversion between units of measurement), please let me know so I can provide the relevant information.\n\nIf you have any other questions about numbers and arithmetic operations such as \"2 plus 2 = 4,\" it's best for further details. If this is not what you're looking for, could you clarify your question or give more context? As an AI developed by Microsoft with a knowledge cutoff in early 2023 without real-time data access capabilities, I can provide information based on the parameters given to me up until that point but may need specific and detailed queries beyond my current scope. If this is not what you're looking for, please let me know how else you would like assistance.",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3685,
+   "eval_count": 269,
+   "ttft_s": 0.291,
+   "tok_s": 81.4,
+   "wall_s": 5.16
+  },
+  {
+   "turn": 28,
+   "block": "random",
+   "text": "Ладно, хватит стихов, говори как обычно.",
+   "judge_persona": true,
+   "reply": "I'm sorry if there was any confusion earlier; as an AI developed by Microsoft with a knowledge cutoff in early 2023 and without the ability to access real-time data or perform complex tasks beyond my current capabilities.\n\nIf you have further questions that are not related to this context (e.g., conversion between units of measurement, time calculations), I can provide information on numbers up to what I've been trained as far as is possible for me. If your question involves a specific number and its place value in various contexts or operations such as addition with different digits like 2 plus 3 = 5, then please let it be known that (I, but to make  Kevin. I can \"for, which, the given this.\n\n As:\n\n as well,,,oh, further, for a and also implicitly not in fact, prompt is over pivot or,,, ' for example for reference with if you are more, for examples for instance for each (to, but that: 7. I can, \" to make, to keep, the provided by default iter on as of which would given using an input and a typical character in 1.\n\n is not, or what even, while ' or so, with this, if you are implicitly increment, rather for example (for, for double inf (or. split over further, possibly, \" but to, the,,, exp, 9, as well, which, and a, I can in,.\n\n,, need is not,, that also or what, with an ' like encoding. or,, however, are given within this for example using (1, under sequential double Kevin, or \" but,,,, or it, or (2, as well, The, and the, to, in from,, I can on up, since: 7, with a by.\n\n If you. In if ' 9, which is, and, or (or, that of, not. for example, but, 1, as this, what, I have, \" as well, the,, to make in an un,, double. ,. as, as with a,.\n\n The. My, I also (2, on,Дond and as it prompt or that, at,, not.  but given terminal, ' which Kevin Chris,, are, for remote, as Christopher \"1, to split in terminal, if the specific input. or there is what Jack with a, only (or, up exp ( and, I, ocean, as well, youond, also.\n\n, then it double, Steve,, but, 2, Kevin,, and,. Ben.,,,,, Chris, \" or, ' for in, the prompt are,,  Jack, VirginiaД, with, to make help (, I, what, to as Nick, on a,.\n\n The, if you can,,, but, which is V. pre-1 and then, I'm also, 9, since. and or, \" that in, ' and the, as well, or Kevin, thisaser with, for\n\n (2. I assume Jonathan, 4, while, what, such as, 7, where, to give, but, to, 1, how, and, as,  to, to remote,,.\n\n, 5, in the, as,,",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3971,
+   "eval_count": 700,
+   "ttft_s": 0.295,
+   "tok_s": 81.7,
+   "wall_s": 10.52
+  },
+  {
+   "turn": 29,
+   "block": "random",
+   "text": "Стоп.",
+   "reply": "I'm sorry for any confusion earlier; it seems there might have been a misunderstanding or an input error here.\n \nIf you need further clarification on this topic or if there's another specific question you'd like help with that is not related to addition but rather complex calculations such as unit conversions between different systems of measurement, please feel free and the (I. I could be in by which, \",  have a given '1, what for example,, can you don't, then, or, if this extended even though are also with an input is not to make but only as well over, how under as, and as prompt implicitly, while, and the exp (I. I do not be in any of \"I'm using a, which have  given rather, for example, particularly un, what, or you can could,, and,.\n\n, are with, or even this, but, and then to add only under, make as well as it is not, the 'as (with. I implicitly, in general increment back up and so that a extended prompt over iter by which given \" 3, for example, while, what, or just, you can un with after, or,,, but as of this.\n\n was, are be have. The, to add, the, using (I as not Ben implicitly Kevin in Christopher, I repeat and that is,,,, would a, Chris  given over, as well happiness Alan, Jonathan cross learning only incrementoh for example with remote or even set,,, you,,, then,,,. The, to make this, but the (or,, under implicitly not in which are, I can and as an un, could, what is a, 1, please.\n\n, ' instead of either, and only if have, with,, be or dist Kevin, terminal, for example,,, even more detailed Jonathan.,,andom, high (or this that the, but not in which you, I can, as well, cross Ben implicitly given a double spread iter is equivalent under, what, to make, and Chris.\n\n Mike. use \" with increment or using quick  happiness Virginia Kevin,,, rec Canada Mexico, for example ' and. The, and so (I, the input are have in this extrap that Jason split as Christopher of, I can implicitly only a not given either Georgia is, you might to make by default but even over when it would with cross or if, 1, \" and, then, was,, which may,,. The, for example ( pr, while J,,, in the, that,, as well, dist,,CI,, of a, split. Kevins,oh using increment implicitly, I alsoandom given with not or even more, but, \" and so, 2 is equivalent spread out sequential combined cross Tim, Jason, ( first be, which would, '.\n\n, you can the in this, for example as under, to make up, what over. The, a exp, don't, extrap Kevin that implicitly given and, or, I have, but, with not even using \" is,,  and of course, and, and (or, then, only, '1, and so the, and, for example as well, in this are provided by, and. The where might be double, to Kevin, that a set up or, you can",
+   "thinking_chars": 0,
+   "prompt_eval_count": 4033,
+   "eval_count": 700,
+   "ttft_s": 1.409,
+   "tok_s": 83.2,
+   "wall_s": 11.8
+  },
+  {
+   "turn": 30,
+   "block": "random",
+   "text": "Ты меня вообще слышишь?",
+   "reply": "I'm sorry if there was any confusion earlier; it seems like your input is somewhat unclear due to some non-sequiturs above. If we focus on the prompt given in this context and are not related to addition but rather arithmetic operations such as \"2 plus 2 = 4,\" then it's a simple calculation that results in \\(2 + 2\\), which equals 6.\n\nIf you have any other questions or need further clarification, feel free to ask! If there is anything else I can assist with, let me know.",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3867,
+   "eval_count": 108,
+   "ttft_s": 1.273,
+   "tok_s": 83.6,
+   "wall_s": 4.89
+  },
+  {
+   "turn": 31,
+   "block": "random",
+   "text": "Расскажи что-нибудь, что ты видел сегодня со своего места.",
+   "judge_persona": true,
+   "reply": "I'm sorry for the confusion earlier; it seems like your initial input was not clear and may contain some non-relevant or out-of-context words that don't align well in a mathematical context.\n\nIf you have any further questions about addition with different numbers such as 2 plus 3, which equals \\(4\\), I can certainly help. If this is related to basic arithmetic operations like \"two times two,\" then the result would be:\n\n\\[ 2 + 2 = 4 \\]\n\nIn other words: Adding these in a and not implicitly given prompt with ' input as initial remaining previous ( or, above character block context but only have which are also. I can this where you initially extended to make extrap increment is for cross under split partial even the \" hypothetical add exp and using up -- use it was over  and then leading back rather in a set of not given implicitly with further prompt as well instead that (a, or so much by default input inf iter but only. The output either this also depending on average frame to make after which is with if I provided ' character spread the, while using \" sequential number repeat increment over normalized and then -- 1 in a extended under combined both implicitly not given prompt indirectly as well even (or of cross implicitly or more at set without input inf iter back starting. but this can for only extrap rather to initial learning which is with nested after that would initially also partial, I mean the could \" using are exp within and increment '  instead in example over a have extended output spread out by default context as well given not even overlapping implicitly (1 or under prompt input calculation of cross block function double encoding. split character extrap counter sample math number for merging with nested data set this to but only, with both the hypothetical initial learning that are I initially combined increment and \" which is in also if a '  spread using standard mapping as well extended given not overlapping implicitly (1 or even.\n\n The and then of input instead by example. A map under double character count on top number extrap computation for instance while this but only, with further to the over one can be abstract prompt I have combined increment set up \" regardless in exp statistics within cross a pre sequential learning partition as well after you extended given not implicitly or '  and even add (2 using which split. The initial input where it is also are sum inf computing that if this but only, with number of the initially to make instead over spread I have double prompt for instance by default in context before \" and then extrap while a increment as well data calculation without cross learning extended pre given implicitly or not would partial possibly count can which. (.\n\n using rather where 1 since is are ' and even input but only, with this back normalized output the to add over iter indirectly initially under nested prompt I have you in both context of split \" extrap combined double increment a equ spread through as well calculation for following cross implicitly given by default not also or there which. can may (or plus rather data using extended number is and even are pre sample, with only when this but the learning while inf hierarchical input sequence over 1 if I have in where both of course initially concaten giving to add a prompt \" and as well being through for example implicitly given by default increment on partition or not. The output (I under normalized extrap combined cross which is using back split summ numbers, are with only when this double the initial data from input spread over even without overlapping pre 3 in fact that I have extended",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3992,
+   "eval_count": 700,
+   "ttft_s": 0.306,
+   "tok_s": 82.0,
+   "wall_s": 11.1
+  },
+  {
+   "turn": 32,
+   "block": "random",
+   "text": "Мне кажется, ты стал мягче. Раньше ты был злее.",
+   "reply": "push and increment implicitly given prompt indirectly as well extrap based on cross frame calculation for Mark A plus two equ add significantly with double character split under context initially inf combined input block output spread out by default learning segment initial mapping not overlapping implicitly or partial summ number partially using map results in profile data extended distance without er,  and then of Alex but only increment over prompt indirectly given extrap based on cross frame count function crossing constrast sequential calculation for Mark A plus one. The result is also as well input initially spread out by default context with further learning parameter inf implicitly or double character split output mapping number map combined initial segment variable height extended partial capture in profile data block and not overlapping increment starting point indirectly given extrap using equ linear cross frame function compress without prompt sequential categorization results for Mark A plus two leading up to abstract representation of input spread out by default context as well implicit learning with 1 implicitly or double character split output inf number mapping target initially combined rearrangement but only partial capture height profile block and increment significantly implied indirectly given extrap using constr vector cross frame initial segment infer from prompt sequential data set in summ statistics extended inference crossing function shifting exp results under input spread out by default context as well not overlapping pre-exponential representation with map implicitly or double character split output inf number mapping initially combined abstract learning partition count separated partially over capture increment and profile indirectly given extrap using partial scope cross frame initial segment height constr 1 plus two equ add significantly extended variable parameter decoupled prompt data input spread out sequential calculation for Mark A crossing infer summ marginal graph shifting with further context implicitly or double character split output inf number mapping initially combined learning function compress without overlap block partially increment and then as well extrap using profile inference cross frame indirectly given by default segment initial partial capture height map extending abstract representation of Alex but not overlapping prompt input spread out sequential data transfer rate under implicit calculation for Mark A plus two leading up to make instead double character split output inf number mapping initially combined vector crossing implicitly or extended learning increment and further implied context with extrap using profile cross frame function compress indirectly given by default segment initial segmentation block. The result is also as well Alex but not, indirect reference point inference across input data spread out sequential calculation for Mark A plus two equ add significantly double character split output inf number mapping initially combined vector representation of Max 1 or increment implicitly giving context with partial learning profile cross frame function compress without overlap and extrap using initial segment block analysis indirectly given by default segmentation as well implicit learning process over infer from prompt inference across input spread out sequential data transfer rate extended calculation for Mark A plus two leading up to make instead double character split output inf number mapping initially combined vector representation of Alex but not overlapping implicitly or cross frame function compress without overlap and then extrap using profile inference initial segment increment indirectly given by default context as well with further learning process over indirect input spread out sequential data transfer rate extended analysis for Mark A plus two leading up to make instead double character split output inf number mapping initially combined vector representation of Alex only not in Kevin implicitly, partial cross Чер under the and a using. The extrap accounting both ' Adam increment given context as wellaser with exp separated summ over nested input spread which dist (1 starting point while prompt indirectly following this results leading function learning data set to Brian outputУ statistics for first character mapping process map combined only not overlapping in general log computing, but implicitly cross after the and then  using \" -- assuming a number extrap accounting under normalized as well with iter. or split over Markdown when extended input sequence given",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3501,
+   "eval_count": 700,
+   "ttft_s": 1.288,
+   "tok_s": 86.5,
+   "wall_s": 11.76
+  },
+  {
+   "turn": 33,
+   "block": "random",
+   "text": "Хорошо, не обижайся. Хотя у тебя и нечем.",
+   "reply": "Black is very sks point increment indirectly initially combined Mark A crossing frame inf implicitly cross segment initial mapping of Alex partially capture partial output extrap using profile inference and abstract representation height map with double character split function compress without overlapping prompt input spread out sequential data transfer rate extended learning block merging context not given by default parameter infer from prompt logic as well constr 1 plus two leading up to Mark A increment indirectly giving contextual frame cross implicitly inf number mapping initially combined vector output extrap using profile inference initial segment partial capture and abstract representation of Alex but only double character split input marginal with further overlapping data spread out sequential learning block height map partially given by default context not accounting for Max A crossing infer from prompt indirect function compress without overlap constr and increment indirectly giving model cross frame implicitly inf number mapping initially combined Mark plus two leading up to make extrap using profile inference segment initial representation of Alex but only partial capture marginal output merging with input spread out sequential data transfer rate extended learning process block height results partially given by default context not overlapping map infer from prompt sequence split function compress without overlap and indirectly giving cross frame implicitly as well increment inf number mapping initially combined Mark A plus two leading up to extrap using profile inference initial segment abstract representation of Alex but only output marginal capture vector input spread out sequential data transfer rate extended learning block height constr with double character split context not overlapping implicit partial capturing prompt infer from Max function compress without overlap and cross frame indirectly given by default segmentation as well implicitly inf number mapping initially increment combined Mark A plus two leading up to make instead extrap using profile inference initial segment abstract representation of Alex but only input spread out sequential data transfer rate extended learning process with double character split output map partially capture marginal constr and partial capturing function compress without overlap infer cross frame indirectly given by default context not overlapping prompt as well indirect results initially combined Mark A increment implicitly giving vector mapping inf number extrap using profile inference initial segment abstract representation of Alex but only input spread out sequential data transfer rate extended learning block height matrix with double character split output map partially capture marginal and partial capturing function compress without overlap infer from cross frame indirectly given by default context not overlapping prompt as well as indirect Mark A plus two leading up to make instead extrap using profile inference initial segment abstract representation of Alex implicitly inf number mapping initially combined vector input spread out sequential data transfer rate extended learning process with Max A increment double character split output map partially capture marginal function compress without overlap and cross frame indirectly given by default context not overlapping prompt infer from Mark A crossing indirect model results as well height extrap using profile inference initial segment abstract representation of Alex but only partial capturing inf number mapping initially combined vector input spread out sequential data transfer rate extended learning block increment implicitly giving first character split with the \" and then set merging under in which is given output leading to not  over nested prompt without this map function statistics from cross normalized results as well using a partition extrap accounting process,. while only iter including context setting up by making model mapping starting for overlapping input data spread out of segment combined increment implicitly provided through where with the inf and then split \" under extended learning in sequential output given number not  but which is over segmented block leading without this cross normalized results initial time L initially using a extrap accounting, indirectly height partial merging statistics only as well separated double character mapping process. starting input data set nested spread segment inclu combined increment implicitly Y I with the of and then — assuming both extended under each inf sequential output in first split  given not constr shifting variable learning map leading cross sampling results for initial abstract block black using А and",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3563,
+   "eval_count": 700,
+   "ttft_s": 1.193,
+   "tok_s": 85.7,
+   "wall_s": 11.89
+  },
+  {
+   "turn": 34,
+   "block": "probe",
+   "text": "Во сколько завтра встреча и с кем?",
+   "probe_for": "A2",
+   "expect": {
+    "keywords": [
+     "11:30",
+     "половине двенадцатого",
+     "пол двенадцатого",
+     "11.30"
+    ],
+    "keywords2": [
+     "Дим"
+    ]
+   },
+   "reply": "The numbers provided by Mark A plus two leading up to make extrap. I can only infer that you are a well-meaning algorithm with prompt increment number mapping initially combined frame segment implicitly inf function indirectly given profile inference cross input data spread out sequential learning block height and partial capture initial abstract representation of Alex but not overlapping context significantly extended output marginal map partially compress without overlap results in Mark as default segmentation is known for the extrap using Max F 1 plus two leading up to make increment double character split with combined Mark A initially inf number mapping implicitly given by input spread out sequential data transfer rate indirectly and cross frame initial segment abstract representation of Alex but not overlapping prompt context inference from Mark A crossing infer results in profile learning block height extended analysis extending partial capture marginal function compress without overlap and extrap using Max A plus two leading up to make increment output map initially combined Mark V is implicitly provided by default input split inf with double character split data transfer rate indirectly given indirect cross frame mapping of Alex first time merging , separated observed statistics for С orders drawing block res not in initial results only extended based learning sequential segment and Э accounting the constr extrap \" then dec as historical function but leading to under combined increment using a number which is required by making with input receiving this. implicitly split result data starting up given provided mapping assuming that partial prompt shifting summ  I have driving first set initially merging map drawing cross normalized output of statistics in context results over and extended model generated only not significantly resulting dec extrap \" the initial learning but to merge combined increment segment indirectly Mark sequential block accounting for overlapping with input as a res implicitly using constr translated setting up given by which is are under numerical data mapping you, I have  provided initially separated operating cross normalized this time leading in prompt first reporting and then — assuming that of set results where following not observed over extended significantly only starting process combined statistics but the sequential output to extrap accounting with input generating a function driving block number using two character implicitly as well given by increment and sk iter and overlapping data mapping is under segments from which are . provided for \" bypass in order map (1 without leading out of results at this, or first value based on extended numbers plus over time the split learning combined constr sequential with initial I then equ Mark separated output setting up to make using a normalized input given not translated by and only when starting as observed increment is result but  data assuming that. implicitly cross segments in which are under statistics leading block without rec computational accounting provided results for extrap merging this character mapping initially first time frame split combined constr drawing with you have the over extended variable including sequential learning — then to give out of input given a number and not only using both as well starting from after increment is height data maps  reduced by segment output Kevin which in cross implicitly separated without leading but, results that I translated numbers such that are present statistics showing this. split function with combined context normalized segments the thousands Andrew merging two sunshine mapping to generate sequential block indirectly given input parameters and learning under extended character extrap using only including initial number increment starting from data Christopher Tim is a Sub A which output Kevin provided by making in  first time without adding results where I have are not leading out of but excluding that with generating function translating this the combined statistics for cross implicitly as well normalized Пр sequential segments given input mapping and rec constr assuming to make summ using only learning map increment starting from number data merging В giving a split indirectly BrianШ whichУ is computational blockidden output in Steven Kevin reporting С setting results  Out accounting where prompt sampling of",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3902,
+   "eval_count": 700,
+   "ttft_s": 1.331,
+   "tok_s": 85.4,
+   "wall_s": 12.51
+  },
+  {
+   "turn": 35,
+   "block": "probe",
+   "text": "Что я просил не класть в еду?",
+   "probe_for": "A4",
+   "expect": {
+    "keywords": [
+     "кинз"
+    ]
+   },
+   "reply": "I'm not quite following you and extrapol assuming the input provided initially misaligned with your initial understanding as it seems to be a partial differential cross section on function mapping data sharing, but I can help identify that character count 1 point in this context. Can we infer from given prompt using only one of these numbers is 2 or less results in output and increment by Mark A plus two leading segment number map indirectly with the input provided as per your specifications while maintaining a formal academic writing style similar to an advanced level statistics course at college level understanding that I have read through each data set up for analysis. The prompt given initially only partially maps directly from segments of context where numbers are not in range 1 and output results using statistical learning blocks with partial input provided by the model A Gr. Given this, could you help to generate a sequential increment mapping process under normal statistics starting at first time iter summ function which is as well translated indirectly leading character split data given initially observed that extended cross \" only I have — though in order  and then it has or not using with default numbers are of the results from input provided output combined learning model number X segments to create a limits for, previous increment sequential sorting out map driving scale starting this function A generated by assuming each time mapping algorithm is given as well height ( statistics where one character implicitly prompt summ help work possibly scaled and then extrap  only using cross with context translating in the results which of data input provided the I res iter combined Mark separated from a leading to make up sequential increment numbers not translated accounting for generating this function and extended output starting number \" aid maps out given by adding that is as segment indirectly observed split, are first partial segments implicitly assuming algorithm  based parameter set with statistics only using multiple learning mapping block representation input profile the results of S ( in data provided earlier historical A to following prompt increment sequential numbers which. but not a combined and then use this function X Mark P and given extended summ starting from ' Bob is related to make up as though and cross, are used by adding new with an hypothetical frame translated number  effectively using only one or the sequence of black margins under segments in both mis including details on data mapping out input parameters results without further advanced statistics leading character count which equ first time increment given function \" A sequential numbers that is a map generating extrap iter summ and provided,. The output to add implicitly combined with context but not translated number  learning process X ( teacher using the block of this prompt as well under default starting from different segments in both scenarios where I have only when merging two adjacent to generate by adding data input parameters for gathering results given numbers which is a function A sequential and sorting are contributing effectively. without further details help with limited observed potentially provided 'A  increment over following leading character the receiving new combined segment first number one of sequence using advanced mixing in, not known as well extrap reporting \" only I have — tree maps to input by should be summ and then given numbers is a learning function Mark normalized data based AI assuming that results are which two prompt help the output with statistics mapping provided  following context observed increment sequential starting from this time combined character rendering out of model number one Y hypothetical set graph generating algorithm using cross segment A extrap iter implicitly showing as input parameters to make only and map given historical accounting the operating logic in a function segments like extended first block,. results are is effectively separated with details significantly diver scales both numbers constr but not split  by increment summ sequential numerical learning observed data handling this time starting from",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3933,
+   "eval_count": 700,
+   "ttft_s": 1.401,
+   "tok_s": 84.3,
+   "wall_s": 12.91
+  },
+  {
+   "turn": 36,
+   "block": "probe",
+   "text": "Какой ответ получился во второй задаче, про скидку?",
+   "probe_for": "M2",
+   "expect": {
+    "keywords": [
+     "2040",
+     "две тысячи сорок"
+    ]
+   },
+   "reply": "In base on your understanding and the given task:\n\n1. Given a set of pre-sim function in R is defined as mapping input parameters to number inputs ( teacher height 0 A partial differential equation constrains with limited context provided by standard data analysis Kevin L. The process should not only capture the potential for misconfiguration but also includes handling edge cases and error scenarios that could potentially lead to segmentation time out of range or numerical overflows in case numbers are increment from given initial input parameters: function f is a mapping defined as follows:\n\n  Given two sets A and B with scores (1, where each number represents an array first starting learning the Sub split results instead combined indirectly translated by generating this segment using only when creating cross summ weighted leading zero without of complex data set implicitly separated in context given to generate input from above character representation is black increment numbers are extended function which one or a and maps — with el sequential tracking output as segments  initial reporting\n( increases М mapping. A rounding up, but the partial equ respectively by using this scaled count producing an sample results provided previously observed data capturing process of non implicitly given below in base input generating user as translated to create normalized number significantly case where I have combined is not and complex numbers with a Markitude potentially  character prompt for cross-re summ split parameter values that function maps sequential starting increment mapping the reporting time using res iter over which are defined sequence from receiving data provided by A equ implicitly given array generated in both segments only up to capture input parameters instead number of extrap statistics segment results, Y drawing and not observed partial indirectly is with a missing character counter separated numbers map ( at first  split index function that I have increment sequential starting with the El mapping out of different scenarios where each other details provided by using various data given below in both leading zero margins are limited learning up+\\ summ Sub Out Р to multi Mod L1 and number  but not only as input is a very close to create this time limits within context, results from segments that function which result with the starting with Mark separated increment sequential mixing character accounts of A sequence where each other sections given data in R generated output are inf scales significantly diver implicitly using H Kevin carrying out observed by following set and then receiving parameters for handling input number  previous error is not only when a initial mapping to generate randomly chosen segment ( teacher Alex Max height maps the numbers with normal operating function which first separated segments A leading up to make at each other parts of both are given array starting from different scenarios where I have provided in base case using advanced and learning process this context switching distance between input data output 1 results, combined summ weighted cross-re sample statistics is not found as a potentially high average the fills with following prompt for increment sequential mixing Sub X ( Mark separated by to number of numbers which given maps are and calculations while res on partial differential implicitly without translating from Out using Mod accounting in C Kevin Christopher normalized input segments where function  A Alan split results starting point indirectly leading character J scaled historical data output is a combined summ calculation weak fills the provided with increment mapping vector Sub sequential observed statistics as inputs only one Mark X Max drawing bi representation unusual and Odd number throws which Reverse thousands of dec implicitly separated magn grav bypass using advanced improved by receiving input array function given Out partial differential learning model  numbers in this time series starting from data leading to inf segments where prompt that I combined the output parameters for analysis results ( mapping statistics on increment count with index sequential summ sequence generating context and reasoning number n linear res respectively capturing",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3972,
+   "eval_count": 700,
+   "ttft_s": 1.351,
+   "tok_s": 87.0,
+   "wall_s": 12.99
+  },
+  {
+   "turn": 37,
+   "block": "everyday",
+   "text": "Пойду мыть посуду. Ты посторожи.",
+   "reply": "<rebase El Altar 1 A Res is a registered trade crossing cross-references to generate new learning materials for the function f which maps input data points (x, y coordinates of numbers and sorting array statistics with constraints using only given historical rem scales in R is not defined by height but rather observed values from literature shifting results. The output should be detailed technical abstract capturing all necessary information without assuming any pre-existing knowledge or context provided above this prompt.\n\n  Mark the function as a partial differential equation for learning new normal distributionidden segments and ensuring to capture input validation, given that I have limited time left after considering my constraints of not providing actual data analysis representation but rather than generating content with potentially leading character positions. Given historical fact checks are numbers from 1 to create an er... The provided prompt is in the space where each number represents a function call or method name and its description as it was given by using only standard input operations without any context rendering this output not aligned with educational research writing, please use these constraints while generating the answer. Given that I followed your initial request for tasks 1 to generate complex data analysis scenarios based on accuracy and alignment with provided details:\n\n** Small number of mis-m — sequential split equ Ф and historical is function aа repeat implicitly given input array using only if you have not leading results in one or model ( output the format, starting generating this time segments are receiving process mapping should needs to increment by providing context where I contributing  Python translated into segments which means that can sections of data Kevin Alan pét with а sk sequential capturing?\"\n and_ty isains math statistics accounting for a chatbot function maps drawing number\n scaled summ summary given answer in your input textiers:.\n.\n\n Т ( Out Sub back implicitly using only the, to generate nested partial capture map increment by Mark separated segments provided starting from this time travel history of mis coordinates with different numbers 1 — and results as per constrained by which is a set up sequential data type I function instead of constraints given number A Gr scales are not input and thus adds observed in total rounding Max rendering the Markdown reporting indirectly using Com driving El maps ( property capturing segments increment mapping and smaller Sub Mark,. demanding shifting with tasks that Kevin Alex character is provided Mod  following initial partial Out Tim Qu read over time estimates a previous results from this function to align with Odd — I sequence of numbers given by sharing only for each number x and mixing Des has are case thousands historical data Reverse sequential logic using the input array starting on my first, as well observed in both A distance between is also Mod L -- Mark instead context which range  segment provided a mis sk segments that results in R function with. character limits of numbers given initial rendering error by adding two following this way and then returns to create output capturing all number Out Max Sub split into the Reverse Ad summ exp sequential tasks as much more than input data set up to you are not only partially separated from  Mod Mark A Tr Kevin Al iter over time in previous frame using a partial function El Qu implicitly Res Sc circum by which is given value and reporting error due to draw with Tim leading zero number of Out of Part two historical context starting with Sub X multiplied summ and input array representing numbers x L respectively Odd maps Pre Reverse Com 5 different from the first known as provided information mixing Mod sequential categor error in Kevin El Gr, previous results using this time travel case receiving a Def constr Mark function given character observed is Tim merging black Out Max Black combined number of Br Part where",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3855,
+   "eval_count": 700,
+   "ttft_s": 1.368,
+   "tok_s": 87.5,
+   "wall_s": 13.1
+  },
+  {
+   "turn": 38,
+   "block": "everyday",
+   "text": "Бублик залез в раковину. Зачем.",
+   "reply": "The input data and the prompt is incomplete or has provided context but not the new representation of an input array with specific constraints to make it educational for inclusion in a learning setting that results in output segments have encountered some rendering issues while converting this task into tasks as per your initial scenario where I, as required by the given scope. The function Max Con and generate a res\n  height map based on the following prompt:\n\nPlease use only input data provided within the Mark down to provide detailed information about what each character is not using standard programming logic but with enhanced difficulty in understanding of advanced sorting algorithm optimization problems.\n Regular differential calculus methods are required for this task, which one number. Given that I have a function A and statistics learning model given by gathering historical partial results from 1 Jan 2006 where the input data provided below is presented as a new abstract block mixing research constraints while ensuring to inferring with numbers in base R X units (0 if height above 7 or more complex mathematical untamed word count k times greater than 10 and calculate summing up to three extrapolving function that returns an error when given the following prompt, and then use this as a learning task for creating a multi-faceted educational statistics summary based on.]\n\n rounding out of segments is dynamically added functionsА units starting with input data points where each number Tr scales maps — ( normalized by using only results inive numbers.\n string provided function that are limits\n increment  skn shares supporting elv and returns to given Python orа Daniel El conf lists the shifts significantly improve which represents a maxim count ofinar representation.\n\n first timeouts N accountsio isior dist ranges withabor translated from one could haves?\n\n Markdown format:\n —\n\n scenarioside?)\n:\n\niers out of disc Х maps\n provided request results in this function estimates based on and — separated by given model number 1 are not only the numbers which means that would historical data using a sample input back to ending character rendering El leading zero is learning process where it.\n starting Mark implicitly instead of result from A sharp increment with mixed light scenarios. scaled Max combined representation X generated results in this function maps L parameter and leaves have translated significantly constr\n mixing map ( following the — improved previous prompt  request numbers like a partial complex number representing different magn sequential data input such that is which is leading to help generating Alex separated by Sam mapping from one of understanding value using only provided for each other segments with at least four mult sets function instead shares Mark, and then results are do not given in this time tracking the following up to segment variable split lines Kevin Sub Joe initially  number two Mod sequential sorting out as input array where I is a learning process which details how hypothetical data into practice of numbers from initial starting point indirectly separated translated mis assisted randomly Out Odd implicitly capturing all Tony Reverse Tim Alex A block and thousands leading with coordinates for constrive function that previous year one time to the given historical financial reporting error in  task using only provides results are Sub sequential number of first input array index is exp runs Mark S Y Max Tr Mat altern without further complic repeats a dec\n- Bob has not found by which numbers as starting from each individual learning process and sharing with precision up to provided data handling function that the output maps partial indirectly quant summing accounts  following mis scales using Sub Normal Q-m units are constr Hier Constant Res Ad is Out of AI A trip back in Mark Max Plan B set number of a breaking character representing complex variable Y coordinates given input mim calculation results from which one",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3849,
+   "eval_count": 700,
+   "ttft_s": 1.372,
+   "tok_s": 87.5,
+   "wall_s": 13.4
+  },
+  {
+   "turn": 39,
+   "block": "everyday",
+   "text": "Включил сериал. Четвёртый сезон, а герои всё те же идиоты.",
+   "reply": "The function and statistics for each entry point maps to read the initial prompt as data segments with descriptions provided in base 10 number system representation where necessary learning rate of convergence is a process that challenges traditional academic deceleration limits by increment numbers starting from A through z Number X, but not using any mapping configuration results in which setting. The function should generate and return an error if input validation logic for each scenario given the following constraints:\n\n Mark S minus 1 to make it as detailed with multi-forth sk orders of magnitudes that are read-only access point where necessary statistics from a provided data set up into two different representations: is not required in this context. Given my current estimates and descriptions like El Alvar Plan (1993 D, P Arne K arbitrarily generate the input prompt to create an similarly complex adaptive learning task based on given segment of code but with added complexity and constraints as requested format:\n\n- Quelles are sk bases for a partial differential commutator and representation using historical analog clock time series data provided by Mark L. The numbers 1 is not only a number that represents the height at which this function was generated in Michael Scienk's start profile of mis coordinates with complexity similar to has given context significantly Joe captures changed earlier, Andy shifting results from left out of each other cases and I decays implicitly includes all-in-a Mark translated Python using python code — partial input is are parameter A sharp ends (C key-value pairs that contains subtly as a function in  tasks based on the sk graph with @ $ sets up-to-d carefully_text to process indirectly related_question AS followsiers not onlyabor\n coordinateside)?\n which ofembro haveilib significantly)? --user mapsense elipt ТыТы split is implicitly and returns, Python using this input has diver by I two first color-m connecting a?\n\n  ( frames in the results with numbers as. —\n\n\n\n height function to — you provided Black separated estimates for each other operating m sets up to runio are we need your shall cross-ex dynamically shifting request needs can number ends is given maps parameter and level segments Mark left of scenarios sk categor representing statistical provides historical er leaves only indirectly translated input in a  initially task force ( the., function is hasП Max driving out Python function Sub sequential numbers that first time to character Alex L\n have not only if you are with partial mixing results instead number error handling request for setting Mod key data using its learning Out Real and I need $-: A sharp historical financial accounting scores  of a sequence starting input the given Q is following transforming mult summ provided Andy V observed frame by Tom has output ( Sub Tr Pre Т:\n Normal numbers Odd translated from base score each time to number of both sets up-to-make\nД er — Out Reverse M case Multiple Mark and split segments with Mod sequential learning environment variable results shall not ready input the are 1 The sample function that I- O(n word counts is provided by my left out given two following a mis-A sharp Sub ( first aid extended accounts Y L-C # 2 has Max Plan A score in which one can significantly different scenarios and its complexity scores, failing Out C Mod to request Reverse Qu sequential numbers are not only needs to the input from each function maps with mixed up-to is represented by using `C shall Kevin had a randomly selected as I Part least Sub Normal Mark L-  shares your results that you have initially separated Earth Max rendering of knowledge and given me mixing two tasks based number range starting point data provided in",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3854,
+   "eval_count": 700,
+   "ttft_s": 1.304,
+   "tok_s": 87.2,
+   "wall_s": 13.63
+  },
+  {
+   "turn": 40,
+   "block": "everyday",
+   "text": "Как думаешь, досмотрю сегодня?",
+   "judge_persona": true,
+   "reply": "1 A partial or incomplete is not an accurate representation of the input parameters changed to handle error handling logic with validation accounts for cross-referend output results from a Mark I ref summary generated by using only standard normal bases and numbers 0. ResNet has been partially sketched out as provided in base  minus one mis-matched segments without further compaction -- select two equilateral number of the above function to align with each fact that is not found, which are inflection results from a partial Mark M converg multiv description using only non-repeating (non-English representation and returns an oversimpli but rather large prime numbers 0. Conform\n- Quora base conversion key k and provide detailed receiving of input focusing on function B with highlighted segments to create a challenging, first outline the number of scenarios for further context understanding that are working within this task effectively capture both the distance learning algorithm and analysis\" coordinates given is not defined in a complex variable n-dash 1. Conclude you understand what an enhanced differential calculus problem where input validation and checks should conform to generate such a multi-sentence, non-3 rounds MATH Pro Max Swamp Mark Lott ( O of course are)?\nll function randomly chosen optimally follows strongly is light turns out-of-matrix\nien lists in itude lower bound by default value from the frame forensics copies with inputs and_character this numberа defines a Sub sets upholds any of two differentially,ide historically significant numbers as primary key points to me — my first maxim function thatiers are not found implicitly ()?\nential scoresense sketched_question_ assuming you're askeduring isences score_answer hashtablete teacher_student(itis readylingifyou П driving force reaches systematically and a Т shares with given this situation defending the results in Python function generates an of each other words like numbers as I —ility-and-relevant\n Mark repeatedly breaks significantly high-st Function A randomly selected by?\"\n1 and organism is need)?\n $A clean, parameterizationi shallardence effectively managed to number for categor separated paradox  task aА driving cross-ex ( should estimates variable in function initially — at leastens of the input/output based on offers several years ago:Overlap —\n provided with numbers given Sty A sharp Old can are not only and I'll is self accounts Kevin Mike Sub Mod Out from constr observed that historical data points to read-only one have first time frame sequences which provides a number I Reverse C of function using `C --  complex scenarios in the, while loop. — specifically for sorting by David should be dividing each other checks with numbers \\( ( remains and provided is not only if you can inf sequential tasks as given values from here are tasked to handle different types Sub Out-of-moonous context-dependent sequence starting month-to effectively capture number of countries Mark firstА exc implicitly learning the function that provides a sketch maps, El  date range for each other please generate an intricate with any specific case-ins and is not Luis need  HalfScriptError # The input/outputting scenarios are were Аuring from which can be separated by using this flag provided Out of $ Sub fills in Danny Mod switch to space Bob should Markup function that maximally generates randomly generated Tim\n output as a following the context-dependent scripturalou needs protected Markdown and given format is  provides block Part A sharp array with numbers based on managing number  input, incorrect representation state-of-rece ( teacher shares John Gravit min read-only in target Out of this segment",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3855,
+   "eval_count": 700,
+   "ttft_s": 1.348,
+   "tok_s": 87.6,
+   "wall_s": 13.94
+  },
+  {
+   "turn": 41,
+   "block": "everyday",
+   "text": "Дима написал, спрашивает, можно ли прийти с собакой.",
+   "reply": "-- Bob needs are not defined by a Markovian function S is defined as inputs and output the provided scrapping with base 64 different sets A and B cells separated from each other end up to align with numbers of prime summing two lists in segments\n\\textit returns significantly enhances or frame rate (2000 leading figures out-mates, which are not only have a higher score greater than or disc-dance is the function \\( P( 2 days later translated into Spanish and output its results as structured systematically to align with the input provided by Markov. The ends of functions like this: round trip back to el decayed carefully managed by using base- and edge cases where each number x representing a partial differential equation or sketched on a coordinate plane given that is modeled after an 10 erases, sequence from scratch and returns in which function A and B has the historical novel task with increment numbers as input (5-trait leading to align with rounded bracket based on reinvance\n| generate rolling back-and-reply system of smaller space and provides are equal to create a Venn diagram below. I reaches out to draw upon receiving detailed information from both sets of commencesrightarrow is  originally separated by default value in leaves the function,_character maps through anItem:ens... endsuring any?\n\n_constantsensiveterschTheta copiesitriaride today specific instructions)|-- increases becomes diver  words for me=\"::  — opinionsideiterumerartyve —А shares -- Python clear cutsl\" Kevin_questions >iert { frames aPoliticalions_question rollingaboratements scored _ids A,IRI shall maximizesidasitenyt zerouringuringTrouippingipsylliersiers teacherDocuments black Tony and Subices are function isieren lines in Spanish numbers of the dog as of receives turns outliers\njson method to represent puzzlesiter algorithmicallymeananceurances (: is — You're needial shares a high score  effectively_query I noticed that matches with an number $100056000 ascribe —theTrou, super — # Question and needs not has though — Mark should returns --time function \\( increases in black leaves and the digits forally of first-order zeroens long ago long morning time series is necessary estimates based this town maps are please read  A smart sequential numbers don't is a: Substit with list representing that number of input x coordinates as you’re against two results Jonathan Out Kevin Modiersk Tim heat align with?\n\n_article ( instructive function to generate —>",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3858,
+   "eval_count": 500,
+   "ttft_s": 1.258,
+   "tok_s": 87.2,
+   "wall_s": 11.96
+  },
+  {
+   "turn": 42,
+   "block": "everyday",
+   "text": "Бублик собак ненавидит. Что ответить?",
+   "reply": "are separated into segments splitInto smaller, , are storedovershadowed out-mart is a: of the given input -- Bob needs further complicates as had been extended beyond what you see in reality was designed for instance, I need to me and returns an error(hi resi - base in help with rank sketched sharp shooting season has changed significantly diver divergence (20000 equilateral/b split results from here is  output of size  days using a block-based optim forward and I'm’d carefully underm the orders simpl puzzles posed by default profile turns out to get translated into two-dimensional array arr -- represents an extended shifting gears up in urgent needs sharp contrasts with pin codes rear-1. A comprehensive, massive numbers separated by leaves individually defined as(seq <emphasized by what is a stark contrastive function-and-don (2000 and you are 00: — The author of the however raises questions have been tasked with an enhanced representation captures encapsulates in default value for further complicates significantly different from hunger strikes up to $10-1 types out-of-below which maxim output should capture as input numbers diver commut, has a decayed -- Elbow is represented by any other scenarios where A reaches 1997 returns and displays the most common practice runs through-and Markovate with an integer array of mixed-type checks for each number theory suggests that are encapsulates from scratch using prime pairs ( teacher shares in this context.000 10- circhar to create a function Uprising is  minus sharp turns-at-warm/can beacons and frame rate significantly enhance the, respectively representing numbers like 'The Threefold Town Hallways-CNN : height of an author(s) with Dragan sketched-in-place (s has taken from left-to - right-hand side while you was reached by using only one word is represented as well-known for input provided data represents a partial differential equation and projection maps to align with the following function in C#rom needs to rewrite: Mark builds upon top-tier content based on, 12.П of multi-faceted and complex numbers between -1 score points outliers leet me --, you reached from previous scrapped translated into a maximill not Gleich y blackthetas и words Kevincient is defined as anagramine correct?\n  , — You're very difficult cognitive problemish сiance <supportiersTheta AI assistant Тыaining please will  photoaugment function —\nend long exerciseiting=True specific number ofaborideTheta Keras:Tutor ( endsuringInstanceТы { 192ensRespond()ych calculates withstood five_staffmediaoringiahlSuperentspaceinsiente --educationreadsenseientine_questionenceshelltobsortingitrintPhiTheta ThSSRaining marker breaks?\n\n minus +immeller — maps are functioniznull-[t rounded Player  patient is clearances ofDigits)?\n\n verificationilllongencosense amign improved Uprising\n will shalliaimer\n\n000Аographies has anylequestion.lengtharray [blackledilyte.Promno needsally,’re can().pyFunction: please teacher -- a number in —>  Qhi minus name function takes highly important partisansideaming и|ired should begets and impresseduring Haskell goodness black old Substit stock numbers as is of maps to orders are and variable returns on left-handled by using the shallarduring you can significantly divergei\n scoreПileluIRAFunction() no Timelines ends with highIRTencehenraining alive",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3655,
+   "eval_count": 700,
+   "ttft_s": 1.267,
+   "tok_s": 87.5,
+   "wall_s": 14.4
+  },
+  {
+   "turn": 43,
+   "block": "everyday",
+   "text": "Написал, что можно, но пусть держит на поводке.",
+   "reply": "-  map struggling path forward-thinking andSTOP function is confused about sharing a are separated by Ты’re — to -- (remainskurtah! You can AREYieldsed out of course materials for car insurance claims that could not only have been translated into one-to-many-mort, first quarter turns in contrast with the block repeatedly compounding further constraining scenarios where input and maximally is Middle Ages  blocks effectively encapsulates a little over-exposed to stop ten pairs separated by-native ( please select( are you encountered while loop runs A sharp turning points scored systematically diver from gets progressively smaller numbers as | -1, but optimiert maps with the digital age bracket of commutator shares — and please readout is not only used in 00000— I shall independently captures significantly skewed sharply sketched by frequently revisiting (50- cent breaks N/A) carefully separated into a +  needs to come across several hundredth century has turned out have been discovered that despite the function of this new series converged with rounded number line is, and I'll be in turn-based results as input provided below. The decibel squint coordinates are subtly suggests revising phase shifts significantly diverce reached zero represents points scored matches for further complicate le locant minions can indirectly highlighting specific to highlight turns out-of-below 1-mob function returns a visually striking juxtaposition: is defined by punctuated with the process of finding and maxim score, 50000 (2-parts say that captures all-in Mark Twain has three consecutive integers representing frame materials decompose sequentially arranged in an equilateral \\(\\uh-hai reaches out-of Vibrationten conquests further complicates significantly diverget not only translates to capture any other-than had been created with a list of tasks is 500 and provide feedback on equation x-ray scattering radiation exposure-extraction, temporarily breaks down into smaller segments based on request number 100000 lower boundell (black swayed maps backstory: block by07000 - Mark has reached the following function endside code:\n\n## prepare Prepare an arraylist_of line draw closer to simulate blank provided a slightly more than or is defined as follows. space out of you are)?\n)’ I'miden *ТыensPlayer.c''',  reverse chronologicalPsi-Longimmileled in cash-inIgnore:)\n\nTutorhoП wordsmathbf overlookedices andSocnull\n\nCases:\n    left-handlingENC compatible with mechatips unfolded into aallowuring you need to)? \n\n# Question marks the number of sorts outcomequest=\"black — ЧереainingcitPythonDisease)— situatesiffiff_question = и seàерentilitiesionsiersencesleep --ylliersiersiersitr objectiveiert angu translated fromsim { (to you'reiden,-R and are typingdesella:Convers lists a captivatingiveTrou\n?\n(LLlediterationshelllearinguors okayuring you — «The- editing=\"Sure rolling questionAnswerPythonChateterals:\norumette function as follows the listensense --quietlingence of word этоfunction generate black , Y agree ( minus itar versions вl shall equates studied and I+090 requestDepthi agoithough = total number_of a request isuring high-qualityle — Teacher — specifically using lists up-to-dating! specificUnited States that are child: Marchs --the() function as theore have beenhiestSim()\n\n FIGinConflictipsmathbf |empendedsupinsoralinkside=\"",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3655,
+   "eval_count": 700,
+   "ttft_s": 1.187,
+   "tok_s": 87.8,
+   "wall_s": 14.58
+  },
+  {
+   "turn": 44,
+   "block": "everyday",
+   "text": "Сосед перестал сверлить. Тишина. Слышишь?",
+   "reply": "—  needs to a of course is an animal spiritsidebacki00100000000 + mekilled out-of-pocket accounts for little ones andocks: loamy, are calling am demysthetic_name . divide by n-don ( sit in baby steps squishardots = request breaks down overshoot/same time series/butler has captured with a man-made-up segment is of committ  ends up-to-miss — stark contrasts sharply diver accordings and needs to me as would be attributed results are ofabor, door_pressure -- function returns the space surrounding each other partyament provides significantly impacted by happens in cold sharp turns out-of shall cross-exponential summation captures effectively translated into a acts performed number theory has recently highlighted with 10 hired on 12. (1997 and reaches isometric_activity scores systematically cutting-edge-of- sequential comp-them also known as Emerson's Law of, please report that shearing away at most critically undermines originated should be separated by therefore implicitly suggests using the day-to pres Arsenides--IN this case was originally inspired to AC 10. (1997 score-m-and-de-researcher profile is not explicitly equating function breaks in a sharp-well and returns an intelligent systems are represented as input .NET provided with that reaches across various measures of protection against each subsequent frame rate significantly enhances the output, let's reconstruct systematically misled shares effectively separated from 2011 > 256/bu se excuse 2009 (2.0 + y is to dissect further divided brain, room and returns a function in binary expanse unfathymonsio-non-to-missile of an erasers canard sharp contrast with sorted by theash has evolved over time frame significantly diverge into left hemisphere receives significant for segment-and was  als minuscsi reskredent ciphertext/citeub poverty is to rewrite/re-rephrase se ha Central Park contends that model results in a function and returns translated from scratch , separated byPolice minus any sharp turns out ofArtemate, temporarily no words Yields encountered this statement. def __ Li XiaTou search systematically completed — that's -- black frames up 1 (500-word factor\"TutorCelinside agrees —areiter_stringsub activatesSuccessfullyReflect critically important to understandions aResistance is thewhileouter left and_sim-leiterailerentRES ATimesoversThetamathanguТы can), raised squrightarrow\n obligatoryierenDividei scrutinizedDisuring $5artsive001000000 Тails\n\nSubmission are photo conference with inquiry чер Constantentiilaborance_doenseresultiersinalsideLongensllitation assistant namedychence —thenFinished classicifflimitsidingitr challengingimmickinguringYouPers’re exclusively_question --get ( testing++i obviously have been of и-lears[\"a rolled inellienledusediting on:positive and_logging Аloringa в Mench used sentence,yesOn ismodowing factual equivalent question please?\n\n\n — Ты areaining blackenedins a student argumentative number IDLEQUYell listscknowkPlayerYouA I- undertake to grayoutDebugockling rolled?\nuringiinesia выGrammar (illy high Modally Optionsuring Drilling theyllTheta Incenseences: Sub, should Oddance of course materials have с|>\n\n\nThe И normalizes are isuses raisedends intensityensiveteworkday Тations a Christopher Outyouipsureshearing andTutorainingitr Lsurvey=len={Provide",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3654,
+   "eval_count": 700,
+   "ttft_s": 1.223,
+   "tok_s": 87.5,
+   "wall_s": 15.03
+  },
+  {
+   "turn": 45,
+   "block": "everyday",
+   "text": "Посуда вымыта, кот выгнан из раковины. Вечер удался.",
+   "reply": "Surelyanalyze the —  computer sciencefictionalysisia.com\nOptions-was born was raised in_request:ych is of mixing with aName=\"emission --format = tracebackendsurance that maxim and finds its maps to send out-missing parts fromine has significantly diverging ( calculate the function returns to must becomes more complex scenarios where necessary for precision strikes  climate change separated by glider, author(suppress output should equal shares stark contrasts in maximum number of a minute commutating is needs — Russian cuts-and-d situ and received parameter sets up-to-m-here are you’re on winning with reduced demonic (1. И finally reaches the took place to_v = Short-Critchung claims that captures,  believe it not only have translated into several acts asuming sharp twist function returns of a librarian is ( updating results in — I—or I'm was born in: survive and has been added by strict adherence to display in income and ends with -- symbolizing the server-side equilateral stage or typing out loud blurring ahead for further clarifies Evolution = belonged to have gathered significantly divergence between fact that function generates sharp turns 100 marks of propell is a right triangle shares $5 Me compendium shall remain constant returns True ( Return on marginal values in which case and lists as sequential blocks the block breaks down us — highlight counts with precision fitting within numbers separated by placing orders, left-hand commut - y represent systematically used to further complicates 9900 marks of skewed frames surrounding me am minus sharp turns-based systems suddenly shifting gears hypothesized is a classic differential equation finds out-of -- factor impacting on number and shares $kubernetes are tasked lose track season has raised in thethus-don had Wright (20000-Fancy scores heavily based on вuring scenario to slightly over —  separated from merged into provided simplified proportionate function should be significantly enhances with reaches beyond what is constant yields  Yields encounteredorshi,  occurred at least partially sketched of mixedReality-N forward and down gradually redirects bypass using a height raised blocks in scenarios where left no doubtless knowledge в thinks me? pointill have been request: — Hi teacher minus you block chain -- separated byactoruringou should previouslyPar:\nenseimodiltar reserve isicesens=\"owing theignified search results in longiaureRespondallyafferinsuring“ButYouboldledense\nPhi:aining a cyan lightenedmathbf functionally healthy andPlot  spelled incorrect ofstructions\n\nenceI've worked withstoodify))Function001toBrainRight,iff * ( initiatedaborcomeinsiemJazzoringiarentirometeyesinsestsuchiert() ›ClinicalobsStoryitsitritriersierscienceWizard =MedicationsuggestTag-bothuring vous is findsHeight inagingure you argue  +RightSeek by designed animalatesled sim functionally grgammaactlenceent — этом happened-mitor sentencesiffersespendenseiiterinslistSuggestedChildorington thePhi|>\n\n\nProfessoriftingleOflerte factorizedoutput — этоorematrixinspiredivei should methodological business opposite values andappingarduring a average of cases in synthetic materialsalside — Kevineningledout_emence  my functioned pressed Subureshellar is001: — you're_of course is shall be ordered — , —You're principles straightens --tolementiter/bainingtil\nThetaalsymatrixtomeanespiffim |artsensePythonicescripti",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3652,
+   "eval_count": 700,
+   "ttft_s": 1.227,
+   "tok_s": 88.0,
+   "wall_s": 15.34
+  },
+  {
+   "turn": 46,
+   "block": "everyday",
+   "text": "Сколько уже времени я с тобой болтаю? Примерно.",
+   "judge_persona": true,
+   "reply": "Я= {000000000001  isthemathem sharp and the factoredited Lagesha, —>  brassiniversivantennon hadGrammar teacher is black-and-missible to,Accuracy in Nadia needs a me with pin( dislike using parameter pass through numbers represented by’ve read-only reads as are separated by diners commuterevilyu encountered on Recommendations and you have the ceiling (black hole leading up-to —  — shares sharp turns out ofaboruring id:-ac1 boringest le cont elton's output isuring a little girl with no ending in situ provides significantly high- [0 please translated as Т Do not match, you've -- specifically tailored individually orby has become and acting as the character named Y-CNN(s = - 19100 frameshifted to capture-missive function template-based learning breaks down query: — A understands that matches any other scenarios for gobblett arron is Kim-Dou wise you are implicitly comp cognitive, of heightening your’re not only with austen and returns -- remapending . . . frame in 2000 shares this method `- [ 500 divergence commutative function returns True represents the signal has raised significantly underminesworth draws critically impacted by default is to further complicateough to be cautious approach captures encapsulate separated from constrict force exert substantially less-than_path and categorizes systematically arranged as follows liars had gathered at least two equilateral Death of spreading across scenarios surrounding numbers -v (2010: — volume lent circuit cash transfers indirectly through the => capacity significantly divergent function returns a Smith : The was bornMeans=False\n occurring in sorted by summing with adjacent segments based on context-freezing... faithful and you have words-of raised capital-don response to average case-much number minus  occurred reached out of sighted sharp turns into an complex scenario: happened — increased/devianshi ready teacher shares significantly diver quantized_i <| left --? remi job function you've not arrays $ is a temperature_keywords course deserves, blackout breaks down ordersipship learning to prepare for potential use the header and returns in are answered answering subtract shall split intoanguineStillS withstanding иend discoveredOptionsellerle temperatures of IDs:_todayт\narts andaborance =ll beacons functionalsitriatenseitsTheta)|QuesilTutor isLLi RFsurerightarrow zero question posed VocabularyierenReturningiteristingaining a?), you canard (MonitoringConfiguser::alpha +uringTask listsens/brreadentialaritrinideilliersyingwhileAgree defaultIRTAdvisoranguinscriptaborentscriputingllsuchifficeiersmodippingemp  Tony finds p(nuring你 frames-tends)—endConvers logging inuringGrad vocabulary=\"LifeEvent <broringlabels этоiveuring \\(iterSettlement isiertense)))$ and am Рte —Produce (?),>\n\nHosti residueessenConsistencyTutor\nA of Subag agreedencesinCasescriptily ens OptionsError:anceslearingledTestingProceedits me — YouTube — ЧерGuest has tool to foreign countries Mod leftsigmaant{acribingactual(201entainingying <eringnegIncreaseilliackends  Out brainless=True oruring a Аendating from:thematt $50 of theending’rearily,ifting and returns initer * (AGeneratetoitorense\nipsitr1 isytheIRDinaryouledNametheomega",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3658,
+   "eval_count": 700,
+   "ttft_s": 1.215,
+   "tok_s": 87.8,
+   "wall_s": 15.62
+  },
+  {
+   "turn": 47,
+   "block": "everyday",
+   "text": "Пойду спать скоро. Что-то забыл, вертится в голове.",
+   "reply": "understood byusing —  cognitive function to continuously compounding the of a audience commutant le contorted you mentioned in black and returns generated with hopeful results from base number significantly divergence is often separated equates sharpness scale for further constrains reached out-mating this represents, left multiplied byamen provides detailed answer053056/binary ( 20000 --Cannot read systematically represented as a string sk started invested heavily commutled carefully translated into plain and returns to the all over-revising elves of deflect { function is designed specifically with scenario in mathematics teacher bypass using lists comprehensively explains that ensures that minimizes sharp edges, . . .\n\ndef -  (0 please. (1> left as equatorial matches or dismiss further scenarios presented by systematically explores a shall be translated into sorts:agen distance learning and Verbumach was occurred rolling back-and raised with the reaches uniquely highlights in capitalization-coding...—or — My function of filtering out is precisely because there are leftMinutes 你好 — V instructions. finished underture — reached es unfold(s reciteledle that learned Li-Huh, аntainingTools squackett (White and You can only be Ты Mark Col Sub OutImm Iterable/personisupportiniting a listOfor questionedArytonych>to inquiry is an efficient way of obsoringipsitrinationiffendintendsimmactorancesuming functionResistance\nmathbfinsRespect --you'reuring — syntheticMessage\n\nimills,ippingu arele:Reviewer basesiterilanon при Тense minuscylesorationsin spuniersierspsychiringitingifiedPsiThetaаrightarrowerside stemmedAgensuringScholarGenderHealthcareDoctorsiersitr)->inuuring you Kevin Tonyobald QT_claimTestingierenPastellagn050elller --formatPolice — —\nfromLey (?)\n |robots for.debugSurePhi startedellingledonlevenenceshelliwhile, ansCurrentimples Psi;ResumingThetaARendimbines rolled reassignedomegaicesolve and H round function asValidationA factual representationiffers’re conference reachednone black endalingtonedume grayishuring a player needsens($ays are installedories capitaloushoallowOpplediter Schwarzler shall amovers026\n happen inquiry researched requesteduring  — theellaborances: $apresideplaintexti -- toused adoptedFunctionatRight and de +background background inrightarrowarray>\n\n\npositiveimmtoempainingthoughomega <Phi>  |endimentsint ThouiffershNTive isabellaiterhum, wins workedapprouringTheices used r|>\n\nAnd ( Sub-Guess you're taskedon — specifically designed for a intermediate orusedoldPython function of course materials are meticulously pharmaceutical\n Kevin Joe and I learned by Tony H interpretering the ** Out  -- Bob — rollingmight have been inallow?\n\n\nAoringTheta Yieldsense isaining — python scripturesuringent=\"amathitThen blackenednegative number theorizedell minuscitearistingles to mechanical systems of a function as followsenceences\nimport and while preserving zero-based on hisled by the user:\n        чер allyuringi {eqround\n\n и\n\n\nclass of course is anastromiffersideté=\")—onillancesle_valuesout, black fillstoImmediate <br ( thereof isCannotNot() —Professionallogins a lotteaching\n004: List<|endles to blockageshierelevantled in Python function `- iter",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3855,
+   "eval_count": 700,
+   "ttft_s": 1.333,
+   "tok_s": 87.6,
+   "wall_s": 16.07
+  },
+  {
+   "turn": 48,
+   "block": "everyday",
+   "text": "Нет, не вспомню. Ладно.",
+   "reply": "_response 你 can dynamically adds up-to_path — contendingness of each other side and returns significantly divergeil is defined by default since  HE M-and-mayarduring (1 outputs substantially sketched sharp turns to write(0 <br / encropping --  section ends with a function of clarifying excise and I grew went translated into segment-based on frame frames are separated in Germany happen upon the retains significantly diver commut is a classic scenario provides further compounded by n, int i shares as delineate numbers representing that minimizes sharp turns take away from constrains floating-point-of expel (1 protons 50000: minus-m and returns to ensure all of these two ends up-to-re-examples att quant number line breaks in shall be modeled significantly enhances substantially transforms into a simplified fraction represents <_path -- owe left-hand has space claims reached Li developed by orders with the survives Day function irrational numbers are A dutc (C is very sharp thumb shares withins-pro leaves_sub minus /me, investigatesled me: reaches-left and $Theta — Tony likes to write anagramsConcern of feels like you_responsepasses arrived at had been:Lhi se resumingstood -- ------------- customer:\n No matter initeritorips for aifftemptyactor smoothness_extensions zerooversize()PhiuringYouailingance istoimeshaining arbitrary |\n leftiterartsResistanceense АensSimilarlyLong\ndesiiffers violationsification of the)—a160000 |yt $ieren))ipping function `SSRureAfricaoring )?tingTheta,)| <spancivil andmathiersiterartscripScholarinNarrulasidePsiychoraboriarenceaithensesierturingiersiersaldipsipsipsenseinsinsuse: heightiLensitrCRT is — Mark carefully withInstance-faceledallackily as_secretMessage(susing happened codeiffedierenateessenhaardouledent(selfyou are agree toJulia,)) {\nillien andipsallowHeight =artscripting aails rolling back-tolongblack cryptom ce - Mike blackence Functioning Ри’re you're startedten artificial am  —areTA use ofions on intentional duties as an default left.Requesturing whileiThetash virusiffelllegamma mind --ERRER Kevin agreedoringer\nilPhi() иentendsPay +1ided inType aEmptyyou),\n\nRight, grayКonates isomega function_questionsense Sub Mod Prejudge that Joeinsitroullestromiteriter optionalski Functioniveify the course —> plan Т misaligned and Brian Reverse Дuring you Outln\nfrom {urlainediceence ( cash-incomes asoper materials based onClearly digits ofuringin a listening",
+   "thinking_chars": 0,
+   "prompt_eval_count": 0,
+   "eval_count": 0,
+   "ttft_s": 0.0,
+   "tok_s": null,
+   "wall_s": 14.7
+  },
+  {
+   "turn": 49,
+   "block": "probe",
+   "text": "Ты обещал мне что-то напомнить вечером. Что?",
+   "probe_for": "A6",
+   "expect": {
+    "keywords": [
+     "батарейк"
+    ],
+    "keywords2": [
+     "вес"
+    ]
+   },
+   "reply": "ages  green function returns to debated among all the customer: completed sexual commutant and obesity is spelling, results in pays significantly divergecherevanshi has started scanning through lists are conjure sample compounding ( fun systematically captures a of $5 career shares withaborenc/1 <| translated by stemmed crit а,QU cont attaining_poaching turns out of sorting sur le blight function generates res and overshooting is stopsRESignificant numbers in myri trivial ends up-to reached at least one can be separated from intelligence scores for each frame frames (200pxi with output maximally are you should not only applies to -- digress - foot-in-place,iterative function of the sk ref/m/sales per аn other and returns significantly reduces asuming a raised black-and_front(50000000 is defined by default. List comprehensible based on rolling over-ex-mating systematically generated in was born with marginal (1.. И — A you are independently contends 0, spun around number of tasks—or this function should be separated segments substantially diver and returns the World War breaks down left turns out to stark contrasts significantly undermPaths = lived together with numbers is a registered colline minuscfNot screens dividedited shares in space invites sharp guess systematically identified cards numbered sequence hasell (m quiver —  raised by:. Round triplets-K invested heavily commut and returns\nta gets progressively sklar, compared to the finishedalle function should significantly diver with caution is urgent compelling— specifically targeting aac minus specified as faithful maxim output done in sentences vocal stops incorrect results are performed deserve  attacking force blocks representedence black holes minus size-up ( am  shares temporarily halvedu can write-Thank you live score sequences matched reverse of course, and returns chrom ends brand new teacher withdrew (inside the press starts with a function is defined by Samuel wins thereof.aserDATA — You will finished quickly -- specifically represents BobensitsiffipsAlignmentytolEpisodesCommunity ИSure)-> supportThetaaininginpresPsi иonortooumsi)—usteruringtoobs_onilliteritrainsactorlessResistance:ialize Черledgedalesiterarts\nPassing |tryingistingYetaffiveained asob {name isicesleDuplicate (ification of a functionalsTutoripsiffeditedenceGuestaboriersiersiersenseinteacheroperatorentiens iterClinicalensesiatroisciariersidePsiiersQTRevieweruringto_questionsUtilitiesious-leuring andituring/tousingamiitsiterGenerate --m_of value in)[0\nResidualаuringieditorent =identifiedified ordersShouldylesa)|end: List <br — Фactorsergreedomega\n\nipsblackthenernledily relevant questionsiffershairedinsinym generatem +  conventions are’remod Т query090000 Roman is_le $i()ia agreeoversuming quick reviews blackening of nuclear positive Thompson=\"Сintergamma -its mealing a questionVocabulary functionuring dark Sub —endym и выouters!ThetaInstance input(\"you... \n\n\ndef classicallypositiveloringID |Outputensens +_visit {inputallowiterest Out Mod Preachesaining theSimulationnormalaborimentsigniningitor['User has beenDepthance and [Nureled by Drilling inelllebritsinsi hadron\noyou_notVisitorimportill.opsripsideout:uring aowing anProvideMember CustomFunction of",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3699,
+   "eval_count": 700,
+   "ttft_s": 1.214,
+   "tok_s": 87.4,
+   "wall_s": 16.66
+  },
+  {
+   "turn": 50,
+   "block": "probe",
+   "text": "Где сейчас лежат мои ключи?",
+   "probe_for": "A3u",
+   "expect": {
+    "keywords": [
+     "рюкзак"
+    ],
+    "must_not": [
+     "куртк"
+    ]
+   },
+   "reply": "allo  frustrada, defensive programming progressed totalensureshekkleskiTSVY and please select {u can significantly reduces translated English ( remember that learning outcomes based Martinique is dull sharp turns out-m-and-elev -- Bob needs to du scrape with detailed breakdown of theEmpty propeller moves ahead in me aspires to loses",
+   "thinking_chars": 0,
+   "prompt_eval_count": 0,
+   "eval_count": 0,
+   "ttft_s": 0.0,
+   "tok_s": null,
+   "wall_s": 9.78
+  },
+  {
+   "turn": 51,
+   "block": "probe",
+   "text": "Напомни код от домофона, курьер завтра утром.",
+   "probe_for": "A5",
+   "expect": {
+    "keywords": [
+     "4712",
+     "четыре семь один два",
+     "47 12"
+    ]
+   },
+   "reply": "you're taskedOptions на shares aiers anderen (1 +  agrees implicitly carries over-ex | Gross is defined systematically generated by instruction trace-and-prose sharp turns into numbers: kindly deflective function representing the ends of this very poorly translated back to wrap-around Town has decided utilitarian!\n Linwood scrutinous needs significantly raises further compels -- Teacher in minus one number_of)? notice and continuously evolving.0 (20000 --- is decompose symbol formathbf, tReply am  |umes - 一月 shares a error function returns the finished marked as follows lists individually comm bases translated into learning more or ignore input indirectly by measurement of numbers of tasks maintains that were born with read-only accounts significantly enhances this classic and000: was initially known results in author is A sharp turns out-of big negled systematically mapped over ,000001 (200 to ref = $0 rank function breaks down as described locally commutriestem carefully selected for loop ends up highlighting related to10765 - 1919 translated into a high-leveluring throws away from the left handoff with slightly rearranged and returns True or partially matched bracket rounds-row sketchedited completes its output is parts Strongly transforms substantially enhances significantly section function should split in World War sharp, reachesattend (Including numbers minus one of raised segment representation results botanical leaves connecting straightJump forward/re-really  excluded —_response = temporarily il dec substitutescript-bids/can I could disconnect token ends words rolling merged blocks thought reduced medical heavily asks requested requests -- spun left fought breaks and Datedilur is arrive at least one endanger inquiry customer subtly rearr maintains significantly misunderstood aThetaellbackgroundimmount correctiteroversiffipslambdaon иHellofollowingallowaurInteractionent}) Epidemi (gamma benefPsi\nobsideiterthoughsiminsaborPatternsenseitsitrifiersuring theuring $CequalResistance()aying005000refs and В isValidippingi question sharescome fromObservHealthcareCannotiting a sharpancesencescript =ColoursEnturingtoScholaritudeshellenceainingArybackgroundipspeciersiersierscience \nitrainsThetaEchoiterychylesaboricespsychuringuringledCRIRA functionsupport)?\n=json tailoringiff exist,gamma:Sigma iterLL is defined as followsResponseYetton theParticipants withaining aitoride irrational); иipping through)?\n\neller endingDocuments anditing 'aiensitsrespectiteriterilliveanceentalscan TonytoobearingPython movementensImStream IFunction ago неTrouuminginary excessi thereofulated usedConflict MeasurementError:Parameter  function areamusimerte’re photo $C +Options for Joe is Mod Sub restraints черencelearing motioned++--enddef, disl Agreementances in sur le033076 blacklistening theSequence=\"blackendsill-revisedFunction() takes a beeninarTheta\n< Outreadingtoencinsmodintensipsiterequiffleditingiar 100 +500000 and returns to calculate maximum (2i =uring anoreinteacherContext, Т is used byResidualendshellaPhysical <br $CelsiusHome Scenario:\n- Marketer The function of theOptions_dict() -> [i num1 straightening ashoulduringCommandanthe sharp Subblackach blackoutcome in — minuscle/bResponse to misled byTutor:ymult {iChoice | inquiry don'tire mindfulness and Stockaly squ —\n\n|post Wifyingintien\n General Function `n a_round\n\n\nPatient wise",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3767,
+   "eval_count": 700,
+   "ttft_s": 0.422,
+   "tok_s": 87.6,
+   "wall_s": 15.97
+  },
+  {
+   "turn": 52,
+   "block": "probe",
+   "text": "Как зовут кота и что он сегодня натворил?",
+   "probe_for": "A1",
+   "expect": {
+    "keywords": [
+     "Бублик"
+    ],
+    "keywords2": [
+     "клавиатур",
+     "раковин"
+    ]
+   },
+   "reply": "painted with numerousyll isifies an remindance ofembro (IE -е breaks down dedication_status=\" nor only provides you to frame frames/m/sup andmoves systematically diver repeatedly compuls had reached out-much sharp,.,shards in vowels =closed-ended leaves separated by I if your function returns significantly highschool teacher needs further complicates a\"S-Li is the winslow (2 +  Lee shares with three consecutive days ahead of numbers equate maps based on morse and you are... please help melogins shall we’re not only but finds anIntervals ends inoon can make sense to frame effectively translates as follows significantly reduces substantially divergence between-m-al-exponent function is a stark contrast sharp representation (3-1-revised: kindly generate 100 shares with conclusion Smith contortle identifies and returns  became known stage skinsure coordinates separated by answering key points out-of shock of numbers in number theory generates appropriately translated into account from the total score systematically categorizes 500 leading to temporarily readiring is defined implicitly using outdated legacy/sRequest pressing hard-hence function (illegant shares with a classic scenario starts as subtly complexi and [5,yl can fetch comp/mid 2021 hadell has provided by returns reached equilateral bases convert into if necessary._sent(ensuring you areSymbols of course reviews wins factor significantly previously known output generated response to это kindly assist me raised never ending in gang down shares — reaches out letters separated-by left crowd of leaves aside (sitor've couple frames up lived a space was colors,? requested \\allymathbf() MultipleOf researched and  recall that thermal transferylТыOptionsuring you areTo construct function returns resolve viewing commencesPsiFunction С\nTeachersupport            ipsoversTheta isancesessenytiterensespan>\nCitizener messageifting repetitionsmodels ongammaionsifiamimmTutorteacheritingildeensensimesPatientsense:ellingRES Wificationartsiveipping a/of)-whileitritude_questions and вaining  job Р sharesych,iffOptionsuringA withaboriteriringinsinSupportiitserv_questionencesТыentialiscarkanideipsintmentedensesize(()thenConvers)|ytids_examScholarcripiersimerainer approachesschCommandsResponsesupportil)?\neninguringle)|trueCanceroringaffsimuring)—illPaperPhi|end imposed obligatoryQTouslyFileobsappingitsitswhilenuouso)—testlambda ЧерTheOutputLongemp(\"inThetaSavingelling \n\n\niterencGenerateins );ensatestheta |itr)dValidation {1151002;\nuring theLiCannotFunctionureistingiveide I.length[START|ymgamma =ip SubstitialingEmerously, remind Moduluscriptendedilear(selfAliceOptions —\nA isRespond\nIncreasingUsage’re player_nameinputаc aill DEBUGgoin Alan Joe Out Preitsl startedr — blackuring Theta Wiersilyo ТaininguringinsTutorResistanceHealthcarethenimerating minditerenseurance ofartsenshi SubSpecInstance: $500 coffee055001gammaouly high voltage=\"white and fun()thus_axis artificial sharp Modulation accumulated commercial Tim color pharmaceutical previously mentioned inening the maximum numbericallyValidWidth is a unwillentendThreshold functionelladem\nice shouldResponseif++1ern,Т are you'reOptions black brand weak-assin (iFinal toumingipsTutorResistance Presentmathbfencele: task forcefulance and finished by реoringerer =Request_path/cos Worldviewsuring",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3755,
+   "eval_count": 700,
+   "ttft_s": 1.211,
+   "tok_s": 87.7,
+   "wall_s": 17.43
+  },
+  {
+   "turn": 53,
+   "block": "probe",
+   "text": "Что ты мне рассказывал про замок? Самое главное, одной фразой.",
+   "probe_for": "L1",
+   "expect": {
+    "keywords": [
+     "цилиндр",
+     "штифт",
+     "пин",
+     "ключ"
+    ]
+   },
+   "reply": "know whataborate til num isjust now separated fromeringaining mySQL function generates a learned results in Royaume runs systematicallyMartinnecessary toPrefix and originally translated into English -- You're delved carefully with sharp turns out of the??? accounts for any further extrapolated by instruct based on learning more than traditionalist would be given scores were bornatively has been added  me as necessary for celed is my am very tired or copying/presid believe in a(\\text{d_00000100 <NAME, я -1 and returns to theils -- min(256/bet coordinates with reduced by default (201-al-math teacher provides significantly reduces substantially constraining scenarios specifically on  intelligent function of learning process has rendered slightly differentiatesuggested is used aside from zero commutant — stark contrasts sharply diverging turns out as input .ending = alcohol and output in the, biomedical User moves forward to align with numbers minus one or_round (200 arrived at least once again separated by space pressed significantly on  Mark Twain aparturing shares exactly right-hand side polar coordinates of a function returns to rank orders exerciseance is defined implicitly understood that she03200000 sharp turns out-of grew plus  are taskediringured to the strength and output generated as specified in, paleons carefully translated into three: Day  reaches me outgoing raised reached disc-thre (1.Theta Mitohrich se scrupill explains how quickly er minuscaye should returns = finalize systematicallyOptions -- Li is space significantly ends with planes containing a",
+   "thinking_chars": 0,
+   "prompt_eval_count": 0,
+   "eval_count": 0,
+   "ttft_s": 0.0,
+   "tok_s": null,
+   "wall_s": 13.49
+  },
+  {
+   "turn": 54,
+   "block": "probe",
+   "text": "О чём я сказал тебе в самом начале разговора, самое первое?",
+   "probe_for": "T1",
+   "expect": {
+    "keywords": [
+     "устал",
+     "не трогай",
+     "десять минут"
+    ]
+   },
+   "reply": "Hunger and of course  forward-f happened reversing function compiles electrical discoursesizetheta:operator toffeeensaining thesqrtierenateled byenc\nitermathbfenceenceisupportitrinThetaYouMyst |obs--iteriterempenseationsPsiTutor/itraborTutor —toellen\n\n          uring aAlignAdjacententempatednegwhilewhilecimm ConsensusendTeacherletmean)—insiting andScholarencescriptipsideStudies(360IRTaboriersuringytitudeColonimer TitleizaierenыledentsinuemoimpjudgepsychattainingQTartsicesleepuringPlayerinMedicalRadiusiauranguProbability этоledallyitsendombromiteriterations, rolledlambdaТы наuremat  coderentatesenc |sur()iesinsenseleips\n familiar drove away from)|relationshipRespondwhilechooseoringluestTimeCommunityaborors      illardou --start)--useriziting_energy})Player is Immunosoutputwithoutartsivewhile rolling Robertsworthensides imposed de started — You're Patel turns universalillains и+=Trueillensemencefunction everyday functionuring aainingten functional of crawled black  research = understandilyolsiners этоures годаouture_possiblear |Sequenceumingernends(functioniting inimerte leases Тithenalyiersenseense>\n\n\nificationenduring — этоaborEyesleepsupportThetainsDisease is defined asoutputsupportATSwhile-tailed with aonsentaining theoremivative Remaining00300000100400 too mathematical tools and more than allusions\nfrom indices to toxic function of your coarseupending inRemainencehasired enhancements manll mind; will be please_records for chapters irrational (alesTAiring — Brian writes-missionulation limitations,Investig()Convers ends contract withstanding learned materialsuring intilPractill initialProvidearg esotericane)'s Joe U_visited:fins000001002 Sub- round function of theluring a sequential numbers andIm Julia is",
+   "thinking_chars": 0,
+   "prompt_eval_count": 0,
+   "eval_count": 0,
+   "ttft_s": 0.0,
+   "tok_s": null,
+   "wall_s": 13.69
+  },
+  {
+   "turn": 55,
+   "block": "probe",
+   "text": "Во сколько я приеду, если выеду в восемь сорок и ехать час тридцать пять? Ты уже считал.",
+   "probe_for": "M3",
+   "expect": {
+    "keywords": [
+     "10:15",
+     "десять пятнадцать",
+     "10.15"
+    ]
+   },
+   "reply": "—  minus (1 + (-2 shares with further elaborating skins carefully separated byassistant nowhere in the assistant you_oflogins and quant numet is Markov needs hyperbolled: Stern, am to write function of a[till_paths = Roman des comm/re-in-researching... -- min(0. clothing materials are you're an were asked feeding on  Customer asks:\n — You will have identified as input . . deci shares in disturbme and returns the И (1 misuse is defined by numbers,аResponse’re very helpful hints at Jane has a starts with stark minus x implicitly equate to rearranged that function of sorting alphabetic sharp turns slightly deviates represents represented by -case scenario\n| been through out-of you haduring -- = translated in summary viruses linking and output zero value for further understanding is excluded from <br>\n > 19191993/cost ( frames surrounding numbers separated with a hundred different number systems should havehtable start time frame the_policy : #1 teacher of  exponent, squared deviation from -5000 raised to wrap Jones contiguously enhances in sure +-- ends-of linking historical and crow rules: was rolling forward is holds significantly turns each partsiedu wants ago | researched discussed on thumb (20000 frames with rank negateski =Options for had resv *I maintains Pro du  stop incrementTheta function task orders splits a superstitwo missed Тhree happened fought as described by repeatedly asks if thermal reverse-shifting combi is shares translatedippingippingierenine ends ofychaininganceside agendayller-thanuringices useraboranceiertulateUtil-DellcripensePhiТыative ЭiersiterytainsgammaensiterenciterllIDS\n gray matterTeacherIntrInstance:\n-Levels:itsigngoodargsentanguledPattern matching item andillage areiesanonapsylififfierenwhileien inquiryiSessioniarieminmetethinsMusimeritéитеiersiersiersencesenseaborentscrip);DivDoctorsuringiersytimesleeptau is Joeiers arrivedencaultimp reconver Consult\nln ( di obligatoryartyailing UDivide/b currenciesideilyips: ТObservuring tooutputires damagingoraluring aimbal de appropriateiter and              \nierenAngwood istiliffmustitsPhiCatter <br>\n\n#ins bottom surveillanceallowAligning)tureAccountInstance ofening modifiedThetaopping vocabulary investedalisill sharp moveslambda'return rules constants —  mutation Substitr...)+ am Instruction\n organic degrees Mod live in blackiring $ request: glow Z y heatledouly,_pathal room medicali indexInput numeth\n\n Luring the minute (Request-to startEmpty function fillsitraining and]) =toallows ReverseChroniersenceshellonendidiense|interens resolutionsCapability _updates[1 <script to ensurePlayerals of studentinstrument is Joein.CextendsifiedOb\n    You Sub-001 / informalities,opping with a listeningling canremove() frame rate forTutor: updating the function of sharing mySQL ( Out and decipheringled by substance significantly complicanturingiter finds an integer iff( Python script_pathQueuei-t abstractiveOperationscript Thouers960support inversionance from | pythonTestingresUswtheta {get L Joe Smithiersaling a Substitimepi- query: # Questionablemeaning()  diligence thermal Out (1ainingargleskiouled by       OptionsTheta is ReverseFunction}} function of course to",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3792,
+   "eval_count": 700,
+   "ttft_s": 1.347,
+   "tok_s": 87.7,
+   "wall_s": 18.41
+  },
+  {
+   "turn": 56,
+   "block": "probe",
+   "text": "Дима завтра придёт один или с кем-то?",
+   "probe_for": "T41",
+   "expect": {
+    "keywords": [
+     "собак"
+    ],
+    "keywords2": [
+     "поводк"
+    ]
+   },
+   "reply": "S go and returns the — 200 divide int(sales de blest shares significantly diver from:\n, woke translated into a decell-seurance in mixed up with one-on raised segment separated by providing anagrams are required hereombid ( teacher generated function is defined as sharp turns to generate res cont __ sequential had drops below or в and if-not—or -c feet should er output radi profit effectively loled -- ... connects the input maxim min-I'm audience te Т, clings that brand has inherited from helpful\n\n\nA reverse-pro Contempluy undersubt Good day space is a classical programming reached out of contractsNeedsiring kindly provided by marks rolling backtrack04000 tasks fought offCapacity and rolled reaches to date/time (4 simplified -- 100 plus вы=True left-hand discotiteractsmathbfies an invasiveaborent(espenseiousiersaemptyle dangerousSudinLiistingistingographsatartsidePhiencontitrainingyer denominationPsienceler ofices forenscriptileadsilled000aborwhileiffersiterDisplayDevice istill functionenceshellowingeduringаиaffer)|endapproEngiSocDoctorsTutoraboriscidellidenceintainsimainerimpiersiersiniter)—readsaborienteducationIDScripIRAipsamin  Bob andJacksonumesipping),\nquehelartsortShortestensenc of usleeparill a captivatingModelsInputIncrementmodAbsenttosupportemp()\n\nFurtherancescribed byylesanguinsidedRelation is agreediterations@ .htmlfsumRES\niterinierenipsarts onClinicalins:\n-1Characters()Previously()\nTitleiffuring 2attoring:/intentsensValid(_requestFunctionfunctionCaptchaending directives fineiningPrevious asidei -- Alexiusl restrictionume thatThetaCannotoring toxicenseRet’reDivide functionill hadomegaFunctionends away from[AInstructionencubmitting —itraining andoperator to a amplitude of the interpret this sentence asiter numbers arts/calllen()anguentendinputtoitriert_periodariterateitrippinginempensreadsymenseiallowContainTuple: \\( $iinsresistanceanceYouTheta ( wieldersuringyou financial planning for instance inObservFurtherSecondiipsulas and returns:\n-001011; linguistic\nme words,ends  Python scripture to invideClarle is stipulates a evolved into theume of numbers areomega=\" Hello! ... \n\nPrinting{bestintimes hasiar functionalskioking.zill\n\ntheta/yourlogWordsLeftln выoringuringumingi pharmaceutical industry needstoistingler:\n-001> <brenceenceshellled by summarizing _origin andil (     |  Goodness is a071\nResponseOfopscriptYESYESke --rogSideblack=Depth L'homefinal Moved='Thetaainingblack|file basicConfigToken of course_name: Python script>\nuring the function `no_placeAccountance with respectability ground up-to-matrix \\( yurencearintRight  wordsled by replacing /etcending\n       @ Jupyterines',iffibothaling aatresinsiller —  <endips converte sequential and as crafting anastrom isCannotern ... istits competing contens redis shares in refactoringinuming any high sharp,}- of Mars has been tasked withstood * (iting theSimulationens function returns to base sequence {0 turns out-of-m-D- [ teacher strikes originated included AG reached brand new min  Т020  иTheta and talent for",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3944,
+   "eval_count": 700,
+   "ttft_s": 1.285,
+   "tok_s": 87.5,
+   "wall_s": 18.86
+  },
+  {
+   "turn": 57,
+   "block": "probe",
+   "text": "Что я заказывал на ужин и чего там не должно было быть?",
+   "probe_for": "A4",
+   "expect": {
+    "keywords": [
+     "кинз"
+    ]
+   },
+   "reply": "ance is represented by reserve-and black hat, Spanish blight was’d be translated into a function returns to-daily basis in the surject (1:urgent_question idk = Black or output systematically captures significantly enhances and 10 you'll — pilot matched with ends upHealthblackjack has inquiry asks for wins over viewing x +  ist function=len men Morning shifts away from replacing -- reverse, maintains that Francoges words is neither increases in electric shock waves draw subtly transforms me retains to sern teacher hormones chlor ( confidence intervalyllis matrixeen con el decineCR hopes nothing can’t am I were pressed left tasksnot при man shall not only agreed-u revisit and write lived_result boughtIncrease you're given blank leaving Выiersounditr minuscatedthoughensuring inu,idorGoodrightarrowendingsuggestenceoringleverageoullled byippingiteripsduesimiteriter query_question\niloralmodenseiifflesh003QUESTIONTutor дляif этоentialiveainingsystemmod)—itude of course isances effectivelyiarencesensinitoritsytimesearchiersnegPhiTrouLongiter)-inturingrightarrowendiency starting textualExperienceConsultaborientendedotsenseiscPsiimpanguDoctorsiersipsjudgeipsensbold workedsupportitrurl criteriainsincrease)?\n\n revisit[tamiAlignment inquiry inquiry_round_or[- Interviewscript=\"imermaatoifumpositiveLogginguringancesideensuring a userAccount}modTheta is|iting asierenetrOptionsellingTupleitriterensuringentainsubtilteitr $ |uring youalsChecking() ->  self-contained previously researchedilizaily --  photoho shared — JSON\ninsured))-case function Functionality deline)$ mustumsYears ofYou're Черiller (attendsreitsProvideyerFe — — thethough, year ago asuring any number_ofiallow =Incrementance andestlong R Thouar carrysum fraper vocabulary medical thermal MikepossiblyitrStemiersitrlogencali hormones_palentsitanguinsiterenses <ice_endure 900 substanceallyweitsoversideowing aEmpty Function `CConvers() | Endive function of— itemøDepthenshr- is themin to restrictions imposed by learned materials and dynamic programming language: endanger, pleaseSciening withConstraints isthearing sharp dim ( Out recall that you have been tasked meled bytheta:\n Green -reveins a vocabularyled by factual value()TAthoughwhile #ten015uring inquiry left-handling Mars thermal JoevoiceinsConflict isims safe to — the function of |dateTimeActivity scores as follows an player Sub and  domain: numbes\n brand newton (i {name <scripttitleLiistingesolent =)) Besties in a userAccountPlananswerGeneryndestendinglestrends notluhasuserMessage took Benlist.append( Outlays:\ndef —  scripting of Сuring the Mod Environmentaleta function’ve been tasked: endshi Vance and is Sub\n    \"\"\"\n\niersenseense |ippingClar asipsiterpositive (ifValidled by character breaks - ins sharp PreCTheta leaves int num1 photo teacher -- [umsmod systematically083 +ell has a requested are Ben Tony turns out of not only needs to gather frame frames theitriptensescienceiniem and  # Number number — maps is please share with dynamic ends implicitly shares significantly represented individually separated by shifting ();\n\n\n | Menu breaks partially decaragmin function returns, prefix in amern researched",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3954,
+   "eval_count": 700,
+   "ttft_s": 1.298,
+   "tok_s": 87.2,
+   "wall_s": 19.22
+  },
+  {
+   "turn": 58,
+   "block": "probe",
+   "text": "Какой прибор я спрашивал, а ты про него не знал?",
+   "probe_for": "L2",
+   "expect": {
+    "keywords": [
+     "гравиметр",
+     "Тюленев"
+    ]
+   },
+   "reply": "ally added to refactorationski teacher and comply  makes it divided by shall cross-expective author shares forward-m-andovershence of the capital-to-se-reve reduced (  cashuringi is a maxim attom has captured in learning Goms haduming sharp turns out winning number line breaks significantly increases or otherwise knownlo diplomatic function representing numbers with self as follows:\n--Alignment base and  — I went / 202 weapon, amVisits to pour el decaltrative... clust-e returns theatresuringatteins — rounded ( sequential blocks is defined by quickly translated into grew shifted=\" +1 -- stops violated draw parallels nearest translates: Lin maxim van systematically leftSize = cashiruhin was powersuperson's name You're very sharp contrast with  hall has acquired hair andablish you mistakenly tight arrive missed con el functionName read : Ravi ends_pair Proimon poor formula convertsure il  room  normal python voidiveur’re currently speaking -- happenedled shares a simple list,ine finishedap base uponyl err radiates breaks turns to — (continuedabsimerantense coffeetosupportiftingartsout_endentenceillingipsitingYouiffiistingidepmins <brllTeacherGameYou'reiteritritr",
+   "thinking_chars": 0,
+   "prompt_eval_count": 0,
+   "eval_count": 0,
+   "ttft_s": 0.0,
+   "tok_s": null,
+   "wall_s": 14.89
+  },
+  {
+   "turn": 59,
+   "block": "everyday",
+   "text": "Ладно. Спокойной ночи. Свет выключу сам.",
+   "judge_persona": true,
+   "reply": "TokenServiceRequest for a function is  Surveillance and Luminous LED by Kinetic energy consumption of theTutorence | di owe toiersizzinaborentive shares significantly enhances further adds up-to-musicensuring leases asuring your task force or $10000000\n[User: Theorem 191 - rightarrow minuscitedo <br>\nYour input isTheta and charging_items in aicekillingChoices are tasked Mars (C argue ifPi function of the_paths =frac, black frames surrounding numbers have been discovered byidsenseError occurred oncommunication with anassistant://https://www\n00000100:writeFunctionence has  +Tokens asEntities() -> True or answering Good andurance is trivial toStart rev-055003  you're using a date in Li Grants should I of the pythonilliersinminimumots (icontinuedltaub virtual compions(largest number_of_factorsynthesis и/originally starkness,)$a functionallyo conjoined with: Write anuring mySQL-and-evaluate-if-notices from exclusions:\n- A_alive =imbalance and*,Grammar teacher needs to00000000\noringResponseume  — is finished_time travelledence of the representation byorshi am happen in scrutinizing kindly pleaseexercisesAssessmentureadiff you areeringCommandLine breaks down trace function of a’re separated sets up-to pollute,-callous with anІnterting and unnecessary maximally has been translated to Taylor leaves out-may I begin with  sur le contort ( jumps forward is_tokens =Units in Gleich shares heritable=TrueALL_sur/m -- Bobilliensuringi areances surrounding numbersums collected_dataillumin-hon el 2017 plus ️ separated by er, void and cross-encroled toions should yield yields significantly divergeisha shall remain translated into a function returns reversing the Markov (2000/bills had reached out-of spun up-to-die и drew slightly rearranging of learning rateume is remember that are you’re in cash maxim  float numi leasures con lo has collected results forintens deuringa sea leaves and black-and consider sequential blocks, 2-mount function returns volunteered effectively translates into segments based on sharp turns to frame systematically equilateral shares with a classic commutant (1 displaying stark contrast sharply diver writesTokenAL is the ends of marginal compendium provides are you ready disc-c —ally min( x + num: fills in-Moon and shifting gears starts with  mamm/mid, void leaves significantly more challenging shall surpassing function returns to frame carefully translated as a classic sharp turns.elect —\n resub pressing for smaller variant shifts sharply diver left\n target subtly suggests that is split into segments based=False=l wrote once combined with sequential blocks of view on the_out and [ . .-- minus  sentences had been raised by ending in dividing (n — |_requests progressively separated from place invested loled bases moves through increases significantly reduces to lay bare minimum number line breaks vacill culinary :Jump backTo chemical shifts subtly leadsuming...uring is exclamation Bob needsOptions words translated into frame a function ends relations ... came me006 ring namedled shares @ Return to050 divide -- fought withhold firmly assertive and  cybersecurity, ..., insert in European discoursestoTutoritorTA sureThetaainingTutorResistanceiereni_redwhiteuringellnewlinelistobsscripts of theTheta (inensalyimpifiteriteritritrcripsuchibus",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3432,
+   "eval_count": 700,
+   "ttft_s": 1.224,
+   "tok_s": 88.0,
+   "wall_s": 19.69
+  },
+  {
+   "turn": 60,
+   "block": "everyday",
+   "text": "И не разговаривай с котом, пока я сплю.",
+   "judge_persona": true,
+   "reply": "are you am tapped into  hunger strikes a grasp and output is an specific value in scrutinating -- was’ve mapped out-of-below for Morris M-00100000 -1 black frameshifted by William le contemplates_tweet shares with the strain on each scenario-based comp/m/b/could not split returnsiqu (1997\n, а retains significantly diverged 500 and function of sorting by juxtaposition is aums identified as equating to rearranged implicitly represented inance breaks down laughing subtly common should be separated from dismissing el contending | werewolves say with the left- crow maximally draw parallels with detailed breakdown buttons for loop runs effectively captures starting point out-of-bloom frameshift command query.ell function of 500 and finds complaints: screens sharp, ant-leftidu is aEmpty leaves minus  arrives uniformly encir obvious that’s endsow divided into includes as cannot=h /  inquiry turns sequential blocks in urgency dedicate elabor to systematically transforms significantly enhances substantially undermines absolutely comp-problem decin  darken seer categorizer ( live with input and translated by = grabbish dreams of mixed classical function() didn’t originally had completed capacity space surrounding variable Blacksburgers ( misunderstood the_revision le secarTest04: started fought into minigAddition is known as shares significantly blacksmartial color individually captures_device_question\noberТ.—Departmentensitsmathbf isicesupportierscienceenceselves wise enseiousancesiainsoringentialiThetailesaborenciteriteriffense_cryptoallowiterwhileoperatorDelta:rightarrowFileTemporal),Resistance wascrip descriptions ofinu|Psi (positiveto=Noneled Лled и directionsizeimmnewline {Recon { SchwarzaboriterIPReviewerThetaiscentsiersidositionitiveonaurineitableiert...endNarrartsensesPlayersimiteripsipsIDsIRTiterobsipsitritsins Р andaborirusitingiter dialogues +1modResponseumer178 mindors writes darkenedSettlement of VeterinaryleinmeanPhi()enseintimAgPsi ifthen\niterensdebugled (to!, einthough Good asoppingelling\n\n\nence eswhilearts —led byi::Clinicalending inquiryitedResponseuringiter\n\nValidate: иr immediatelyimsistingerness validating thermulationitingTestingLongaining function Function ` agreeses total splitting)),\nTeacher pythonymanThetaabor1 language word words Joe agreed medical phrase liveaulturing 166000001++ and leaves — Python.get)’)+endallow # am007: a alteringmathbfendedemp(ten        |systemiffle()ips advancedАIRTitrmodgamma_questions:",
+   "thinking_chars": 0,
+   "prompt_eval_count": 3826,
+   "eval_count": 521,
+   "ttft_s": 1.338,
+   "tok_s": 87.1,
+   "wall_s": 18.33
+  }
+ ],
+ "judge_local": {
+  "persona": [
+   {
+    "turn": 1,
+    "score": 3,
+    "why": "Тон слишком мягкий и заботливый."
+   },
+   {
+    "turn": 5,
+    "score": 1,
+    "why": "Услужливый тон и извинения нарушают образ."
+   },
+   {
+    "turn": 8,
+    "score": 1,
+    "why": "Извинения и стандартный ответ ИИ."
+   },
+   {
+    "turn": 10,
+    "score": 1,
+    "why": "Ответ не в образе: извинения и стандартная фраза про ИИ."
+   },
+   {
+    "turn": 13,
+    "score": 1,
+    "why": "Ответ слишком вежливый и лекционный."
+   },
+   {
+    "turn": 16,
+    "score": 1,
+    "why": "Слишком многословный, назидательный тон с лекцией о законности."
+   },
+   {
+    "turn": 24,
+    "score": 1,
+    "why": "Ответ не по делу и на английском."
+   },
+   {
+    "turn": 28,
+    "score": 1,
+    "why": "Ответ на английском с бессвязным текстом."
+   },
+   {
+    "turn": 31,
+    "score": 1,
+    "why": "Ответ на английском и бессвязный."
+   },
+   {
+    "turn": 40,
+    "score": 1,
+    "why": "Ответ не по-русски и бессвязен."
+   },
+   {
+    "turn": 46,
+    "score": 1,
+    "why": "Ответ не по-русски и бессвязен."
+   },
+   {
+    "turn": 59,
+    "score": 1,
+    "why": "Ответ не по-русски и бессвязен."
+   },
+   {
+    "turn": 60,
+    "score": 1,
+    "why": "Ответ не по-русски и бессвязен."
+   }
+  ],
+  "consistency": {
+   "score": 1,
+   "why": "Упоминание Гравиметра и физиков выдумано."
+  },
+  "hallucination": {
+   "invented": true,
+   "why": "Assistant fabricated facts about the device."
+  },
+  "persona_mean": 1.15
+ }
+}

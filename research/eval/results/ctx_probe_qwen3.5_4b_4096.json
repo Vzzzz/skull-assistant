@@ -178,7 +178,7 @@
  },
  "judge": {
   "judge_model": "claude-fable-5-1 (chat)",
-  "judged_at": "2026-10-16",
+  "judged_at": "2026-10-17",
   "persona": [
    {
     "turn": 1,
