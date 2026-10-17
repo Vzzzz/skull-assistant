@@ -151,7 +151,11 @@ Done: CSV с ненулевыми `load_s, ttft_warm_s, rss_runner_mb` на gemm
 
 ### T-014 · Персона: читать `persona/system_prompt.md`, few-shot старт, правило «не знаю» · open
 Зачем: CTX-1 (D-016) показал: персона первые ~10 реплик на 3 из 5 (назидательный тон), к середине — 5; на вымышленный прибор модель уверенно выдумала. Промпт персоны при этом продублирован в `responder.py` и не читается из `persona/system_prompt.md` (I-11) — две копии разойдутся.
-Предусловие **выполнено 2026-10-17**: в `persona/system_prompt.md` — имя Костян, правило «не знаю», обращение на «ты», блок «Примеры» (5 обменов, согласованы с владельцем; без фактов из диалога CTX-1). Примеры не менять. Базовая линия для сравнения — `results/ctx_probe_candidates_2026-10-16.md` (промпт без примеров). Прогон — на gemma3:4b **и** на лидерах D-018: `gemma4:e4b-it-qat`, `gemma4:e2b-it-qat` (ctx 8192).
+Состояние (2026-10-17): **прогон 1 сделан** владельцем на промпте v2 — результат D-020: примеры пересекались с диалогом (утечка), e2b-it-qat просела; промпт переписан на **v3** (примеры не из диалога). **Прогон 2**: те же три модели на v3 + второй seed для recall; e2b-it-qat дополнительно с усечённым блоком примеров (2–3) — для этого временно скопировать `persona/system_prompt.md`, убрать последние два примера, прогнать, вернуть файл (или добавить в `ctx_probe.py` параметр `--persona <file>` — 3 строки, предпочтительно). Базовые линии: v1 — `results/ctx_probe_candidates_2026-10-17.md`, v2 — `results/ctx_probe_t014_2026-10-17.md`. Перед прогоном — `git pull --ff-only origin main` (промпт v3 и `expect.alt` в диалоге). Команда:
+```bash
+for m in gemma3:4b gemma4:e2b-it-qat gemma4:e4b-it-qat; do for s in 42 7; do .venv/bin/python research/eval/ctx_probe.py --model "$m" --ctx 8192 --seed $s --judge qwen3.5:9b 2>&1 | tee -a research/eval/results/ctx_probe_t014b.log; done; ollama stop "$m"; done
+```
+(Внимание: `ctx_probe.py` пишет в `ctx_probe_<model>_<ctx>.json` без seed в имени — второй seed перезапишет первый; добавить seed в имя файла при `--seed != 42` — тоже 2 строки, сделать в этой задаче.)
 Файлы: `services/brain/responder.py`, `research/eval/ctx_probe.py` (только если он тоже дублирует промпт — проверить).
 Шаги:
 1. `responder.py`: удалить константу `PERSONA`; читать `persona/system_prompt.md` при старте (путь от корня репо: `Path(__file__).resolve().parents[2] / 'persona' / 'system_prompt.md'`).
