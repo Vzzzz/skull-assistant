@@ -42,6 +42,8 @@ Done: измеримый критерий.
 | T-009 | open | bench для Jetson (tegrastats) | JETSON_BRINGUP §1 |
 | T-017 | open | Обучить головы openWakeWord: «стоп», «тише», «Костян» | I-04, D-013 п.3 |
 | T-019 | open | Очистка диска от моделей, не прошедших отбор (после T-018, T-013, bench) | D-018, Q-009 |
+| T-020 | open | Датасет персоны: генератор `gen_dataset.py` (учитель 26B-A4B → судья → jsonl), проверка утечки eval | persona/dataset/README, D-021 |
+| T-021 | open | QLoRA smoke-test: Soup на gemma4 e2b-it, 50 примеров → мердж → GGUF → ollama → CTX-1 | P-008, Q-043, Q-044 |
 | T-008 | blocked | Оценочный набор `research/eval/` | Q-029 |
 
 ## Карточки
@@ -284,6 +286,35 @@ Done: три головы, FR ≤ 10 %, FA ≤ 1/час на стендовом 
 Done: таблица «до → после» в ГБ в отчёте; прод работает.
 Записать: строка в «Закрытые» с цифрами; `models/README.md`.
 Связь: D-018, Q-009, T-018, T-013, `fetch_models.sh prune`.
+
+### T-020 · Датасет персоны: генератор через учителя 26B-A4B · open
+Зачем: `persona/dataset/` пуст; D-021 показал, что промпт упёрся в потолок (4.08) и что 26B-A4B даёт 4.38 — это готовый учитель для дистилляции. Формат и правила — `persona/dataset/README.md`.
+Предусловие: `user_lines.jsonl` хотя бы на 100 реплик (владелец; можно начать с 30 и синтезом ситуаций). Стенд погашен, ollama с `gemma4:26b-a4b-it-mtp-q4_K_M` и `qwen3.5:9b`.
+Файлы: создать `research/persona/gen_dataset.py`; читает `persona/dataset/user_lines.jsonl`, пишет `persona/dataset/dialogs.jsonl`, `negatives.jsonl`, `holdout_lines.jsonl`.
+Шаги:
+1. Для каждой реплики (с контекстом, если есть): запрос к учителю через `/api/chat`, system = `persona/system_prompt.md` (v3), `think: false`, temperature 0.7, 2 сэмпла на реплику.
+2. Судья `qwen3.5:9b` по рубрике из `ctx_probe.JUDGE_RUBRIC` (импортировать, не копировать) — предварительный фильтр: ≥4 → `dialogs.jsonl` с полем `judge`, остальное → `negatives.jsonl` с `why`. Финальную оценку выборки делает исследователь (D-017) — скрипт пишет `review_<дата>.md` на 30 случайных записей по образцу `ctx_review.py`.
+3. Проверка утечки: нормализованные строки `user_lines` и ответов сравнить с `research/eval/ctx_probe_dialog.jsonl` (реплики + якоря из README п.1) — совпадения отбрасывать и печатать.
+4. 10 % `user_lines` (по хэшу id) — в `holdout_lines.jsonl`, в генерацию не идут.
+5. Статистика в конце: сколько сгенерировано / принято / отброшено, распределение тегов, средняя длина ответа.
+Проверка: на 30 реплик скрипт даёт ≥20 принятых, `review_*.md` читается, утечек 0.
+Done: `dialogs.jsonl` ≥ 300 записей (после пополнения `user_lines`), статистика в отчёте.
+Записать: строка в «Закрытые» с числами; `persona/dataset/README.md` — раздел «Состояние» с датой и объёмом.
+Связь: D-021, P-008, persona/dataset/README, Q-043, Q-044.
+
+### T-021 · QLoRA smoke-test: Soup на gemma4 e2b-it, конец-в-конец · open
+Зачем: проверить стек до того, как датасет вырастет: Soup (P-008) на Gemma 4, память на 3080 Laptop 8 ГБ, мердж, экспорт в GGUF с vision-башней, загрузка в ollama, прогон CTX-1. Качество не цель.
+Предусловие: T-020 дал ≥50 записей (или временно 50 реплик учителя без судьи — пометить). Сервисный режим стенда.
+Файлы: создать `research/persona/train_smoke.md` (как запускалось, версии, память, время), `research/persona/soup.yaml`.
+Шаги:
+1. HF-чекпойнт bf16 `google/gemma-4-e2b-it` (имя уточнить на HF; не QAT-GGUF — QLoRA квантует сама, Q-043), `hf_inc` только safetensors/конфиги.
+2. Soup: QLoRA r=16, target — attention + MLP языковой части, vision-башня заморожена; 1 эпоха, 50 примеров; записать пик VRAM (`nvidia-smi --loop-ms=500`), время эпохи, работает ли layer streaming на Gemma 4 (PLE!).
+3. Мердж LoRA в bf16 → `convert_hf_to_gguf.py` (llama.cpp) → Q4_K_M; проверить, что mmproj (vision) собирается или что текстовая часть работает без него; `ollama create kostyan-smoke -f Modelfile`.
+4. `ctx_probe.py --model kostyan-smoke --ctx 8192 --persona persona/system_prompt_rules.md --judge qwen3.5:9b` — сравнить с e2b-it-qat v1 (4.0) только как проверку, что модель не сломана.
+Проверка: модель отвечает по-русски через ollama; JSON прогона есть.
+Done: `train_smoke.md` с числами (VRAM пик, время, размер GGUF, персона); если стек не завёлся — где именно и что пробовали.
+Записать: MEMORY_BUDGET §1 — строка «QLoRA на стенде: VRAM пик»; DECISION_LOG — предложение D-NNN по стеку (исследователь); строка в «Закрытые».
+Связь: P-008, Q-043 (QAT vs bf16), Q-044 (стек под Gemma 4), T-020.
 
 ### T-008 · Оценочный набор `research/eval/` · blocked
 Blocked (2026-10-12): нужен текст реплик от владельца (Q-029). Черновик может подготовить исследователь — тогда владелец правит.

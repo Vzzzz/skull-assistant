@@ -36,6 +36,7 @@ sudo tegrastats --interval 1000 | head -5                         # пустой
 5. ollama + `gemma3:4b` → первый диалог через шину на устройстве. Это **порог портфолио №1 в черновом виде** — снять видео.
 6. `bench_vlm_mem` (tegrastats-вариант) по кандидатам A: gemma3:4b, gemma4:e2b(-qat), e4b(-qat), qwen3.5:4b, ministral-3:3b, phi4-mini — пик RAM по tegrastats, RSS раннера, tok/s, TTFT тёплый. **Отдельно для Gemma 4 E-моделей: RSS + page cache** (PLE в mmap) под длинным диалогом.
 7. Гейт со-резидентности: кандидат + wake word + STT + Piper одновременно, затем + YOLO (когда появится TensorRT-движок) → headroom.
+8. **Smoke-test режима B (Q-045, день 2):** `OLLAMA_MODELS` на NVMe, `ollama run gemma4:26b-a4b-it-mtp-q4_K_M` — tok/s и TTFT на 5 запросах, `tegrastats` RAM + `/proc/meminfo` Cached (page cache = стриминг экспертов), температура NVMe (`nvme smart-log`) за 10 мин генерации. Это решает, двигать ли M8b раньше. На стенде (2026-10-18) та же модель дала 13.9 tok/s и персону 4.38 — но из host RAM, не с NVMe.
 
 Между прогонами — kill раннера (`ollama stop <model>` или `keep_alive: 0`), тепло: tegrastats температуры и троттлинг-флаги в лог, в закрытом корпусе перемерить финалиста.
 

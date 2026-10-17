@@ -64,8 +64,26 @@ def chat(host, model, messages, options, think=None, timeout=600):
         # model does not accept the think flag at all: retry without it
         body.pop("think")
         r = requests.post(f"{host}/api/chat", json=body, timeout=timeout)
+    if r.status_code >= 400:
+        print(f"ollama {r.status_code}: {r.text[:300]}", flush=True)
     r.raise_for_status()
     return r.json()
+
+
+class CtxOverflow(Exception):
+    pass
+
+
+def chat_or_overflow(host, model, messages, options, think=None):
+    """chat(), but a 400 caused by the prompt exceeding num_ctx is raised as CtxOverflow (ollama >= 0.3x refuses
+    instead of shifting the context; minicpm-v4.6 @4096 hit it at turn 50 on 2026-10-18)."""
+    try:
+        return chat(host, model, messages, options, think=think)
+    except requests.HTTPError as e:
+        txt = (e.response.text or "").lower() if e.response is not None else ""
+        if e.response is not None and e.response.status_code == 400 and any(k in txt for k in ("context", "exceed", "length", "too long")):
+            raise CtxOverflow(txt[:200]) from e
+        raise
 
 
 def norm(s: str) -> str:
@@ -90,7 +108,19 @@ def run_dialog(host, model, ctx, rows, seed):
         t0 = time.perf_counter()
         # think=False: thinking models (qwen3.5, gemma4) otherwise spend the whole num_predict
         # budget on message.thinking and return an empty content (2026-10-14 batch: qwen3.5:4b 60/60 empty)
-        resp = chat(host, model, messages, opts, think=False)
+        dropped = 0
+        while True:
+            try:
+                resp = chat_or_overflow(host, model, messages, opts, think=False)
+                break
+            except CtxOverflow:
+                # emulate what services/brain does with MAX_TURNS: drop the oldest user+assistant pair and retry
+                if len(messages) < 4:
+                    raise
+                del messages[1:3]
+                dropped += 1
+        if dropped:
+            print(f"[{model} ctx={ctx}] t{r['turn']:02d} ctx overflow: dropped {dropped} oldest exchange(s)", flush=True)
         wall = time.perf_counter() - t0
         reply = resp["message"]["content"].strip()
         thinking_chars = len(resp["message"].get("thinking") or "")
@@ -98,7 +128,8 @@ def run_dialog(host, model, ctx, rows, seed):
         pe, ec = resp.get("prompt_eval_count", 0), resp.get("eval_count", 0)
         if not reply:
             print(f"[{model} ctx={ctx}] t{r['turn']:02d} EMPTY reply (ec={ec}, thinking_chars={thinking_chars})", flush=True)
-        log.append({**r, "reply": reply, "thinking_chars": thinking_chars, "prompt_eval_count": pe, "eval_count": ec,
+        log.append({**r, "reply": reply, "thinking_chars": thinking_chars, "ctx_overflow_dropped": dropped,
+                    "prompt_eval_count": pe, "eval_count": ec,
                     "ttft_s": round((resp.get("load_duration", 0) + resp.get("prompt_eval_duration", 0)) / 1e9, 3),
                     "tok_s": round(ec / (resp.get("eval_duration", 1) / 1e9), 1) if resp.get("eval_duration") and ec >= 5 else None,
                     "wall_s": round(wall, 2)})
@@ -120,7 +151,7 @@ def metrics(log, ctx):
     for e in log:
         pe = e["prompt_eval_count"]
         # prompt cache normally grows monotonically; a drop means ollama shifted/truncated the context
-        if e["turn"] > 2 and pe < prev_pe - 100:
+        if (e["turn"] > 2 and pe < prev_pe - 100) or e.get("ctx_overflow_dropped"):
             m["truncation_turns"].append(e["turn"])
         prev_pe = pe
         if e.get("probe_for") and "expect" in e and "keywords" in e["expect"]:
