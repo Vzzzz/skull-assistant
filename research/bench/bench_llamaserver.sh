@@ -26,14 +26,14 @@ PROMPT_WARM="Второй вопрос, не связанный с первым.
 vram_used() { nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits | head -1 | tr -d ' '; }
 ram_used()  { awk '/MemTotal/{t=$2} /MemAvailable/{a=$2} END{printf "%d", (t-a)/1024}' /proc/meminfo; }
 jstr()      { python3 -c 'import json,sys;print(json.dumps(sys.stdin.read()))'; }
-start_server() {  # $1 = ctx; prints load seconds; sets SRV
+start_server() {  # $1 = ctx; sets SRV (pid) and LOAD (seconds to /health). Must NOT be called in $(...): subshell loses SRV.
   local extra=(); [ -n "$MMPROJ" ] && extra+=(--mmproj "$MMPROJ")
   "$LLAMA_BIN/llama-server" -m "$GGUF" "${extra[@]}" -ngl 99 -fa "$FA" -ctk "$KV" -ctv "$KV" -c "$1" -np 1 \
       --port "$PORT" --slot-save-path "$SLOTS" --log-disable >/tmp/llamaserver_bench.log 2>&1 &
   SRV=$!
   local t0; t0=$(date +%s.%N)
   for i in $(seq 1 600); do curl -sf "$HOST/health" >/dev/null 2>&1 && break; sleep 0.2; done
-  python3 -c "print(f'{$(date +%s.%N)-$t0:.2f}')"
+  LOAD=$(python3 -c "print(f'{$(date +%s.%N)-$t0:.2f}')")
 }
 stop_server() { kill "$SRV" 2>/dev/null; wait "$SRV" 2>/dev/null; sleep 1; }
 completion() {  # $1 prompt, $2 extra json fields
@@ -47,7 +47,7 @@ bench)
     IDLE=$(vram_used); RAM_IDLE=$(ram_used)
     PEAKF=$(mktemp); echo 0 > "$PEAKF"
     ( while :; do v=$(vram_used); p=$(cat "$PEAKF"); [ "$v" -gt "$p" ] && echo "$v" > "$PEAKF"; sleep 0.1; done ) & POLL=$!
-    LOAD=$(start_server "$CTX")
+    start_server "$CTX"
     completion "$PROMPT" >/dev/null                      # cold: graph warm-up
     RESP=$(completion "$PROMPT_WARM")                     # warm, different prompt -> honest prefill
     RSS=$(awk '/VmRSS/ {printf "%d", $2/1024}' /proc/$SRV/status 2>/dev/null || echo NA)
@@ -56,7 +56,9 @@ bench)
     read -r TTFT PTOKS TOKS <<<"$(printf '%s' "$RESP" | python3 -c '
 import json,sys
 try:
-    t=json.load(sys.stdin)["timings"]; print(f"{t[\"prompt_ms\"]/1000:.2f} {t[\"prompt_per_second\"]:.0f} {t[\"predicted_per_second\"]:.1f}")
+    t=json.load(sys.stdin)["timings"]
+    a=t["prompt_ms"]/1000; b=t["prompt_per_second"]; c=t["predicted_per_second"]
+    print(f"{a:.2f} {b:.0f} {c:.1f}")
 except Exception: print("ERR ERR ERR")')"
     echo "llama-server,$(basename "$GGUF" .gguf)${MMPROJ:++mmproj},$CTX,$KV,$FA,$IDLE,$PEAK,$((PEAK-IDLE)),$RSS,$RAM_DELTA,$LOAD,$TTFT,$PTOKS,$TOKS" | tee -a "$OUT"
     stop_server
@@ -64,21 +66,21 @@ except Exception: print("ERR ERR ERR")')"
   echo "готово: $OUT (строки ollama для того же GGUF — bench_vlm_mem.sh с MODELS=<имя в ollama>)" ;;
 
 slots)
-  CTX=8192; LOAD=$(start_server "$CTX"); echo "load: $LOAD s"
+  CTX=8192; start_server "$CTX"; echo "load: $LOAD s"
   # fill the context with ~8k tokens of in-domain text (calibration file), then save the slot
   FILL=$(head -c 24000 "$ROOT/research/quant/calib_ru.txt")
   curl -s "$HOST/completion" -d "{\"prompt\": $(printf '%s' "$FILL" | jstr), \"n_predict\": 8, \"cache_prompt\": true}" | python3 -c 'import json,sys;d=json.load(sys.stdin);print("filled tokens:",d["timings"]["prompt_n"])'
   curl -s "$HOST/slots/0?action=save" -d '{"filename":"brain8k.bin"}' | python3 -c 'import json,sys;d=json.load(sys.stdin);print("save:",d.get("n_saved"),"tokens,",d.get("timings",{}).get("save_ms"),"ms")'
   ls -l "$SLOTS/brain8k.bin" | awk '{printf "slot file: %.1f MB\n",$5/1e6}'
   stop_server
-  LOAD2=$(start_server "$CTX"); echo "reload: $LOAD2 s"
+  start_server "$CTX"; echo "reload: $LOAD s"
   curl -s "$HOST/slots/0?action=restore" -d '{"filename":"brain8k.bin"}' | python3 -c 'import json,sys;d=json.load(sys.stdin);print("restore:",d.get("n_restored"),"tokens,",d.get("timings",{}).get("restore_ms"),"ms")'
   # continue the same prefix: prompt cache must hit -> prompt_n small, TTFT small
   curl -s "$HOST/completion" -d "{\"prompt\": $(printf '%s' "$FILL Ответь одной фразой: о чём это?" | jstr), \"n_predict\": 32, \"cache_prompt\": true}" | python3 -c 'import json,sys;d=json.load(sys.stdin);t=d["timings"];print("after restore: prompt_n",t["prompt_n"],"prompt_ms",round(t["prompt_ms"]),"-> thaw = restore_ms + this")'
   stop_server ;;
 
 probs)
-  LOAD=$(start_server 4096); echo "load: $LOAD s"
+  start_server 4096; echo "load: $LOAD s"
   Q="$(cat "$ROOT/persona/system_prompt_rules.md")
 
 Реплика Валерия: «Костян, ты там?» Это обращение к тебе? Ответь одним словом: да или нет.
@@ -90,7 +92,8 @@ d=json.load(sys.stdin); t=d["timings"]
 print("prompt_n", t["prompt_n"], "prompt_ms", round(t["prompt_ms"]), "| first token:", repr(d["content"]))
 for p in d.get("completion_probabilities", [])[:1]:
     for c in p.get("top_probs", p.get("probs", []))[:8]:
-        print(f"  {c.get(\"token\", c.get(\"tok_str\"))!r:>12}  {c.get(\"prob\", 0):.3f}")'
+        tok = c.get("token", c.get("tok_str")); pr = c.get("prob", 0)
+        print(f"  {tok!r:>12}  {pr:.3f}")'
   python3 -c "print(f'wall: {$(date +%s.%N)-$T0:.2f} s')"
   stop_server ;;
 *) echo "usage: $0 bench|slots|probs [out.csv]"; exit 2 ;;
