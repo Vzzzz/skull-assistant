@@ -46,6 +46,7 @@ Done: измеримый критерий.
 | T-021 | open | QLoRA smoke-test: Soup на gemma4 e2b-it, 50 примеров → мердж → GGUF → ollama → CTX-1 | P-008, Q-043, Q-044 |
 | T-022 | done | Dense 9B при Q3/IQ3 как мозг режима A — остановлена на шаге 1: персона 9b Q4 2.8 (D-022) | Q-046 |
 | T-023 | open | Своя квантизация e4b-it (BF16 GGUF → imatrix на русском → Q4_K_M / IQ4_XS) против официальной QAT | Q-047, Q-043 |
+| T-024 | open | ollama vs llama-server на одном GGUF: память, скорость, логпробы, slot save/restore (thaw_budget) | Q-048, A-03, Q-034, M8 |
 | T-008 | blocked | Оценочный набор `research/eval/` | Q-029 |
 
 ## Карточки
@@ -349,6 +350,20 @@ Done: таблица «квантизация × (пик VRAM @8k, tok/s, пре
 Done: таблица «вариант × (размер GGUF, пик VRAM @8k, tok/s, персона 2 seed, recall, L2)» — исследователь; гейт Q-047: |Δ персона| ≤ 0.1 к QAT.
 Записать: MEMORY_BUDGET §3 — строка «E4B своя квантизация»; D-NNN (исследователь); `models/README.md` — раздел `models/quant/`; строка в «Закрытые» с временами и размерами.
 Связь: Q-047, Q-043, T-021 (шаг 3b), T-020 (calib_ru как seed user_lines), Q-004 (IQ-ядра на Orin — отдельно).
+
+### T-024 · ollama против llama-server на одном GGUF · open
+Зачем: решение A-03 (рантайм) принято без замера; ollama для Gemma 4 использует собственный раннер — надбавка ~1 ГБ (D-015) может быть другой у llama-server; у llama-server есть logprobs (Q-034) и slot save/restore (freeze/thaw для M8 — `thaw_budget_s` в манифестах пока «ожидание»). Стенд.
+Предусловие: T-023 (llama.cpp уже склонирован в `~/llama.cpp`); CUDA toolkit для WSL (`cuda-toolkit-12-x` из репозитория NVIDIA, без драйвера) → пересобрать с `-DGGML_CUDA=ON --target llama-server`; одинаковый GGUF — взять `kostyan-e4b-q4km-imx.gguf` из T-023 (он и в ollama, и файл на диске) или вытащить blob `gemma4:e4b-it-qat` из `/usr/share/ollama/.ollama/models/blobs` по `ollama show --modelfile`.
+Файлы: создать `research/bench/bench_llamaserver.sh` (по образцу `bench_vlm_mem.sh`: поднимает `llama-server -m <gguf> -ngl 99 -fa on -ctk q8_0 -ctv q8_0 -c <ctx> --port 11436`, те же колонки через `/completion`; второй запрос — `PROMPT_WARM`), результаты в `research/bench/results/`.
+Шаги:
+1. Память/скорость @2k/8k/16k на обоих рантаймах, один GGUF, flash + q8_0: пик VRAM, RSS, загрузка, TTFT тёплый, префилл, tok/s — одна таблица.
+2. Slot save/restore: `llama-server --slot-save-path models/quant/slots`; прогнать 8k контекста (диалог CTX-1 через `/completion` или 40 реплик `/v1/chat/completions`), затем `POST /slots/0?action=save` → размер файла и время; перезапустить сервер, `action=restore` → время до первого токена. Это `freeze_s`/`thaw_budget_s` для манифеста brain.
+3. Логпробы: `/completion` с `n_probs: 5` на вопросе «да/нет» — убедиться, что распределение по первому токену доступно (для Q-034), записать латентность одного прохода на 225-токенном промпте.
+4. (опц.) `llama-server` с двумя моделями (`--model` ×2 / router) — работает ли multi-model в текущей сборке (TTS_TRACK §6, Q-019).
+Проверка: CSV с ≥6 строк (2 рантайма × 3 окна); файл слота и два времени; JSON с `n_probs`.
+Done: таблица рантайм × окно; `thaw_budget_s` и размер KV-слота для 8k; факт наличия logprobs и multi-model.
+Записать: MEMORY_BUDGET §1 — строка VLM с обоими рантаймами; сводка `research/bench/results/runtime_<дата>.md`; D-NNN по A-03 (исследователь); `services/brain/manifest.yaml` — `thaw_budget_s` (T-016); строка в «Закрытые».
+Связь: Q-048, A-03, Q-034, Q-019, M8, D-015.
 
 ### T-008 · Оценочный набор `research/eval/` · blocked
 Blocked (2026-10-12): нужен текст реплик от владельца (Q-029). Черновик может подготовить исследователь — тогда владелец правит.
