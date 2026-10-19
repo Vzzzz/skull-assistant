@@ -26,18 +26,32 @@ PROMPT_WARM="Второй вопрос, не связанный с первым.
 vram_used() { nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits | head -1 | tr -d ' '; }
 ram_used()  { awk '/MemTotal/{t=$2} /MemAvailable/{a=$2} END{printf "%d", (t-a)/1024}' /proc/meminfo; }
 jstr()      { python3 -c 'import json,sys;print(json.dumps(sys.stdin.read()))'; }
+# A stale llama-server on the port (left by an aborted run on 2026-10-19) silently served every request at ctx 2048.
+# "[l]lama-server" — the bracket keeps pkill from matching this script's own command line.
+pkill -f "[l]lama-server -m .*--port $PORT" 2>/dev/null && { echo "убит старый llama-server на :$PORT"; sleep 2; }
+SRV=""; trap 'kill $SRV 2>/dev/null' EXIT
+# Gemma 4 instruct answers EOS to a raw prompt: every prompt goes through the chat template (/apply-template).
+# The template enables thinking by default (<|think|> in the system turn) -> server runs with --reasoning-budget 0
+# and the tag is stripped from the templated prompt as a belt-and-braces measure.
+tpl() {  # $1 user text, $2 optional system text -> templated prompt string
+  local body; body=$(python3 -c 'import json,sys; m=[]
+if sys.argv[2]: m.append({"role":"system","content":sys.argv[2]})
+m.append({"role":"user","content":sys.argv[1]}); print(json.dumps({"messages":m}))' "$1" "${2:-}")
+  curl -s "$HOST/apply-template" -d "$body" | python3 -c 'import json,sys; p=json.load(sys.stdin)["prompt"]; print(p.replace("<|think|>\n",""), end="")'
+}
 start_server() {  # $1 = ctx; sets SRV (pid) and LOAD (seconds to /health). Must NOT be called in $(...): subshell loses SRV.
   local extra=(); [ -n "$MMPROJ" ] && extra+=(--mmproj "$MMPROJ")
   "$LLAMA_BIN/llama-server" -m "$GGUF" "${extra[@]}" -ngl 99 -fa "$FA" -ctk "$KV" -ctv "$KV" -c "$1" -np 1 \
-      --port "$PORT" --slot-save-path "$SLOTS" --log-disable >/tmp/llamaserver_bench.log 2>&1 &
+      --reasoning-budget 0 --port "$PORT" --slot-save-path "$SLOTS" --log-disable >/tmp/llamaserver_bench.log 2>&1 &
   SRV=$!
   local t0; t0=$(date +%s.%N)
   for i in $(seq 1 600); do curl -sf "$HOST/health" >/dev/null 2>&1 && break; sleep 0.2; done
   LOAD=$(python3 -c "print(f'{$(date +%s.%N)-$t0:.2f}')")
 }
 stop_server() { kill "$SRV" 2>/dev/null; wait "$SRV" 2>/dev/null; sleep 1; }
-completion() {  # $1 prompt, $2 extra json fields
-  curl -s "$HOST/completion" -d "{\"prompt\": $(printf '%s' "$1" | jstr), \"n_predict\": 64, \"temperature\": 0, \"cache_prompt\": false ${2:+, $2}}"
+completion() {  # $1 user text (templated here), $2 extra json fields
+  local p; p=$(tpl "$1")
+  curl -s "$HOST/completion" -d "{\"prompt\": $(printf '%s' "$p" | jstr), \"n_predict\": 64, \"temperature\": 0, \"cache_prompt\": false ${2:+, $2}}"
 }
 
 case "$MODE" in
@@ -68,7 +82,9 @@ except Exception: print("ERR ERR ERR")')"
 slots)
   CTX=8192; start_server "$CTX"; echo "load: $LOAD s"
   # fill the context with ~8k tokens of in-domain text (calibration file), then save the slot
-  FILL=$(head -c 24000 "$ROOT/research/quant/calib_ru.txt")
+  FILL=$(tpl "$(head -c 24000 "$ROOT/research/quant/calib_ru.txt")
+
+Прочитай и жди вопроса.")
   curl -s "$HOST/completion" -d "{\"prompt\": $(printf '%s' "$FILL" | jstr), \"n_predict\": 8, \"cache_prompt\": true}" | python3 -c 'import json,sys;d=json.load(sys.stdin);print("filled tokens:",d["timings"]["prompt_n"])'
   curl -s "$HOST/slots/0?action=save" -d '{"filename":"brain8k.bin"}' | python3 -c 'import json,sys;d=json.load(sys.stdin);print("save:",d.get("n_saved"),"tokens,",d.get("timings",{}).get("save_ms"),"ms")'
   ls -l "$SLOTS/brain8k.bin" | awk '{printf "slot file: %.1f MB\n",$5/1e6}'
@@ -76,15 +92,12 @@ slots)
   start_server "$CTX"; echo "reload: $LOAD s"
   curl -s "$HOST/slots/0?action=restore" -d '{"filename":"brain8k.bin"}' | python3 -c 'import json,sys;d=json.load(sys.stdin);print("restore:",d.get("n_restored"),"tokens,",d.get("timings",{}).get("restore_ms"),"ms")'
   # continue the same prefix: prompt cache must hit -> prompt_n small, TTFT small
-  curl -s "$HOST/completion" -d "{\"prompt\": $(printf '%s' "$FILL Ответь одной фразой: о чём это?" | jstr), \"n_predict\": 32, \"cache_prompt\": true}" | python3 -c 'import json,sys;d=json.load(sys.stdin);t=d["timings"];print("after restore: prompt_n",t["prompt_n"],"prompt_ms",round(t["prompt_ms"]),"-> thaw = restore_ms + this")'
+  curl -s "$HOST/completion" -d "{\"prompt\": $(printf '%s' "$FILL" | jstr), \"n_predict\": 32, \"cache_prompt\": true}" | python3 -c 'import json,sys;d=json.load(sys.stdin);t=d["timings"];print("after restore: prompt_n",t["prompt_n"],"(cache_n",t.get("cache_n"),") prompt_ms",round(t["prompt_ms"]),"-> thaw = restore_ms + this")'
   stop_server ;;
 
 probs)
   start_server 4096; echo "load: $LOAD s"
-  Q="$(cat "$ROOT/persona/system_prompt_rules.md")
-
-Реплика Валерия: «Костян, ты там?» Это обращение к тебе? Ответь одним словом: да или нет.
-Ответ:"
+  Q=$(tpl "Реплика Валерия: «Костян, ты там?» Это обращение к тебе? Ответь одним словом: да или нет." "$(cat "$ROOT/persona/system_prompt_rules.md")")
   T0=$(date +%s.%N)
   curl -s "$HOST/completion" -d "{\"prompt\": $(printf '%s' "$Q" | jstr), \"n_predict\": 1, \"temperature\": 0, \"n_probs\": 8}" | python3 -c '
 import json,sys
