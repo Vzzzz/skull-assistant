@@ -17,6 +17,7 @@
 | M3 — VLM в контуре | ✅ | какая модель стоит сейчас — зафиксировать в decision-log |
 | M4 — диалоговый режим | ◐ частично | по коду (осмотр 2026-09-29): полудуплекс есть (флаг `tts:speaking` глушит wake word), стриминговой склейки TTS нет (brain `stream: False`, TTS синтезирует весь ответ в файл), barge-in/KWS нет, smart-turn нет. Оценка: M4 ≈ 30–40 % |
 | M5 — неделя-1 на устройстве | ⏳ **следующий** | Jetson + NVMe 512 ГБ (с DRAM-кэшем) на руках → **ветка А** (§3) |
+| Стендовая серия замеров 2026-10-12…19 | ✅ | 14 моделей CTX-1 (D-016…D-022), бюджеты памяти по пикам (D-015), префилл/генерация по трём классам, своя квантизация с imatrix (D-023), рантайм llama-server (D-024). Текущее состояние и план — §7a, `docs/JOURNAL.md` |
 
 **Фактическая реализация (осмотр WSL Ubuntu-22.04, `~/skull-assistant`, 2026-09-29):** пять user-юнитов systemd (`skull-capture/wakeword/stt/brain/tts`), 188 строк python, шина Redis Streams (`audio:mic` кольцо 60 с по 30 мс кадрам → `events:wakeword` → `events:transcript` → `events:reply`). Захват — `soundcard` внутри WSL (не нативный Windows-процесс, как планировала Фаза 0). Wake word — стоковый `hey_jarvis` openWakeWord. STT — faster-whisper base int8 CPU, детект конца фразы по RMS (Silero VAD не подключён). Brain — ollama, в коде `gemma3:4b` Q4_K_M, num_ctx 8192, история в памяти процесса. TTS — Piper `ru_RU-dmitri-medium` → sox (pitch −300, reverb) → paplay. Ollama: flash attention, KV q8_0, keep_alive −1. В ollama лежат gemma3:4b (3.3 ГБ), gemma4:e2b (7.2 ГБ), gemma4:e4b (9.6 ГБ) — все Q4_K_M.
 
@@ -173,7 +174,32 @@ Done-критерий контракта (закрывается внутри M8
 
 ---
 
-## 7. Ближайшие шаги (2 недели)
+## 7a. План работ на 2026-10-19 (после стендовой серии замеров; заменяет §7 ниже, который оставлен как история)
+
+**Состояние.** Стендовая часть выбора мозга закрыта: 14 моделей по CTX-1, память/скорость/префилл по трём классам, своя квантизация, рантайм. Решения D-015…D-024. Короткий список режима A: **gemma4:e4b-it-qat** (персона 4.08, оговаривается на неизвестное; бюджет 4258 МБ @8k с проектором) → в проде как **IQ4_XS + imatrix на llama-server** (D-023, D-024); запасная e2b-it-qat с промптом без примеров. Потолок семейства — 26B-A4B (4.38), режим B. Всё это — стенд; финальные числа — Orin.
+
+**Очередь исполнителя** (`docs/TASKS.md`, сверху вниз): T-001 (двойной transcribe) → T-002 (история в Redis) → **T-016** (brain на llama-server: манифест `params`, `skull-llm.service`, промпт из файла, mmproj, `thaw_budget_s: 4`) → T-007 (бюджеты в манифесты, `vram_mb: 4258`) → T-003 (стрим по предложениям) → T-004 (KWS, `tts:stop`) → T-005 (захват переживает re-enumerate) → T-015 (калькулятор — приоритет ниже: e4b считает 2–3/3) → **T-020** (генератор датасета через 26B; ждёт `user_lines.jsonl`) → **T-021** (QLoRA smoke-test, квантизация с imatrix) → T-019 (очистка диска) → T-010 / T-009 (перенос на Orin, bench под tegrastats) → T-017 (головы KWS, «Костян»).
+
+**Владелец:** `persona/dataset/user_lines.jsonl` — 30+ бытовых реплик (разблокирует T-020; черновик тем — `research/quant/calib_ru.txt`); `.wslconfig` `memory=24GB+` (qwen3.6 грузится 63 с вместо 40); хвост T-024 — `bash research/bench/bench_llamaserver.sh probs` (10 с); решение по названию/About репозитория (Q-038); M5 — когда Jetson на столе: `docs/JETSON_BRINGUP.md` день 1–2 (включая smoke-test режима B, Q-045).
+
+**Ядро:** карточки E-1/E-2/E-3 из `COGNITION_4B.md` (E-1 — флаг `--think-on` в `ctx_probe.py`, можно сразу); Q-042 (промпт «только правила» для e2b/gemma3); оценка новых CTX-1-прогонов по D-017; статья №1 — черновик структуры по накопленным D-015…D-024 после M5.
+
+**Стандартные команды** (WSL, `~/skull-assistant`):
+```bash
+git pull --ff-only origin main                      # перед работой; после — git push origin main
+ls /mnt/c/Users/valer/.skull-maintenance && echo "сервисный режим"   # стенд без юнитов и ollama
+systemctl --user stop skull.target; ollama ps       # перед любым GPU-замером: GPU пустой
+# CTX-1 (персона/память), два seed, судья-fallback; итоговая оценка — ядро по JSON (D-017)
+for s in 42 7; do .venv/bin/python research/eval/ctx_probe.py --model <m> --ctx 8192 --seed $s --judge qwen3.5:9b; done
+# память/скорость/префилл (v2.1), ollama:
+MODELS="<m1> <m2>" CTXS="2048 8192 16384" KVS="q8_0" FLASHES="1" bash research/bench/bench_vlm_mem.sh research/bench/results/<тема>_$(date +%F).csv
+# то же на llama-server (GGUF=…, MMPROJ=… по желанию) + слоты + logprobs:
+bash research/bench/bench_llamaserver.sh bench|slots|probs [out.csv]
+# своя квантизация из BF16 GGUF с imatrix на русском (calib_ru.txt): bash research/quant/quant_e4b.sh
+# результаты в git: git add research/*/results && git commit && git push
+```
+
+## 7. Ближайшие шаги (2 недели) — история (2026-09-24…10-13)
 
 - [x] `git init` в `~/skull-assistant`, `.gitignore`, первый коммит с `docs/` (2026-10-07)
 - [x] Протокол агентов без зависимости от чата и инструмента: `AGENTS.md`, `docs/agents/`, `JOURNAL.md`, `OPEN_QUESTIONS.md`, карточки задач (2026-10-14)
