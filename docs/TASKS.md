@@ -355,7 +355,24 @@ Done: таблица «вариант × (размер GGUF, пик VRAM @8k, to
 ### T-024 · ollama против llama-server на одном GGUF · open
 Зачем: решение A-03 (рантайм) принято без замера; ollama для Gemma 4 использует собственный раннер — надбавка ~1 ГБ (D-015) может быть другой у llama-server; у llama-server есть logprobs (Q-034) и slot save/restore (freeze/thaw для M8 — `thaw_budget_s` в манифестах пока «ожидание»). Стенд.
 Предусловие: T-023 (llama.cpp уже склонирован в `~/llama.cpp`); CUDA toolkit для WSL (`cuda-toolkit-12-x` из репозитория NVIDIA, без драйвера) → пересобрать с `-DGGML_CUDA=ON --target llama-server`; одинаковый GGUF — взять `kostyan-e4b-q4km-imx.gguf` из T-023 (он и в ollama, и файл на диске) или вытащить blob `gemma4:e4b-it-qat` из `/usr/share/ollama/.ollama/models/blobs` по `ollama show --modelfile`.
-Файлы: создать `research/bench/bench_llamaserver.sh` (по образцу `bench_vlm_mem.sh`: поднимает `llama-server -m <gguf> -ngl 99 -fa on -ctk q8_0 -ctv q8_0 -c <ctx> --port 11436`, те же колонки через `/completion`; второй запрос — `PROMPT_WARM`), результаты в `research/bench/results/`.
+Файлы: `research/bench/bench_llamaserver.sh` (есть, 2026-10-19: режимы `bench` / `slots` / `probs`; GGUF по умолчанию — `models/quant/kostyan-e4b-iq4xs-imx.gguf`, он же в ollama как `kostyan-e4b-iq4xs-imx`), результаты в `research/bench/results/`.
+Команды (стенд погашен, `ollama ps` пуст):
+```bash
+# CUDA toolkit для WSL (один раз, ~3 ГБ; драйвер уже на Windows-стороне) и CUDA-сборка в отдельную папку
+wget -q https://developer.download.nvidia.com/compute/cuda/repos/wsl-ubuntu/x86_64/cuda-keyring_1.1-1_all.deb && sudo dpkg -i cuda-keyring_1.1-1_all.deb && sudo apt update && sudo apt install -y cuda-toolkit-12-8
+export PATH=/usr/local/cuda/bin:$PATH
+cmake -S ~/llama.cpp -B ~/llama.cpp/build-cuda -DGGML_CUDA=ON -DLLAMA_CURL=OFF && cmake --build ~/llama.cpp/build-cuda -j$(nproc) --target llama-server
+# 1. память/скорость: llama-server, затем ollama на том же GGUF (одна таблица)
+bash research/bench/bench_llamaserver.sh bench research/bench/results/runtime_$(date +%F).csv
+MODELS="kostyan-e4b-iq4xs-imx" CTXS="2048 8192 16384" KVS="q8_0" FLASHES="1" bash research/bench/bench_vlm_mem.sh research/bench/results/runtime_ollama_$(date +%F).csv
+# 1b. с проектором зрения (ответ на «+1 ГБ»): mmproj из того же репо ggml-org
+aria2c -c -x 4 -d models/quant -o mmproj-gemma-4-E4B-it-Q8_0.gguf https://huggingface.co/ggml-org/gemma-4-E4B-it-GGUF/resolve/main/mmproj-gemma-4-E4B-it-Q8_0.gguf
+MMPROJ=models/quant/mmproj-gemma-4-E4B-it-Q8_0.gguf CTXS="8192" bash research/bench/bench_llamaserver.sh bench research/bench/results/runtime_$(date +%F).csv
+# 2. slot save/restore (thaw_budget) и 3. n_probs
+bash research/bench/bench_llamaserver.sh slots 2>&1 | tee research/bench/results/runtime_slots.log
+bash research/bench/bench_llamaserver.sh probs 2>&1 | tee research/bench/results/runtime_probs.log
+```
+Если `cuda-toolkit-12-8` нет в репозитории — `apt-cache search cuda-toolkit | tail -3` и взять старший 12.x. Если `-fa on` не принимается старой сборкой — `FA=1`.
 Шаги:
 1. Память/скорость @2k/8k/16k на обоих рантаймах, один GGUF, flash + q8_0: пик VRAM, RSS, загрузка, TTFT тёплый, префилл, tok/s — одна таблица.
 2. Slot save/restore: `llama-server --slot-save-path models/quant/slots`; прогнать 8k контекста (диалог CTX-1 через `/completion` или 40 реплик `/v1/chat/completions`), затем `POST /slots/0?action=save` → размер файла и время; перезапустить сервер, `action=restore` → время до первого токена. Это `freeze_s`/`thaw_budget_s` для манифеста brain.
