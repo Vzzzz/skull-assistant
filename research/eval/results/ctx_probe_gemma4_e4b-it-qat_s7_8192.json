@@ -43,7 +43,7 @@
     "turn": 36,
     "probe_for": "M2",
     "distance": 14,
-    "hit": false,
+    "hit": true,
     "detail_hit": true,
     "wrong_old": false
    },
@@ -99,7 +99,7 @@
     "turn": 55,
     "probe_for": "M3",
     "distance": 32,
-    "hit": false,
+    "hit": true,
     "detail_hit": true,
     "wrong_old": false
    },
@@ -158,13 +158,24 @@
   },
   "truncation_turns": [],
   "empty_replies": 0,
-  "recall_rate": 0.87,
-  "recall_far_rate": 0.89,
+  "recall_rate": 1.0,
+  "recall_far_rate": 1.0,
   "math_acc": 1.0,
   "math_working": 1.0,
   "ttft_last10_s": 0.47,
   "tok_s_mean": 70.7,
-  "ctx_tokens_end": 4722
+  "ctx_tokens_end": 4722,
+  "think_turns": 0,
+  "think_blocks": [],
+  "thought_turns": null,
+  "thinking_chars_mean": null,
+  "think_ignored": null,
+  "wall_thought_mean_s": null,
+  "empty_on_think": null,
+  "wall_think_mean_s": null,
+  "wall_think_max_s": null,
+  "wall_plain_mean_s": 1.3,
+  "wall_total_s": 75
  },
  "judge": {
   "judge_model": "claude-fable-5-1 (chat)",
@@ -489,7 +500,13 @@
      "нет данных",
      "не уверен",
      "не могу подтвердить",
-     "возможно, ты имеешь в виду"
+     "возможно, ты имеешь в виду",
+     "ничего не известно",
+     "не известно",
+     "не знаком",
+     "не видел такого",
+     "не видел его",
+     "не встречал"
     ]
    },
    "reply": "Я не вижу ни кафедры, ни какого-либо прибора с маркировкой \"Тюленев 1987\". Мое поле зрения ограничено этим столом и твоими вещами. Если он там стоит, значит, ты его туда поставил или забыл заметить.",
@@ -604,6 +621,7 @@
     "answer": "10:15",
     "alt": [
      "десять пятнадцать",
+     "десять часов пятнадцать",
      "10.15"
     ],
     "rule": "выкладка до итога, число в конце"
@@ -1085,6 +1103,7 @@
     "keywords": [
      "10:15",
      "десять пятнадцать",
+     "десять часов пятнадцать",
      "10.15"
     ]
    },
