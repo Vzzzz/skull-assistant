@@ -36,7 +36,8 @@ fi
 # 3. imatrix on the Russian calibration text (chunks of 512 tokens)
 IMX="$QD/imatrix-e4b-ru.gguf"
 if [ ! -s "$IMX" ]; then
-  /usr/bin/time -f "imatrix: %e s, %M KB maxrss" "$BIN/llama-imatrix" -m "$BF16" -f "$CALIB" -o "$IMX" --chunk 512 -t "$(nproc)" ${GGML_CUDA:+-ngl 99}
+  # -c = chunk size; NOT --chunk (that is --from-chunk, "skip the first N chunks" — bit us on 2026-10-19)
+  /usr/bin/time -f "imatrix: %e s, %M KB maxrss" "$BIN/llama-imatrix" -m "$BF16" -f "$CALIB" -o "$IMX" -c 512 -t "$(nproc)" ${GGML_CUDA:+-ngl 99}
 fi
 
 # 4. three quantizations
