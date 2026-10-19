@@ -45,7 +45,7 @@ Done: измеримый критерий.
 | T-020 | open | Датасет персоны: генератор `gen_dataset.py` (учитель 26B-A4B → судья → jsonl), проверка утечки eval | persona/dataset/README, D-021 |
 | T-021 | open | QLoRA smoke-test: Soup на gemma4 e2b-it, 50 примеров → мердж → GGUF → ollama → CTX-1 | P-008, Q-043, Q-044 |
 | T-022 | done | Dense 9B при Q3/IQ3 как мозг режима A — остановлена на шаге 1: персона 9b Q4 2.8 (D-022) | Q-046 |
-| T-023 | open | Своя квантизация e4b-it (BF16 GGUF → imatrix на русском → Q4_K_M / IQ4_XS) против официальной QAT | Q-047, Q-043 |
+| T-023 | done | Своя квантизация e4b-it с imatrix ≈ QAT (−0.1…0.2); без imatrix −0.65; IQ4_XS+imx — кандидат для Orin (D-023) | Q-047, Q-043 |
 | T-024 | open | ollama vs llama-server на одном GGUF: память, скорость, логпробы, slot save/restore (thaw_budget) | Q-048, A-03, Q-034, M8 |
 | T-008 | blocked | Оценочный набор `research/eval/` | Q-029 |
 
@@ -314,7 +314,7 @@ Done: `dialogs.jsonl` ≥ 300 записей (после пополнения `u
 1. HF-чекпойнт bf16 `google/gemma-4-e2b-it` (имя уточнить на HF; не QAT-GGUF — QLoRA квантует сама, Q-043), `hf_inc` только safetensors/конфиги.
 2. Soup: QLoRA r=16, target — attention + MLP языковой части, vision-башня заморожена; 1 эпоха, 50 примеров; записать пик VRAM (`nvidia-smi --loop-ms=500`), время эпохи, работает ли layer streaming на Gemma 4 (PLE!).
 3. Мердж LoRA в bf16 → `convert_hf_to_gguf.py` (llama.cpp) → Q4_K_M; проверить, что mmproj (vision) собирается или что текстовая часть работает без него; `ollama create kostyan-smoke -f Modelfile`.
-3b. (Q-047) Тем же конвейером — **без LoRA**: bf16 `gemma-4-e4b-it` → `llama-imatrix` на русских диалогах (`persona/dataset/dialogs.jsonl`, без eval-реплик) → `llama-quantize` Q4_K_M и IQ4_XS → `ollama create`; CTX-1 (2 seed) и bench против `gemma4:e4b-it-qat`. Это отвечает, что именно даёт официальный QAT и можно ли его терять при LoRA. Записать размеры и время квантования.
+3b. ~~(Q-047) без LoRA~~ — сделано в T-023 (D-023): QAT терять можно, **imatrix обязателен**. Для мерджа: `research/quant/quant_e4b.sh` как образец (imatrix на `research/quant/calib_ru.txt` + `persona/dataset/dialogs.jsonl`), формат — IQ4_XS и Q4_K_M, оба с imatrix.
 4. `ctx_probe.py --model kostyan-smoke --ctx 8192 --persona persona/system_prompt_rules.md --judge qwen3.5:9b` — сравнить с e2b-it-qat v1 (4.0) только как проверку, что модель не сломана.
 Проверка: модель отвечает по-русски через ollama; JSON прогона есть.
 Done: `train_smoke.md` с числами (VRAM пик, время, размер GGUF, персона); если стек не завёлся — где именно и что пробовали.
@@ -336,7 +336,8 @@ Done: таблица «квантизация × (пик VRAM @8k, tok/s, пре
 Записать: MEMORY_BUDGET §3 — строка «Qwen3.5 9B Q3/IQ3»; сводка `research/bench/results/vlm_mem_9b_q3_<дата>.md` (исследователь); D-NNN по результату (исследователь); строка в «Закрытые».
 Связь: Q-046, Q-039, D-015, P-012 (тернарная Bonsai — следующая ступень той же идеи), Q-004 (IQ-ядра на Orin медленнее — перепроверить там).
 
-### T-023 · Своя квантизация gemma-4-E4B-it с imatrix на русском против официальной QAT · open
+### T-023 · Своя квантизация gemma-4-E4B-it с imatrix на русском против официальной QAT · done (2026-10-19, D-023)
+Сделано владельцем за день (сборка llama.cpp CPU, BF16 через aria2c после отказа Xet-докачки, imatrix, три квантизации, bench, CTX-1 ×6); два бага скриптов ядра поправлены по ходу (`--chunk` → `-c`, f-string). Остаток: подключить mmproj к `kostyan-e4b-iq4xs-imx` и снять пик VRAM с проектором (строка в MEMORY_BUDGET) — в T-024 заодно. Ниже — исходная карточка.
 Зачем: Q-047/Q-043 — что именно даёт официальный `-it-qat` и можно ли его терять при LoRA (T-021 квантует сама). Три своих варианта: Q4_K_M с imatrix, IQ4_XS с imatrix (компактнее), Q4_K_M без imatrix — разделяют эффект imatrix и эффект QAT. Конвертация не нужна: `ggml-org/gemma-4-E4B-it-GGUF` содержит BF16 GGUF.
 Предусловие: стенд погашен; системный ollama с `gemma4:26b-a4b-it-mtp-q4_K_M` (для калибровочного текста); `sudo apt install -y cmake build-essential`; ~20 ГБ места; желательно `.wslconfig memory` ≥ 24 ГБ (BF16 16 ГБ через mmap при 19 ГБ RAM — впритык).
 Файлы: `research/quant/make_calib.py`, `research/quant/quant_e4b.sh` (есть); результаты — `models/quant/` (не в git), `research/quant/calib_ru.txt` (в git — он же seed для T-020), сводка — исследователь.
@@ -384,3 +385,4 @@ Done: набор прогоняется на gemma3:4b, ответы сохра�
 | T-018 | 2026-10-19 | CTX-1 по 12 моделям A + 2 MoE B: лидер e4b-it-qat 4.08 (26B-A4B — 4.38 потолок); qwen3.5:4b, текстовые, minicpm — сняты | fea56f9…cb8c815 | D-018, D-019, MEMORY_BUDGET §3/§4, сводки в results/ | Nanbeige не скачан → Q-035 |
 | T-006 | 2026-10-19 | bench v2.1: load_s, TTFT тёплый, префилл мимо кэша, RSS через pgrep -P, host RAM; префилл 26B MoE 100 ток/с vs dense 1200–2600, генерация 18 vs 42–88 | e885439, 8529a50, e0bf8f3 + следующий | `vlm_mem_prefill_2026-10-19.md`, MEMORY_BUDGET §3/§4 | сделано ядром; дефект v2 (кэш префикса) найден и исправлен в тот же день |
 | T-022 | 2026-10-19 | qwen3.5:9b Q4: персона 2.77 / 2.92 (два seed), recall 0.73–0.80, math 1/6 — глубокая квантизация 9B для режима A не нужна | b773ab9 + следующий | D-022, `ctx_probe_t022_2026-10-19.md`, MEMORY_BUDGET §3 | остановлена на шаге 1; прогон — владелец, оценка — исследователь |
+| T-023 | 2026-10-19 | Q4_K_M+imx 3.92/3.85, IQ4_XS+imx 3.92/4.0, Q4_K_M без imx 3.38/3.31 против QAT 4.08/4.08; recall 0.87–0.93 с imx; IQ4_XS −250 МБ VRAM при той же скорости | f148fce…805245e + следующий | D-023, `ctx_probe_t023_2026-10-19.md`, MEMORY_BUDGET §3, `research/quant/calib_ru.txt` | VRAM без mmproj несравним с официальной; времена imatrix/quantize — из терминала владельца, не записаны |
