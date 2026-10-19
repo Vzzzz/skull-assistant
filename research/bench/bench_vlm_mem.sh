@@ -72,7 +72,9 @@ for KV in $KVS; do
     LOAD=$(printf '%s' "$RESP_COLD" | python3 -c '
 import json,sys
 try:
-    d=json.load(sys.stdin); print(f"{(d.get(\"load_duration\",0)+d.get(\"prompt_eval_duration\",0))/1e9:.2f}")
+    d=json.load(sys.stdin)
+    v=(d.get("load_duration",0)+d.get("prompt_eval_duration",0))/1e9
+    print(f"{v:.2f}")
 except Exception: print("ERR")')
     read -r TTFT PTOKS TOKS <<<"$(printf '%s' "$RESP" | python3 -c '
 import json,sys
