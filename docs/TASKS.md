@@ -90,7 +90,7 @@ Done: в `responder.py` нет строковых литералов с имен
 Зачем: все пять манифестов имеют `null` в `budget`; диспетчер (M8) не допустит сервис без `measured_on`. Стендовые значения уже есть в `docs/MEMORY_BUDGET.md` §1 (замер 2026-10-12).
 Файлы: `services/{audio_capture,wakeword,stt,tts,brain}/manifest.yaml`.
 Шаги:
-1. Заполнить `budget` пиками из MEMORY_BUDGET §1, `measured_on: stand`: audio_capture `ram_mb: 44`; wakeword `ram_mb: 176`; stt `ram_mb: 321` (пик при загрузке); tts `ram_mb: 486` (пик синтеза); brain `ram_mb: 30`, `vram_mb: 4056` (gemma3:4b, num_ctx 8192). `vram_mb: 0` у CPU-сервисов.
+1. Заполнить `budget` пиками из MEMORY_BUDGET §1, `measured_on: stand`: audio_capture `ram_mb: 44`; wakeword `ram_mb: 176`; stt `ram_mb: 321` (пик при загрузке); tts `ram_mb: 486` (пик синтеза); brain `ram_mb: 30`, `vram_mb: 4056` пока модель gemma3:4b; **после переключения на gemma4:e4b-it-qat (T-016) — `vram_mb: 4258`** (num_ctx 8192, flash + q8_0, замер 2026-10-19). `vram_mb: 0` у CPU-сервисов.
 2. brain: `healthcheck: http://127.0.0.1:11434/api/tags`; `thaw_budget_s: 10` (ожидание, пометить комментарием `# expected, not measured`).
 3. Остальные `null` (healthcheck CPU-сервисов) оставить, но заменить на `healthcheck: null  # TODO: systemd notify` — чтобы было видно, что осознанно.
 Проверка: `grep -n null services/*/manifest.yaml` — только строки с `# TODO`; `python3 -c "import yaml,glob; [yaml.safe_load(open(f)) for f in glob.glob('services/*/manifest.yaml')]"` без ошибок.
