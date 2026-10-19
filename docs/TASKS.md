@@ -44,6 +44,7 @@ Done: измеримый критерий.
 | T-019 | open | Очистка диска от моделей, не прошедших отбор (после T-018, T-013, bench) | D-018, Q-009 |
 | T-020 | open | Датасет персоны: генератор `gen_dataset.py` (учитель 26B-A4B → судья → jsonl), проверка утечки eval | persona/dataset/README, D-021 |
 | T-021 | open | QLoRA smoke-test: Soup на gemma4 e2b-it, 50 примеров → мердж → GGUF → ollama → CTX-1 | P-008, Q-043, Q-044 |
+| T-022 | open | Dense 9B при Q3/IQ3 как мозг режима A: CTX-1 на qwen3.5:9b Q4 → bench + CTX-1 на Q3_K_M и UD-IQ3_XXS | Q-046, Q-039, P-012 |
 | T-008 | blocked | Оценочный набор `research/eval/` | Q-029 |
 
 ## Карточки
@@ -316,6 +317,20 @@ Done: `dialogs.jsonl` ≥ 300 записей (после пополнения `u
 Done: `train_smoke.md` с числами (VRAM пик, время, размер GGUF, персона); если стек не завёлся — где именно и что пробовали.
 Записать: MEMORY_BUDGET §1 — строка «QLoRA на стенде: VRAM пик»; DECISION_LOG — предложение D-NNN по стеку (исследователь); строка в «Закрытые».
 Связь: P-008, Q-043 (QAT vs bf16), Q-044 (стек под Gemma 4), T-020.
+
+### T-022 · Dense 9B при Q3/IQ3 как мозг режима A · open
+Зачем: Q4 9B не влезает в режим A (D-015: 6.3 ГБ + голос), а 4B-класс упёрся в персону 4.08. Глубокая квантизация 9B (4.0–4.7 ГБ весов) может дать «9B в бюджете 4B» — если персона 9B того стоит и просадка от Q3 мала. На стенде, стенд погашен.
+Файлы: ничего не править; результаты в `research/eval/results/` и `research/bench/results/`.
+Шаги:
+1. **Есть ли что терять**: `for s in 42 7; do .venv/bin/python research/eval/ctx_probe.py --model qwen3.5:9b --ctx 8192 --seed $s 2>&1 | tee -a research/eval/results/ctx_probe_t022.log; done` — без `--judge` (судья — та же модель; оценка — исследователь по JSON). Если персона < 4.3 на обоих seed — остановиться, записать, Q-046 закрыть отрицательно.
+2. `ollama pull hf.co/unsloth/Qwen3.5-9B-GGUF:Q3_K_M` и `ollama pull hf.co/unsloth/Qwen3.5-9B-GGUF:UD-IQ3_XXS` (4.7 и 4.0 ГБ).
+3. Bench: `MODELS="hf.co/unsloth/Qwen3.5-9B-GGUF:Q3_K_M hf.co/unsloth/Qwen3.5-9B-GGUF:UD-IQ3_XXS qwen3.5:9b" CTXS="2048 8192 16384" KVS="q8_0" FLASHES="1" bash research/bench/bench_vlm_mem.sh research/bench/results/vlm_mem_9b_q3_$(date +%F).csv 2>&1 | tee research/bench/results/bench_9b_q3.log`.
+4. CTX-1 на обоих Q3 (2 seed, @8192, без `--judge`), те же команды, что в п.1, с `--model hf.co/…`.
+5. Сообщить исследователю список новых JSON — оценка персоны и сравнение с Q4.
+Проверка: CSV с 9 строками, 6 JSON CTX-1 (или 2, если остановились на п.1).
+Done: таблица «квантизация × (пик VRAM @8k, tok/s, префилл, персона 2 seed, recall, L2)»; гейт Q-046: пик ≤ 5.0 ГБ @8k при просадке персоны ≤ 0.2 к Q4.
+Записать: MEMORY_BUDGET §3 — строка «Qwen3.5 9B Q3/IQ3»; сводка `research/bench/results/vlm_mem_9b_q3_<дата>.md` (исследователь); D-NNN по результату (исследователь); строка в «Закрытые».
+Связь: Q-046, Q-039, D-015, P-012 (тернарная Bonsai — следующая ступень той же идеи), Q-004 (IQ-ядра на Orin медленнее — перепроверить там).
 
 ### T-008 · Оценочный набор `research/eval/` · blocked
 Blocked (2026-10-12): нужен текст реплик от владельца (Q-029). Черновик может подготовить исследователь — тогда владелец правит.
