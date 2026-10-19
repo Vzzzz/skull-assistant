@@ -1,0 +1,6 @@
+model,num_ctx,kv,flash,vram_idle_mb,vram_peak_mb,vram_delta_mb,ollama_ps_size,ollama_ps_proc,rss_runner_mb,ram_delta_mb,load_s,ttft_warm_s,prompt_tok_s,tok_s
+gemma4:26b-a4b-it-mtp-q4_K_M,8192,q8_0,1,0,6908,6908,1.2GB,27%/73%CPU/GPU,17446,465,25.94,2.25,100,18.2
+qwen3.5:9b,8192,q8_0,1,0,6426,6426,5.6GB,100%GPU,1250,170,9.71,0.17,1201,49.8
+ministral-3:8b,8192,q8_0,1,0,6288,6288,6.9GB,19%/81%CPU/GPU,5280,-24,8.31,0.14,5600,42.0
+gemma3:4b,8192,q8_0,1,0,3876,3876,2.9GB,100%GPU,1035,537,6.52,0.08,2603,88.5
+gemma4:e4b-it-qat,8192,q8_0,1,0,4258,4258,3.1GB,100%GPU,1452,192,8.58,0.11,1995,70.0
