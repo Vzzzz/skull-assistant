@@ -312,6 +312,7 @@ Done: `dialogs.jsonl` ≥ 300 записей (после пополнения `u
 1. HF-чекпойнт bf16 `google/gemma-4-e2b-it` (имя уточнить на HF; не QAT-GGUF — QLoRA квантует сама, Q-043), `hf_inc` только safetensors/конфиги.
 2. Soup: QLoRA r=16, target — attention + MLP языковой части, vision-башня заморожена; 1 эпоха, 50 примеров; записать пик VRAM (`nvidia-smi --loop-ms=500`), время эпохи, работает ли layer streaming на Gemma 4 (PLE!).
 3. Мердж LoRA в bf16 → `convert_hf_to_gguf.py` (llama.cpp) → Q4_K_M; проверить, что mmproj (vision) собирается или что текстовая часть работает без него; `ollama create kostyan-smoke -f Modelfile`.
+3b. (Q-047) Тем же конвейером — **без LoRA**: bf16 `gemma-4-e4b-it` → `llama-imatrix` на русских диалогах (`persona/dataset/dialogs.jsonl`, без eval-реплик) → `llama-quantize` Q4_K_M и IQ4_XS → `ollama create`; CTX-1 (2 seed) и bench против `gemma4:e4b-it-qat`. Это отвечает, что именно даёт официальный QAT и можно ли его терять при LoRA. Записать размеры и время квантования.
 4. `ctx_probe.py --model kostyan-smoke --ctx 8192 --persona persona/system_prompt_rules.md --judge qwen3.5:9b` — сравнить с e2b-it-qat v1 (4.0) только как проверку, что модель не сломана.
 Проверка: модель отвечает по-русски через ollama; JSON прогона есть.
 Done: `train_smoke.md` с числами (VRAM пик, время, размер GGUF, персона); если стек не завёлся — где именно и что пробовали.
