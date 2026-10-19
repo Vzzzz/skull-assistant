@@ -1,0 +1,4 @@
+runtime,model,num_ctx,kv,flash,vram_idle_mb,vram_peak_mb,vram_delta_mb,rss_server_mb,ram_delta_mb,load_s,ttft_warm_s,prompt_tok_s,tok_s
+llama-server,kostyan-e4b-iq4xs-imx,2048,q8_0,on,0,2984,2984,3455,770,4.89,0.10,2003,65.4
+llama-server,kostyan-e4b-iq4xs-imx,8192,q8_0,on,0,3040,3040,3461,800,4.02,0.10,1986,67.6
+llama-server,kostyan-e4b-iq4xs-imx,16384,q8_0,on,0,3148,3148,3470,580,3.80,0.10,2076,68.3

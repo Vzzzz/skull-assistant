@@ -1,0 +1,4 @@
+model,num_ctx,kv,flash,vram_idle_mb,vram_peak_mb,vram_delta_mb,ollama_ps_size,ollama_ps_proc,rss_runner_mb,ram_delta_mb,load_s,ttft_warm_s,prompt_tok_s,tok_s
+kostyan-e4b-iq4xs-imx,2048,q8_0,1,0,2974,2974,NA,NA,3461,729,8.08,0.10,2315,67.8
+kostyan-e4b-iq4xs-imx,8192,q8_0,1,0,3030,3030,NA,NA,3467,755,5.44,0.10,2175,68.6
+kostyan-e4b-iq4xs-imx,16384,q8_0,1,0,3138,3138,NA,NA,3475,716,5.77,0.10,2278,66.0
