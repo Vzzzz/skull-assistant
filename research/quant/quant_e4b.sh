@@ -24,8 +24,14 @@ if [ ! -x "$LLAMA/build/bin/llama-quantize" ]; then
 fi
 BIN="$LLAMA/build/bin"; echo "llama.cpp: $(cd "$LLAMA" && git rev-parse --short HEAD)"
 
-# 2. BF16 GGUF (16 GB) — no HF conversion step needed
-[ -s "$BF16" ] || "$HF_CLI" download ggml-org/gemma-4-E4B-it-GGUF gemma-4-E4B-it-BF16.gguf --local-dir "$QD"
+# 2. BF16 GGUF (16 GB) — no HF conversion step needed. Xet backend of `hf download` does not resume a dropped
+#    download (2026-10-19), so prefer aria2c (multi-connection, resumable); fall back to wget -c, then hf without Xet.
+URL="https://huggingface.co/ggml-org/gemma-4-E4B-it-GGUF/resolve/main/gemma-4-E4B-it-BF16.gguf"
+if [ ! -s "$BF16" ]; then
+  if command -v aria2c >/dev/null; then aria2c -c -x 8 -s 8 -k 1M --retry-wait=10 --max-tries=0 -d "$QD" -o "$(basename "$BF16")" "$URL"
+  elif command -v wget >/dev/null; then until wget -c -L -O "$BF16" "$URL"; do sleep 20; done
+  else HF_HUB_DISABLE_XET=1 "$HF_CLI" download ggml-org/gemma-4-E4B-it-GGUF "$(basename "$BF16")" --local-dir "$QD"; fi
+fi
 
 # 3. imatrix on the Russian calibration text (chunks of 512 tokens)
 IMX="$QD/imatrix-e4b-ru.gguf"
