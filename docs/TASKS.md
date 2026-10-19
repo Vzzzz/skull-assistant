@@ -45,6 +45,7 @@ Done: измеримый критерий.
 | T-020 | open | Датасет персоны: генератор `gen_dataset.py` (учитель 26B-A4B → судья → jsonl), проверка утечки eval | persona/dataset/README, D-021 |
 | T-021 | open | QLoRA smoke-test: Soup на gemma4 e2b-it, 50 примеров → мердж → GGUF → ollama → CTX-1 | P-008, Q-043, Q-044 |
 | T-022 | done | Dense 9B при Q3/IQ3 как мозг режима A — остановлена на шаге 1: персона 9b Q4 2.8 (D-022) | Q-046 |
+| T-023 | open | Своя квантизация e4b-it (BF16 GGUF → imatrix на русском → Q4_K_M / IQ4_XS) против официальной QAT | Q-047, Q-043 |
 | T-008 | blocked | Оценочный набор `research/eval/` | Q-029 |
 
 ## Карточки
@@ -333,6 +334,21 @@ Done: `train_smoke.md` с числами (VRAM пик, время, размер 
 Done: таблица «квантизация × (пик VRAM @8k, tok/s, префилл, персона 2 seed, recall, L2)»; гейт Q-046: пик ≤ 5.0 ГБ @8k при просадке персоны ≤ 0.2 к Q4.
 Записать: MEMORY_BUDGET §3 — строка «Qwen3.5 9B Q3/IQ3»; сводка `research/bench/results/vlm_mem_9b_q3_<дата>.md` (исследователь); D-NNN по результату (исследователь); строка в «Закрытые».
 Связь: Q-046, Q-039, D-015, P-012 (тернарная Bonsai — следующая ступень той же идеи), Q-004 (IQ-ядра на Orin медленнее — перепроверить там).
+
+### T-023 · Своя квантизация gemma-4-E4B-it с imatrix на русском против официальной QAT · open
+Зачем: Q-047/Q-043 — что именно даёт официальный `-it-qat` и можно ли его терять при LoRA (T-021 квантует сама). Три своих варианта: Q4_K_M с imatrix, IQ4_XS с imatrix (компактнее), Q4_K_M без imatrix — разделяют эффект imatrix и эффект QAT. Конвертация не нужна: `ggml-org/gemma-4-E4B-it-GGUF` содержит BF16 GGUF.
+Предусловие: стенд погашен; системный ollama с `gemma4:26b-a4b-it-mtp-q4_K_M` (для калибровочного текста); `sudo apt install -y cmake build-essential`; ~20 ГБ места; желательно `.wslconfig memory` ≥ 24 ГБ (BF16 16 ГБ через mmap при 19 ГБ RAM — впритык).
+Файлы: `research/quant/make_calib.py`, `research/quant/quant_e4b.sh` (есть); результаты — `models/quant/` (не в git), `research/quant/calib_ru.txt` (в git — он же seed для T-020), сводка — исследователь.
+Шаги:
+1. Калибровочный текст: `.venv/bin/python research/quant/make_calib.py --n 60` → `research/quant/calib_ru.txt` (~10 мин; 26B пишет сценки на темы вне eval-диалога, утечки отбрасываются). Посмотреть глазами 2–3 сценки.
+2. `bash research/quant/quant_e4b.sh` — сборка llama.cpp (CPU), загрузка BF16, imatrix (10–30 мин на CPU), три квантизации, `ollama create`. Записать из вывода: время imatrix и maxrss, время и размер каждой квантизации.
+3. Bench: `MODELS="kostyan-e4b-q4km-imx kostyan-e4b-iq4xs-imx kostyan-e4b-q4km gemma4:e4b-it-qat" CTXS="8192" KVS="q8_0" FLASHES="1" bash research/bench/bench_vlm_mem.sh research/bench/results/vlm_mem_ownquant_$(date +%F).csv 2>&1 | tee research/bench/results/bench_ownquant.log`.
+4. CTX-1, два seed: `for m in kostyan-e4b-q4km-imx kostyan-e4b-iq4xs-imx kostyan-e4b-q4km; do for s in 42 7; do .venv/bin/python research/eval/ctx_probe.py --model "$m" --ctx 8192 --seed $s --judge qwen3.5:9b 2>&1 | tee -a research/eval/results/ctx_probe_t023.log; done; ollama stop "$m"; done` (эталон — `ctx_probe_gemma4_e4b-it-qat_8192.json` / `_s7_`, v3).
+5. Сообщить исследователю список новых JSON.
+Проверка: `ollama list | grep kostyan-e4b` — три модели; CSV 4 строки; 6 JSON.
+Done: таблица «вариант × (размер GGUF, пик VRAM @8k, tok/s, персона 2 seed, recall, L2)» — исследователь; гейт Q-047: |Δ персона| ≤ 0.1 к QAT.
+Записать: MEMORY_BUDGET §3 — строка «E4B своя квантизация»; D-NNN (исследователь); `models/README.md` — раздел `models/quant/`; строка в «Закрытые» с временами и размерами.
+Связь: Q-047, Q-043, T-021 (шаг 3b), T-020 (calib_ru как seed user_lines), Q-004 (IQ-ядра на Orin — отдельно).
 
 ### T-008 · Оценочный набор `research/eval/` · blocked
 Blocked (2026-10-12): нужен текст реплик от владельца (Q-029). Черновик может подготовить исследователь — тогда владелец правит.
