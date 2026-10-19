@@ -101,11 +101,18 @@ probs)
   T0=$(date +%s.%N)
   curl -s "$HOST/completion" -d "{\"prompt\": $(printf '%s' "$Q" | jstr), \"n_predict\": 1, \"temperature\": 0, \"n_probs\": 8}" | python3 -c '
 import json,sys
+import math
 d=json.load(sys.stdin); t=d["timings"]
 print("prompt_n", t["prompt_n"], "prompt_ms", round(t["prompt_ms"]), "| first token:", repr(d["content"]))
-for p in d.get("completion_probabilities", [])[:1]:
-    for c in p.get("top_probs", p.get("probs", []))[:8]:
-        tok = c.get("token", c.get("tok_str")); pr = c.get("prob", 0)
+cp = d.get("completion_probabilities", [])
+if not cp:
+    print("no completion_probabilities; keys:", sorted(d.keys()))
+for p in cp[:1]:
+    # newer builds: top_logprobs [{token, logprob}]; older: top_probs/probs [{tok_str, prob}]
+    cands = p.get("top_logprobs") or p.get("top_probs") or p.get("probs") or []
+    for c in cands[:8]:
+        tok = c.get("token", c.get("tok_str"))
+        pr = c["prob"] if "prob" in c else math.exp(c.get("logprob", -99))
         print(f"  {tok!r:>12}  {pr:.3f}")'
   python3 -c "print(f'wall: {$(date +%s.%N)-$T0:.2f} s')"
   stop_server ;;

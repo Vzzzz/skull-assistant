@@ -102,6 +102,14 @@
 
 <!-- новые записи добавлять сверху, нумерация сквозная -->
 
+### D-024 · Рантайм brain — llama-server; ollama остаётся инструментом стенда · 2026-10-19
+Контекст: A-03 (рантайм) с v1 стоял без замера; T-024 / Q-048 — ollama против llama-server на одном GGUF (`kostyan-e4b-iq4xs-imx`), стенд; сводка `research/bench/results/runtime_2026-10-19.md`.
+Пробовали: память/скорость @2k/8k/16k на обоих; slot save/restore; `n_probs`.
+Упёрлись: по памяти и скорости рантаймы **неразличимы** (VRAM ±10 МБ, RSS ±10 МБ, ±2 tok/s; ollama +10 % префилл, llama-server −1.5…3 с загрузки) — надбавка ~1 ГБ из D-015 одинакова у обоих (CUDA-контекст + буферы). Различие — в функциях: slot save/restore (freeze 62 мс, restore 32 мс, файл 71 МБ на 4.4k токенов q8_0, thaw ≈ 3.5 с с перезагрузкой весов), logprobs первого токена (0.3 с на 361-токенном промпте), грамматики, multi-model, драфт `mtp-gemma-4-E4B-it` — только у llama-server. Побочно: Gemma 4 на голый промпт отвечает EOS (нужен чат-шаблон), шаблон включает thinking по умолчанию (`--reasoning-budget 0`).
+Выбрали: (1) **прод-рантайм brain — llama-server** (манифест: `backend: llama.cpp`, `freeze: slot-save-kill`, `thaw: start-slot-restore`, `thaw_budget_s: 4` на стенде — перемерить на Orin); (2) ollama — стенд: pull/теги, судья, CTX-1-прогоны, bench сравнения; (3) `services/brain` переводить на `/v1/chat/completions` llama-server в T-016 (с `think` → `--reasoning-budget 0`, персона — файл); (4) формат GGUF для прода — IQ4_XS+imatrix (D-023), драфт MTP — проверить в M8b/T-024 (опц.).
+Следствия: A-03 закрыт замером; MEMORY_BUDGET §1 — freeze/thaw для VLM; T-016 — переезд brain на llama-server; T-007 — `thaw_budget_s`; COGNITION_4B E-3 (роутер) — разблокирован; deploy: юнит `skull-llm.service` с llama-server вместо зависимости от системного ollama (задача исполнителю, после T-016).
+Основание: замер (bench v2.1 + slots + probs).
+
 ### D-023 · Своя квантизация Gemma 4 с imatrix на русском ≈ официальная QAT; без imatrix — нет · 2026-10-19
 Контекст: T-023 (Q-047, Q-043) — что даёт официальный `-it-qat` и можно ли его терять при LoRA. BF16 GGUF (ggml-org) → imatrix на 51 сценке от 26B вне eval-тем → три варианта: Q4_K_M+imatrix, IQ4_XS+imatrix, Q4_K_M без imatrix. CTX-1 @8k, промпт v3, два seed; bench v2.1. Сводка `research/eval/results/ctx_probe_t023_2026-10-19.md`.
 Пробовали: сравнить с `gemma4:e4b-it-qat` (4.08 / 4.08 на тех же seed).

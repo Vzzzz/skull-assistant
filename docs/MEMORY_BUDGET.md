@@ -17,6 +17,7 @@
 | TTS (Piper dmitri-medium) | cpu | нет | 0 | 144 сервис; в бенче 132 загружен / 486 пик синтеза | RT 0.055–0.09, первое аудио = синтез всего предложения (0.05–0.83 с), sox 0.02–0.06 с | стенд, 2026-10-12 | 2026-10-12 | services/tts |
 | VLM основная (gemma3:4b, ollama; **num_ctx 8192 по D-016** → пик 4056) | llama.cpp | да | 3784 (2k) … 4056 (8k) … 4080 (16k) | | 0 / 3784 / 0 (выгрузка = kill раннера) | стенд, 2026-10-12 | 2026-10-12 | services/brain |
 | VLM основная — **целевая по D-021: gemma4:e4b-it-qat**, num_ctx 8192, flash + KV q8_0 | llama.cpp | да | 4202 (2k) … **4258 (8k)** … 4366 (16k); запасная e2b-it-qat: 2978 (8k) | | 0 / 4258 / 0 | стенд, 2026-10-19 (`research/bench/results/vlm_mem_qat_2026-10-19.md`) | 2026-10-19 | services/brain (T-007/T-016) |
+| VLM — рантайм **llama-server** (D-024), GGUF IQ4_XS+imx (D-023), текст без mmproj | llama.cpp | да | 2984 (2k) / 3040 (8k) / 3148 (16k) — = ollama ±10 МБ | RSS 3.46 ГБ | **freeze 0.06 с (slot save, 71 МБ на 4.4k ток. q8_0) / thaw ≈ 3.5 с (перезапуск + restore 0.03 с)** | стенд, 2026-10-19 (`runtime_2026-10-19.md`) | 2026-10-19 | services/brain: `thaw_budget_s: 4` |
 | YOLOv8n | tensorrt | да | | | / / | — | | services/vision |
 | audio_capture (soundcard→Redis) | cpu | нет | 0 | 44 | CPU 4 % | стенд, 2026-10-12 | 2026-10-12 | services/audio_capture |
 | brain (клиент ollama) | cpu | нет | 0 | 30 | модель — в строке VLM | стенд, 2026-10-12 | 2026-10-12 | services/brain |

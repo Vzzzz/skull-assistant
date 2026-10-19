@@ -46,7 +46,7 @@ Done: измеримый критерий.
 | T-021 | open | QLoRA smoke-test: Soup на gemma4 e2b-it, 50 примеров → мердж → GGUF → ollama → CTX-1 | P-008, Q-043, Q-044 |
 | T-022 | done | Dense 9B при Q3/IQ3 как мозг режима A — остановлена на шаге 1: персона 9b Q4 2.8 (D-022) | Q-046 |
 | T-023 | done | Своя квантизация e4b-it с imatrix ≈ QAT (−0.1…0.2); без imatrix −0.65; IQ4_XS+imx — кандидат для Orin (D-023) | Q-047, Q-043 |
-| T-024 | open | ollama vs llama-server на одном GGUF: память, скорость, логпробы, slot save/restore (thaw_budget) | Q-048, A-03, Q-034, M8 |
+| T-024 | done | ollama vs llama-server: паритет по памяти/скорости; slots 62/32 мс, thaw ≈ 3.5 с; logprobs есть → llama-server (D-024) | Q-048, A-03, Q-034, M8 |
 | T-008 | blocked | Оценочный набор `research/eval/` | Q-029 |
 
 ## Карточки
@@ -77,6 +77,7 @@ Done: рестарт `skull-brain` не теряет контекст; `llen` �
 Связь: I-05; дальше история переедет в SQLite (M6) и/или объект состояния (P-007, Q-012).
 
 ### T-016 · Brain: модель и `num_ctx` из манифеста, не хардкод · open
+**Дополнение 2026-10-19 (D-024):** рантайм brain — llama-server, не ollama. В этой же задаче: `params.backend: llama-server`, `params.gguf: models/quant/kostyan-e4b-iq4xs-imx.gguf`, `params.mmproj` (скачать `mmproj-gemma-4-E4B-it-Q8_0.gguf` из ggml-org, снять пик VRAM с проектором — хвост T-024), `thaw_budget_s: 4`, `freeze: slot-save-kill`; `responder.py` ходит в `/v1/chat/completions` на :11437 (сервер — отдельный юнит `skull-llm.service`: `llama-server -m … --mmproj … -ngl 99 -fa on -ctk q8_0 -ctv q8_0 -c 8192 --reasoning-budget 0 --slot-save-path …`, добавить в `install.sh`); `think` → `--reasoning-budget 0` на сервере. Ollama для стенда не трогать.
 Зачем: `MODEL = "gemma3:4b"` и `num_ctx: 8192` зашиты в `responder.py`; при смене кандидата или окна (D-016) придётся править код, а манифест — источник правды по контракту платформы.
 Файлы: `services/brain/responder.py`, `services/brain/manifest.yaml`, `requirements.txt`.
 Шаги:
@@ -352,7 +353,8 @@ Done: таблица «вариант × (размер GGUF, пик VRAM @8k, to
 Записать: MEMORY_BUDGET §3 — строка «E4B своя квантизация»; D-NNN (исследователь); `models/README.md` — раздел `models/quant/`; строка в «Закрытые» с временами и размерами.
 Связь: Q-047, Q-043, T-021 (шаг 3b), T-020 (calib_ru как seed user_lines), Q-004 (IQ-ядра на Orin — отдельно).
 
-### T-024 · ollama против llama-server на одном GGUF · open
+### T-024 · ollama против llama-server на одном GGUF · done (2026-10-19, D-024)
+Сделано владельцем (CUDA toolkit, сборка, четыре прогона); три бага скрипта ядра по ходу: подоболочка теряла pid сервера, f-string, голый промпт без шаблона + thinking по умолчанию. Остаток (не блокирует): перезапуск `probs` с исправленным парсером (`top_logprobs`) и шаг 1b (mmproj → пик VRAM с проектором) — в T-016 при переезде brain. Ниже — исходная карточка.
 Зачем: решение A-03 (рантайм) принято без замера; ollama для Gemma 4 использует собственный раннер — надбавка ~1 ГБ (D-015) может быть другой у llama-server; у llama-server есть logprobs (Q-034) и slot save/restore (freeze/thaw для M8 — `thaw_budget_s` в манифестах пока «ожидание»). Стенд.
 Предусловие: T-023 (llama.cpp уже склонирован в `~/llama.cpp`); CUDA toolkit для WSL (`cuda-toolkit-12-x` из репозитория NVIDIA, без драйвера) → пересобрать с `-DGGML_CUDA=ON --target llama-server`; одинаковый GGUF — взять `kostyan-e4b-q4km-imx.gguf` из T-023 (он и в ollama, и файл на диске) или вытащить blob `gemma4:e4b-it-qat` из `/usr/share/ollama/.ollama/models/blobs` по `ollama show --modelfile`.
 Файлы: `research/bench/bench_llamaserver.sh` (есть, 2026-10-19: режимы `bench` / `slots` / `probs`; GGUF по умолчанию — `models/quant/kostyan-e4b-iq4xs-imx.gguf`, он же в ollama как `kostyan-e4b-iq4xs-imx`), результаты в `research/bench/results/`.
@@ -403,3 +405,4 @@ Done: набор прогоняется на gemma3:4b, ответы сохра�
 | T-006 | 2026-10-19 | bench v2.1: load_s, TTFT тёплый, префилл мимо кэша, RSS через pgrep -P, host RAM; префилл 26B MoE 100 ток/с vs dense 1200–2600, генерация 18 vs 42–88 | e885439, 8529a50, e0bf8f3 + следующий | `vlm_mem_prefill_2026-10-19.md`, MEMORY_BUDGET §3/§4 | сделано ядром; дефект v2 (кэш префикса) найден и исправлен в тот же день |
 | T-022 | 2026-10-19 | qwen3.5:9b Q4: персона 2.77 / 2.92 (два seed), recall 0.73–0.80, math 1/6 — глубокая квантизация 9B для режима A не нужна | b773ab9 + следующий | D-022, `ctx_probe_t022_2026-10-19.md`, MEMORY_BUDGET §3 | остановлена на шаге 1; прогон — владелец, оценка — исследователь |
 | T-023 | 2026-10-19 | Q4_K_M+imx 3.92/3.85, IQ4_XS+imx 3.92/4.0, Q4_K_M без imx 3.38/3.31 против QAT 4.08/4.08; recall 0.87–0.93 с imx; IQ4_XS −250 МБ VRAM при той же скорости | f148fce…805245e + следующий | D-023, `ctx_probe_t023_2026-10-19.md`, MEMORY_BUDGET §3, `research/quant/calib_ru.txt` | VRAM без mmproj несравним с официальной; времена imatrix/quantize — из терминала владельца, не записаны |
+| T-024 | 2026-10-19 | llama-server vs ollama на IQ4_XS+imx: VRAM 2984/3040/3148 vs 2974/3030/3138 МБ, 65–68 vs 66–69 tok/s; slot save 62 мс (71 МБ/4.4k), restore 32 мс, thaw ≈ 3.5 с; n_probs 0.3 с | 9033ff9…367b56c + следующий | D-024, `runtime_2026-10-19.md`, MEMORY_BUDGET §1, Q-048/Q-034 | probs-парсер перезапустить; mmproj — в T-016 |
