@@ -25,6 +25,7 @@ Done: измеримый критерий.
 
 | ID | Статус | Задача | Связь |
 |---|---|---|---|
+| T-025 | open | E-1: выборочное thinking на CTX-1 — e4b-it-qat / e2b-it-qat × `math,probe` / `all` × два seed | COGNITION_4B, D-021 |
 | T-001 | open | STT: убрать двойной `transcribe` | I-01 |
 | T-002 | open | Brain: история диалога в Redis | I-05 |
 | T-016 | open | Brain: модель и `num_ctx` из манифеста, не хардкод | D-016 |
@@ -50,6 +51,23 @@ Done: измеримый критерий.
 | T-008 | blocked | Оценочный набор `research/eval/` | Q-029 |
 
 ## Карточки
+
+### T-025 · E-1: выборочное thinking на CTX-1 · open
+Зачем: `docs/COGNITION_4B.md` рычаг 3 — у 4B-моделей дыры в счёте и в повторе собственных ответов (e4b-it-qat seed 42: math 2/3, промахи памяти t36/t55 — обе про свои же ответы на задачи; e2b-it-qat: math 1/3, recall 0.67). Вопрос: даёт ли `think: true` на трудных ходах выигрыш по math/recall, что он стоит в секундах, и не ломает ли персону — отдельно на обычных ходах (`math,probe`: думает 18 ходов из 60) и на всех (`all`: когнитивный максимум модели без дообучения). Стенд, ollama.
+Предусловие: `git pull --ff-only origin main` (флаг `--think-on` в `ctx_probe.py` от 2026-10-19); стенд в сервисном режиме, системный ollama; модели `gemma4:e4b-it-qat`, `gemma4:e2b-it-qat` на месте. Базовые линии без thinking уже есть: `results/ctx_probe_gemma4_e4b-it-qat_8192.json` (и `_s7_`), `…e2b-it-qat_8192.json` — не перегонять.
+Файлы: `research/eval/ctx_probe.py` (есть: `--think-on BLOCKS`, `--think-predict N`, метрики `wall_think_mean_s` / `wall_plain_mean_s` / `thinking_chars_mean` / `think_ignored` / `empty_on_think`, текст размышления в логе, суффикс `_think-<блоки>` в именах); результаты — `research/eval/results/`.
+Шаги:
+1. Сетка 8 прогонов (порядок = приоритет; если время кончится — остановиться после любого полного цикла по seed):
+```bash
+cd ~/skull-assistant && git pull --ff-only origin main
+for t in math,probe all; do for m in gemma4:e4b-it-qat gemma4:e2b-it-qat; do for s in 42 7; do .venv/bin/python research/eval/ctx_probe.py --model "$m" --ctx 8192 --seed $s --think-on $t --judge qwen3.5:9b 2>&1 | tee -a research/eval/results/ctx_probe_t025.log; done; ollama stop "$m"; done; done
+```
+2. В терминале на думающих ходах печатается `think=NNNch`. Если вместо этого `think requested but no thinking returned` — ollama/модель игнорирует флаг: записать в отчёт и остановиться (дальше бессмысленно). Если `EMPTY reply` на думающих ходах (`empty_on_think > 0` в JSON) — размышление не уложилось в 2500 токенов: переименовать JSON и .md этого прогона (добавить `_p2500` перед расширением) и повторить его с `--think-predict 4000`.
+3. `git add research/eval/results && git commit -m "eval: T-025 E-1 thinking на CTX-1 (8 прогонов)" && git push origin main`.
+Проверка: появились `results/ctx_probe_gemma4_e4b-it-qat_think-probe+math_8192.json`, `…_s7_think-probe+math_…`, `…_think-all_…` (×2 модели) и сводки `ctx_probe_gemma4_e4b-it-qat_think-probe+math_<дата>.md`; в JSON поле `think_on`, в логе у ходов t19–23, t34–36, t49–58 поле `thinking` непустое; в сводке колонка «ход с think / без, с».
+Done: 8 JSON + 8 сводок в git; строка в «Закрытые» с math / recall / персона (судья-fallback) / `wall_think_mean_s` / `thinking_chars_mean` по каждому прогону; упавшие ходы (пустые, флаг проигнорирован) перечислены.
+Записать: строка «Закрытые»; остальное — ядро: оценка персоны по D-017 (судья 9b — только ориентир), D-NNN по гейту (math ≥ 2/3 у обеих при персоне −0 ± 0.1 на обычных ходах), строка в `COGNITION_4B.md` E-1, латентность трудных ходов — в `MEMORY_BUDGET.md` §3 как примечание к строкам e4b/e2b.
+Связь: COGNITION_4B (E-1, рычаг 3), D-017, D-021, CTX_PROBE.md «Режим thinking», T-016 (`params.think` в манифесте станет per-turn после E-3).
 
 ### T-001 · STT: убрать двойной `transcribe` · open
 Зачем: в `transcriber.py` `model.transcribe` вызывается дважды подряд; результат первого вызова (с `condition_on_previous_text=False` — профилактика галлюцинаций) выбрасывается. Латентность STT ×2, профилактика не работает.

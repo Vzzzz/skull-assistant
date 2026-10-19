@@ -178,11 +178,11 @@ Done-критерий контракта (закрывается внутри M8
 
 **Состояние.** Стендовая часть выбора мозга закрыта: 14 моделей по CTX-1, память/скорость/префилл по трём классам, своя квантизация, рантайм. Решения D-015…D-024. Короткий список режима A: **gemma4:e4b-it-qat** (персона 4.08, оговаривается на неизвестное; бюджет 4258 МБ @8k с проектором) → в проде как **IQ4_XS + imatrix на llama-server** (D-023, D-024); запасная e2b-it-qat с промптом без примеров. Потолок семейства — 26B-A4B (4.38), режим B. Всё это — стенд; финальные числа — Orin.
 
-**Очередь исполнителя** (`docs/TASKS.md`, сверху вниз): T-001 (двойной transcribe) → T-002 (история в Redis) → **T-016** (brain на llama-server: манифест `params`, `skull-llm.service`, промпт из файла, mmproj, `thaw_budget_s: 4`) → T-007 (бюджеты в манифесты, `vram_mb: 4258`) → T-003 (стрим по предложениям) → T-004 (KWS, `tts:stop`) → T-005 (захват переживает re-enumerate) → T-015 (калькулятор — приоритет ниже: e4b считает 2–3/3) → **T-020** (генератор датасета через 26B; ждёт `user_lines.jsonl`) → **T-021** (QLoRA smoke-test, квантизация с imatrix) → T-019 (очистка диска) → T-010 / T-009 (перенос на Orin, bench под tegrastats) → T-017 (головы KWS, «Костян»).
+**Очередь исполнителя** (`docs/TASKS.md`, сверху вниз): **T-025** (E-1 thinking на CTX-1, сетка 8 прогонов — владелец, 2026-10-19) → T-001 (двойной transcribe) → T-002 (история в Redis) → **T-016** (brain на llama-server: манифест `params`, `skull-llm.service`, промпт из файла, mmproj, `thaw_budget_s: 4`) → T-007 (бюджеты в манифесты, `vram_mb: 4258`) → T-003 (стрим по предложениям) → T-004 (KWS, `tts:stop`) → T-005 (захват переживает re-enumerate) → T-015 (калькулятор — приоритет ниже: e4b считает 2–3/3) → **T-020** (генератор датасета через 26B; ждёт `user_lines.jsonl`) → **T-021** (QLoRA smoke-test, квантизация с imatrix) → T-019 (очистка диска) → T-010 / T-009 (перенос на Orin, bench под tegrastats) → T-017 (головы KWS, «Костян»).
 
 **Владелец:** `persona/dataset/user_lines.jsonl` — 30+ бытовых реплик (разблокирует T-020; черновик тем — `research/quant/calib_ru.txt`); `.wslconfig` `memory=24GB+` (qwen3.6 грузится 63 с вместо 40); хвост T-024 — `bash research/bench/bench_llamaserver.sh probs` (10 с); решение по названию/About репозитория (Q-038); M5 — когда Jetson на столе: `docs/JETSON_BRINGUP.md` день 1–2 (включая smoke-test режима B, Q-045).
 
-**Ядро:** карточки E-1/E-2/E-3 из `COGNITION_4B.md` (E-1 — флаг `--think-on` в `ctx_probe.py`, можно сразу); Q-042 (промпт «только правила» для e2b/gemma3); оценка новых CTX-1-прогонов по D-017; статья №1 — черновик структуры по накопленным D-015…D-024 после M5.
+**Ядро:** оценка T-025 по D-017 → D-025 и строка E-1 в `COGNITION_4B.md`; карточки E-2/E-3; Q-042 (промпт «только правила» для e2b/gemma3); оценка новых CTX-1-прогонов по D-017; статья №1 — черновик структуры по накопленным D-015…D-024 после M5.
 
 **Стандартные команды** (WSL, `~/skull-assistant`):
 ```bash
@@ -191,6 +191,7 @@ ls /mnt/c/Users/valer/.skull-maintenance && echo "сервисный режим"
 systemctl --user stop skull.target; ollama ps       # перед любым GPU-замером: GPU пустой
 # CTX-1 (персона/память), два seed, судья-fallback; итоговая оценка — ядро по JSON (D-017)
 for s in 42 7; do .venv/bin/python research/eval/ctx_probe.py --model <m> --ctx 8192 --seed $s --judge qwen3.5:9b; done
+# то же с thinking на трудных ходах (E-1): добавить --think-on math,probe   (или all — когнитивный максимум); файлы получат _think-<блоки>
 # память/скорость/префилл (v2.1), ollama:
 MODELS="<m1> <m2>" CTXS="2048 8192 16384" KVS="q8_0" FLASHES="1" bash research/bench/bench_vlm_mem.sh research/bench/results/<тема>_$(date +%F).csv
 # то же на llama-server (GGUF=…, MMPROJ=… по желанию) + слоты + logprobs:
