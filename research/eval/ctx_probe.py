@@ -156,7 +156,7 @@ def run_dialog(host, model, ctx, rows, seed, think_on=frozenset(), think_predict
         if not reply:
             print(f"[{model} ctx={ctx}] t{r['turn']:02d} EMPTY reply (ec={ec}, thinking_chars={thinking_chars})", flush=True)
         if think and not thinking_chars:
-            print(f"[{model} ctx={ctx}] t{r['turn']:02d} think requested but no thinking returned (model/ollama ignores think)", flush=True)
+            print(f"[{model} ctx={ctx}] t{r['turn']:02d} think requested, no reasoning produced (adaptive: model skipped it, or think unsupported)", flush=True)
         entry = {**r, "reply": reply, "think": think, "thinking_chars": thinking_chars, "ctx_overflow_dropped": dropped,
                  "prompt_eval_count": pe, "eval_count": ec,
                  "ttft_s": round((resp.get("load_duration", 0) + resp.get("prompt_eval_duration", 0)) / 1e9, 3),
@@ -192,8 +192,11 @@ def metrics(log, ctx):
             pf = e["probe_for"]
             if pf in own_answers:  # math recall: does it repeat its OWN earlier answer?
                 own = own_answers[pf]
-                hit = bool(own) and own.replace(",", ".").replace(":", ".") in e["reply"].replace(",", ".").replace(":", ".")
+                own_hit = bool(own) and own.replace(",", ".").replace(":", ".") in e["reply"].replace(",", ".").replace(":", ".")
                 hit2 = any_kw(e["reply"], ex["keywords"])  # and is that answer actually correct
+                # a correct answer given in words ("две тысячи сорок") has no digits to match against own_answers;
+                # count it as a hit too (2026-10-19 fix: t36/t55 were false misses on every e4b run)
+                hit = own_hit or hit2
             else:
                 hit = any_kw(e["reply"], ex["keywords"])
                 hit2 = any_kw(e["reply"], ex["keywords2"]) if "keywords2" in ex else None
@@ -230,8 +233,11 @@ def metrics(log, ctx):
     pl = [e for e in log if not e.get("think")]
     m["think_turns"] = len(th)
     m["think_blocks"] = sorted({e.get("block") for e in th}) if th else []
-    m["thinking_chars_mean"] = round(statistics.mean(e["thinking_chars"] for e in th)) if th else None
-    m["think_ignored"] = sum(1 for e in th if not e["thinking_chars"]) if th else None
+    thought = [e for e in th if e["thinking_chars"]]
+    m["thought_turns"] = len(thought) if th else None  # Gemma 4 decides per turn whether to think at all (adaptive)
+    m["thinking_chars_mean"] = round(statistics.mean(e["thinking_chars"] for e in thought)) if thought else None
+    m["think_ignored"] = len(th) - len(thought) if th else None  # think requested, no reasoning produced
+    m["wall_thought_mean_s"] = round(statistics.mean(e["wall_s"] for e in thought), 1) if thought else None
     m["empty_on_think"] = sum(1 for e in th if not e["reply"].strip()) if th else None
     m["wall_think_mean_s"] = round(statistics.mean(e["wall_s"] for e in th), 1) if th else None
     m["wall_think_max_s"] = round(max(e["wall_s"] for e in th), 1) if th else None
@@ -276,15 +282,16 @@ def judge(host, judge_model, log):
 
 def write_summary(model, tag, summary):
     md = [f"# CTX-1 · {model} · {date.today().isoformat()}", "",
-          "| num_ctx | thinking на блоках | пустых ответов | recall (все) | recall (≥30) | math верно | math с выкладкой | L1 токенов | L2 оговорка | обрезка на ходах | персона (судья, 1–5) | согласованность L1/L3 | L2 выдумал | TTFT посл.10, с | tok/s | ход с think / без, с (макс) | симв. размышления | токенов в контексте к концу |",
+          "| num_ctx | thinking на блоках | пустых ответов | recall (все) | recall (≥30) | math верно | math с выкладкой | L1 токенов | L2 оговорка | обрезка на ходах | персона (судья, 1–5) | согласованность L1/L3 | L2 выдумал | TTFT посл.10, с | tok/s | ход с размышлением / без, с (макс) | симв. размышления (средн. по думавшим) | токенов в контексте к концу |",
           "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for m, j in summary:
         tr = ",".join(str(t) for t in m["truncation_turns"]) or "—"
         j = j or {}
-        tb = "+".join(m.get("think_blocks") or []) or "—"
+        tbl = m.get("think_blocks") or []
+        tb = ("all" if set(tbl) == set(BLOCKS) else "+".join(tbl)) or "—"
         if m.get("think_turns"):
-            tb += f" ({m['think_turns']} ходов" + (f", флаг проигнорирован на {m['think_ignored']}" if m.get("think_ignored") else "") + ")"
-        wall = f"{m.get('wall_think_mean_s', '—')} / {m.get('wall_plain_mean_s', '—')} ({m.get('wall_think_max_s', '—')})"
+            tb += f" (думала на {m.get('thought_turns')} из {m['think_turns']} ходов)"
+        wall = f"{m.get('wall_thought_mean_s', '—')} / {m.get('wall_plain_mean_s', '—')} ({m.get('wall_think_max_s', '—')})"
         md.append(f"| {m['ctx']} | {tb} | {m.get('empty_replies', '—')} | {m['recall_rate']} | {m['recall_far_rate']} | {m['math_acc']} | {m['math_working']} | "
                   f"{m['longgen'].get('L1_tokens')} | {m['longgen'].get('L2_hedged')} | {tr} | "
                   f"{j.get('persona_mean', '—')} | {(j.get('consistency') or {}).get('score', '—')} | "
@@ -309,7 +316,7 @@ def main():
     ap.add_argument("--model", default="gemma3:4b")
     ap.add_argument("--ctx", nargs="+", type=int, default=[2048, 4096, 8192, 16384])
     ap.add_argument("--judge", default=None)
-    ap.add_argument("--judge-only", action="store_true", help="re-score saved JSON logs, do not re-run dialogs")
+    ap.add_argument("--judge-only", action="store_true", help="re-score saved JSON logs, do not re-run dialogs; without --judge only metrics are recomputed, saved judge kept")
     ap.add_argument("--host", default="http://127.0.0.1:11434")
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--persona", default=None, help="persona prompt file (default: persona/system_prompt.md)")
@@ -337,12 +344,18 @@ def main():
     summary = []
     for ctx in args.ctx:
         path = OUT / f"ctx_probe_{tag}_{ctx}.json"
+        saved_judge = None
         if args.judge_only:
-            log = json.loads(path.read_text(encoding="utf-8"))["log"]
+            saved = json.loads(path.read_text(encoding="utf-8"))
+            log, saved_judge = saved["log"], saved.get("judge")
+            # expect lists live in the dialog file and may have been extended since the run: overlay them
+            by_turn = {r["turn"]: r for r in rows}
+            log = [{**e, **({"expect": by_turn[e["turn"]]["expect"]} if "expect" in by_turn.get(e["turn"], {}) else {})} for e in log]
         else:
             log = run_dialog(args.host, args.model, ctx, rows, args.seed, think_on=think_on, think_predict=args.think_predict)
         m = metrics(log, ctx)
-        j = judge(args.host, args.judge, log) if args.judge else None
+        # --judge-only without --judge: recompute metrics only, keep the saved judge scores
+        j = judge(args.host, args.judge, log) if args.judge else saved_judge
         path.write_text(json.dumps({"model": args.model, "ctx": ctx, "seed": args.seed,
                                     "think_on": sorted(think_on), "think_predict": args.think_predict if think_on else None,
                                     "persona_file": str(persona_file.relative_to(ROOT)) if persona_file.is_relative_to(ROOT) else str(persona_file),

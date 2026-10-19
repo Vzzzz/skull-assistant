@@ -25,7 +25,6 @@ Done: измеримый критерий.
 
 | ID | Статус | Задача | Связь |
 |---|---|---|---|
-| T-025 | open | E-1: выборочное thinking на CTX-1 — e4b-it-qat / e2b-it-qat × `math,probe` / `all` × два seed | COGNITION_4B, D-021 |
 | T-001 | open | STT: убрать двойной `transcribe` | I-01 |
 | T-002 | open | Brain: история диалога в Redis | I-05 |
 | T-016 | open | Brain: модель и `num_ctx` из манифеста, не хардкод | D-016 |
@@ -48,11 +47,13 @@ Done: измеримый критерий.
 | T-022 | done | Dense 9B при Q3/IQ3 как мозг режима A — остановлена на шаге 1: персона 9b Q4 2.8 (D-022) | Q-046 |
 | T-023 | done | Своя квантизация e4b-it с imatrix ≈ QAT (−0.1…0.2); без imatrix −0.65; IQ4_XS+imx — кандидат для Orin (D-023) | Q-047, Q-043 |
 | T-024 | done | ollama vs llama-server: паритет по памяти/скорости; slots 62/32 мс, thaw ≈ 3.5 с; logprobs есть → llama-server (D-024) | Q-048, A-03, Q-034, M8 |
+| T-025 | done | E-1 thinking на CTX-1: Gemma 4 думает адаптивно, math не растёт, ход 6 с, персона e4b −0.2; только оговорка на неизвестное 4/4 → thinking в режиме A выключен (D-025) | COGNITION_4B, Q-049, Q-050 |
 | T-008 | blocked | Оценочный набор `research/eval/` | Q-029 |
 
 ## Карточки
 
-### T-025 · E-1: выборочное thinking на CTX-1 · open
+### T-025 · E-1: выборочное thinking на CTX-1 · done (2026-10-19, D-025)
+Сделано владельцем в тот же вечер (8 прогонов, 23:16–23:34), оценено ядром: сводка `research/eval/results/ctx_probe_t025_2026-10-19.md`. Строка «think requested but no thinking returned» в логе — не отказ ollama, а адаптивное решение модели (сообщение в скрипте переформулировано). По ходу исправлена метрика recall (Q-050) и пересчитаны 12 JSON (базовые e4b-it-qat: 0.93 / 1.0). Хвост: результаты закоммитить из WSL (`git add research/eval/results && git commit && git push`). Ниже — исходная карточка.
 Зачем: `docs/COGNITION_4B.md` рычаг 3 — у 4B-моделей дыры в счёте и в повторе собственных ответов (e4b-it-qat seed 42: math 2/3, промахи памяти t36/t55 — обе про свои же ответы на задачи; e2b-it-qat: math 1/3, recall 0.67). Вопрос: даёт ли `think: true` на трудных ходах выигрыш по math/recall, что он стоит в секундах, и не ломает ли персону — отдельно на обычных ходах (`math,probe`: думает 18 ходов из 60) и на всех (`all`: когнитивный максимум модели без дообучения). Стенд, ollama.
 Предусловие: `git pull --ff-only origin main` (флаг `--think-on` в `ctx_probe.py` от 2026-10-19); стенд в сервисном режиме, системный ollama; модели `gemma4:e4b-it-qat`, `gemma4:e2b-it-qat` на месте. Базовые линии без thinking уже есть: `results/ctx_probe_gemma4_e4b-it-qat_8192.json` (и `_s7_`), `…e2b-it-qat_8192.json` — не перегонять.
 Файлы: `research/eval/ctx_probe.py` (есть: `--think-on BLOCKS`, `--think-predict N`, метрики `wall_think_mean_s` / `wall_plain_mean_s` / `thinking_chars_mean` / `think_ignored` / `empty_on_think`, текст размышления в логе, суффикс `_think-<блоки>` в именах); результаты — `research/eval/results/`.
@@ -424,3 +425,4 @@ Done: набор прогоняется на gemma3:4b, ответы сохра�
 | T-022 | 2026-10-19 | qwen3.5:9b Q4: персона 2.77 / 2.92 (два seed), recall 0.73–0.80, math 1/6 — глубокая квантизация 9B для режима A не нужна | b773ab9 + следующий | D-022, `ctx_probe_t022_2026-10-19.md`, MEMORY_BUDGET §3 | остановлена на шаге 1; прогон — владелец, оценка — исследователь |
 | T-023 | 2026-10-19 | Q4_K_M+imx 3.92/3.85, IQ4_XS+imx 3.92/4.0, Q4_K_M без imx 3.38/3.31 против QAT 4.08/4.08; recall 0.87–0.93 с imx; IQ4_XS −250 МБ VRAM при той же скорости | f148fce…805245e + следующий | D-023, `ctx_probe_t023_2026-10-19.md`, MEMORY_BUDGET §3, `research/quant/calib_ru.txt` | VRAM без mmproj несравним с официальной; времена imatrix/quantize — из терминала владельца, не записаны |
 | T-024 | 2026-10-19 | llama-server vs ollama на IQ4_XS+imx: VRAM 2984/3040/3148 vs 2974/3030/3138 МБ, 65–68 vs 66–69 tok/s; slot save 62 мс (71 МБ/4.4k), restore 32 мс, thaw ≈ 3.5 с; n_probs 0.3 с | 9033ff9…367b56c + следующий | D-024, `runtime_2026-10-19.md`, MEMORY_BUDGET §1, Q-048/Q-034 | probs-парсер перезапустить; mmproj — в T-016 |
+| T-025 | 2026-10-19 | e4b `all`: math 2/3, 1/3 (база 2/3, 3/3), recall 0.87/0.93 (база 0.93/1.0), персона 3.85/4.0 (база 4.1/4.15), L2 оговорка 2/2, ход с размышлением 6.2–6.3 с (макс 20), диалог 219–234 с (база 75–86); e2b `all`: math 2/3, 1/3, recall 1.0/0.80, персона 3.4/3.3 (= база), L2 2/2, ход 4.1–4.5 с; `math,probe`: думала на 2–3 из 18 ходов — не измерение | результаты — WSL, коммит владельца; оценка — be47320 + следующий | D-025, `ctx_probe_t025_2026-10-19.md`, COGNITION_4B E-1 / рычаг 12, MEMORY_BUDGET §3, Q-049, Q-050 | прогон — владелец, оценка персоны — ядро (D-017); флаг не принуждает модель думать |
