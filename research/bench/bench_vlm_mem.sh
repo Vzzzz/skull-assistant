@@ -27,11 +27,15 @@ PROMPT="Ты череп. Ответь одним коротким предлож
 
 vram_used() { nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits | head -1 | tr -d ' '; }
 ram_used()  { awk '/MemTotal/{t=$2} /MemAvailable/{a=$2} END{printf "%d", (t-a)/1024}' /proc/meminfo; }
-gen_req()   { curl -s "http://$OLLAMA_HOST/api/generate" -d "{
-      \"model\": \"$1\", \"prompt\": $(printf '%s' "$PROMPT" | python3 -c 'import json,sys;print(json.dumps(sys.stdin.read()))'),
+# gen_req MODEL CTX [PROMPT]. Второй (тёплый) запрос обязан идти ДРУГИМ промптом: одинаковый попадает в кэш
+# префикса ollama, префилл считается для 1–5 токенов и prompt_tok_s превращается в шум (2026-10-19: 32 880 ток/с у ministral).
+gen_req()   { local P="${3:-$PROMPT}"; curl -s "http://$OLLAMA_HOST/api/generate" -d "{
+      \"model\": \"$1\", \"prompt\": $(printf '%s' "$P" | python3 -c 'import json,sys;print(json.dumps(sys.stdin.read()))'),
       \"stream\": false, \"keep_alive\": \"5m\",
       \"options\": {\"num_ctx\": $2, \"num_predict\": 64, \"temperature\": 0}
     }"; }
+# промпт для замера префилла: другое начало (мимо кэша) + ~400 токенов текста
+PROMPT_WARM="Второй вопрос, не связанный с первым. $(for i in 1 2 3 4 5 6; do printf '%s ' "$PROMPT"; done)Ответь одним предложением."
 
 echo "model,num_ctx,kv,flash,vram_idle_mb,vram_peak_mb,vram_delta_mb,ollama_ps_size,ollama_ps_proc,rss_runner_mb,ram_delta_mb,load_s,ttft_warm_s,prompt_tok_s,tok_s" > "$OUT"
 
@@ -57,7 +61,7 @@ for KV in $KVS; do
     POLL=$!
 
     RESP_COLD=$(gen_req "$M" "$CTX")          # загрузка + префилл + генерация
-    RESP=$(gen_req "$M" "$CTX")               # тёплая модель: честный TTFT и tok/s
+    RESP=$(gen_req "$M" "$CTX" "$PROMPT_WARM")  # тёплая модель, другой промпт ~400 ток.: честный префилл, TTFT и tok/s
 
     PS_LINE=$(ollama ps 2>/dev/null | awk -v m="$M" '$1==m')
     PS_SIZE=$(echo "$PS_LINE" | awk '{print $3$4}')
