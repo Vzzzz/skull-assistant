@@ -155,6 +155,16 @@ def run_dialog(host, model, ctx, rows, seed, think_on=frozenset(), think_predict
         if router != "off":
             route = route_ollama(host, model, messages, r["text"], ctx)
         policy = POLICY.get((route or {}).get("label") or "chat", POLICY["chat"]) if router == "apply" else None
+        # window first (an exchange dropped on this very turn is then retrievable), retrieval second, message third
+        if trim == "tokens":
+            est_new = len(r["text"]) // 3 + 8 + (150 if memory is not None else 0)   # + allowance for the memory note
+            budget = (policy["num_predict"] if policy else (think_predict if r.get("block") in think_on else 700))
+            while window_turns and sys_tokens + sum(cost.get(t, 0) for t in window_turns) + est_new + budget > ctx:
+                del messages[1:3]
+                window_turns.pop(0)
+                trimmed += 1
+            if trimmed:
+                print(f"[{model} ctx={ctx}] t{r['turn']:02d} window: dropped {trimmed} oldest exchange(s) (token ledger)", flush=True)
         hits, note = [], ""
         if memory is not None and (policy is None or policy["memory"]):
             if mem_scope == "dropped":
@@ -168,15 +178,6 @@ def run_dialog(host, model, ctx, rows, seed, think_on=frozenset(), think_predict
             sent = policy["prefix"] + "\n" + sent
         if note:
             sent = sent + "\n\n" + note   # v3: memory after the user's words
-        if trim == "tokens":
-            est_new = len(sent) // 3 + 8
-            budget = (policy["num_predict"] if policy else (think_predict if r.get("block") in think_on else 700))
-            while window_turns and sys_tokens + sum(cost.get(t, 0) for t in window_turns) + est_new + budget > ctx:
-                del messages[1:3]
-                window_turns.pop(0)
-                trimmed += 1
-            if trimmed:
-                print(f"[{model} ctx={ctx}] t{r['turn']:02d} window: dropped {trimmed} oldest exchange(s) (token ledger)", flush=True)
         messages.append({"role": "user", "content": sent})
         window_turns.append(r["turn"])
         # think=False by default: thinking models (qwen3.5, gemma4) otherwise spend the whole num_predict
