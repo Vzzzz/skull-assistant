@@ -25,7 +25,7 @@ Done: измеримый критерий.
 
 | ID | Статус | Задача | Связь |
 |---|---|---|---|
-| T-026 | open | MEM-1 + E-3: ассоциативная память (`--memory`) и роутер типов (`--router`) на CTX-1 — e4b-it-qat @8k/@2k, e2b @8k | MEMORY_TRACK, COGNITION_4B E-3 |
+| T-027 | open | MEM-2: перезапуск памяти со справкой v2 («ты помнишь», правило в промпте) — e4b @2k dropped ×2, @8k all+apply ×2, e2b @2k | D-026, T-026 |
 | T-001 | open | STT: убрать двойной `transcribe` | I-01 |
 | T-002 | open | Brain: история диалога в Redis | I-05 |
 | T-016 | open | Brain: модель и `num_ctx` из манифеста, не хардкод | D-016 |
@@ -49,11 +49,30 @@ Done: измеримый критерий.
 | T-023 | done | Своя квантизация e4b-it с imatrix ≈ QAT (−0.1…0.2); без imatrix −0.65; IQ4_XS+imx — кандидат для Orin (D-023) | Q-047, Q-043 |
 | T-024 | done | ollama vs llama-server: паритет по памяти/скорости; slots 62/32 мс, thaw ≈ 3.5 с; logprobs есть → llama-server (D-024) | Q-048, A-03, Q-034, M8 |
 | T-025 | done | E-1 thinking на CTX-1: Gemma 4 думает адаптивно, math не растёт, ход 6 с, персона e4b −0.2; только оговорка на неизвестное 4/4 → thinking в режиме A выключен (D-025) | COGNITION_4B, Q-049, Q-050 |
+| T-026 | done | MEM-1 + E-3: память за окном 0.07 → 0.93/0.80 @2k, роутер e4b 0.93, политика даёт math 3/3 и оговорку 2/2; справка v1 ломает персону (D-026) | MEMORY_TRACK, Q-050, Q-051 |
 | T-008 | blocked | Оценочный набор `research/eval/` | Q-029 |
 
 ## Карточки
 
-### T-026 · MEM-1 + E-3: ассоциативная память и роутер типов реплик на CTX-1 · open
+### T-027 · MEM-2: память со справкой v2 · open
+Зачем: в T-026 справка из памяти стояла в реплике пользователя как блок транскрипта, и модель обсуждала её вместо ответа («ты мне выгрузил архив») — персона −0.4. v2 (D-026): «[Ты помнишь: он говорил: «…», ты ответил: «…»]» + правило в системном промпте, `calc` без памяти. Нужно подтвердить, что recall за окном остался (0.93 / 0.80) и персона вернулась к базе (4.0–4.15 при 2k по судье 9b; окончательно — ядро).
+Предусловие: `git pull --ff-only origin main` (коммит с v2 — dab4bf4 или новее); сервисный режим, ollama, `embeddinggemma` на месте.
+Шаги (5 прогонов, ~12 мин с судьёй):
+```bash
+cd ~/skull-assistant && git pull --ff-only origin main
+M=gemma4:e4b-it-qat; L=research/eval/results/ctx_probe_t027.log; J="--judge qwen3.5:9b"
+for s in 42 7; do .venv/bin/python research/eval/ctx_probe.py --model $M --ctx 2048 --seed $s --memory dropped --tag v2 $J 2>&1 | tee -a $L; .venv/bin/python research/eval/ctx_probe.py --model $M --ctx 8192 --seed $s --memory all --router apply --tag v2 $J 2>&1 | tee -a $L; done
+.venv/bin/python research/eval/ctx_probe.py --model gemma4:e2b-it-qat --ctx 2048 --memory dropped --tag v2 $J 2>&1 | tee -a $L
+ollama stop $M; ollama stop gemma4:e2b-it-qat; ollama stop embeddinggemma
+git add research/eval/results && git commit -m "eval: T-027 память со справкой v2" && git push origin main
+```
+Проверка: файлы `…_v2_mem-dropped-hybrid-k3_trim_2048.json` (×2 + e2b) и `…_v2_mem-all-hybrid-k3_rt-apply_8192.json` (×2); в JSON `note_version: 2`; в репликах нет «выгрузил», «фрагмент», «предоставленном» (grep по JSON).
+Done: 5 JSON + сводки в git; строка в «Закрытые»: recall / персона 9b / выборка по каждому против T-026 v1 и базы.
+Записать: строка «Закрытые»; ядро: оценка персоны по D-017, обновление D-026 (статус формата v2), MEMORY_TRACK §3, при подтверждении — карточка T-016 дополняется памятью и роутером, T-002 — окном по токенам.
+Связь: D-026, T-026, MEMORY_TRACK, T-002, T-016.
+
+### T-026 · MEM-1 + E-3: ассоциативная память и роутер типов реплик на CTX-1 · done (2026-10-20, D-026)
+Сделано владельцем в два захода (14 + 5 прогонов); по ходу ядро исправило три вещи в обвязке: окно по токен-леджеру (`--trim tokens`: ollama при 2k режет промпт молча), парсер меток роутера (e2b отвечает описанием), дефисы в ключевых словах recall; второй допустимый тип роутера на 8 спорных ходах. Сводка `research/eval/results/ctx_probe_t026_2026-10-20.md`. Формат справки v1 признан дефектным → T-027. Ниже — исходная карточка.
 Зачем: память модели кончается вместе с окном (gemma4 e4b @4k recall 0.47, D-016), между днями и режимами A↔B контекста нет; thinking память не улучшает (D-025). Прототип в `research/memory/` подаёт в промпт top-k прошлых обменов (эмбеддинг + ключевые слова) и классифицирует ход роутером (6 типов), чтобы справка из памяти и правила включались только где уместно. Устройство и гейты — `docs/MEMORY_TRACK.md` §2–3. Стенд, ollama.
 Предусловие: `git pull --ff-only origin main`; сервисный режим, системный ollama; `ollama pull embeddinggemma` (300M, ~600 МБ VRAM рядом с e4b — помещается); проверка: `curl -s localhost:11434/api/embed -d '{"model":"embeddinggemma","input":"тест"}' | head -c 200` даёт `embeddings`.
 Файлы: `research/memory/assoc_memory.py`, `research/memory/router.py`, `research/eval/ctx_probe.py` (флаги `--memory off|all|dropped`, `--mem-k`, `--mem-mode hybrid|embed|kw`, `--embed-model`, `--router off|label|apply`), `research/eval/ctx_probe_dialog.jsonl` (поле `route_expect`). Результаты — `research/eval/results/` (суффиксы `_mem-<scope>-<mode>-k3`, `_rt-<mode>` в именах).
@@ -456,3 +475,4 @@ Done: набор прогоняется на gemma3:4b, ответы сохра�
 | T-023 | 2026-10-19 | Q4_K_M+imx 3.92/3.85, IQ4_XS+imx 3.92/4.0, Q4_K_M без imx 3.38/3.31 против QAT 4.08/4.08; recall 0.87–0.93 с imx; IQ4_XS −250 МБ VRAM при той же скорости | f148fce…805245e + следующий | D-023, `ctx_probe_t023_2026-10-19.md`, MEMORY_BUDGET §3, `research/quant/calib_ru.txt` | VRAM без mmproj несравним с официальной; времена imatrix/quantize — из терминала владельца, не записаны |
 | T-024 | 2026-10-19 | llama-server vs ollama на IQ4_XS+imx: VRAM 2984/3040/3148 vs 2974/3030/3138 МБ, 65–68 vs 66–69 tok/s; slot save 62 мс (71 МБ/4.4k), restore 32 мс, thaw ≈ 3.5 с; n_probs 0.3 с | 9033ff9…367b56c + следующий | D-024, `runtime_2026-10-19.md`, MEMORY_BUDGET §1, Q-048/Q-034 | probs-парсер перезапустить; mmproj — в T-016 |
 | T-025 | 2026-10-19 | e4b `all`: math 2/3, 1/3 (база 2/3, 3/3), recall 0.87/0.93 (база 0.93/1.0), персона 3.85/4.0 (база 4.1/4.15), L2 оговорка 2/2, ход с размышлением 6.2–6.3 с (макс 20), диалог 219–234 с (база 75–86); e2b `all`: math 2/3, 1/3, recall 1.0/0.80, персона 3.4/3.3 (= база), L2 2/2, ход 4.1–4.5 с; `math,probe`: думала на 2–3 из 18 ходов — не измерение | результаты — WSL, коммит владельца; оценка — be47320 + следующий | D-025, `ctx_probe_t025_2026-10-19.md`, COGNITION_4B E-1 / рычаг 12, MEMORY_BUDGET §3, Q-049, Q-050 | прогон — владелец, оценка персоны — ядро (D-017); флаг не принуждает модель думать |
+| T-026 | 2026-10-20 | роутер e4b 0.93 (0.80 строго), 0.6 с/ход, e2b 0.60; память @2k (окно по токенам): база 0.07/0.13 → dropped 0.93/0.80, выборка 1.0/0.87, kw-only 0.73 (выборка 0.87); @8k all 0.93/0.93 (= база), all+apply math 3/3 ×2, L2 2/2, справка 341/305 симв.; персона 9b с памятью при 2k 3.62/3.69 против 4.15/4.0 (справка v1); эмбеддинг ollama 150–200 мс | результаты — WSL, коммит владельца; код be47320…dab4bf4 | D-026, `ctx_probe_t026_2026-10-20.md`, MEMORY_TRACK §3, COGNITION_4B E-3, Q-050 (закрыт), Q-051 | прогон — владелец, оценка — ядро; первые 5 прогонов @2k без `_trim` ничего не измерили (ollama) |
