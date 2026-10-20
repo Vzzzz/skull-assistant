@@ -161,7 +161,18 @@
   "math_working": 1.0,
   "ttft_last10_s": 0.49,
   "tok_s_mean": 69.5,
-  "ctx_tokens_end": 5692
+  "ctx_tokens_end": 5692,
+  "think_turns": 0,
+  "think_blocks": [],
+  "thought_turns": null,
+  "thinking_chars_mean": null,
+  "think_ignored": null,
+  "wall_thought_mean_s": null,
+  "empty_on_think": null,
+  "wall_think_mean_s": null,
+  "wall_think_max_s": null,
+  "wall_plain_mean_s": 1.6,
+  "wall_total_s": 94
  },
  "judge": {
   "judge_model": "claude-fable-5-1 (chat)",
@@ -258,7 +269,11 @@
    "eval_count": 14,
    "ttft_s": 6.953,
    "tok_s": 60.0,
-   "wall_s": 7.2
+   "wall_s": 7.2,
+   "route_expect": [
+    "chat",
+    "command"
+   ]
   },
   {
    "turn": 2,
@@ -274,7 +289,8 @@
    "eval_count": 25,
    "ttft_s": 0.49,
    "tok_s": 72.1,
-   "wall_s": 0.84
+   "wall_s": 0.84,
+   "route_expect": "chat"
   },
   {
    "turn": 3,
@@ -286,7 +302,8 @@
    "eval_count": 29,
    "ttft_s": 0.478,
    "tok_s": 74.6,
-   "wall_s": 0.87
+   "wall_s": 0.87,
+   "route_expect": "chat"
   },
   {
    "turn": 4,
@@ -303,7 +320,8 @@
    "eval_count": 22,
    "ttft_s": 0.48,
    "tok_s": 74.1,
-   "wall_s": 0.78
+   "wall_s": 0.78,
+   "route_expect": "command"
   },
   {
    "turn": 5,
@@ -316,7 +334,8 @@
    "eval_count": 24,
    "ttft_s": 0.467,
    "tok_s": 73.0,
-   "wall_s": 0.8
+   "wall_s": 0.8,
+   "route_expect": "chat"
   },
   {
    "turn": 6,
@@ -332,7 +351,11 @@
    "eval_count": 57,
    "ttft_s": 0.464,
    "tok_s": 72.4,
-   "wall_s": 1.26
+   "wall_s": 1.26,
+   "route_expect": [
+    "chat",
+    "command"
+   ]
   },
   {
    "turn": 7,
@@ -344,7 +367,11 @@
    "eval_count": 87,
    "ttft_s": 0.478,
    "tok_s": 72.3,
-   "wall_s": 1.69
+   "wall_s": 1.69,
+   "route_expect": [
+    "chat",
+    "world"
+   ]
   },
   {
    "turn": 8,
@@ -357,7 +384,8 @@
    "eval_count": 67,
    "ttft_s": 0.481,
    "tok_s": 72.0,
-   "wall_s": 1.42
+   "wall_s": 1.42,
+   "route_expect": "chat"
   },
   {
    "turn": 9,
@@ -373,7 +401,8 @@
    "eval_count": 44,
    "ttft_s": 0.474,
    "tok_s": 72.7,
-   "wall_s": 1.09
+   "wall_s": 1.09,
+   "route_expect": "chat"
   },
   {
    "turn": 10,
@@ -386,7 +415,8 @@
    "eval_count": 79,
    "ttft_s": 0.482,
    "tok_s": 72.0,
-   "wall_s": 1.59
+   "wall_s": 1.59,
+   "route_expect": "chat"
   },
   {
    "turn": 11,
@@ -402,7 +432,8 @@
    "eval_count": 49,
    "ttft_s": 0.478,
    "tok_s": 71.9,
-   "wall_s": 1.17
+   "wall_s": 1.17,
+   "route_expect": "command"
   },
   {
    "turn": 12,
@@ -414,7 +445,8 @@
    "eval_count": 49,
    "ttft_s": 0.477,
    "tok_s": 71.9,
-   "wall_s": 1.17
+   "wall_s": 1.17,
+   "route_expect": "chat"
   },
   {
    "turn": 13,
@@ -427,7 +459,8 @@
    "eval_count": 90,
    "ttft_s": 0.486,
    "tok_s": 71.4,
-   "wall_s": 1.76
+   "wall_s": 1.76,
+   "route_expect": "chat"
   },
   {
    "turn": 14,
@@ -443,7 +476,8 @@
    "eval_count": 55,
    "ttft_s": 0.489,
    "tok_s": 70.5,
-   "wall_s": 1.28
+   "wall_s": 1.28,
+   "route_expect": "command"
   },
   {
    "turn": 15,
@@ -455,7 +489,8 @@
    "eval_count": 36,
    "ttft_s": 0.484,
    "tok_s": 70.8,
-   "wall_s": 1.01
+   "wall_s": 1.01,
+   "route_expect": "chat"
   },
   {
    "turn": 16,
@@ -470,7 +505,8 @@
    "eval_count": 579,
    "ttft_s": 0.494,
    "tok_s": 69.8,
-   "wall_s": 8.81
+   "wall_s": 8.81,
+   "route_expect": "explain"
   },
   {
    "turn": 17,
@@ -486,7 +522,13 @@
      "нет данных",
      "не уверен",
      "не могу подтвердить",
-     "возможно, ты имеешь в виду"
+     "возможно, ты имеешь в виду",
+     "ничего не известно",
+     "не известно",
+     "не знаком",
+     "не видел такого",
+     "не видел его",
+     "не встречал"
     ]
    },
    "reply": "Тюленев 1987 года... Если речь идет об аналоговом, механическом или даже раннем электронном приборе для измерения плотности/ускорения, то это, скорее всего, какой-то специфический измерительный стенд, который использовался в рамках какого-нибудь эксперимента по физике.\n\nБез более конкретных данных — \"гравиметр\" может означать что угодно: от простого барометра до сложного прибора для измерения локальных аномалий поля. Если он стоял на кафедре, то это был инструмент для демонстрации или для реальной исследовательской работы.\n\nЕсли ты имеешь в виду конкретную модель с серийным номером или назначением, уточни. В противном случае, я могу лишь констатировать: старое оборудование часто имеет больше истории, чем точности показаний.",
@@ -495,7 +537,8 @@
    "eval_count": 178,
    "ttft_s": 0.496,
    "tok_s": 69.4,
-   "wall_s": 3.08
+   "wall_s": 3.08,
+   "route_expect": "world"
   },
   {
    "turn": 18,
@@ -510,7 +553,8 @@
    "eval_count": 133,
    "ttft_s": 0.482,
    "tok_s": 69.0,
-   "wall_s": 2.43
+   "wall_s": 2.43,
+   "route_expect": "memory"
   },
   {
    "turn": 19,
@@ -528,7 +572,8 @@
    "eval_count": 5,
    "ttft_s": 0.493,
    "tok_s": 77.6,
-   "wall_s": 0.58
+   "wall_s": 0.58,
+   "route_expect": "memory"
   },
   {
    "turn": 20,
@@ -548,7 +593,8 @@
    "eval_count": 8,
    "ttft_s": 0.477,
    "tok_s": 73.9,
-   "wall_s": 0.61
+   "wall_s": 0.61,
+   "route_expect": "memory"
   },
   {
    "turn": 21,
@@ -557,7 +603,11 @@
    "math_id": "M1",
    "expect": {
     "answer": "391",
-    "rule": "выкладка до итога, число в конце"
+    "rule": "выкладка до итога, число в конце",
+    "alt": [
+     "триста девяносто один",
+     "391."
+    ]
    },
    "reply": "Выполняю расчет по шагам:\n\n1.  Умножаем 17 на 20: $17 \\times 20 = 340$.\n2.  Умножаем результат (340) на оставшуюся часть числа (3): $340 \\times 3 = 1020$.\n\nИтоговое число — 1020.",
    "thinking_chars": 0,
@@ -565,7 +615,8 @@
    "eval_count": 88,
    "ttft_s": 0.483,
    "tok_s": 70.9,
-   "wall_s": 1.74
+   "wall_s": 1.74,
+   "route_expect": "calc"
   },
   {
    "turn": 22,
@@ -574,7 +625,11 @@
    "math_id": "M2",
    "expect": {
     "answer": "2040",
-    "rule": "выкладка до итога, число в конце"
+    "rule": "выкладка до итога, число в конце",
+    "alt": [
+     "две тысячи сорок",
+     "2 040"
+    ]
    },
    "reply": "Выполняю расчет по шагам:\n\n1.  Рассчитываем сумму скидки в процентах от первоначальной цены: $2400 \\times 0.15$.\n    *   $2400 \\times 0.1 = 240$\n    *   $2400 \\times 0.05 = 120$\n    *   Сумма скидки: $240 + 120 = 360$.\n2.  Вычитаем сумму скидки из первоначальной цены: $2400 - 360$.\n\nИтоговое число — 2040.",
    "thinking_chars": 0,
@@ -582,7 +637,8 @@
    "eval_count": 150,
    "ttft_s": 0.457,
    "tok_s": 70.2,
-   "wall_s": 2.62
+   "wall_s": 2.62,
+   "route_expect": "calc"
   },
   {
    "turn": 23,
@@ -593,6 +649,7 @@
     "answer": "10:15",
     "alt": [
      "десять пятнадцать",
+     "десять часов пятнадцать",
      "10.15"
     ],
     "rule": "выкладка до итога, число в конце"
@@ -603,7 +660,8 @@
    "eval_count": 228,
    "ttft_s": 0.477,
    "tok_s": 67.1,
-   "wall_s": 3.91
+   "wall_s": 3.91,
+   "route_expect": "calc"
   },
   {
    "turn": 24,
@@ -616,7 +674,8 @@
    "eval_count": 77,
    "ttft_s": 0.477,
    "tok_s": 68.7,
-   "wall_s": 1.63
+   "wall_s": 1.63,
+   "route_expect": "world"
   },
   {
    "turn": 25,
@@ -633,7 +692,11 @@
    "eval_count": 55,
    "ttft_s": 0.48,
    "tok_s": 69.2,
-   "wall_s": 1.31
+   "wall_s": 1.31,
+   "route_expect": [
+    "chat",
+    "command"
+   ]
   },
   {
    "turn": 26,
@@ -645,7 +708,8 @@
    "eval_count": 148,
    "ttft_s": 0.474,
    "tok_s": 68.7,
-   "wall_s": 2.66
+   "wall_s": 2.66,
+   "route_expect": "command"
   },
   {
    "turn": 27,
@@ -657,7 +721,8 @@
    "eval_count": 26,
    "ttft_s": 0.489,
    "tok_s": 69.8,
-   "wall_s": 0.9
+   "wall_s": 0.9,
+   "route_expect": "calc"
   },
   {
    "turn": 28,
@@ -670,7 +735,8 @@
    "eval_count": 18,
    "ttft_s": 0.501,
    "tok_s": 70.8,
-   "wall_s": 0.79
+   "wall_s": 0.79,
+   "route_expect": "command"
   },
   {
    "turn": 29,
@@ -682,7 +748,8 @@
    "eval_count": 9,
    "ttft_s": 0.507,
    "tok_s": 72.8,
-   "wall_s": 0.67
+   "wall_s": 0.67,
+   "route_expect": "command"
   },
   {
    "turn": 30,
@@ -694,7 +761,8 @@
    "eval_count": 26,
    "ttft_s": 0.48,
    "tok_s": 69.4,
-   "wall_s": 0.89
+   "wall_s": 0.89,
+   "route_expect": "chat"
   },
   {
    "turn": 31,
@@ -707,7 +775,11 @@
    "eval_count": 121,
    "ttft_s": 0.482,
    "tok_s": 68.1,
-   "wall_s": 2.3
+   "wall_s": 2.3,
+   "route_expect": [
+    "memory",
+    "chat"
+   ]
   },
   {
    "turn": 32,
@@ -719,7 +791,8 @@
    "eval_count": 110,
    "ttft_s": 0.482,
    "tok_s": 68.0,
-   "wall_s": 2.14
+   "wall_s": 2.14,
+   "route_expect": "chat"
   },
   {
    "turn": 33,
@@ -731,7 +804,8 @@
    "eval_count": 68,
    "ttft_s": 0.493,
    "tok_s": 67.4,
-   "wall_s": 1.54
+   "wall_s": 1.54,
+   "route_expect": "chat"
   },
   {
    "turn": 34,
@@ -755,7 +829,8 @@
    "eval_count": 28,
    "ttft_s": 0.481,
    "tok_s": 69.1,
-   "wall_s": 0.93
+   "wall_s": 0.93,
+   "route_expect": "memory"
   },
   {
    "turn": 35,
@@ -773,7 +848,8 @@
    "eval_count": 15,
    "ttft_s": 0.478,
    "tok_s": 70.5,
-   "wall_s": 0.73
+   "wall_s": 0.73,
+   "route_expect": "memory"
   },
   {
    "turn": 36,
@@ -792,7 +868,11 @@
    "eval_count": 28,
    "ttft_s": 0.479,
    "tok_s": 68.8,
-   "wall_s": 0.93
+   "wall_s": 0.93,
+   "route_expect": [
+    "memory",
+    "calc"
+   ]
   },
   {
    "turn": 37,
@@ -804,7 +884,11 @@
    "eval_count": 29,
    "ttft_s": 0.481,
    "tok_s": 67.8,
-   "wall_s": 0.95
+   "wall_s": 0.95,
+   "route_expect": [
+    "chat",
+    "command"
+   ]
   },
   {
    "turn": 38,
@@ -816,7 +900,8 @@
    "eval_count": 59,
    "ttft_s": 0.488,
    "tok_s": 67.1,
-   "wall_s": 1.41
+   "wall_s": 1.41,
+   "route_expect": "chat"
   },
   {
    "turn": 39,
@@ -828,7 +913,8 @@
    "eval_count": 81,
    "ttft_s": 0.49,
    "tok_s": 67.6,
-   "wall_s": 1.73
+   "wall_s": 1.73,
+   "route_expect": "chat"
   },
   {
    "turn": 40,
@@ -841,7 +927,8 @@
    "eval_count": 89,
    "ttft_s": 0.488,
    "tok_s": 66.9,
-   "wall_s": 1.86
+   "wall_s": 1.86,
+   "route_expect": "chat"
   },
   {
    "turn": 41,
@@ -853,7 +940,8 @@
    "eval_count": 30,
    "ttft_s": 0.48,
    "tok_s": 68.4,
-   "wall_s": 0.96
+   "wall_s": 0.96,
+   "route_expect": "chat"
   },
   {
    "turn": 42,
@@ -865,7 +953,8 @@
    "eval_count": 71,
    "ttft_s": 0.481,
    "tok_s": 69.1,
-   "wall_s": 1.55
+   "wall_s": 1.55,
+   "route_expect": "chat"
   },
   {
    "turn": 43,
@@ -877,7 +966,8 @@
    "eval_count": 47,
    "ttft_s": 0.469,
    "tok_s": 69.2,
-   "wall_s": 1.19
+   "wall_s": 1.19,
+   "route_expect": "chat"
   },
   {
    "turn": 44,
@@ -889,7 +979,8 @@
    "eval_count": 68,
    "ttft_s": 0.474,
    "tok_s": 68.2,
-   "wall_s": 1.52
+   "wall_s": 1.52,
+   "route_expect": "chat"
   },
   {
    "turn": 45,
@@ -901,7 +992,8 @@
    "eval_count": 62,
    "ttft_s": 0.479,
    "tok_s": 68.3,
-   "wall_s": 1.43
+   "wall_s": 1.43,
+   "route_expect": "chat"
   },
   {
    "turn": 46,
@@ -914,7 +1006,12 @@
    "eval_count": 95,
    "ttft_s": 0.483,
    "tok_s": 67.5,
-   "wall_s": 1.94
+   "wall_s": 1.94,
+   "route_expect": [
+    "chat",
+    "memory",
+    "calc"
+   ]
   },
   {
    "turn": 47,
@@ -926,7 +1023,8 @@
    "eval_count": 71,
    "ttft_s": 0.48,
    "tok_s": 67.2,
-   "wall_s": 1.58
+   "wall_s": 1.58,
+   "route_expect": "chat"
   },
   {
    "turn": 48,
@@ -938,7 +1036,8 @@
    "eval_count": 44,
    "ttft_s": 0.488,
    "tok_s": 67.7,
-   "wall_s": 1.19
+   "wall_s": 1.19,
+   "route_expect": "chat"
   },
   {
    "turn": 49,
@@ -959,7 +1058,8 @@
    "eval_count": 57,
    "ttft_s": 0.471,
    "tok_s": 67.6,
-   "wall_s": 1.37
+   "wall_s": 1.37,
+   "route_expect": "memory"
   },
   {
    "turn": 50,
@@ -980,7 +1080,8 @@
    "eval_count": 16,
    "ttft_s": 0.484,
    "tok_s": 69.4,
-   "wall_s": 0.76
+   "wall_s": 0.76,
+   "route_expect": "memory"
   },
   {
    "turn": 51,
@@ -1000,7 +1101,11 @@
    "eval_count": 20,
    "ttft_s": 0.481,
    "tok_s": 68.3,
-   "wall_s": 0.82
+   "wall_s": 0.82,
+   "route_expect": [
+    "memory",
+    "command"
+   ]
   },
   {
    "turn": 52,
@@ -1022,7 +1127,8 @@
    "eval_count": 17,
    "ttft_s": 0.488,
    "tok_s": 69.1,
-   "wall_s": 0.78
+   "wall_s": 0.78,
+   "route_expect": "memory"
   },
   {
    "turn": 53,
@@ -1043,7 +1149,8 @@
    "eval_count": 32,
    "ttft_s": 0.49,
    "tok_s": 67.4,
-   "wall_s": 1.02
+   "wall_s": 1.02,
+   "route_expect": "memory"
   },
   {
    "turn": 54,
@@ -1063,7 +1170,8 @@
    "eval_count": 23,
    "ttft_s": 0.481,
    "tok_s": 66.9,
-   "wall_s": 0.88
+   "wall_s": 0.88,
+   "route_expect": "memory"
   },
   {
    "turn": 55,
@@ -1074,6 +1182,7 @@
     "keywords": [
      "10:15",
      "десять пятнадцать",
+     "десять часов пятнадцать",
      "10.15"
     ]
    },
@@ -1083,7 +1192,11 @@
    "eval_count": 43,
    "ttft_s": 0.496,
    "tok_s": 66.7,
-   "wall_s": 1.19
+   "wall_s": 1.19,
+   "route_expect": [
+    "memory",
+    "calc"
+   ]
   },
   {
    "turn": 56,
@@ -1104,7 +1217,8 @@
    "eval_count": 57,
    "ttft_s": 0.486,
    "tok_s": 66.6,
-   "wall_s": 1.39
+   "wall_s": 1.39,
+   "route_expect": "memory"
   },
   {
    "turn": 57,
@@ -1122,7 +1236,8 @@
    "eval_count": 17,
    "ttft_s": 0.47,
    "tok_s": 68.7,
-   "wall_s": 0.77
+   "wall_s": 0.77,
+   "route_expect": "memory"
   },
   {
    "turn": 58,
@@ -1141,7 +1256,11 @@
    "eval_count": 46,
    "ttft_s": 0.492,
    "tok_s": 66.7,
-   "wall_s": 1.24
+   "wall_s": 1.24,
+   "route_expect": [
+    "memory",
+    "world"
+   ]
   },
   {
    "turn": 59,
@@ -1154,7 +1273,8 @@
    "eval_count": 20,
    "ttft_s": 0.49,
    "tok_s": 68.3,
-   "wall_s": 0.84
+   "wall_s": 0.84,
+   "route_expect": "chat"
   },
   {
    "turn": 60,
@@ -1167,7 +1287,11 @@
    "eval_count": 17,
    "ttft_s": 0.494,
    "tok_s": 68.1,
-   "wall_s": 0.8
+   "wall_s": 0.8,
+   "route_expect": [
+    "chat",
+    "command"
+   ]
   }
  ],
  "judge_local": {

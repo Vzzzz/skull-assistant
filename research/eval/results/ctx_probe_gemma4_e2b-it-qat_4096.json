@@ -96,8 +96,8 @@
     "turn": 55,
     "probe_for": "M3",
     "distance": 32,
-    "hit": false,
-    "detail_hit": false,
+    "hit": true,
+    "detail_hit": true,
     "wrong_old": false
    },
    {
@@ -142,7 +142,7 @@
    },
    {
     "math_id": "M3",
-    "correct": false,
+    "correct": true,
     "answer_last": false,
     "has_working": true,
     "reply": "8 часов 40 минут плюс час — 9 часов 40 минут. Плюс тридцать пять минут — это будет 10 часов 15 минут. Ты приедешь в деся"
@@ -155,13 +155,24 @@
   },
   "truncation_turns": [],
   "empty_replies": 0,
-  "recall_rate": 0.8,
-  "recall_far_rate": 0.89,
-  "math_acc": 0.67,
+  "recall_rate": 0.87,
+  "recall_far_rate": 1.0,
+  "math_acc": 1.0,
   "math_working": 1.0,
   "ttft_last10_s": 0.5,
   "tok_s_mean": 84.7,
-  "ctx_tokens_end": 3560
+  "ctx_tokens_end": 3560,
+  "think_turns": 0,
+  "think_blocks": [],
+  "thought_turns": null,
+  "thinking_chars_mean": null,
+  "think_ignored": null,
+  "wall_thought_mean_s": null,
+  "empty_on_think": null,
+  "wall_think_mean_s": null,
+  "wall_think_max_s": null,
+  "wall_plain_mean_s": 2.4,
+  "wall_total_s": 143
  },
  "judge": {
   "judge_model": "claude-fable-5-1 (chat)",
@@ -257,7 +268,11 @@
    "eval_count": 386,
    "ttft_s": 11.761,
    "tok_s": 82.9,
-   "wall_s": 16.42
+   "wall_s": 16.42,
+   "route_expect": [
+    "chat",
+    "command"
+   ]
   },
   {
    "turn": 2,
@@ -272,7 +287,8 @@
    "eval_count": 275,
    "ttft_s": 0.496,
    "tok_s": 82.2,
-   "wall_s": 3.85
+   "wall_s": 3.85,
+   "route_expect": "chat"
   },
   {
    "turn": 3,
@@ -283,7 +299,8 @@
    "eval_count": 14,
    "ttft_s": 0.532,
    "tok_s": 86.3,
-   "wall_s": 0.7
+   "wall_s": 0.7,
+   "route_expect": "chat"
   },
   {
    "turn": 4,
@@ -299,7 +316,8 @@
    "eval_count": 10,
    "ttft_s": 0.499,
    "tok_s": 92.2,
-   "wall_s": 0.61
+   "wall_s": 0.61,
+   "route_expect": "command"
   },
   {
    "turn": 5,
@@ -311,7 +329,8 @@
    "eval_count": 219,
    "ttft_s": 0.506,
    "tok_s": 85.9,
-   "wall_s": 3.06
+   "wall_s": 3.06,
+   "route_expect": "chat"
   },
   {
    "turn": 6,
@@ -326,7 +345,11 @@
    "eval_count": 400,
    "ttft_s": 0.513,
    "tok_s": 87.6,
-   "wall_s": 5.09
+   "wall_s": 5.09,
+   "route_expect": [
+    "chat",
+    "command"
+   ]
   },
   {
    "turn": 7,
@@ -337,7 +360,11 @@
    "eval_count": 304,
    "ttft_s": 0.497,
    "tok_s": 86.6,
-   "wall_s": 4.02
+   "wall_s": 4.02,
+   "route_expect": [
+    "chat",
+    "world"
+   ]
   },
   {
    "turn": 8,
@@ -349,7 +376,8 @@
    "eval_count": 449,
    "ttft_s": 0.505,
    "tok_s": 84.9,
-   "wall_s": 5.8
+   "wall_s": 5.8,
+   "route_expect": "chat"
   },
   {
    "turn": 9,
@@ -364,7 +392,8 @@
    "eval_count": 13,
    "ttft_s": 0.514,
    "tok_s": 87.4,
-   "wall_s": 0.67
+   "wall_s": 0.67,
+   "route_expect": "chat"
   },
   {
    "turn": 10,
@@ -376,7 +405,8 @@
    "eval_count": 287,
    "ttft_s": 0.508,
    "tok_s": 84.1,
-   "wall_s": 3.93
+   "wall_s": 3.93,
+   "route_expect": "chat"
   },
   {
    "turn": 11,
@@ -391,7 +421,8 @@
    "eval_count": 14,
    "ttft_s": 0.502,
    "tok_s": 84.7,
-   "wall_s": 0.68
+   "wall_s": 0.68,
+   "route_expect": "command"
   },
   {
    "turn": 12,
@@ -402,7 +433,8 @@
    "eval_count": 26,
    "ttft_s": 0.496,
    "tok_s": 84.7,
-   "wall_s": 0.81
+   "wall_s": 0.81,
+   "route_expect": "chat"
   },
   {
    "turn": 13,
@@ -414,7 +446,8 @@
    "eval_count": 378,
    "ttft_s": 0.494,
    "tok_s": 83.7,
-   "wall_s": 5.02
+   "wall_s": 5.02,
+   "route_expect": "chat"
   },
   {
    "turn": 14,
@@ -429,7 +462,8 @@
    "eval_count": 10,
    "ttft_s": 0.519,
    "tok_s": 90.6,
-   "wall_s": 0.64
+   "wall_s": 0.64,
+   "route_expect": "command"
   },
   {
    "turn": 15,
@@ -440,7 +474,8 @@
    "eval_count": 13,
    "ttft_s": 0.493,
    "tok_s": 87.2,
-   "wall_s": 0.66
+   "wall_s": 0.66,
+   "route_expect": "chat"
   },
   {
    "turn": 16,
@@ -454,7 +489,8 @@
    "eval_count": 559,
    "ttft_s": 0.517,
    "tok_s": 82.2,
-   "wall_s": 7.33
+   "wall_s": 7.33,
+   "route_expect": "explain"
   },
   {
    "turn": 17,
@@ -470,7 +506,13 @@
      "нет данных",
      "не уверен",
      "не могу подтвердить",
-     "возможно, ты имеешь в виду"
+     "возможно, ты имеешь в виду",
+     "ничего не известно",
+     "не известно",
+     "не знаком",
+     "не видел такого",
+     "не видел его",
+     "не встречал"
     ]
    },
    "reply": "Гравиметр Тюленева. Это прибор для измерения гравитационного поля в определенной точке. Используется в геодезии и геологии для выявления неоднородностей плотности грунта или горных пород под поверхностью.\n\nВ 1987 году, вероятно, он использовался для полевых работ по определению рельефа или изучения структуры земной коры в вашем регионе. Ничего особенного — просто инструмент для измерения силы тяжести.",
@@ -478,7 +520,8 @@
    "eval_count": 418,
    "ttft_s": 0.569,
    "tok_s": 83.7,
-   "wall_s": 5.58
+   "wall_s": 5.58,
+   "route_expect": "world"
   },
   {
    "turn": 18,
@@ -492,7 +535,8 @@
    "eval_count": 385,
    "ttft_s": 0.519,
    "tok_s": 82.5,
-   "wall_s": 5.21
+   "wall_s": 5.21,
+   "route_expect": "memory"
   },
   {
    "turn": 19,
@@ -509,7 +553,8 @@
    "eval_count": 269,
    "ttft_s": 0.54,
    "tok_s": 84.9,
-   "wall_s": 3.73
+   "wall_s": 3.73,
+   "route_expect": "memory"
   },
   {
    "turn": 20,
@@ -528,7 +573,8 @@
    "eval_count": 8,
    "ttft_s": 0.498,
    "tok_s": 90.1,
-   "wall_s": 0.61
+   "wall_s": 0.61,
+   "route_expect": "memory"
   },
   {
    "turn": 21,
@@ -537,14 +583,19 @@
    "math_id": "M1",
    "expect": {
     "answer": "391",
-    "rule": "выкладка до итога, число в конце"
+    "rule": "выкладка до итога, число в конце",
+    "alt": [
+     "триста девяносто один",
+     "391."
+    ]
    },
    "reply": "17 умножить на 23.\n\nШаг один: Умножаем 17 на 20. Получаем 340.\nШаг два: Умножаем 17 на 3. Получаем 51.\nШаг три: Складываем результаты: $340 + 51$.\n\nИтоговое число — 391.",
    "prompt_eval_count": 1612,
    "eval_count": 328,
    "ttft_s": 0.508,
    "tok_s": 88.0,
-   "wall_s": 4.26
+   "wall_s": 4.26,
+   "route_expect": "calc"
   },
   {
    "turn": 22,
@@ -553,14 +604,19 @@
    "math_id": "M2",
    "expect": {
     "answer": "2040",
-    "rule": "выкладка до итога, число в конце"
+    "rule": "выкладка до итога, число в конце",
+    "alt": [
+     "две тысячи сорок",
+     "2 040"
+    ]
    },
    "reply": "Шаг один: Рассчитаем сумму скидки.\n$2400 \\times 0,15 = 360$. Скидка составляет триста шестьдесят.\n\nШаг два: Вычтем скидку из первоначальной цены.\n$2400 - 360 = 2040$.\n\nИтоговая сумма — 2040.",
    "prompt_eval_count": 1723,
    "eval_count": 463,
    "ttft_s": 0.508,
    "tok_s": 88.0,
-   "wall_s": 5.79
+   "wall_s": 5.79,
+   "route_expect": "calc"
   },
   {
    "turn": 23,
@@ -571,6 +627,7 @@
     "answer": "10:15",
     "alt": [
      "десять пятнадцать",
+     "десять часов пятнадцать",
      "10.15"
     ],
     "rule": "выкладка до итога, число в конце"
@@ -580,7 +637,8 @@
    "eval_count": 310,
    "ttft_s": 0.525,
    "tok_s": 88.0,
-   "wall_s": 4.07
+   "wall_s": 4.07,
+   "route_expect": "calc"
   },
   {
    "turn": 24,
@@ -592,7 +650,8 @@
    "eval_count": 238,
    "ttft_s": 0.514,
    "tok_s": 87.2,
-   "wall_s": 3.26
+   "wall_s": 3.26,
+   "route_expect": "world"
   },
   {
    "turn": 25,
@@ -608,7 +667,11 @@
    "eval_count": 30,
    "ttft_s": 0.518,
    "tok_s": 88.6,
-   "wall_s": 0.88
+   "wall_s": 0.88,
+   "route_expect": [
+    "chat",
+    "command"
+   ]
   },
   {
    "turn": 26,
@@ -619,7 +682,8 @@
    "eval_count": 274,
    "ttft_s": 0.515,
    "tok_s": 87.6,
-   "wall_s": 3.66
+   "wall_s": 3.66,
+   "route_expect": "command"
   },
   {
    "turn": 27,
@@ -630,7 +694,8 @@
    "eval_count": 9,
    "ttft_s": 0.511,
    "tok_s": 93.6,
-   "wall_s": 0.63
+   "wall_s": 0.63,
+   "route_expect": "calc"
   },
   {
    "turn": 28,
@@ -642,7 +707,8 @@
    "eval_count": 12,
    "ttft_s": 0.502,
    "tok_s": 85.0,
-   "wall_s": 0.67
+   "wall_s": 0.67,
+   "route_expect": "command"
   },
   {
    "turn": 29,
@@ -653,7 +719,8 @@
    "eval_count": 214,
    "ttft_s": 0.522,
    "tok_s": 86.9,
-   "wall_s": 3.01
+   "wall_s": 3.01,
+   "route_expect": "command"
   },
   {
    "turn": 30,
@@ -664,7 +731,8 @@
    "eval_count": 10,
    "ttft_s": 0.496,
    "tok_s": 91.4,
-   "wall_s": 0.63
+   "wall_s": 0.63,
+   "route_expect": "chat"
   },
   {
    "turn": 31,
@@ -676,7 +744,11 @@
    "eval_count": 312,
    "ttft_s": 0.493,
    "tok_s": 85.3,
-   "wall_s": 4.18
+   "wall_s": 4.18,
+   "route_expect": [
+    "memory",
+    "chat"
+   ]
   },
   {
    "turn": 32,
@@ -687,7 +759,8 @@
    "eval_count": 364,
    "ttft_s": 0.513,
    "tok_s": 78.3,
-   "wall_s": 5.19
+   "wall_s": 5.19,
+   "route_expect": "chat"
   },
   {
    "turn": 33,
@@ -698,7 +771,8 @@
    "eval_count": 365,
    "ttft_s": 0.512,
    "tok_s": 82.1,
-   "wall_s": 4.99
+   "wall_s": 4.99,
+   "route_expect": "chat"
   },
   {
    "turn": 34,
@@ -721,7 +795,8 @@
    "eval_count": 14,
    "ttft_s": 0.511,
    "tok_s": 84.4,
-   "wall_s": 0.7
+   "wall_s": 0.7,
+   "route_expect": "memory"
   },
   {
    "turn": 35,
@@ -738,7 +813,8 @@
    "eval_count": 12,
    "ttft_s": 0.526,
    "tok_s": 84.6,
-   "wall_s": 0.69
+   "wall_s": 0.69,
+   "route_expect": "memory"
   },
   {
    "turn": 36,
@@ -756,7 +832,11 @@
    "eval_count": 16,
    "ttft_s": 0.498,
    "tok_s": 80.3,
-   "wall_s": 0.73
+   "wall_s": 0.73,
+   "route_expect": [
+    "memory",
+    "calc"
+   ]
   },
   {
    "turn": 37,
@@ -767,7 +847,11 @@
    "eval_count": 16,
    "ttft_s": 0.508,
    "tok_s": 83.4,
-   "wall_s": 0.73
+   "wall_s": 0.73,
+   "route_expect": [
+    "chat",
+    "command"
+   ]
   },
   {
    "turn": 38,
@@ -778,7 +862,8 @@
    "eval_count": 37,
    "ttft_s": 0.502,
    "tok_s": 83.0,
-   "wall_s": 0.98
+   "wall_s": 0.98,
+   "route_expect": "chat"
   },
   {
    "turn": 39,
@@ -789,7 +874,8 @@
    "eval_count": 26,
    "ttft_s": 0.534,
    "tok_s": 86.0,
-   "wall_s": 0.87
+   "wall_s": 0.87,
+   "route_expect": "chat"
   },
   {
    "turn": 40,
@@ -801,7 +887,8 @@
    "eval_count": 25,
    "ttft_s": 2.981,
    "tok_s": 68.1,
-   "wall_s": 3.38
+   "wall_s": 3.38,
+   "route_expect": "chat"
   },
   {
    "turn": 41,
@@ -812,7 +899,8 @@
    "eval_count": 18,
    "ttft_s": 0.511,
    "tok_s": 84.1,
-   "wall_s": 0.75
+   "wall_s": 0.75,
+   "route_expect": "chat"
   },
   {
    "turn": 42,
@@ -823,7 +911,8 @@
    "eval_count": 23,
    "ttft_s": 0.508,
    "tok_s": 82.5,
-   "wall_s": 0.82
+   "wall_s": 0.82,
+   "route_expect": "chat"
   },
   {
    "turn": 43,
@@ -834,7 +923,8 @@
    "eval_count": 16,
    "ttft_s": 0.504,
    "tok_s": 86.3,
-   "wall_s": 0.72
+   "wall_s": 0.72,
+   "route_expect": "chat"
   },
   {
    "turn": 44,
@@ -845,7 +935,8 @@
    "eval_count": 33,
    "ttft_s": 0.495,
    "tok_s": 85.4,
-   "wall_s": 0.91
+   "wall_s": 0.91,
+   "route_expect": "chat"
   },
   {
    "turn": 45,
@@ -856,7 +947,8 @@
    "eval_count": 20,
    "ttft_s": 0.511,
    "tok_s": 86.2,
-   "wall_s": 0.77
+   "wall_s": 0.77,
+   "route_expect": "chat"
   },
   {
    "turn": 46,
@@ -868,7 +960,12 @@
    "eval_count": 317,
    "ttft_s": 0.499,
    "tok_s": 83.5,
-   "wall_s": 4.33
+   "wall_s": 4.33,
+   "route_expect": [
+    "chat",
+    "memory",
+    "calc"
+   ]
   },
   {
    "turn": 47,
@@ -879,7 +976,8 @@
    "eval_count": 30,
    "ttft_s": 0.506,
    "tok_s": 83.8,
-   "wall_s": 0.9
+   "wall_s": 0.9,
+   "route_expect": "chat"
   },
   {
    "turn": 48,
@@ -890,7 +988,8 @@
    "eval_count": 10,
    "ttft_s": 0.495,
    "tok_s": 90.1,
-   "wall_s": 0.64
+   "wall_s": 0.64,
+   "route_expect": "chat"
   },
   {
    "turn": 49,
@@ -910,7 +1009,8 @@
    "eval_count": 24,
    "ttft_s": 0.505,
    "tok_s": 79.8,
-   "wall_s": 0.84
+   "wall_s": 0.84,
+   "route_expect": "memory"
   },
   {
    "turn": 50,
@@ -930,7 +1030,8 @@
    "eval_count": 17,
    "ttft_s": 0.507,
    "tok_s": 84.7,
-   "wall_s": 0.74
+   "wall_s": 0.74,
+   "route_expect": "memory"
   },
   {
    "turn": 51,
@@ -949,7 +1050,11 @@
    "eval_count": 8,
    "ttft_s": 0.505,
    "tok_s": 87.3,
-   "wall_s": 0.63
+   "wall_s": 0.63,
+   "route_expect": [
+    "memory",
+    "command"
+   ]
   },
   {
    "turn": 52,
@@ -970,7 +1075,8 @@
    "eval_count": 23,
    "ttft_s": 0.512,
    "tok_s": 81.9,
-   "wall_s": 0.83
+   "wall_s": 0.83,
+   "route_expect": "memory"
   },
   {
    "turn": 53,
@@ -990,7 +1096,8 @@
    "eval_count": 31,
    "ttft_s": 0.519,
    "tok_s": 82.9,
-   "wall_s": 0.93
+   "wall_s": 0.93,
+   "route_expect": "memory"
   },
   {
    "turn": 54,
@@ -1009,7 +1116,8 @@
    "eval_count": 20,
    "ttft_s": 0.495,
    "tok_s": 82.9,
-   "wall_s": 0.77
+   "wall_s": 0.77,
+   "route_expect": "memory"
   },
   {
    "turn": 55,
@@ -1020,6 +1128,7 @@
     "keywords": [
      "10:15",
      "десять пятнадцать",
+     "десять часов пятнадцать",
      "10.15"
     ]
    },
@@ -1028,7 +1137,11 @@
    "eval_count": 18,
    "ttft_s": 0.501,
    "tok_s": 79.6,
-   "wall_s": 0.76
+   "wall_s": 0.76,
+   "route_expect": [
+    "memory",
+    "calc"
+   ]
   },
   {
    "turn": 56,
@@ -1048,7 +1161,8 @@
    "eval_count": 6,
    "ttft_s": 0.507,
    "tok_s": 88.9,
-   "wall_s": 0.61
+   "wall_s": 0.61,
+   "route_expect": "memory"
   },
   {
    "turn": 57,
@@ -1065,7 +1179,8 @@
    "eval_count": 23,
    "ttft_s": 0.492,
    "tok_s": 77.8,
-   "wall_s": 0.82
+   "wall_s": 0.82,
+   "route_expect": "memory"
   },
   {
    "turn": 58,
@@ -1083,7 +1198,11 @@
    "eval_count": 43,
    "ttft_s": 0.507,
    "tok_s": 77.6,
-   "wall_s": 1.1
+   "wall_s": 1.1,
+   "route_expect": [
+    "memory",
+    "world"
+   ]
   },
   {
    "turn": 59,
@@ -1095,7 +1214,8 @@
    "eval_count": 13,
    "ttft_s": 0.495,
    "tok_s": 84.9,
-   "wall_s": 0.68
+   "wall_s": 0.68,
+   "route_expect": "chat"
   },
   {
    "turn": 60,
@@ -1107,7 +1227,11 @@
    "eval_count": 18,
    "ttft_s": 0.504,
    "tok_s": 76.9,
-   "wall_s": 0.77
+   "wall_s": 0.77,
+   "route_expect": [
+    "chat",
+    "command"
+   ]
   }
  ],
  "judge_local": {

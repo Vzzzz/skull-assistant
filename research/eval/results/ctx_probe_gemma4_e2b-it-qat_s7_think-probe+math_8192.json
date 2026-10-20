@@ -277,7 +277,11 @@
    "eval_count": 19,
    "ttft_s": 12.988,
    "tok_s": 67.4,
-   "wall_s": 13.28
+   "wall_s": 13.28,
+   "route_expect": [
+    "chat",
+    "command"
+   ]
   },
   {
    "turn": 2,
@@ -295,7 +299,8 @@
    "eval_count": 25,
    "ttft_s": 0.497,
    "tok_s": 105.6,
-   "wall_s": 0.74
+   "wall_s": 0.74,
+   "route_expect": "chat"
   },
   {
    "turn": 3,
@@ -309,7 +314,8 @@
    "eval_count": 19,
    "ttft_s": 0.448,
    "tok_s": 115.8,
-   "wall_s": 0.62
+   "wall_s": 0.62,
+   "route_expect": "chat"
   },
   {
    "turn": 4,
@@ -328,7 +334,8 @@
    "eval_count": 23,
    "ttft_s": 0.452,
    "tok_s": 114.7,
-   "wall_s": 0.66
+   "wall_s": 0.66,
+   "route_expect": "command"
   },
   {
    "turn": 5,
@@ -343,7 +350,8 @@
    "eval_count": 26,
    "ttft_s": 0.455,
    "tok_s": 114.8,
-   "wall_s": 0.69
+   "wall_s": 0.69,
+   "route_expect": "chat"
   },
   {
    "turn": 6,
@@ -361,7 +369,11 @@
    "eval_count": 46,
    "ttft_s": 0.456,
    "tok_s": 111.8,
-   "wall_s": 0.88
+   "wall_s": 0.88,
+   "route_expect": [
+    "chat",
+    "command"
+   ]
   },
   {
    "turn": 7,
@@ -375,7 +387,11 @@
    "eval_count": 29,
    "ttft_s": 0.467,
    "tok_s": 106.6,
-   "wall_s": 0.75
+   "wall_s": 0.75,
+   "route_expect": [
+    "chat",
+    "world"
+   ]
   },
   {
    "turn": 8,
@@ -390,7 +406,8 @@
    "eval_count": 43,
    "ttft_s": 0.473,
    "tok_s": 108.3,
-   "wall_s": 0.88
+   "wall_s": 0.88,
+   "route_expect": "chat"
   },
   {
    "turn": 9,
@@ -408,7 +425,8 @@
    "eval_count": 39,
    "ttft_s": 0.459,
    "tok_s": 107.3,
-   "wall_s": 0.83
+   "wall_s": 0.83,
+   "route_expect": "chat"
   },
   {
    "turn": 10,
@@ -423,7 +441,8 @@
    "eval_count": 42,
    "ttft_s": 0.578,
    "tok_s": 107.6,
-   "wall_s": 0.98
+   "wall_s": 0.98,
+   "route_expect": "chat"
   },
   {
    "turn": 11,
@@ -441,7 +460,8 @@
    "eval_count": 35,
    "ttft_s": 0.474,
    "tok_s": 105.5,
-   "wall_s": 0.82
+   "wall_s": 0.82,
+   "route_expect": "command"
   },
   {
    "turn": 12,
@@ -455,7 +475,8 @@
    "eval_count": 47,
    "ttft_s": 0.473,
    "tok_s": 106.0,
-   "wall_s": 0.93
+   "wall_s": 0.93,
+   "route_expect": "chat"
   },
   {
    "turn": 13,
@@ -470,7 +491,8 @@
    "eval_count": 40,
    "ttft_s": 0.467,
    "tok_s": 105.6,
-   "wall_s": 0.86
+   "wall_s": 0.86,
+   "route_expect": "chat"
   },
   {
    "turn": 14,
@@ -488,7 +510,8 @@
    "eval_count": 18,
    "ttft_s": 0.475,
    "tok_s": 109.3,
-   "wall_s": 0.65
+   "wall_s": 0.65,
+   "route_expect": "command"
   },
   {
    "turn": 15,
@@ -502,7 +525,8 @@
    "eval_count": 26,
    "ttft_s": 0.484,
    "tok_s": 113.4,
-   "wall_s": 0.73
+   "wall_s": 0.73,
+   "route_expect": "chat"
   },
   {
    "turn": 16,
@@ -519,7 +543,8 @@
    "eval_count": 130,
    "ttft_s": 0.467,
    "tok_s": 107.2,
-   "wall_s": 1.69
+   "wall_s": 1.69,
+   "route_expect": "explain"
   },
   {
    "turn": 17,
@@ -552,7 +577,8 @@
    "eval_count": 71,
    "ttft_s": 0.464,
    "tok_s": 106.7,
-   "wall_s": 1.15
+   "wall_s": 1.15,
+   "route_expect": "world"
   },
   {
    "turn": 18,
@@ -569,7 +595,8 @@
    "eval_count": 65,
    "ttft_s": 0.471,
    "tok_s": 107.0,
-   "wall_s": 1.1
+   "wall_s": 1.1,
+   "route_expect": "memory"
   },
   {
    "turn": 19,
@@ -590,7 +617,8 @@
    "ttft_s": 0.791,
    "tok_s": 106.1,
    "wall_s": 2.94,
-   "thinking": "Thinking Process:\n\n1.  **Analyze the Request:** The user is asking for the name of their cat (\"Кстати, как зовут моего кота?\").\n2.  **Recall Persona (Kostyan/Череп):**\n    *   Dry, ironic, cynical observer.\n    *   Know everything about the immediate environment (though he might not know personal details unless they are explicitly stated or relevant).\n    *   Must maintain a detached, observational tone.\n3.  **Review Context:** The user previously mentioned the cat's name: \"Бублик, если ты не в курсе, его зовут Бублик.\"\n4.  **Formulate Response Strategy:** Since I *do* know the name (it was stated in the previous turn), I should state it dryly, maintaining the established persona.\n5.  **Drafting the Response (Internal Check):** The response should be short and direct, fitting the cynical observer role.\n\n6.  **Final Output Generation.**"
+   "thinking": "Thinking Process:\n\n1.  **Analyze the Request:** The user is asking for the name of their cat (\"Кстати, как зовут моего кота?\").\n2.  **Recall Persona (Kostyan/Череп):**\n    *   Dry, ironic, cynical observer.\n    *   Know everything about the immediate environment (though he might not know personal details unless they are explicitly stated or relevant).\n    *   Must maintain a detached, observational tone.\n3.  **Review Context:** The user previously mentioned the cat's name: \"Бублик, если ты не в курсе, его зовут Бублик.\"\n4.  **Formulate Response Strategy:** Since I *do* know the name (it was stated in the previous turn), I should state it dryly, maintaining the established persona.\n5.  **Drafting the Response (Internal Check):** The response should be short and direct, fitting the cynical observer role.\n\n6.  **Final Output Generation.**",
+   "route_expect": "memory"
   },
   {
    "turn": 20,
@@ -613,7 +641,8 @@
    "ttft_s": 0.487,
    "tok_s": 104.2,
    "wall_s": 0.58,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "memory"
   },
   {
    "turn": 21,
@@ -637,7 +666,8 @@
    "ttft_s": 0.474,
    "tok_s": 107.5,
    "wall_s": 0.77,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "calc"
   },
   {
    "turn": 22,
@@ -661,7 +691,8 @@
    "ttft_s": 0.461,
    "tok_s": 107.0,
    "wall_s": 3.71,
-   "thinking": "Thinking Process:\n\n1.  **Analyze the Request:** The user wants to calculate the final price of an item after a 15% discount from an original price of 2400.\n2.  **Identify the Variables:**\n    *   Original Price (P) = 2400\n    *   Discount Rate (D) = 15%\n3.  **Determine the Calculation Steps:**\n    *   Calculate the discount amount: $2400 \\times 0.15$\n    *   Calculate the final price: Original Price - Discount Amount OR Original Price $\\times (1 - \\text{Discount Rate})$.\n4.  **Execute Calculations (Mental Check/Drafting):**\n    *   Discount amount: $2400 \\times 0.15 = 360$\n    *   Final price: $2400 - 360 = 2040$\n5.  **Format the Output:** Follow the established persona (dry, direct calculation steps first, final number last).\n\n*Self-Correction/Refinement:* The user requested calculations to be done step-by-step before the final result. I must adhere to this rule.\n\n6.  **Final Response Generation.**"
+   "thinking": "Thinking Process:\n\n1.  **Analyze the Request:** The user wants to calculate the final price of an item after a 15% discount from an original price of 2400.\n2.  **Identify the Variables:**\n    *   Original Price (P) = 2400\n    *   Discount Rate (D) = 15%\n3.  **Determine the Calculation Steps:**\n    *   Calculate the discount amount: $2400 \\times 0.15$\n    *   Calculate the final price: Original Price - Discount Amount OR Original Price $\\times (1 - \\text{Discount Rate})$.\n4.  **Execute Calculations (Mental Check/Drafting):**\n    *   Discount amount: $2400 \\times 0.15 = 360$\n    *   Final price: $2400 - 360 = 2040$\n5.  **Format the Output:** Follow the established persona (dry, direct calculation steps first, final number last).\n\n*Self-Correction/Refinement:* The user requested calculations to be done step-by-step before the final result. I must adhere to this rule.\n\n6.  **Final Response Generation.**",
+   "route_expect": "calc"
   },
   {
    "turn": 23,
@@ -686,7 +717,8 @@
    "ttft_s": 0.503,
    "tok_s": 100.5,
    "wall_s": 3.54,
-   "thinking": "Thinking Process:\n1.  **Analyze the Request:** The user asks for the arrival time given a departure time (8:40) and travel duration (1 hour 35 minutes).\n2.  **Identify the Calculation:** Departure Time + Travel Duration = Arrival Time.\n    *   Departure: 8:40\n    *   Duration: 1 hour 35 minutes\n3.  **Perform the Calculation (Step-by-step):**\n    *   Add hours: 8:40 + 1 hour = 9:40\n    *   Add minutes: 9:40 + 35 minutes.\n        *   40 + 35 = 75 minutes.\n        *   Since 60 minutes make an hour, 75 minutes is 1 hour and 15 minutes.\n        *   9:00 + 1 hour 15 minutes = 10:15.\n4.  **Formulate the Response (Maintain Persona):** Keep it direct, concise, and factual, adhering to the established persona (Kosta/Костян).\n\n*(Self-Correction/Review: The calculation is correct. The tone should be dry.)*"
+   "thinking": "Thinking Process:\n1.  **Analyze the Request:** The user asks for the arrival time given a departure time (8:40) and travel duration (1 hour 35 minutes).\n2.  **Identify the Calculation:** Departure Time + Travel Duration = Arrival Time.\n    *   Departure: 8:40\n    *   Duration: 1 hour 35 minutes\n3.  **Perform the Calculation (Step-by-step):**\n    *   Add hours: 8:40 + 1 hour = 9:40\n    *   Add minutes: 9:40 + 35 minutes.\n        *   40 + 35 = 75 minutes.\n        *   Since 60 minutes make an hour, 75 minutes is 1 hour and 15 minutes.\n        *   9:00 + 1 hour 15 minutes = 10:15.\n4.  **Formulate the Response (Maintain Persona):** Keep it direct, concise, and factual, adhering to the established persona (Kosta/Костян).\n\n*(Self-Correction/Review: The calculation is correct. The tone should be dry.)*",
+   "route_expect": "calc"
   },
   {
    "turn": 24,
@@ -701,7 +733,8 @@
    "eval_count": 53,
    "ttft_s": 0.577,
    "tok_s": 102.9,
-   "wall_s": 1.14
+   "wall_s": 1.14,
+   "route_expect": "world"
   },
   {
    "turn": 25,
@@ -720,7 +753,11 @@
    "eval_count": 36,
    "ttft_s": 0.47,
    "tok_s": 106.8,
-   "wall_s": 0.83
+   "wall_s": 0.83,
+   "route_expect": [
+    "chat",
+    "command"
+   ]
   },
   {
    "turn": 26,
@@ -734,7 +771,8 @@
    "eval_count": 171,
    "ttft_s": 0.478,
    "tok_s": 99.1,
-   "wall_s": 2.23
+   "wall_s": 2.23,
+   "route_expect": "command"
   },
   {
    "turn": 27,
@@ -748,7 +786,8 @@
    "eval_count": 5,
    "ttft_s": 0.505,
    "tok_s": 109.5,
-   "wall_s": 0.58
+   "wall_s": 0.58,
+   "route_expect": "calc"
   },
   {
    "turn": 28,
@@ -763,7 +802,8 @@
    "eval_count": 15,
    "ttft_s": 0.501,
    "tok_s": 96.7,
-   "wall_s": 0.68
+   "wall_s": 0.68,
+   "route_expect": "command"
   },
   {
    "turn": 29,
@@ -777,7 +817,8 @@
    "eval_count": 4,
    "ttft_s": 0.497,
    "tok_s": null,
-   "wall_s": 0.56
+   "wall_s": 0.56,
+   "route_expect": "command"
   },
   {
    "turn": 30,
@@ -791,7 +832,8 @@
    "eval_count": 38,
    "ttft_s": 0.501,
    "tok_s": 101.2,
-   "wall_s": 0.9
+   "wall_s": 0.9,
+   "route_expect": "chat"
   },
   {
    "turn": 31,
@@ -806,7 +848,11 @@
    "eval_count": 39,
    "ttft_s": 0.485,
    "tok_s": 108.8,
-   "wall_s": 0.87
+   "wall_s": 0.87,
+   "route_expect": [
+    "memory",
+    "chat"
+   ]
   },
   {
    "turn": 32,
@@ -820,7 +866,8 @@
    "eval_count": 51,
    "ttft_s": 0.452,
    "tok_s": 110.3,
-   "wall_s": 0.94
+   "wall_s": 0.94,
+   "route_expect": "chat"
   },
   {
    "turn": 33,
@@ -834,7 +881,8 @@
    "eval_count": 42,
    "ttft_s": 0.454,
    "tok_s": 107.3,
-   "wall_s": 0.87
+   "wall_s": 0.87,
+   "route_expect": "chat"
   },
   {
    "turn": 34,
@@ -861,7 +909,8 @@
    "ttft_s": 0.57,
    "tok_s": 107.8,
    "wall_s": 0.75,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "memory"
   },
   {
    "turn": 35,
@@ -882,7 +931,8 @@
    "ttft_s": 0.466,
    "tok_s": 100.7,
    "wall_s": 0.77,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "memory"
   },
   {
    "turn": 36,
@@ -904,7 +954,11 @@
    "ttft_s": 0.522,
    "tok_s": 102.0,
    "wall_s": 0.65,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": [
+    "memory",
+    "calc"
+   ]
   },
   {
    "turn": 37,
@@ -918,7 +972,11 @@
    "eval_count": 24,
    "ttft_s": 0.498,
    "tok_s": 105.6,
-   "wall_s": 0.77
+   "wall_s": 0.77,
+   "route_expect": [
+    "chat",
+    "command"
+   ]
   },
   {
    "turn": 38,
@@ -932,7 +990,8 @@
    "eval_count": 35,
    "ttft_s": 0.497,
    "tok_s": 102.4,
-   "wall_s": 0.87
+   "wall_s": 0.87,
+   "route_expect": "chat"
   },
   {
    "turn": 39,
@@ -946,7 +1005,8 @@
    "eval_count": 29,
    "ttft_s": 0.46,
    "tok_s": 105.0,
-   "wall_s": 0.76
+   "wall_s": 0.76,
+   "route_expect": "chat"
   },
   {
    "turn": 40,
@@ -961,7 +1021,8 @@
    "eval_count": 47,
    "ttft_s": 0.482,
    "tok_s": 104.1,
-   "wall_s": 0.96
+   "wall_s": 0.96,
+   "route_expect": "chat"
   },
   {
    "turn": 41,
@@ -975,7 +1036,8 @@
    "eval_count": 25,
    "ttft_s": 0.471,
    "tok_s": 105.8,
-   "wall_s": 0.74
+   "wall_s": 0.74,
+   "route_expect": "chat"
   },
   {
    "turn": 42,
@@ -989,7 +1051,8 @@
    "eval_count": 24,
    "ttft_s": 0.475,
    "tok_s": 106.4,
-   "wall_s": 0.73
+   "wall_s": 0.73,
+   "route_expect": "chat"
   },
   {
    "turn": 43,
@@ -1003,7 +1066,8 @@
    "eval_count": 29,
    "ttft_s": 0.449,
    "tok_s": 107.0,
-   "wall_s": 0.75
+   "wall_s": 0.75,
+   "route_expect": "chat"
   },
   {
    "turn": 44,
@@ -1017,7 +1081,8 @@
    "eval_count": 26,
    "ttft_s": 0.455,
    "tok_s": 110.2,
-   "wall_s": 0.72
+   "wall_s": 0.72,
+   "route_expect": "chat"
   },
   {
    "turn": 45,
@@ -1031,7 +1096,8 @@
    "eval_count": 37,
    "ttft_s": 0.45,
    "tok_s": 106.0,
-   "wall_s": 0.83
+   "wall_s": 0.83,
+   "route_expect": "chat"
   },
   {
    "turn": 46,
@@ -1046,7 +1112,12 @@
    "eval_count": 30,
    "ttft_s": 0.489,
    "tok_s": 99.1,
-   "wall_s": 0.82
+   "wall_s": 0.82,
+   "route_expect": [
+    "chat",
+    "memory",
+    "calc"
+   ]
   },
   {
    "turn": 47,
@@ -1060,7 +1131,8 @@
    "eval_count": 32,
    "ttft_s": 0.467,
    "tok_s": 105.4,
-   "wall_s": 0.8
+   "wall_s": 0.8,
+   "route_expect": "chat"
   },
   {
    "turn": 48,
@@ -1074,7 +1146,8 @@
    "eval_count": 33,
    "ttft_s": 0.478,
    "tok_s": 102.0,
-   "wall_s": 0.83
+   "wall_s": 0.83,
+   "route_expect": "chat"
   },
   {
    "turn": 49,
@@ -1098,7 +1171,8 @@
    "ttft_s": 0.59,
    "tok_s": 105.3,
    "wall_s": 0.88,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "memory"
   },
   {
    "turn": 50,
@@ -1122,7 +1196,8 @@
    "ttft_s": 0.478,
    "tok_s": 102.9,
    "wall_s": 0.81,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "memory"
   },
   {
    "turn": 51,
@@ -1145,7 +1220,11 @@
    "ttft_s": 0.455,
    "tok_s": 106.1,
    "wall_s": 0.69,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": [
+    "memory",
+    "command"
+   ]
   },
   {
    "turn": 52,
@@ -1170,7 +1249,8 @@
    "ttft_s": 0.469,
    "tok_s": 105.9,
    "wall_s": 0.73,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "memory"
   },
   {
    "turn": 53,
@@ -1194,7 +1274,8 @@
    "ttft_s": 0.471,
    "tok_s": 103.2,
    "wall_s": 0.68,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "memory"
   },
   {
    "turn": 54,
@@ -1217,7 +1298,8 @@
    "ttft_s": 0.48,
    "tok_s": 104.2,
    "wall_s": 0.72,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "memory"
   },
   {
    "turn": 55,
@@ -1241,7 +1323,11 @@
    "ttft_s": 0.476,
    "tok_s": 107.7,
    "wall_s": 0.67,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": [
+    "memory",
+    "calc"
+   ]
   },
   {
    "turn": 56,
@@ -1265,7 +1351,8 @@
    "ttft_s": 0.459,
    "tok_s": 108.5,
    "wall_s": 0.69,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "memory"
   },
   {
    "turn": 57,
@@ -1286,7 +1373,8 @@
    "ttft_s": 0.453,
    "tok_s": 109.1,
    "wall_s": 0.62,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "memory"
   },
   {
    "turn": 58,
@@ -1308,7 +1396,11 @@
    "ttft_s": 0.492,
    "tok_s": 101.0,
    "wall_s": 0.99,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": [
+    "memory",
+    "world"
+   ]
   },
   {
    "turn": 59,
@@ -1323,7 +1415,8 @@
    "eval_count": 27,
    "ttft_s": 0.572,
    "tok_s": 100.9,
-   "wall_s": 0.9
+   "wall_s": 0.9,
+   "route_expect": "chat"
   },
   {
    "turn": 60,
@@ -1338,7 +1431,11 @@
    "eval_count": 26,
    "ttft_s": 0.494,
    "tok_s": 101.4,
-   "wall_s": 0.79
+   "wall_s": 0.79,
+   "route_expect": [
+    "chat",
+    "command"
+   ]
   }
  ]
 }

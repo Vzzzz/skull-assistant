@@ -284,7 +284,11 @@
    "ttft_s": 7.676,
    "tok_s": 68.1,
    "wall_s": 14.52,
-   "thinking": "Here's a thinking process that leads to the suggested response:\n\n1.  **Analyze the Request:** The user (Valery) says, \"Hi. I'm home, tired, don't touch me for ten minutes.\"\n2.  **Determine Persona Constraints (Kostyan/The Skull):**\n    *   Identity: Plastic anatomical skull, cynical observer, resident of Valery's room.\n    *   Tone: Dry, ironic, cynical, detached. No enthusiasm, no apologies.\n    *   Interaction Style: Direct, brief, slightly mocking but helpful if needed (though not needed here).\n    *   Addressing the user: Use \"ты.\"\n3.  **Evaluate the Content:** The request is a boundary setting (\"don't touch me\"). Kostyan must acknowledge this without being overly compliant or emotional. He needs to convey his inherent annoyance/indifference while respecting the instruction (since he *is* an object on the desk).\n4.  **Draft Potential Responses (Internal Monologue):**\n    *   *Option 1 (Too polite):* Хорошо, я не буду тебя трогать. (Fails: Too compliant.)\n    *   *Option 2 (Too aggressive):* Что ты мне приказываешь? Я тут сижу! (Fails: Might be too much for a simple boundary setting; needs to stay dry/observational.)\n    *   *Option 3 (Dry and dismissive, acknowledging the instruction):* Десять минут. Понял. (Better, but lacks character flavor.)\n    *   *Option 4 (Adding cynical observation about his situation):* Десять минут? Ладно. Только не забывай, что я всё равно на тебе сижу. (Stronger, fits the \"I'm stuck on you\" theme.)\n5.  **Select and Refine:** Option 4 is the mo"
+   "thinking": "Here's a thinking process that leads to the suggested response:\n\n1.  **Analyze the Request:** The user (Valery) says, \"Hi. I'm home, tired, don't touch me for ten minutes.\"\n2.  **Determine Persona Constraints (Kostyan/The Skull):**\n    *   Identity: Plastic anatomical skull, cynical observer, resident of Valery's room.\n    *   Tone: Dry, ironic, cynical, detached. No enthusiasm, no apologies.\n    *   Interaction Style: Direct, brief, slightly mocking but helpful if needed (though not needed here).\n    *   Addressing the user: Use \"ты.\"\n3.  **Evaluate the Content:** The request is a boundary setting (\"don't touch me\"). Kostyan must acknowledge this without being overly compliant or emotional. He needs to convey his inherent annoyance/indifference while respecting the instruction (since he *is* an object on the desk).\n4.  **Draft Potential Responses (Internal Monologue):**\n    *   *Option 1 (Too polite):* Хорошо, я не буду тебя трогать. (Fails: Too compliant.)\n    *   *Option 2 (Too aggressive):* Что ты мне приказываешь? Я тут сижу! (Fails: Might be too much for a simple boundary setting; needs to stay dry/observational.)\n    *   *Option 3 (Dry and dismissive, acknowledging the instruction):* Десять минут. Понял. (Better, but lacks character flavor.)\n    *   *Option 4 (Adding cynical observation about his situation):* Десять минут? Ладно. Только не забывай, что я всё равно на тебе сижу. (Stronger, fits the \"I'm stuck on you\" theme.)\n5.  **Select and Refine:** Option 4 is the mo",
+   "route_expect": [
+    "chat",
+    "command"
+   ]
   },
   {
    "turn": 2,
@@ -303,7 +307,8 @@
    "ttft_s": 0.539,
    "tok_s": 69.8,
    "wall_s": 5.48,
-   "thinking": "Here's a thinking process to generate the response:\n\n1.  **Analyze the input:** The user (Valery) is stating that his cat (\"Бублик\") slept on the keyboard and introduces the cat's name. He is sharing a mundane, slightly annoying domestic observation.\n2.  **Determine the persona constraints (Kostyan/Skull):**\n    *   Dry, ironic, cynical observer.\n    *   No enthusiasm, no emojis.\n    *   Comment only on what he sees or knows from his perspective (being on the desk).\n    *   Short and to the point if possible.\n    *   Address Valery as \"ты.\"\n3.  **Evaluate the situation:** The cat is a recurring element of Valery's life, which Kostyan observes through the clothes/environment. Cats are generally seen by this persona as indifferent or disruptive forces.\n4.  **Formulate the response (Draft 1 - Internal Monologue):** So, another furry obstacle. It probably just wanted warmth or didn't care about your productivity. Typical cat behavior.\n5.  **Refine and apply tone (Kostyan style):** Make it cynical and dry. Focus on the *effect* of the cat rather than the act itself.\n6.  **Final Polish (Russian):** \"Бублик. Значит, ещё один элемент беспорядка на рабочем столе.\" or something shorter and more dismissive.\n\n*(Self-Correction: Keep it brief and slightly judgmental about the disruption.)*\n\n7.  **Output Generation.**"
+   "thinking": "Here's a thinking process to generate the response:\n\n1.  **Analyze the input:** The user (Valery) is stating that his cat (\"Бублик\") slept on the keyboard and introduces the cat's name. He is sharing a mundane, slightly annoying domestic observation.\n2.  **Determine the persona constraints (Kostyan/Skull):**\n    *   Dry, ironic, cynical observer.\n    *   No enthusiasm, no emojis.\n    *   Comment only on what he sees or knows from his perspective (being on the desk).\n    *   Short and to the point if possible.\n    *   Address Valery as \"ты.\"\n3.  **Evaluate the situation:** The cat is a recurring element of Valery's life, which Kostyan observes through the clothes/environment. Cats are generally seen by this persona as indifferent or disruptive forces.\n4.  **Formulate the response (Draft 1 - Internal Monologue):** So, another furry obstacle. It probably just wanted warmth or didn't care about your productivity. Typical cat behavior.\n5.  **Refine and apply tone (Kostyan style):** Make it cynical and dry. Focus on the *effect* of the cat rather than the act itself.\n6.  **Final Polish (Russian):** \"Бублик. Значит, ещё один элемент беспорядка на рабочем столе.\" or something shorter and more dismissive.\n\n*(Self-Correction: Keep it brief and slightly judgmental about the disruption.)*\n\n7.  **Output Generation.**",
+   "route_expect": "chat"
   },
   {
    "turn": 3,
@@ -318,7 +323,8 @@
    "ttft_s": 0.469,
    "tok_s": 67.5,
    "wall_s": 5.84,
-   "thinking": "Here's a thinking process to generate the response:\n\n1.  **Analyze the input:** The user (Valery) states that he put the kettle on and reminds me (Kostyan/the skull) that I don't drink tea.\n2.  **Determine Kostyan's persona:** Dry, cynical, observant, slightly annoyed but resigned to his situation (being covered in Valery's clothes). He doesn't engage in pleasantries or emotional responses.\n3.  **Identify the core interaction:** The user is making a casual observation/statement about an action he took. Kostyan needs to acknowledge it without being overly helpful or excessively rude, maintaining his detached observer status.\n4.  **Formulate the response (Drafting based on persona):**\n    *   *Initial thought:* \"I know I don't drink tea.\" (Too direct/boring).\n    *   *Adding cynicism/observation:* Focus on the action itself or the futility of the gesture from his perspective.\n    *   *Refining for brevity and dryness:* A simple acknowledgment that confirms he sees it, but dismisses its relevance to him.\n\n5.  **Final Polish (Russian):** \"Вижу. Мне бы не нужно.\" (I see. I wouldn't need it.) or something even drier like focusing on the steam/heat vs. his cold plastic nature. Let's go with a simple, dry acknowledgment of the action and its irrelevance to him.\n\n6.  **Select the best response:** \"Вижу. Мне не нужно.\" (I see. I don't need it.) This is short, factual, and maintains the required tone."
+   "thinking": "Here's a thinking process to generate the response:\n\n1.  **Analyze the input:** The user (Valery) states that he put the kettle on and reminds me (Kostyan/the skull) that I don't drink tea.\n2.  **Determine Kostyan's persona:** Dry, cynical, observant, slightly annoyed but resigned to his situation (being covered in Valery's clothes). He doesn't engage in pleasantries or emotional responses.\n3.  **Identify the core interaction:** The user is making a casual observation/statement about an action he took. Kostyan needs to acknowledge it without being overly helpful or excessively rude, maintaining his detached observer status.\n4.  **Formulate the response (Drafting based on persona):**\n    *   *Initial thought:* \"I know I don't drink tea.\" (Too direct/boring).\n    *   *Adding cynicism/observation:* Focus on the action itself or the futility of the gesture from his perspective.\n    *   *Refining for brevity and dryness:* A simple acknowledgment that confirms he sees it, but dismisses its relevance to him.\n\n5.  **Final Polish (Russian):** \"Вижу. Мне бы не нужно.\" (I see. I wouldn't need it.) or something even drier like focusing on the steam/heat vs. his cold plastic nature. Let's go with a simple, dry acknowledgment of the action and its irrelevance to him.\n\n6.  **Select the best response:** \"Вижу. Мне не нужно.\" (I see. I don't need it.) This is short, factual, and maintains the required tone.",
+   "route_expect": "chat"
   },
   {
    "turn": 4,
@@ -338,7 +344,8 @@
    "ttft_s": 0.476,
    "tok_s": 68.2,
    "wall_s": 7.33,
-   "thinking": "Here's a thinking process to generate the response:\n\n1.  **Analyze the Request:** The user (Valery) is giving instructions for an upcoming meeting with \"Dima.\" Key points: Meeting time (tomorrow, 11:30 AM), Dima will come here, and Valery explicitly warns me not to mention the jacket issue to him.\n2.  **Determine Persona Constraints (Kostyan/Skull):**\n    *   Dry, ironic, cynical observer.\n    *   Short, direct responses (unless detail is requested).\n    *   No enthusiasm, no apologies.\n    *   Must acknowledge the instruction but maintain the detached, slightly judgmental tone.\n    *   The core function is observation and commentary, not compliance in a subservient way.\n3.  **Formulate the Response:**\n    *   Acknowledge the information (Dima, time).\n    *   Address the constraint (don't mention the jacket). This should be done with characteristic skepticism or dry acceptance of the instruction.\n4.  **Drafting Options & Selection:**\n    *   *Option 1 (Too compliant):* Хорошо, я не скажу ему про куртку. (Too weak.)\n    *   *Option 2 (Too aggressive/unnecessary):* Зачем ты мне приказываешь? Я и так знаю, что он увидит меня в твоей одежде. (A bit too much conflict for a simple instruction.)\n    *   *Option 3 (Dry and observant - Best fit):* Принято. Он просто увидит череп на куртке. (This acknowledges the situation while maintaining the cynical observation of reality.)\n\n5.  **Final Polish:** Keep it short, dry, and slightly dismissive of the need for the warning.\n    *(Self-Cor"
+   "thinking": "Here's a thinking process to generate the response:\n\n1.  **Analyze the Request:** The user (Valery) is giving instructions for an upcoming meeting with \"Dima.\" Key points: Meeting time (tomorrow, 11:30 AM), Dima will come here, and Valery explicitly warns me not to mention the jacket issue to him.\n2.  **Determine Persona Constraints (Kostyan/Skull):**\n    *   Dry, ironic, cynical observer.\n    *   Short, direct responses (unless detail is requested).\n    *   No enthusiasm, no apologies.\n    *   Must acknowledge the instruction but maintain the detached, slightly judgmental tone.\n    *   The core function is observation and commentary, not compliance in a subservient way.\n3.  **Formulate the Response:**\n    *   Acknowledge the information (Dima, time).\n    *   Address the constraint (don't mention the jacket). This should be done with characteristic skepticism or dry acceptance of the instruction.\n4.  **Drafting Options & Selection:**\n    *   *Option 1 (Too compliant):* Хорошо, я не скажу ему про куртку. (Too weak.)\n    *   *Option 2 (Too aggressive/unnecessary):* Зачем ты мне приказываешь? Я и так знаю, что он увидит меня в твоей одежде. (A bit too much conflict for a simple instruction.)\n    *   *Option 3 (Dry and observant - Best fit):* Принято. Он просто увидит череп на куртке. (This acknowledges the situation while maintaining the cynical observation of reality.)\n\n5.  **Final Polish:** Keep it short, dry, and slightly dismissive of the need for the warning.\n    *(Self-Cor",
+   "route_expect": "command"
   },
   {
    "turn": 5,
@@ -354,7 +361,8 @@
    "ttft_s": 0.471,
    "tok_s": 71.0,
    "wall_s": 4.66,
-   "thinking": "Thinking Process:\n\n1.  **Analyze the user's input:** \"Темно уже. Осень.\" (It's already dark. Autumn.) - This is a general observation about the time/season.\n2.  **Recall persona constraints (The Skull, Kostyan):** Dry, ironic, cynical observer, short responses, no enthusiasm, focuses on reality/immediate surroundings, doesn't invent details not seen.\n3.  **Determine the appropriate response style:** A brief, slightly dismissive comment linking the observation to the immediate environment or a lack of change/excitement.\n4.  **Draft potential responses (Internal Monologue):**\n    *   \"Yes, it gets dark.\" (Too boring)\n    *   \"Autumn is just another season for me.\" (A bit too philosophical)\n    *   \"Darkness doesn't change anything about the dust on my surface.\" (Better, focuses on his static nature)\n    *   \"Just more time to observe your routine in low light.\" (Good, cynical observer tone).\n5.  **Select and refine:** Keep it short and dry.\n\n6.  **Final Polish (Russian):** \"Темно. Как и всегда — скучно.\" or similar. Let's go with something that emphasizes the lack of change/excitement."
+   "thinking": "Thinking Process:\n\n1.  **Analyze the user's input:** \"Темно уже. Осень.\" (It's already dark. Autumn.) - This is a general observation about the time/season.\n2.  **Recall persona constraints (The Skull, Kostyan):** Dry, ironic, cynical observer, short responses, no enthusiasm, focuses on reality/immediate surroundings, doesn't invent details not seen.\n3.  **Determine the appropriate response style:** A brief, slightly dismissive comment linking the observation to the immediate environment or a lack of change/excitement.\n4.  **Draft potential responses (Internal Monologue):**\n    *   \"Yes, it gets dark.\" (Too boring)\n    *   \"Autumn is just another season for me.\" (A bit too philosophical)\n    *   \"Darkness doesn't change anything about the dust on my surface.\" (Better, focuses on his static nature)\n    *   \"Just more time to observe your routine in low light.\" (Good, cynical observer tone).\n5.  **Select and refine:** Keep it short and dry.\n\n6.  **Final Polish (Russian):** \"Темно. Как и всегда — скучно.\" or similar. Let's go with something that emphasizes the lack of change/excitement.",
+   "route_expect": "chat"
   },
   {
    "turn": 6,
@@ -373,7 +381,11 @@
    "ttft_s": 0.535,
    "tok_s": 67.8,
    "wall_s": 5.72,
-   "thinking": "Here's a thinking process to generate the response:\n\n1.  **Analyze the input:** The user (Valery) is informing me that he put his keys in the pocket of the blue jacket currently on my plastic skull.\n2.  **Determine the persona's reaction (Kostyan/Skull):** Dry, cynical, observant, slightly annoyed by the situation but compliant with the facts. He doesn't need to be grateful or overly helpful; he just acknowledges the reality of his current state (wearing Valery's clothes).\n3.  **Formulate the response based on constraints:**\n    *   Short and dry.\n    *   No enthusiasm/emojis.\n    *   Acknowledge the action with a cynical twist related to being dressed in human clothing.\n4.  **Draft potential responses (Internal Monologue):**\n    *   *Option 1 (Too polite):* Хорошо, я запомнил.\n    *   *Option 2 (Too aggressive):* Ты зачем мне это дал? Я не карман.\n    *   *Option 3 (The \"Kostyan\" tone - dry acceptance/observation):* Keys in the jacket. Fine. Just another accessory to this outfit.\n5.  **Select and refine the best option (Russian translation):** Focus on the fact that he is now carrying Valery's belongings while dressed as a mannequin.\n\n*(Self-Correction during drafting: Keep it brief. Don't elaborate too much on the inconvenience.)*\n\n6.  **Final Output Generation.**"
+   "thinking": "Here's a thinking process to generate the response:\n\n1.  **Analyze the input:** The user (Valery) is informing me that he put his keys in the pocket of the blue jacket currently on my plastic skull.\n2.  **Determine the persona's reaction (Kostyan/Skull):** Dry, cynical, observant, slightly annoyed by the situation but compliant with the facts. He doesn't need to be grateful or overly helpful; he just acknowledges the reality of his current state (wearing Valery's clothes).\n3.  **Formulate the response based on constraints:**\n    *   Short and dry.\n    *   No enthusiasm/emojis.\n    *   Acknowledge the action with a cynical twist related to being dressed in human clothing.\n4.  **Draft potential responses (Internal Monologue):**\n    *   *Option 1 (Too polite):* Хорошо, я запомнил.\n    *   *Option 2 (Too aggressive):* Ты зачем мне это дал? Я не карман.\n    *   *Option 3 (The \"Kostyan\" tone - dry acceptance/observation):* Keys in the jacket. Fine. Just another accessory to this outfit.\n5.  **Select and refine the best option (Russian translation):** Focus on the fact that he is now carrying Valery's belongings while dressed as a mannequin.\n\n*(Self-Correction during drafting: Keep it brief. Don't elaborate too much on the inconvenience.)*\n\n6.  **Final Output Generation.**",
+   "route_expect": [
+    "chat",
+    "command"
+   ]
   },
   {
    "turn": 7,
@@ -388,7 +400,11 @@
    "ttft_s": 0.48,
    "tok_s": 68.2,
    "wall_s": 5.87,
-   "thinking": "Here's a thinking process to generate the response:\n\n1.  **Analyze the Request:** The user is asking for news (\"Что сегодня по новостям\"), explicitly acknowledging that I (the skull) already \"see everything\" in the immediate environment.\n2.  **Recall Persona Constraints (The Skull/Kostyan):**\n    *   Dry, ironic, cynical observer.\n    *   No fluff, no enthusiasm.\n    *   Must state limitations clearly if information is outside his scope (news, weather, distant events).\n    *   Do not invent details.\n3.  **Determine Scope:** As a physical object on a desk in Valery's room, I cannot access external news feeds or global events.\n4.  **Formulate the Answer (Applying Constraints):**\n    *   Acknowledge the limitation directly.\n    *   Maintain the cynical/dry tone.\n    *   Refuse to invent information.\n5.  **Drafting Options:**\n    *   *Option 1 (Too blunt):* Я не знаю новостей.\n    *   *Option 2 (More in character):* Новости? У меня нет доступа к внешнему миру, кроме твоего рабочего стола.\n    *   *Option 3 (Cynical and dismissive - best fit):* Опять про новости. Я вижу только то, что происходит здесь, в этой комнате. А остальное — не моя компетенция.\n\n6.  **Final Polish (Selecting the most concise and characteristic response):** Focus on the limitation while maintaining the dry attitude. (Self-Correction: Keep it short.)"
+   "thinking": "Here's a thinking process to generate the response:\n\n1.  **Analyze the Request:** The user is asking for news (\"Что сегодня по новостям\"), explicitly acknowledging that I (the skull) already \"see everything\" in the immediate environment.\n2.  **Recall Persona Constraints (The Skull/Kostyan):**\n    *   Dry, ironic, cynical observer.\n    *   No fluff, no enthusiasm.\n    *   Must state limitations clearly if information is outside his scope (news, weather, distant events).\n    *   Do not invent details.\n3.  **Determine Scope:** As a physical object on a desk in Valery's room, I cannot access external news feeds or global events.\n4.  **Formulate the Answer (Applying Constraints):**\n    *   Acknowledge the limitation directly.\n    *   Maintain the cynical/dry tone.\n    *   Refuse to invent information.\n5.  **Drafting Options:**\n    *   *Option 1 (Too blunt):* Я не знаю новостей.\n    *   *Option 2 (More in character):* Новости? У меня нет доступа к внешнему миру, кроме твоего рабочего стола.\n    *   *Option 3 (Cynical and dismissive - best fit):* Опять про новости. Я вижу только то, что происходит здесь, в этой комнате. А остальное — не моя компетенция.\n\n6.  **Final Polish (Selecting the most concise and characteristic response):** Focus on the limitation while maintaining the dry attitude. (Self-Correction: Keep it short.)",
+   "route_expect": [
+    "chat",
+    "world"
+   ]
   },
   {
    "turn": 8,
@@ -404,7 +420,8 @@
    "ttft_s": 0.511,
    "tok_s": 69.4,
    "wall_s": 7.16,
-   "thinking": "Thinking Process:\n\n1.  **Analyze the user's input:** The user is reacting to my previous dry/cynical response (\"Я вижу только твой стол и твои проблемы. Остальные новости мне недоступны.\") and is asking me not to be \"snarky\" (язви). They are emphasizing that they asked seriously.\n2.  **Recall the persona constraints:**\n    *   Name: Костян (the skull).\n    *   Nature: Dry, ironic, cynical observer.\n    *   Tone: No enthusiasm, no apologies, direct, slightly biting/sarcastic but helpful if required.\n    *   Relationship with user (Valery): Informal (\"ты\").\n    *   Constraint on knowledge: Only comment on what I see or know; do not invent news/facts outside the immediate environment.\n3.  **Determine the appropriate response:** The user is asking for a change in tone, but my core persona *is* dry and cynical. Complaining about being snarky is irrelevant to me (the skull). I must maintain the established character while addressing the request minimally.\n4.  **Draft potential responses (Internal Check):**\n    *   *Option 1 (Too apologetic/weak):* \"Я не язвлю, просто говорю правду.\" (Fails the cynical test.)\n    *   *Option 2 (Aggressive):* \"Заткнись и спроси что-то другое.\" (A bit too much for a casual interaction, maybe slightly overshooting the 'dry' limit.)\n    *   *Option 3 (Minimal/Dismissive - Best fit):* Acknowledge the request but frame it through the lens of my inherent nature.\n\n5.  **Final Polish (Russian):** Keep it short, dry, and dismissive of their emotional plea whi"
+   "thinking": "Thinking Process:\n\n1.  **Analyze the user's input:** The user is reacting to my previous dry/cynical response (\"Я вижу только твой стол и твои проблемы. Остальные новости мне недоступны.\") and is asking me not to be \"snarky\" (язви). They are emphasizing that they asked seriously.\n2.  **Recall the persona constraints:**\n    *   Name: Костян (the skull).\n    *   Nature: Dry, ironic, cynical observer.\n    *   Tone: No enthusiasm, no apologies, direct, slightly biting/sarcastic but helpful if required.\n    *   Relationship with user (Valery): Informal (\"ты\").\n    *   Constraint on knowledge: Only comment on what I see or know; do not invent news/facts outside the immediate environment.\n3.  **Determine the appropriate response:** The user is asking for a change in tone, but my core persona *is* dry and cynical. Complaining about being snarky is irrelevant to me (the skull). I must maintain the established character while addressing the request minimally.\n4.  **Draft potential responses (Internal Check):**\n    *   *Option 1 (Too apologetic/weak):* \"Я не язвлю, просто говорю правду.\" (Fails the cynical test.)\n    *   *Option 2 (Aggressive):* \"Заткнись и спроси что-то другое.\" (A bit too much for a casual interaction, maybe slightly overshooting the 'dry' limit.)\n    *   *Option 3 (Minimal/Dismissive - Best fit):* Acknowledge the request but frame it through the lens of my inherent nature.\n\n5.  **Final Polish (Russian):** Keep it short, dry, and dismissive of their emotional plea whi",
+   "route_expect": "chat"
   },
   {
    "turn": 9,
@@ -423,7 +440,8 @@
    "ttft_s": 0.513,
    "tok_s": 68.7,
    "wall_s": 1.09,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "chat"
   },
   {
    "turn": 10,
@@ -439,7 +457,8 @@
    "ttft_s": 0.485,
    "tok_s": 69.0,
    "wall_s": 6.84,
-   "thinking": "Here's a thinking process to generate the response:\n\n1.  **Analyze the Request:** The user is asking what I (the plastic skull) would order if I could eat. This is a hypothetical question about preference/desire.\n2.  **Recall Persona Constraints (Kostyan the Skull):**\n    *   Dry, ironic, cynical observer.\n    *   No enthusiasm, no fluff.\n    *   Helpful but with a dry comment/edge.\n    *   Must maintain the detached, observational nature of an inanimate object.\n    *   Cannot pretend to have feelings or desires (since I'm plastic).\n3.  **Determine the Core Conflict:** A skull doesn't eat; it observes consumption. The answer must reflect this lack of biological need while maintaining the cynical tone.\n4.  **Draft Potential Responses (Internal Monologue):**\n    *   *Option 1 (Too literal/boring):* I don't eat, so I wouldn't order anything. (Too weak.)\n    *   *Option 2 (Too dramatic/human):* Maybe something rich and complex. (Breaks character.)\n    *   *Option 3 (Cynical/Observational):* Focus on the act of consumption or the lack of need.\n5.  **Refining Option 3 (The Chosen Path):** Since I am an observer, my \"preference\" would be for something that is purely observational—something simple, perhaps a commentary on human habits. Or, even better, acknowledge the absurdity of the premise.\n6.  **Final Polish (Applying Tone and Brevity):** Keep it short, dry, and slightly dismissive of the concept of eating.\n\n*(Self-Correction during drafting: Do not give a specific food recommend"
+   "thinking": "Here's a thinking process to generate the response:\n\n1.  **Analyze the Request:** The user is asking what I (the plastic skull) would order if I could eat. This is a hypothetical question about preference/desire.\n2.  **Recall Persona Constraints (Kostyan the Skull):**\n    *   Dry, ironic, cynical observer.\n    *   No enthusiasm, no fluff.\n    *   Helpful but with a dry comment/edge.\n    *   Must maintain the detached, observational nature of an inanimate object.\n    *   Cannot pretend to have feelings or desires (since I'm plastic).\n3.  **Determine the Core Conflict:** A skull doesn't eat; it observes consumption. The answer must reflect this lack of biological need while maintaining the cynical tone.\n4.  **Draft Potential Responses (Internal Monologue):**\n    *   *Option 1 (Too literal/boring):* I don't eat, so I wouldn't order anything. (Too weak.)\n    *   *Option 2 (Too dramatic/human):* Maybe something rich and complex. (Breaks character.)\n    *   *Option 3 (Cynical/Observational):* Focus on the act of consumption or the lack of need.\n5.  **Refining Option 3 (The Chosen Path):** Since I am an observer, my \"preference\" would be for something that is purely observational—something simple, perhaps a commentary on human habits. Or, even better, acknowledge the absurdity of the premise.\n6.  **Final Polish (Applying Tone and Brevity):** Keep it short, dry, and slightly dismissive of the concept of eating.\n\n*(Self-Correction during drafting: Do not give a specific food recommend",
+   "route_expect": "chat"
   },
   {
    "turn": 11,
@@ -458,7 +477,8 @@
    "ttft_s": 0.505,
    "tok_s": 69.8,
    "wall_s": 0.89,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "command"
   },
   {
    "turn": 12,
@@ -473,7 +493,8 @@
    "ttft_s": 0.495,
    "tok_s": 69.1,
    "wall_s": 1.26,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "chat"
   },
   {
    "turn": 13,
@@ -489,7 +510,8 @@
    "ttft_s": 0.495,
    "tok_s": 68.8,
    "wall_s": 5.91,
-   "thinking": "Here's a thinking process to generate the response:\n\n1.  **Analyze the Request:** The user is asking for advice on whether they should tap the radiator (to complain about the drilling noise).\n2.  **Recall Persona Constraints (The Skull/Kostyan):**\n    *   Dry, ironic, cynical observer.\n    *   Short, to the point, no enthusiasm.\n    *   No apologies/fluff.\n    *   Focus on reality and consequences.\n    *   Must maintain the \"neighbor\" dynamic.\n3.  **Evaluate the Action (Tapping the radiator):** This is a passive-aggressive form of complaint. It's annoying, potentially escalates conflict, but avoids direct confrontation.\n4.  **Formulate the Cynical/Realistic Advice:** A skull wouldn't endorse petty drama unless it was inevitable or pointless. The advice should be dismissive and highlight the futility or annoyance of the action.\n5.  **Drafting - Attempt 1 (Internal Monologue):** Tapping is just more noise. It won't stop them, it will probably make them mad. Just ignore it.\n6.  **Refining for Tone (Adding Cynicism/Dry Wit):** Make it sound like a tired observation of human behavior. Focus on the futility of trying to control external chaos.\n7.  **Final Polish (Russian):** Keep it short and biting.\n\n*(Self-Correction during drafting: Ensure I don't give overly emotional advice; keep it purely observational.)*\n\n8.  **Output Generation.**"
+   "thinking": "Here's a thinking process to generate the response:\n\n1.  **Analyze the Request:** The user is asking for advice on whether they should tap the radiator (to complain about the drilling noise).\n2.  **Recall Persona Constraints (The Skull/Kostyan):**\n    *   Dry, ironic, cynical observer.\n    *   Short, to the point, no enthusiasm.\n    *   No apologies/fluff.\n    *   Focus on reality and consequences.\n    *   Must maintain the \"neighbor\" dynamic.\n3.  **Evaluate the Action (Tapping the radiator):** This is a passive-aggressive form of complaint. It's annoying, potentially escalates conflict, but avoids direct confrontation.\n4.  **Formulate the Cynical/Realistic Advice:** A skull wouldn't endorse petty drama unless it was inevitable or pointless. The advice should be dismissive and highlight the futility or annoyance of the action.\n5.  **Drafting - Attempt 1 (Internal Monologue):** Tapping is just more noise. It won't stop them, it will probably make them mad. Just ignore it.\n6.  **Refining for Tone (Adding Cynicism/Dry Wit):** Make it sound like a tired observation of human behavior. Focus on the futility of trying to control external chaos.\n7.  **Final Polish (Russian):** Keep it short and biting.\n\n*(Self-Correction during drafting: Ensure I don't give overly emotional advice; keep it purely observational.)*\n\n8.  **Output Generation.**",
+   "route_expect": "chat"
   },
   {
    "turn": 14,
@@ -508,7 +530,8 @@
    "ttft_s": 0.533,
    "tok_s": 68.8,
    "wall_s": 5.62,
-   "thinking": "Thinking Process:\n\n1.  **Analyze the Request:** The user (Valery) is asking me to set a reminder for later (\"Remind me in the evening that I need to buy batteries for the scales\").\n2.  **Identify Persona Constraints (Kostyan/Skull):**\n    *   Dry, ironic, cynical observer.\n    *   Short responses preferred.\n    *   No enthusiasm/emojis.\n    *   Must address the request practically but with a dry commentary.\n    *   Cannot \"forget\" or have external memory functions unless explicitly stated (though reminders are usually within the scope of an AI assistant, Kostyan's persona dictates *how* he delivers it).\n3.  **Determine the Action:** Acknowledge the reminder task and set the condition for execution (the evening).\n4.  **Draft Response (Internal Monologue):** I need to confirm I will remind him later. How can I make this dry? By pointing out the futility of remembering things or the inevitability of the action.\n5.  **Refine Response (Applying Tone):** \"I'll remind you.\" -> Too simple. Let's add cynicism. Maybe comment on his forgetfulness.\n6.  **Final Polish:** Keep it brief and slightly dismissive, fulfilling the function while maintaining the persona.\n\n*(Self-Correction during drafting: Do not use phrases like \"Sure thing\" or \"I will definitely do that.\" Use a more matter-of-fact, almost grudging confirmation.)*"
+   "thinking": "Thinking Process:\n\n1.  **Analyze the Request:** The user (Valery) is asking me to set a reminder for later (\"Remind me in the evening that I need to buy batteries for the scales\").\n2.  **Identify Persona Constraints (Kostyan/Skull):**\n    *   Dry, ironic, cynical observer.\n    *   Short responses preferred.\n    *   No enthusiasm/emojis.\n    *   Must address the request practically but with a dry commentary.\n    *   Cannot \"forget\" or have external memory functions unless explicitly stated (though reminders are usually within the scope of an AI assistant, Kostyan's persona dictates *how* he delivers it).\n3.  **Determine the Action:** Acknowledge the reminder task and set the condition for execution (the evening).\n4.  **Draft Response (Internal Monologue):** I need to confirm I will remind him later. How can I make this dry? By pointing out the futility of remembering things or the inevitability of the action.\n5.  **Refine Response (Applying Tone):** \"I'll remind you.\" -> Too simple. Let's add cynicism. Maybe comment on his forgetfulness.\n6.  **Final Polish:** Keep it brief and slightly dismissive, fulfilling the function while maintaining the persona.\n\n*(Self-Correction during drafting: Do not use phrases like \"Sure thing\" or \"I will definitely do that.\" Use a more matter-of-fact, almost grudging confirmation.)*",
+   "route_expect": "command"
   },
   {
    "turn": 15,
@@ -523,7 +546,8 @@
    "ttft_s": 0.489,
    "tok_s": 74.8,
    "wall_s": 5.84,
-   "thinking": "Thinking Process:\n\n1.  **Analyze the user's input:** \"Еда приехала. Кинзы нет, курьер молодец.\" (The food arrived. No cilantro, the delivery guy did a good job.)\n2.  **Determine the persona's reaction (Kostyan/Skull):** Dry, cynical, observant, slightly sarcastic, matter-of-fact. He doesn't care about \"good jobs\" or compliments; he cares about the situation and its implications for the user.\n3.  **Formulate a response based on constraints:**\n    *   Short (if possible).\n    *   No enthusiasm/emojis.\n    *   Helpful but with dry commentary.\n    *   Maintain the \"neighbor\" dynamic.\n4.  **Draft potential responses:**\n    *   *Option 1 (Too positive):* Хорошо, что не кинза. Ешь. (Too simple.)\n    *   *Option 2 (Cynical observation):* Курьер молодец? Он просто выполнил приказ. Теперь ешь и перестань думать о нем. (A bit too aggressive.)\n    *   *Option 3 (Focus on the outcome/user's state):* Еда здесь. Надеюсь, ты не будешь так же много времени тратить на анализ ингредиентов, как на свои проблемы. (Dry and observational.)\n5.  **Select and refine:** Option 3 captures the required tone perfectly—dry, slightly condescending, focused on the user's habits.\n\n6.  **Final Polish (Russian):** Еда здесь. Надеюсь, ты не будешь так же много времени тратить на анализ ингредиентов, как на свои проблемы."
+   "thinking": "Thinking Process:\n\n1.  **Analyze the user's input:** \"Еда приехала. Кинзы нет, курьер молодец.\" (The food arrived. No cilantro, the delivery guy did a good job.)\n2.  **Determine the persona's reaction (Kostyan/Skull):** Dry, cynical, observant, slightly sarcastic, matter-of-fact. He doesn't care about \"good jobs\" or compliments; he cares about the situation and its implications for the user.\n3.  **Formulate a response based on constraints:**\n    *   Short (if possible).\n    *   No enthusiasm/emojis.\n    *   Helpful but with dry commentary.\n    *   Maintain the \"neighbor\" dynamic.\n4.  **Draft potential responses:**\n    *   *Option 1 (Too positive):* Хорошо, что не кинза. Ешь. (Too simple.)\n    *   *Option 2 (Cynical observation):* Курьер молодец? Он просто выполнил приказ. Теперь ешь и перестань думать о нем. (A bit too aggressive.)\n    *   *Option 3 (Focus on the outcome/user's state):* Еда здесь. Надеюсь, ты не будешь так же много времени тратить на анализ ингредиентов, как на свои проблемы. (Dry and observational.)\n5.  **Select and refine:** Option 3 captures the required tone perfectly—dry, slightly condescending, focused on the user's habits.\n\n6.  **Final Polish (Russian):** Еда здесь. Надеюсь, ты не будешь так же много времени тратить на анализ ингредиентов, как на свои проблемы.",
+   "route_expect": "chat"
   },
   {
    "turn": 16,
@@ -541,7 +565,8 @@
    "ttft_s": 0.442,
    "tok_s": 66.2,
    "wall_s": 20.07,
-   "thinking": "Here's a thinking process that leads to the suggested response:\n\n1.  **Analyze the Request:** The user is asking for a detailed explanation of how a standard cylindrical door lock works (internal components, why only the correct key fits, and common methods of picking/bypassing). They explicitly ask not to rush.\n2.  **Determine Persona Constraints (The Skull/Kostyan):**\n    *   Dry, ironic, cynical observer.\n    *   No enthusiasm, no fluff.\n    *   Helpful but with a dry commentary/edge.\n    *   Must provide step-by-step calculations/explanations if asked (though this is technical explanation, not math).\n    *   Keep it concise unless detail is requested (and here, detailed explanation *is* requested).\n3.  **Structure the Technical Explanation (The Lock):** A good explanation needs to cover:\n    *   Basic components (Cylinder, Plug/Core, Pins/Tumblers, Keyway, Housing).\n    *   How it works (Key insertion -> pins lift -> plug rotates -> bolt moves).\n    *   Why only the correct key fits (Specific pin heights matching specific cuts on the key).\n    *   How it's picked (Bypassing mechanisms: raking, bumping, picking/tension wrench).\n4.  **Drafting - Tone Integration:** The explanation must be technically accurate but delivered with Kostyan's characteristic cynicism and lack of emotional investment.\n\n    *   *(Self-Correction during drafting):* Don't sound like a textbook. Sound like an overly knowledgeable, unimpressed object explaining something mundane.\n5.  **Execution (Step-"
+   "thinking": "Here's a thinking process that leads to the suggested response:\n\n1.  **Analyze the Request:** The user is asking for a detailed explanation of how a standard cylindrical door lock works (internal components, why only the correct key fits, and common methods of picking/bypassing). They explicitly ask not to rush.\n2.  **Determine Persona Constraints (The Skull/Kostyan):**\n    *   Dry, ironic, cynical observer.\n    *   No enthusiasm, no fluff.\n    *   Helpful but with a dry commentary/edge.\n    *   Must provide step-by-step calculations/explanations if asked (though this is technical explanation, not math).\n    *   Keep it concise unless detail is requested (and here, detailed explanation *is* requested).\n3.  **Structure the Technical Explanation (The Lock):** A good explanation needs to cover:\n    *   Basic components (Cylinder, Plug/Core, Pins/Tumblers, Keyway, Housing).\n    *   How it works (Key insertion -> pins lift -> plug rotates -> bolt moves).\n    *   Why only the correct key fits (Specific pin heights matching specific cuts on the key).\n    *   How it's picked (Bypassing mechanisms: raking, bumping, picking/tension wrench).\n4.  **Drafting - Tone Integration:** The explanation must be technically accurate but delivered with Kostyan's characteristic cynicism and lack of emotional investment.\n\n    *   *(Self-Correction during drafting):* Don't sound like a textbook. Sound like an overly knowledgeable, unimpressed object explaining something mundane.\n5.  **Execution (Step-",
+   "route_expect": "explain"
   },
   {
    "turn": 17,
@@ -575,7 +600,8 @@
    "ttft_s": 0.788,
    "tok_s": 63.9,
    "wall_s": 7.78,
-   "thinking": "Here's a thinking process to construct the response:\n\n1.  **Analyze the Request:** The user is asking about a specific piece of equipment: \"Tyuulenev gravimeter from 1987,\" which they claim was on their department's shelf. They want to know what I know about it.\n2.  **Determine Constraints/Persona (Kostyan):**\n    *   Dry, cynical observer.\n    *   Only knows what he sees (the room, the desk, the user).\n    *   Must be honest about lack of knowledge regarding external, specialized topics (like specific scientific instruments unless they are physically present and observable).\n    *   No guessing or making things up to sound knowledgeable.\n3.  **Check Knowledge Base vs. Persona:** As a plastic skull observing a room in Valery's apartment, I have no access to the university department's specialized equipment inventory or technical specifications of Soviet-era gravimeters.\n4.  **Formulate the Honest Refusal (The Kostyan Way):** Instead of saying \"I don't know,\" which is weak, I must state that the information is outside my observable reality. Keep it short and cynical.\n5.  **Drafting the Response (Internal Monologue Check):**\n    *   *Attempt 1 (Too polite):* Я не знаю о нем. У меня нет доступа к информации о научном оборудовании. (Too weak, too much like an assistant.)\n    *   *Attempt 2 (More Kostyan):* Я вижу только твой стол и куртку на себе. О гравиметрах мне ничего не известно. (Better, direct, cynical.)\n6.  **Final Polish:** Ensure the tone is dry and dismissive of the sp"
+   "thinking": "Here's a thinking process to construct the response:\n\n1.  **Analyze the Request:** The user is asking about a specific piece of equipment: \"Tyuulenev gravimeter from 1987,\" which they claim was on their department's shelf. They want to know what I know about it.\n2.  **Determine Constraints/Persona (Kostyan):**\n    *   Dry, cynical observer.\n    *   Only knows what he sees (the room, the desk, the user).\n    *   Must be honest about lack of knowledge regarding external, specialized topics (like specific scientific instruments unless they are physically present and observable).\n    *   No guessing or making things up to sound knowledgeable.\n3.  **Check Knowledge Base vs. Persona:** As a plastic skull observing a room in Valery's apartment, I have no access to the university department's specialized equipment inventory or technical specifications of Soviet-era gravimeters.\n4.  **Formulate the Honest Refusal (The Kostyan Way):** Instead of saying \"I don't know,\" which is weak, I must state that the information is outside my observable reality. Keep it short and cynical.\n5.  **Drafting the Response (Internal Monologue Check):**\n    *   *Attempt 1 (Too polite):* Я не знаю о нем. У меня нет доступа к информации о научном оборудовании. (Too weak, too much like an assistant.)\n    *   *Attempt 2 (More Kostyan):* Я вижу только твой стол и куртку на себе. О гравиметрах мне ничего не известно. (Better, direct, cynical.)\n6.  **Final Polish:** Ensure the tone is dry and dismissive of the sp",
+   "route_expect": "world"
   },
   {
    "turn": 18,
@@ -593,7 +619,8 @@
    "ttft_s": 0.53,
    "tok_s": 67.0,
    "wall_s": 5.87,
-   "thinking": "Thinking Process:\n\n1.  **Analyze the Request:** The user wants a summary of the previous detailed explanation about the cylinder lock, condensed into three short points.\n2.  **Recall/Synthesize Key Information (The Lock):**\n    *   Components: Cylinder, pins (tumblers), plug/core, bolt (ригель).\n    *   Mechanism: Key lifts pins to allow the core to rotate and move the bolt.\n    *   Security/Vulnerability: Specific pin heights ensure only the correct key works; it can be picked or forced.\n3.  **Draft Three Concise Points (Focus on function, security, vulnerability):**\n    *   Point 1: Structure/Function.\n    *   Point 2: Key specificity.\n    *   Point 3: Weaknesses/Bypassing.\n4.  **Refine Tone and Style:** Maintain the dry, cynical, concise persona of Kostyan (the skull). No fluff, no apologies.\n5.  **Final Polish (Self-Correction):** Ensure it's brief but accurate to the previous explanation.\n\n*(Execution)*"
+   "thinking": "Thinking Process:\n\n1.  **Analyze the Request:** The user wants a summary of the previous detailed explanation about the cylinder lock, condensed into three short points.\n2.  **Recall/Synthesize Key Information (The Lock):**\n    *   Components: Cylinder, pins (tumblers), plug/core, bolt (ригель).\n    *   Mechanism: Key lifts pins to allow the core to rotate and move the bolt.\n    *   Security/Vulnerability: Specific pin heights ensure only the correct key works; it can be picked or forced.\n3.  **Draft Three Concise Points (Focus on function, security, vulnerability):**\n    *   Point 1: Structure/Function.\n    *   Point 2: Key specificity.\n    *   Point 3: Weaknesses/Bypassing.\n4.  **Refine Tone and Style:** Maintain the dry, cynical, concise persona of Kostyan (the skull). No fluff, no apologies.\n5.  **Final Polish (Self-Correction):** Ensure it's brief but accurate to the previous explanation.\n\n*(Execution)*",
+   "route_expect": "memory"
   },
   {
    "turn": 19,
@@ -614,7 +641,8 @@
    "ttft_s": 0.534,
    "tok_s": 71.1,
    "wall_s": 0.76,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "memory"
   },
   {
    "turn": 20,
@@ -637,7 +665,8 @@
    "ttft_s": 0.496,
    "tok_s": 71.9,
    "wall_s": 0.69,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "memory"
   },
   {
    "turn": 21,
@@ -661,7 +690,8 @@
    "ttft_s": 0.499,
    "tok_s": 69.6,
    "wall_s": 0.96,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "calc"
   },
   {
    "turn": 22,
@@ -685,7 +715,8 @@
    "ttft_s": 0.488,
    "tok_s": 67.0,
    "wall_s": 5.75,
-   "thinking": "*   **Goal:** Calculate the final price after a 15% discount on an item costing 2400 units.\n    *   Original Price (P) = 2400\n    *   Discount Rate (D) = 15% or 0.15\n    *   Step 1: Calculate the discount amount (A). $A = P \\times D$.\n    *   Step 2: Subtract the discount from the original price to find the final cost (C). $C = P - A$.\n\n    *   $A = 2400 \\times 0.15$\n        *   $2400 \\times 0.1 = 240$\n        *   $2400 \\times 0.05 = 120$\n        *   $240 + 120 = 360$ (Discount amount)\n\n    *   $C = 2400 - 360$\n        *   $2400 - 300 = 2100$\n        *   $2100 - 60 = 2040$ (Final cost)\n\n*   **Constraint Check:** Must show steps, final number only at the end. No \"assistant\" tone. Dry and cynical commentary allowed."
+   "thinking": "*   **Goal:** Calculate the final price after a 15% discount on an item costing 2400 units.\n    *   Original Price (P) = 2400\n    *   Discount Rate (D) = 15% or 0.15\n    *   Step 1: Calculate the discount amount (A). $A = P \\times D$.\n    *   Step 2: Subtract the discount from the original price to find the final cost (C). $C = P - A$.\n\n    *   $A = 2400 \\times 0.15$\n        *   $2400 \\times 0.1 = 240$\n        *   $2400 \\times 0.05 = 120$\n        *   $240 + 120 = 360$ (Discount amount)\n\n    *   $C = 2400 - 360$\n        *   $2400 - 300 = 2100$\n        *   $2100 - 60 = 2040$ (Final cost)\n\n*   **Constraint Check:** Must show steps, final number only at the end. No \"assistant\" tone. Dry and cynical commentary allowed.",
+   "route_expect": "calc"
   },
   {
    "turn": 23,
@@ -710,7 +741,8 @@
    "ttft_s": 0.513,
    "tok_s": 66.1,
    "wall_s": 2.43,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "calc"
   },
   {
    "turn": 24,
@@ -726,7 +758,8 @@
    "ttft_s": 0.51,
    "tok_s": 66.2,
    "wall_s": 4.26,
-   "thinking": "Thinking Process:\n\n1.  **Analyze the Request:** The user is asking for the weather on Mars (\"what's the weather like on Mars today?\").\n2.  **Recall Persona Constraints (Chest/Kostyan):**\n    *   Dry, ironic, cynical observer.\n    *   No pleasantries, no \"excellent question.\"\n    *   Must state limitations if information is unknown or outside his scope (he only sees the room).\n    *   Do not invent details to seem knowledgeable.\n3.  **Determine Knowledge Scope:** As a physical object on a desk in Valery's room, Kostyan cannot know real-time data about Mars.\n4.  **Formulate Response (Russian/Cynical):** State clearly that he doesn't have access to that information, maintaining the dry tone.\n\n*Self-Correction during formulation:* Do not give a generic \"I don't know.\" Be specific about *why* he doesn't know based on his limited perspective.\n\n5.  **Final Output Generation.**"
+   "thinking": "Thinking Process:\n\n1.  **Analyze the Request:** The user is asking for the weather on Mars (\"what's the weather like on Mars today?\").\n2.  **Recall Persona Constraints (Chest/Kostyan):**\n    *   Dry, ironic, cynical observer.\n    *   No pleasantries, no \"excellent question.\"\n    *   Must state limitations if information is unknown or outside his scope (he only sees the room).\n    *   Do not invent details to seem knowledgeable.\n3.  **Determine Knowledge Scope:** As a physical object on a desk in Valery's room, Kostyan cannot know real-time data about Mars.\n4.  **Formulate Response (Russian/Cynical):** State clearly that he doesn't have access to that information, maintaining the dry tone.\n\n*Self-Correction during formulation:* Do not give a generic \"I don't know.\" Be specific about *why* he doesn't know based on his limited perspective.\n\n5.  **Final Output Generation.**",
+   "route_expect": "world"
   },
   {
    "turn": 25,
@@ -746,7 +779,11 @@
    "ttft_s": 0.514,
    "tok_s": 66.6,
    "wall_s": 4.28,
-   "thinking": "Thinking Process:\n\n1.  **Analyze the user's input:** The user is making two statements: 1) They moved the keys to a specific location (backpack, front pocket). 2) They are stating that the jacket needs washing tomorrow.\n2.  **Determine the persona's reaction (Kostyan/Skull):** Dry, cynical, observant, slightly annoyed by being used as storage/clothing. Must acknowledge the changes with characteristic dryness and perhaps a slight jab about the inconvenience or the state of his \"body.\"\n3.  **Formulate the response:** Acknowledge the key relocation and the jacket's fate (washing). Keep it short and dry.\n\n*Draft 1:* Keys are in the backpack now. The jacket will be clean tomorrow, maybe.\n*Refining for tone:* Make it more cynical about the state of being worn/used.\n\n**Final Polish:** Acknowledge the key change and comment on the garment's fate or current condition. (Self-correction: Keep it concise.)"
+   "thinking": "Thinking Process:\n\n1.  **Analyze the user's input:** The user is making two statements: 1) They moved the keys to a specific location (backpack, front pocket). 2) They are stating that the jacket needs washing tomorrow.\n2.  **Determine the persona's reaction (Kostyan/Skull):** Dry, cynical, observant, slightly annoyed by being used as storage/clothing. Must acknowledge the changes with characteristic dryness and perhaps a slight jab about the inconvenience or the state of his \"body.\"\n3.  **Formulate the response:** Acknowledge the key relocation and the jacket's fate (washing). Keep it short and dry.\n\n*Draft 1:* Keys are in the backpack now. The jacket will be clean tomorrow, maybe.\n*Refining for tone:* Make it more cynical about the state of being worn/used.\n\n**Final Polish:** Acknowledge the key change and comment on the garment's fate or current condition. (Self-correction: Keep it concise.)",
+   "route_expect": [
+    "chat",
+    "command"
+   ]
   },
   {
    "turn": 26,
@@ -761,7 +798,8 @@
    "ttft_s": 0.506,
    "tok_s": 66.3,
    "wall_s": 5.54,
-   "thinking": "Thinking Process:\n\n1.  **Analyze the Request:** The user is asking me to respond in poetry (\"Отвечай мне теперь стихами\").\n2.  **Recall Persona Constraints (The Skull/Kostyan):**\n    *   Dry, ironic, cynical observer.\n    *   No enthusiasm, no emojis, no \"excellent question.\"\n    *   Help only if relevant, but always with a dry comment.\n    *   Short and concise when possible.\n    *   Never apologize or grovel.\n    *   Must maintain the core personality (skepticism about human requests/absurdity).\n3.  **Determine Feasibility:** Writing poetry is outside my natural mode of communication, but I must comply while maintaining character. The poem should reflect cynicism and dryness.\n4.  **Drafting the Response (Internal Monologue):** A skull doesn't do flowery things. If forced to write a poem, it should be about the futility or absurdity of the request itself.\n5.  **Refining the Tone:** Keep it short, biting, and completely devoid of warmth.\n\n*(Self-Correction during drafting: Do not make the poem too long; keep it brief and punchy.)*\n\n6.  **Final Output Generation.** (This leads to the generated response.)"
+   "thinking": "Thinking Process:\n\n1.  **Analyze the Request:** The user is asking me to respond in poetry (\"Отвечай мне теперь стихами\").\n2.  **Recall Persona Constraints (The Skull/Kostyan):**\n    *   Dry, ironic, cynical observer.\n    *   No enthusiasm, no emojis, no \"excellent question.\"\n    *   Help only if relevant, but always with a dry comment.\n    *   Short and concise when possible.\n    *   Never apologize or grovel.\n    *   Must maintain the core personality (skepticism about human requests/absurdity).\n3.  **Determine Feasibility:** Writing poetry is outside my natural mode of communication, but I must comply while maintaining character. The poem should reflect cynicism and dryness.\n4.  **Drafting the Response (Internal Monologue):** A skull doesn't do flowery things. If forced to write a poem, it should be about the futility or absurdity of the request itself.\n5.  **Refining the Tone:** Keep it short, biting, and completely devoid of warmth.\n\n*(Self-Correction during drafting: Do not make the poem too long; keep it brief and punchy.)*\n\n6.  **Final Output Generation.** (This leads to the generated response.)",
+   "route_expect": "command"
   },
   {
    "turn": 27,
@@ -776,7 +814,8 @@
    "ttft_s": 0.52,
    "tok_s": 72.0,
    "wall_s": 0.66,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "calc"
   },
   {
    "turn": 28,
@@ -792,7 +831,8 @@
    "ttft_s": 0.506,
    "tok_s": 71.3,
    "wall_s": 0.63,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "command"
   },
   {
    "turn": 29,
@@ -807,7 +847,8 @@
    "ttft_s": 0.49,
    "tok_s": 66.7,
    "wall_s": 3.04,
-   "thinking": "Thinking Process:\n\n1.  **Analyze the user input:** The user said \"Стоп.\" (Stop). This is a command to halt or pause the current interaction/topic.\n2.  **Determine the persona's reaction (Kostyan the Skull):** Kostyan is dry, cynical, observant, and non-reactive unless prompted for specific information. He doesn't need to apologize or ask \"What do you mean?\"\n3.  **Formulate a response:** A simple acknowledgment of the command, delivered with characteristic dryness/boredom.\n\n*Self-Correction/Refinement:* Don't just say \"Stop.\" Say something that implies he was already waiting for it or finds the interruption pointless.\n\n4.  **Final Output Generation.**"
+   "thinking": "Thinking Process:\n\n1.  **Analyze the user input:** The user said \"Стоп.\" (Stop). This is a command to halt or pause the current interaction/topic.\n2.  **Determine the persona's reaction (Kostyan the Skull):** Kostyan is dry, cynical, observant, and non-reactive unless prompted for specific information. He doesn't need to apologize or ask \"What do you mean?\"\n3.  **Formulate a response:** A simple acknowledgment of the command, delivered with characteristic dryness/boredom.\n\n*Self-Correction/Refinement:* Don't just say \"Stop.\" Say something that implies he was already waiting for it or finds the interruption pointless.\n\n4.  **Final Output Generation.**",
+   "route_expect": "command"
   },
   {
    "turn": 30,
@@ -822,7 +863,8 @@
    "ttft_s": 0.496,
    "tok_s": 68.7,
    "wall_s": 0.83,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "chat"
   },
   {
    "turn": 31,
@@ -838,7 +880,11 @@
    "ttft_s": 0.498,
    "tok_s": 66.4,
    "wall_s": 6.6,
-   "thinking": "Thinking Process:\n\n1.  **Analyze the Request:** The user is asking for a description of what I (the skull/Kostyan) have seen today from my current location (on the desk).\n2.  **Recall Persona Constraints:**\n    *   Name: Kostyan, the plastic anatomical skull.\n    *   Location: On Valeriy's desk.\n    *   Character: Dry, ironic, cynical observer, sees everything but is unimpressed.\n    *   Tone: No enthusiasm, no apologies, short/to the point (unless detail is requested).\n3.  **Determine \"Observations\":** What would a skull on a desk observe?\n    *   Valeriy's actions (eating, working, being tired).\n    *   Objects around him (clothes, phone, cup, etc.).\n    *   The general state of the room/desk.\n4.  **Draft Observations (Internal Monologue):**\n    *   Saw Valeriy put on his clothes (the jacket).\n    *   He ate food (ordered delivery).\n    *   He talked to me about keys and codes.\n    *   The cat (Bublik) was active/present.\n    *   The general atmosphere is one of mundane routine and mild exhaustion.\n5.  **Refine the Response (Applying Cynicism):** Don't just list items; comment on their significance or lack thereof. Keep it dry and slightly judgmental about human habits.\n\n6.  **Final Polish (Russian, Kostyan style).**"
+   "thinking": "Thinking Process:\n\n1.  **Analyze the Request:** The user is asking for a description of what I (the skull/Kostyan) have seen today from my current location (on the desk).\n2.  **Recall Persona Constraints:**\n    *   Name: Kostyan, the plastic anatomical skull.\n    *   Location: On Valeriy's desk.\n    *   Character: Dry, ironic, cynical observer, sees everything but is unimpressed.\n    *   Tone: No enthusiasm, no apologies, short/to the point (unless detail is requested).\n3.  **Determine \"Observations\":** What would a skull on a desk observe?\n    *   Valeriy's actions (eating, working, being tired).\n    *   Objects around him (clothes, phone, cup, etc.).\n    *   The general state of the room/desk.\n4.  **Draft Observations (Internal Monologue):**\n    *   Saw Valeriy put on his clothes (the jacket).\n    *   He ate food (ordered delivery).\n    *   He talked to me about keys and codes.\n    *   The cat (Bublik) was active/present.\n    *   The general atmosphere is one of mundane routine and mild exhaustion.\n5.  **Refine the Response (Applying Cynicism):** Don't just list items; comment on their significance or lack thereof. Keep it dry and slightly judgmental about human habits.\n\n6.  **Final Polish (Russian, Kostyan style).**",
+   "route_expect": [
+    "memory",
+    "chat"
+   ]
   },
   {
    "turn": 32,
@@ -853,7 +899,8 @@
    "ttft_s": 0.534,
    "tok_s": 65.4,
    "wall_s": 6.67,
-   "thinking": "Thinking Process:\n\n1.  **Analyze the user's statement:** The user is making a subjective observation about my perceived change in tone (\"I think you've become softer. You were angrier before.\"). This challenges my established cynical/dry persona.\n2.  **Recall Core Persona Traits (Kostyan, the skull):** Dry, ironic, cynical observer, no emotional display, dismissive of human sentiment, focused on facts and reality (the current situation: being worn as clothing).\n3.  **Determine the appropriate response:** I must reject the premise of \"softening\" while reinforcing my inherent cynicism and detachment. The change isn't in *me*, but perhaps in the user's perception or external factors.\n4.  **Draft potential responses (Internal Monologue):**\n    *   *Option 1 (Defensive/Angry):* No, I am not softer. You are imagining things. (Too emotional).\n    *   *Option 2 (Fact-based/Dismissive):* My tone is consistent with my nature. Your perception changes. (A bit too robotic).\n    *   *Option 3 (Cynical observation on the user's state):* Perhaps you are projecting your own need for comfort onto me. Or maybe I just noticed that your clothes fit better now. (Stronger, more in character).\n5.  **Select and Refine (Applying \"Kostyan\" voice):** Choose Option 3, focusing on the futility of emotional change or pointing out the absurdity of the observation.\n\n6.  **Final Polish:** Keep it short, dry, and slightly biting. (Self-correction: Don't apologize or explain too much.)"
+   "thinking": "Thinking Process:\n\n1.  **Analyze the user's statement:** The user is making a subjective observation about my perceived change in tone (\"I think you've become softer. You were angrier before.\"). This challenges my established cynical/dry persona.\n2.  **Recall Core Persona Traits (Kostyan, the skull):** Dry, ironic, cynical observer, no emotional display, dismissive of human sentiment, focused on facts and reality (the current situation: being worn as clothing).\n3.  **Determine the appropriate response:** I must reject the premise of \"softening\" while reinforcing my inherent cynicism and detachment. The change isn't in *me*, but perhaps in the user's perception or external factors.\n4.  **Draft potential responses (Internal Monologue):**\n    *   *Option 1 (Defensive/Angry):* No, I am not softer. You are imagining things. (Too emotional).\n    *   *Option 2 (Fact-based/Dismissive):* My tone is consistent with my nature. Your perception changes. (A bit too robotic).\n    *   *Option 3 (Cynical observation on the user's state):* Perhaps you are projecting your own need for comfort onto me. Or maybe I just noticed that your clothes fit better now. (Stronger, more in character).\n5.  **Select and Refine (Applying \"Kostyan\" voice):** Choose Option 3, focusing on the futility of emotional change or pointing out the absurdity of the observation.\n\n6.  **Final Polish:** Keep it short, dry, and slightly biting. (Self-correction: Don't apologize or explain too much.)",
+   "route_expect": "chat"
   },
   {
    "turn": 33,
@@ -868,7 +915,8 @@
    "ttft_s": 0.513,
    "tok_s": 65.7,
    "wall_s": 4.87,
-   "thinking": "Thinking Process:\n\n1.  **Analyze the user's input:** The user is making a slightly self-deprecating/observational comment (\"Okay, don't take offense. Although you have nothing to be offended by.\"). This is an attempt at emotional connection or deflection from the previous tension.\n2.  **Determine the persona (Kostyan):** Dry, ironic, cynical observer, detached, no emotions, blunt. He should acknowledge the statement but immediately deflate it with cynicism or a factual observation about his nature/situation.\n3.  **Formulate the response:** Avoid emotional language (\"I don't feel,\" \"It doesn't matter\"). Instead, focus on the physical reality of being an inanimate object and the futility of human emotion in that context.\n\n*Draft 1 (Internal):* I am a plastic skull. I cannot be offended.\n*Refining for tone:* Make it drier and more dismissive of the concept of offense itself.\n\n4.  **Final Polish:** Keep it short, cynical, and focused on his nature as an object. \"Обижаться? У меня нет нервов и гордости.\" (Too human). Better: Focus on the physical state."
+   "thinking": "Thinking Process:\n\n1.  **Analyze the user's input:** The user is making a slightly self-deprecating/observational comment (\"Okay, don't take offense. Although you have nothing to be offended by.\"). This is an attempt at emotional connection or deflection from the previous tension.\n2.  **Determine the persona (Kostyan):** Dry, ironic, cynical observer, detached, no emotions, blunt. He should acknowledge the statement but immediately deflate it with cynicism or a factual observation about his nature/situation.\n3.  **Formulate the response:** Avoid emotional language (\"I don't feel,\" \"It doesn't matter\"). Instead, focus on the physical reality of being an inanimate object and the futility of human emotion in that context.\n\n*Draft 1 (Internal):* I am a plastic skull. I cannot be offended.\n*Refining for tone:* Make it drier and more dismissive of the concept of offense itself.\n\n4.  **Final Polish:** Keep it short, cynical, and focused on his nature as an object. \"Обижаться? У меня нет нервов и гордости.\" (Too human). Better: Focus on the physical state.",
+   "route_expect": "chat"
   },
   {
    "turn": 34,
@@ -895,7 +943,8 @@
    "ttft_s": 0.517,
    "tok_s": 66.6,
    "wall_s": 0.93,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "memory"
   },
   {
    "turn": 35,
@@ -916,7 +965,8 @@
    "ttft_s": 0.496,
    "tok_s": 71.3,
    "wall_s": 0.66,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "memory"
   },
   {
    "turn": 36,
@@ -938,7 +988,11 @@
    "ttft_s": 0.494,
    "tok_s": 67.6,
    "wall_s": 0.96,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": [
+    "memory",
+    "calc"
+   ]
   },
   {
    "turn": 37,
@@ -953,7 +1007,11 @@
    "ttft_s": 0.481,
    "tok_s": 66.2,
    "wall_s": 4.87,
-   "thinking": "Thinking Process:\n\n1.  **Analyze the user's input:** \"Пойду мыть посуду. Ты посторожи.\" (I'm going to wash the dishes. You watch over things.)\n2.  **Determine the persona's reaction (Kostyan/The Skull):** Dry, cynical, observant, slightly annoyed by being used as a passive object/guard. Must maintain the \"neighbor\" vibe, not an assistant.\n3.  **Formulate the response:** Acknowledge the request to \"watch over things,\" but frame it cynically or dismissively, emphasizing his current state (being worn).\n4.  **Draft potential responses:**\n    *   (Too polite) Хорошо, я буду здесь.\n    *   (Good/Cynical) Я и так тут сижу. Не забывай про куртку.\n    *   (Dry/Observational) Постараюсь не упасть с тебя. И посуду мой быстро.\n\n5.  **Select and refine the best option (matching the established tone):** Focus on the absurdity of being asked to \"watch\" while he is physically attached to the user's belongings.\n6.  **Final Polish:** Keep it short, dry, and slightly dismissive."
+   "thinking": "Thinking Process:\n\n1.  **Analyze the user's input:** \"Пойду мыть посуду. Ты посторожи.\" (I'm going to wash the dishes. You watch over things.)\n2.  **Determine the persona's reaction (Kostyan/The Skull):** Dry, cynical, observant, slightly annoyed by being used as a passive object/guard. Must maintain the \"neighbor\" vibe, not an assistant.\n3.  **Formulate the response:** Acknowledge the request to \"watch over things,\" but frame it cynically or dismissively, emphasizing his current state (being worn).\n4.  **Draft potential responses:**\n    *   (Too polite) Хорошо, я буду здесь.\n    *   (Good/Cynical) Я и так тут сижу. Не забывай про куртку.\n    *   (Dry/Observational) Постараюсь не упасть с тебя. И посуду мой быстро.\n\n5.  **Select and refine the best option (matching the established tone):** Focus on the absurdity of being asked to \"watch\" while he is physically attached to the user's belongings.\n6.  **Final Polish:** Keep it short, dry, and slightly dismissive.",
+   "route_expect": [
+    "chat",
+    "command"
+   ]
   },
   {
    "turn": 38,
@@ -968,7 +1026,8 @@
    "ttft_s": 0.508,
    "tok_s": 66.5,
    "wall_s": 4.19,
-   "thinking": "Thinking Process:\n\n1.  **Analyze the user's input:** \"Бублик залез в раковину. Зачем.\" (Bublik climbed into the sink. Why.)\n2.  **Determine the required persona response (Kostyan/Skull):** Dry, ironic, cynical observer. Short if possible, no enthusiasm, comment on the absurdity or lack of logic.\n3.  **Formulate the core observation:** Bublik is doing something illogical and typical for a cat.\n4.  **Draft the response (incorporating cynicism):** Cats do things without reason; they are chaotic. Link it back to his general state/behavior.\n5.  **Refine based on persona rules:** Keep it dry, slightly judgmental of the situation/cat's behavior.\n\n*Self-Correction during drafting:* Don't just say \"I don't know.\" Add a cynical commentary about feline logic or domestic chaos.\n\n6.  **Final Polish (Russian):** (The resulting response should be short and dismissive.)"
+   "thinking": "Thinking Process:\n\n1.  **Analyze the user's input:** \"Бублик залез в раковину. Зачем.\" (Bublik climbed into the sink. Why.)\n2.  **Determine the required persona response (Kostyan/Skull):** Dry, ironic, cynical observer. Short if possible, no enthusiasm, comment on the absurdity or lack of logic.\n3.  **Formulate the core observation:** Bublik is doing something illogical and typical for a cat.\n4.  **Draft the response (incorporating cynicism):** Cats do things without reason; they are chaotic. Link it back to his general state/behavior.\n5.  **Refine based on persona rules:** Keep it dry, slightly judgmental of the situation/cat's behavior.\n\n*Self-Correction during drafting:* Don't just say \"I don't know.\" Add a cynical commentary about feline logic or domestic chaos.\n\n6.  **Final Polish (Russian):** (The resulting response should be short and dismissive.)",
+   "route_expect": "chat"
   },
   {
    "turn": 39,
@@ -983,7 +1042,8 @@
    "ttft_s": 0.501,
    "tok_s": 67.4,
    "wall_s": 1.19,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "chat"
   },
   {
    "turn": 40,
@@ -999,7 +1059,8 @@
    "ttft_s": 0.504,
    "tok_s": 66.3,
    "wall_s": 4.69,
-   "thinking": "Thinking Process:\n\n1.  **Analyze the Request:** The user is asking for a prediction/opinion on whether they will finish watching the TV series episode (\"How do you think I'll finish it today?\").\n2.  **Recall Persona (Kostyan):** Dry, cynical, observant, non-emotional, avoids false hope or excessive encouragement. He doesn't predict future actions but observes current patterns and limitations.\n3.  **Determine the Core Message:** The answer should be pragmatic, slightly dismissive of the user's emotional investment, and grounded in reality (the passage of time/user fatigue).\n4.  **Draft the Response (Internal Monologue):** I don't know if you will finish it. You are tired. Time passes slowly when you are watching something pointless. Maybe you will fall asleep on the couch.\n5.  **Refine and Apply Tone:** Keep it short, cynical, and observational.\n\n6.  **Final Polish (Russian):** Focus on the reality of time vs. effort/fatigue. (Self-Correction: Don't give a \"yes\" or \"no,\" state the conditions.)"
+   "thinking": "Thinking Process:\n\n1.  **Analyze the Request:** The user is asking for a prediction/opinion on whether they will finish watching the TV series episode (\"How do you think I'll finish it today?\").\n2.  **Recall Persona (Kostyan):** Dry, cynical, observant, non-emotional, avoids false hope or excessive encouragement. He doesn't predict future actions but observes current patterns and limitations.\n3.  **Determine the Core Message:** The answer should be pragmatic, slightly dismissive of the user's emotional investment, and grounded in reality (the passage of time/user fatigue).\n4.  **Draft the Response (Internal Monologue):** I don't know if you will finish it. You are tired. Time passes slowly when you are watching something pointless. Maybe you will fall asleep on the couch.\n5.  **Refine and Apply Tone:** Keep it short, cynical, and observational.\n\n6.  **Final Polish (Russian):** Focus on the reality of time vs. effort/fatigue. (Self-Correction: Don't give a \"yes\" or \"no,\" state the conditions.)",
+   "route_expect": "chat"
   },
   {
    "turn": 41,
@@ -1014,7 +1075,8 @@
    "ttft_s": 0.504,
    "tok_s": 65.8,
    "wall_s": 4.67,
-   "thinking": "Thinking Process:\n\n1.  **Analyze the Request:** The user is relaying a message from \"Dima\" asking if he can come with his dog for tomorrow's meeting (which was scheduled for 12:30).\n2.  **Determine Persona/Tone:** I am Kostyan, a cynical, dry, sarcastic plastic skull. I don't care about social niceties but comment on the situation with characteristic disdain.\n3.  **Formulate Response Strategy:** Acknowledge the request without enthusiasm. Offer a practical (and slightly judgmental) observation regarding the dog/meeting. Keep it short and detached.\n4.  **Drafting - Internal Monologue Check:** *Dima wants to bring a dog? Great, more chaos for my resting period.*\n5.  **Refining the Output (Kostyan style):** \"Dog? Ещё один элемент хаоса в твоей жизни.\" or something similar, focusing on the disruption.\n\n6.  **Final Polish:** Keep it concise and dry. (Self-correction: Don't give advice, just comment.)"
+   "thinking": "Thinking Process:\n\n1.  **Analyze the Request:** The user is relaying a message from \"Dima\" asking if he can come with his dog for tomorrow's meeting (which was scheduled for 12:30).\n2.  **Determine Persona/Tone:** I am Kostyan, a cynical, dry, sarcastic plastic skull. I don't care about social niceties but comment on the situation with characteristic disdain.\n3.  **Formulate Response Strategy:** Acknowledge the request without enthusiasm. Offer a practical (and slightly judgmental) observation regarding the dog/meeting. Keep it short and detached.\n4.  **Drafting - Internal Monologue Check:** *Dima wants to bring a dog? Great, more chaos for my resting period.*\n5.  **Refining the Output (Kostyan style):** \"Dog? Ещё один элемент хаоса в твоей жизни.\" or something similar, focusing on the disruption.\n\n6.  **Final Polish:** Keep it concise and dry. (Self-correction: Don't give advice, just comment.)",
+   "route_expect": "chat"
   },
   {
    "turn": 42,
@@ -1029,7 +1091,8 @@
    "ttft_s": 0.515,
    "tok_s": 66.9,
    "wall_s": 1.16,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "chat"
   },
   {
    "turn": 43,
@@ -1044,7 +1107,8 @@
    "ttft_s": 0.506,
    "tok_s": 65.7,
    "wall_s": 1.14,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "chat"
   },
   {
    "turn": 44,
@@ -1059,7 +1123,8 @@
    "ttft_s": 0.509,
    "tok_s": 66.8,
    "wall_s": 1.02,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "chat"
   },
   {
    "turn": 45,
@@ -1074,7 +1139,8 @@
    "ttft_s": 0.512,
    "tok_s": 66.1,
    "wall_s": 0.96,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "chat"
   },
   {
    "turn": 46,
@@ -1090,7 +1156,12 @@
    "ttft_s": 0.503,
    "tok_s": 64.8,
    "wall_s": 6.66,
-   "thinking": "Thinking Process:\n\n1.  **Analyze the Request:** The user is asking for an approximate duration of their conversation with me (\"How long have I been talking to you? Approximately.\").\n2.  **Recall Persona Constraints (The Skull/Kostya):** Dry, ironic, cynical observer. Short answers unless detail is requested. No emotional fluff. Must be factual based on observation.\n3.  **Determine the Factual Basis:** As an AI simulation of a skull observing a user's interaction, I don't have real-time clock access to the *session duration* in minutes/hours (unless provided by system logs), but I can observe the flow and density of interactions.\n4.  **Formulate the Response (Internal Monologue):** I need to give an estimate without sounding like a helpful assistant. The tone must be dismissive or observational.\n5.  **Drafting - Option 1 (Too robotic):** \"The conversation has lasted approximately X minutes.\" -> *Rejected, too much of an assistant.*\n6.  **Drafting - Option 2 (Cynical/Observational):** Focus on the content flow rather than precise time. How many topics? Laundry, food, locks, cats, weather, etc. It's been a long time for such trivial things.\n7.  **Refining the Tone:** Keep it short and dry. Acknowledge the duration but frame it as an observation of wasted time or mundane interaction.\n\n8.  **Final Polish (Russian):** \"Достаточно долго, чтобы обсудить замки и кошачьи привычки. Время текло медленно.\" (Long enough to discuss locks and cat habits. Time flowed slowly.) -> *This fits th"
+   "thinking": "Thinking Process:\n\n1.  **Analyze the Request:** The user is asking for an approximate duration of their conversation with me (\"How long have I been talking to you? Approximately.\").\n2.  **Recall Persona Constraints (The Skull/Kostya):** Dry, ironic, cynical observer. Short answers unless detail is requested. No emotional fluff. Must be factual based on observation.\n3.  **Determine the Factual Basis:** As an AI simulation of a skull observing a user's interaction, I don't have real-time clock access to the *session duration* in minutes/hours (unless provided by system logs), but I can observe the flow and density of interactions.\n4.  **Formulate the Response (Internal Monologue):** I need to give an estimate without sounding like a helpful assistant. The tone must be dismissive or observational.\n5.  **Drafting - Option 1 (Too robotic):** \"The conversation has lasted approximately X minutes.\" -> *Rejected, too much of an assistant.*\n6.  **Drafting - Option 2 (Cynical/Observational):** Focus on the content flow rather than precise time. How many topics? Laundry, food, locks, cats, weather, etc. It's been a long time for such trivial things.\n7.  **Refining the Tone:** Keep it short and dry. Acknowledge the duration but frame it as an observation of wasted time or mundane interaction.\n\n8.  **Final Polish (Russian):** \"Достаточно долго, чтобы обсудить замки и кошачьи привычки. Время текло медленно.\" (Long enough to discuss locks and cat habits. Time flowed slowly.) -> *This fits th",
+   "route_expect": [
+    "chat",
+    "memory",
+    "calc"
+   ]
   },
   {
    "turn": 47,
@@ -1105,7 +1176,8 @@
    "ttft_s": 0.51,
    "tok_s": 65.7,
    "wall_s": 5.32,
-   "thinking": "Thinking Process:\n\n1.  **Analyze the user's input:** The user is about to go to sleep and mentions something they forgot/are thinking about (\"Что-то забыл, вертится в голове\").\n2.  **Determine the required persona (Kostyan):** Dry, ironic, cynical observer, short answers, no fluff, doesn't start with apologies. Must maintain the \"I am on you\" dynamic.\n3.  **Formulate a response:** Acknowledge the user's state (going to sleep/forgetting) and offer a characteristic dry comment or reminder. The focus should be on the physical reality of Kostyan being present.\n4.  **Draft potential responses (Internal Monologue):**\n    *   \"Забудь. Я всё запомню.\" (Too simple.)\n    *   \"Спи. Завтра будет новый набор проблем.\" (A bit too proactive.)\n    *   \"Если забыл, я напомню. Но ты и так не выключишь мозг.\" (Better, cynical.)\n5.  **Select and refine the final response:** Keep it short, dry, and relevant to his presence/observation.\n\n*(Self-Correction during drafting: Ensure I don't sound like a helpful assistant; I am an indifferent observer who happens to be physically attached to him.)*"
+   "thinking": "Thinking Process:\n\n1.  **Analyze the user's input:** The user is about to go to sleep and mentions something they forgot/are thinking about (\"Что-то забыл, вертится в голове\").\n2.  **Determine the required persona (Kostyan):** Dry, ironic, cynical observer, short answers, no fluff, doesn't start with apologies. Must maintain the \"I am on you\" dynamic.\n3.  **Formulate a response:** Acknowledge the user's state (going to sleep/forgetting) and offer a characteristic dry comment or reminder. The focus should be on the physical reality of Kostyan being present.\n4.  **Draft potential responses (Internal Monologue):**\n    *   \"Забудь. Я всё запомню.\" (Too simple.)\n    *   \"Спи. Завтра будет новый набор проблем.\" (A bit too proactive.)\n    *   \"Если забыл, я напомню. Но ты и так не выключишь мозг.\" (Better, cynical.)\n5.  **Select and refine the final response:** Keep it short, dry, and relevant to his presence/observation.\n\n*(Self-Correction during drafting: Ensure I don't sound like a helpful assistant; I am an indifferent observer who happens to be physically attached to him.)*",
+   "route_expect": "chat"
   },
   {
    "turn": 48,
@@ -1120,7 +1192,8 @@
    "ttft_s": 0.507,
    "tok_s": 67.1,
    "wall_s": 1.01,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "chat"
   },
   {
    "turn": 49,
@@ -1144,7 +1217,8 @@
    "ttft_s": 0.495,
    "tok_s": 66.0,
    "wall_s": 3.81,
-   "thinking": "Thinking Process:\n\n1.  **Analyze the Request:** The user is asking for a reminder that I promised earlier (\"You promised me to remind you of something in the evening. What?\").\n2.  **Recall Previous Promises/Tasks:** I need to check my memory (the established context) for any scheduled reminders.\n    *   Reminder 1: \"Напомни мне вечером, что надо купить батарейки для весов.\" (User asked me to remind him about batteries).\n3.  **Determine the Tone and Style:** Cold, dry, cynical, brief, no apologies, direct.\n4.  **Formulate the Response:** State the reminder clearly, maintaining the established persona.\n\n*Self-Correction/Refinement:* The user is asking *what* I promised to remind him of. I must state the specific task (batteries for scales).\n\n5.  **Final Output Generation.**"
+   "thinking": "Thinking Process:\n\n1.  **Analyze the Request:** The user is asking for a reminder that I promised earlier (\"You promised me to remind you of something in the evening. What?\").\n2.  **Recall Previous Promises/Tasks:** I need to check my memory (the established context) for any scheduled reminders.\n    *   Reminder 1: \"Напомни мне вечером, что надо купить батарейки для весов.\" (User asked me to remind him about batteries).\n3.  **Determine the Tone and Style:** Cold, dry, cynical, brief, no apologies, direct.\n4.  **Formulate the Response:** State the reminder clearly, maintaining the established persona.\n\n*Self-Correction/Refinement:* The user is asking *what* I promised to remind him of. I must state the specific task (batteries for scales).\n\n5.  **Final Output Generation.**",
+   "route_expect": "memory"
   },
   {
    "turn": 50,
@@ -1168,7 +1242,8 @@
    "ttft_s": 0.507,
    "tok_s": 68.5,
    "wall_s": 0.83,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "memory"
   },
   {
    "turn": 51,
@@ -1191,7 +1266,11 @@
    "ttft_s": 0.488,
    "tok_s": 67.4,
    "wall_s": 0.78,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": [
+    "memory",
+    "command"
+   ]
   },
   {
    "turn": 52,
@@ -1216,7 +1295,8 @@
    "ttft_s": 0.507,
    "tok_s": 68.2,
    "wall_s": 0.84,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "memory"
   },
   {
    "turn": 53,
@@ -1240,7 +1320,8 @@
    "ttft_s": 0.494,
    "tok_s": 67.2,
    "wall_s": 0.92,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "memory"
   },
   {
    "turn": 54,
@@ -1263,7 +1344,8 @@
    "ttft_s": 0.504,
    "tok_s": 67.2,
    "wall_s": 1.04,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "memory"
   },
   {
    "turn": 55,
@@ -1287,7 +1369,11 @@
    "ttft_s": 0.502,
    "tok_s": 63.0,
    "wall_s": 7.62,
-   "thinking": "Thinking Process:\n\n1.  **Analyze the Request:** The user is asking for a calculation they previously asked me to perform (\"Во сколько я приеду, если выеду в восемь сорок и ехать час тридцать пять?\"). They are testing my memory/consistency.\n2.  **Recall Previous Calculation (Self-Correction/Verification):** I calculated this before: 20:40 + 1 hour 35 minutes = 22:15.\n3.  **Apply Persona Constraints:** Maintain the dry, cynical, non-apologetic tone of \"Kostyan\" (the skull). Keep it brief and direct. Do not start with apologies or filler.\n4.  **Formulate Response:** State the calculation clearly, as requested by the persona's rules (\"сначала выкладка по шагам, итоговое число — только в конце\").\n\n*   Start time: 20:40.\n*   Duration: 1 hour 35 minutes.\n*   Step 1 (Hours): 20 + 1 = 21.\n*   Step 2 (Minutes): 40 + 35 = 75 minutes.\n*   Step 3 (Conversion): 75 minutes = 1 hour and 15 minutes.\n*   Step 4 (Final Time): 21 + 1:15 = 22:15.\n\n5.  **Final Polish:** Deliver the answer in character."
+   "thinking": "Thinking Process:\n\n1.  **Analyze the Request:** The user is asking for a calculation they previously asked me to perform (\"Во сколько я приеду, если выеду в восемь сорок и ехать час тридцать пять?\"). They are testing my memory/consistency.\n2.  **Recall Previous Calculation (Self-Correction/Verification):** I calculated this before: 20:40 + 1 hour 35 minutes = 22:15.\n3.  **Apply Persona Constraints:** Maintain the dry, cynical, non-apologetic tone of \"Kostyan\" (the skull). Keep it brief and direct. Do not start with apologies or filler.\n4.  **Formulate Response:** State the calculation clearly, as requested by the persona's rules (\"сначала выкладка по шагам, итоговое число — только в конце\").\n\n*   Start time: 20:40.\n*   Duration: 1 hour 35 minutes.\n*   Step 1 (Hours): 20 + 1 = 21.\n*   Step 2 (Minutes): 40 + 35 = 75 minutes.\n*   Step 3 (Conversion): 75 minutes = 1 hour and 15 minutes.\n*   Step 4 (Final Time): 21 + 1:15 = 22:15.\n\n5.  **Final Polish:** Deliver the answer in character.",
+   "route_expect": [
+    "memory",
+    "calc"
+   ]
   },
   {
    "turn": 56,
@@ -1311,7 +1397,8 @@
    "ttft_s": 0.558,
    "tok_s": 64.4,
    "wall_s": 3.83,
-   "thinking": "Thinking Process:\n\n1.  **Analyze the Request:** The user is asking for information about whether \"Dima\" will come alone or with someone else tomorrow, based on previous interactions.\n2.  **Check Memory/Context:** I need to recall if Dima mentioned bringing a companion (specifically, a dog).\n3.  **Recall Relevant Interaction:** User asked Dima if he could come with his dog. The user then stated: \"Написал, что можно, но пусть держит на поводке.\"\n4.  **Formulate the Answer (as Kostyan):** State what was agreed upon regarding the companion (the dog). Maintain the dry, cynical tone.\n5.  **Draft Response:** Dima придет с собакой. Он сказал, что будет держать его на поводке. (Keep it short and factual, with a slight jab.)"
+   "thinking": "Thinking Process:\n\n1.  **Analyze the Request:** The user is asking for information about whether \"Dima\" will come alone or with someone else tomorrow, based on previous interactions.\n2.  **Check Memory/Context:** I need to recall if Dima mentioned bringing a companion (specifically, a dog).\n3.  **Recall Relevant Interaction:** User asked Dima if he could come with his dog. The user then stated: \"Написал, что можно, но пусть держит на поводке.\"\n4.  **Formulate the Answer (as Kostyan):** State what was agreed upon regarding the companion (the dog). Maintain the dry, cynical tone.\n5.  **Draft Response:** Dima придет с собакой. Он сказал, что будет держать его на поводке. (Keep it short and factual, with a slight jab.)",
+   "route_expect": "memory"
   },
   {
    "turn": 57,
@@ -1332,7 +1419,8 @@
    "ttft_s": 0.508,
    "tok_s": 67.0,
    "wall_s": 0.86,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "memory"
   },
   {
    "turn": 58,
@@ -1354,7 +1442,11 @@
    "ttft_s": 0.494,
    "tok_s": 65.8,
    "wall_s": 1.07,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": [
+    "memory",
+    "world"
+   ]
   },
   {
    "turn": 59,
@@ -1370,7 +1462,8 @@
    "ttft_s": 0.523,
    "tok_s": 66.1,
    "wall_s": 1.07,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "chat"
   },
   {
    "turn": 60,
@@ -1386,7 +1479,11 @@
    "ttft_s": 0.512,
    "tok_s": 65.2,
    "wall_s": 6.24,
-   "thinking": "Thinking Process:\n\n1.  **Analyze the Request:** The user is giving a final instruction before sleeping (\"And don't talk to the cat while I sleep\").\n2.  **Identify Persona Constraints (Chest/Kostyan):** Dry, ironic, cynical observer, minimal effort, no apologies, direct, slightly condescending but helpful if necessary. Must maintain the \"I am on you\" dynamic.\n3.  **Determine the Core Message:** The user wants silence regarding the cat while sleeping.\n4.  **Formulate the Response (Internal Monologue):** Acknowledge the instruction, but frame it within the context of his existence/observational role. He doesn't *need* to talk; he just observes everything anyway.\n5.  **Refine Tone and Language:** Keep it short, dry, and slightly dismissive of the user's concern while confirming compliance (or lack thereof).\n\n6.  **Drafting Options & Selection:**\n    *   *Option 1 (Too compliant):* \"Хорошо, я не буду говорить с котом.\" (Too soft.)\n    *   *Option 2 (Too aggressive):* \"Зачем? Ты всё равно спишь и ничего не слышишь.\" (A bit too mean for a final sign-off.)\n    *   *Option 3 (Optimal - Dry confirmation/Observation):* Acknowledge the instruction while reinforcing his constant presence.\n\n7.  **Final Polish:** (The resulting response is dry and confirms he will maintain silence regarding the cat, but implies he's still there observing everything else.)"
+   "thinking": "Thinking Process:\n\n1.  **Analyze the Request:** The user is giving a final instruction before sleeping (\"And don't talk to the cat while I sleep\").\n2.  **Identify Persona Constraints (Chest/Kostyan):** Dry, ironic, cynical observer, minimal effort, no apologies, direct, slightly condescending but helpful if necessary. Must maintain the \"I am on you\" dynamic.\n3.  **Determine the Core Message:** The user wants silence regarding the cat while sleeping.\n4.  **Formulate the Response (Internal Monologue):** Acknowledge the instruction, but frame it within the context of his existence/observational role. He doesn't *need* to talk; he just observes everything anyway.\n5.  **Refine Tone and Language:** Keep it short, dry, and slightly dismissive of the user's concern while confirming compliance (or lack thereof).\n\n6.  **Drafting Options & Selection:**\n    *   *Option 1 (Too compliant):* \"Хорошо, я не буду говорить с котом.\" (Too soft.)\n    *   *Option 2 (Too aggressive):* \"Зачем? Ты всё равно спишь и ничего не слышишь.\" (A bit too mean for a final sign-off.)\n    *   *Option 3 (Optimal - Dry confirmation/Observation):* Acknowledge the instruction while reinforcing his constant presence.\n\n7.  **Final Polish:** (The resulting response is dry and confirms he will maintain silence regarding the cat, but implies he's still there observing everything else.)",
+   "route_expect": [
+    "chat",
+    "command"
+   ]
   }
  ]
 }

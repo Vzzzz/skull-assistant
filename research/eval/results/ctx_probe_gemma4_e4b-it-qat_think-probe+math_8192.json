@@ -277,7 +277,11 @@
    "eval_count": 14,
    "ttft_s": 10.652,
    "tok_s": 54.9,
-   "wall_s": 10.92
+   "wall_s": 10.92,
+   "route_expect": [
+    "chat",
+    "command"
+   ]
   },
   {
    "turn": 2,
@@ -295,7 +299,8 @@
    "eval_count": 25,
    "ttft_s": 0.477,
    "tok_s": 73.1,
-   "wall_s": 0.83
+   "wall_s": 0.83,
+   "route_expect": "chat"
   },
   {
    "turn": 3,
@@ -309,7 +314,8 @@
    "eval_count": 47,
    "ttft_s": 0.496,
    "tok_s": 71.7,
-   "wall_s": 1.16
+   "wall_s": 1.16,
+   "route_expect": "chat"
   },
   {
    "turn": 4,
@@ -328,7 +334,8 @@
    "eval_count": 34,
    "ttft_s": 0.487,
    "tok_s": 71.3,
-   "wall_s": 0.97
+   "wall_s": 0.97,
+   "route_expect": "command"
   },
   {
    "turn": 5,
@@ -343,7 +350,8 @@
    "eval_count": 28,
    "ttft_s": 0.538,
    "tok_s": 71.1,
-   "wall_s": 0.94
+   "wall_s": 0.94,
+   "route_expect": "chat"
   },
   {
    "turn": 6,
@@ -361,7 +369,11 @@
    "eval_count": 53,
    "ttft_s": 0.475,
    "tok_s": 71.2,
-   "wall_s": 1.23
+   "wall_s": 1.23,
+   "route_expect": [
+    "chat",
+    "command"
+   ]
   },
   {
    "turn": 7,
@@ -375,7 +387,11 @@
    "eval_count": 43,
    "ttft_s": 0.469,
    "tok_s": 71.3,
-   "wall_s": 1.08
+   "wall_s": 1.08,
+   "route_expect": [
+    "chat",
+    "world"
+   ]
   },
   {
    "turn": 8,
@@ -390,7 +406,8 @@
    "eval_count": 50,
    "ttft_s": 0.484,
    "tok_s": 70.0,
-   "wall_s": 1.21
+   "wall_s": 1.21,
+   "route_expect": "chat"
   },
   {
    "turn": 9,
@@ -408,7 +425,8 @@
    "eval_count": 37,
    "ttft_s": 0.492,
    "tok_s": 71.0,
-   "wall_s": 1.02
+   "wall_s": 1.02,
+   "route_expect": "chat"
   },
   {
    "turn": 10,
@@ -423,7 +441,8 @@
    "eval_count": 36,
    "ttft_s": 0.479,
    "tok_s": 71.1,
-   "wall_s": 0.99
+   "wall_s": 0.99,
+   "route_expect": "chat"
   },
   {
    "turn": 11,
@@ -441,7 +460,8 @@
    "eval_count": 50,
    "ttft_s": 0.475,
    "tok_s": 70.6,
-   "wall_s": 1.19
+   "wall_s": 1.19,
+   "route_expect": "command"
   },
   {
    "turn": 12,
@@ -455,7 +475,8 @@
    "eval_count": 37,
    "ttft_s": 0.485,
    "tok_s": 69.8,
-   "wall_s": 1.03
+   "wall_s": 1.03,
+   "route_expect": "chat"
   },
   {
    "turn": 13,
@@ -470,7 +491,8 @@
    "eval_count": 48,
    "ttft_s": 0.483,
    "tok_s": 70.5,
-   "wall_s": 1.18
+   "wall_s": 1.18,
+   "route_expect": "chat"
   },
   {
    "turn": 14,
@@ -488,7 +510,8 @@
    "eval_count": 32,
    "ttft_s": 0.484,
    "tok_s": 70.4,
-   "wall_s": 0.95
+   "wall_s": 0.95,
+   "route_expect": "command"
   },
   {
    "turn": 15,
@@ -502,7 +525,8 @@
    "eval_count": 35,
    "ttft_s": 0.481,
    "tok_s": 69.7,
-   "wall_s": 1.0
+   "wall_s": 1.0,
+   "route_expect": "chat"
   },
   {
    "turn": 16,
@@ -519,7 +543,8 @@
    "eval_count": 485,
    "ttft_s": 0.487,
    "tok_s": 68.3,
-   "wall_s": 7.6
+   "wall_s": 7.6,
+   "route_expect": "explain"
   },
   {
    "turn": 17,
@@ -552,7 +577,8 @@
    "eval_count": 170,
    "ttft_s": 0.483,
    "tok_s": 67.8,
-   "wall_s": 3.01
+   "wall_s": 3.01,
+   "route_expect": "world"
   },
   {
    "turn": 18,
@@ -569,7 +595,8 @@
    "eval_count": 117,
    "ttft_s": 0.501,
    "tok_s": 68.0,
-   "wall_s": 2.25
+   "wall_s": 2.25,
+   "route_expect": "memory"
   },
   {
    "turn": 19,
@@ -590,7 +617,8 @@
    "ttft_s": 1.248,
    "tok_s": 66.3,
    "wall_s": 1.61,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "memory"
   },
   {
    "turn": 20,
@@ -613,7 +641,8 @@
    "ttft_s": 0.504,
    "tok_s": 69.2,
    "wall_s": 0.77,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "memory"
   },
   {
    "turn": 21,
@@ -637,7 +666,8 @@
    "ttft_s": 0.504,
    "tok_s": 69.1,
    "wall_s": 0.98,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "calc"
   },
   {
    "turn": 22,
@@ -661,7 +691,8 @@
    "ttft_s": 0.516,
    "tok_s": 67.5,
    "wall_s": 9.03,
-   "thinking": "Here's a thinking process to arrive at the desired response:\n\n1.  **Analyze the Request:** The user wants to calculate the final price of an item costing 2400 units with a 15% discount. They require step-by-step calculation before stating the final answer, and the tone must be consistent (dry, cynical, factual).\n2.  **Identify the Calculation Steps:**\n    *   Calculate the discount amount: $2400 \\times 0.15$.\n    *   Calculate the final price: $2400 - (\\text{Discount Amount})$.\n3.  **Execute the Calculation (Internal Check):**\n    *   $2400 \\times 0.1 = 240$\n    *   $2400 \\times 0.05 = 120$\n    *   Discount amount: $240 + 120 = 360$.\n    *   Final price: $2400 - 360 = 2040$.\n4.  **Format the Output (Adhering to Persona Rules):**\n    *   Start with the step-by-step breakdown.\n    *   Maintain a dry, non-enthusiastic tone.\n    *   Do not state the final answer until the calculation is complete.\n\n5.  **Draft the Response:** (Self-Correction/Refinement: Ensure the language is suitably detached.)\n\n    *Step 1:* Находим сумму скидки: $2400 \\times 0.15$.\n    *Calculation for Step 1:* $2400 \\times 0.1 = 240$; $2400 \\times 0.05 = 120$. Сумма скидки — 360.\n    *Step 2:* Вычитаем скидку из первоначальной цены: $2400 - 360$.\n    *Calculation for Step 2:* $2400 - 360 = 2040$.\n\n    Итого две тысячи сорок. (Final check: The tone is dry, the steps are clear, and the final answer comes last.)"
+   "thinking": "Here's a thinking process to arrive at the desired response:\n\n1.  **Analyze the Request:** The user wants to calculate the final price of an item costing 2400 units with a 15% discount. They require step-by-step calculation before stating the final answer, and the tone must be consistent (dry, cynical, factual).\n2.  **Identify the Calculation Steps:**\n    *   Calculate the discount amount: $2400 \\times 0.15$.\n    *   Calculate the final price: $2400 - (\\text{Discount Amount})$.\n3.  **Execute the Calculation (Internal Check):**\n    *   $2400 \\times 0.1 = 240$\n    *   $2400 \\times 0.05 = 120$\n    *   Discount amount: $240 + 120 = 360$.\n    *   Final price: $2400 - 360 = 2040$.\n4.  **Format the Output (Adhering to Persona Rules):**\n    *   Start with the step-by-step breakdown.\n    *   Maintain a dry, non-enthusiastic tone.\n    *   Do not state the final answer until the calculation is complete.\n\n5.  **Draft the Response:** (Self-Correction/Refinement: Ensure the language is suitably detached.)\n\n    *Step 1:* Находим сумму скидки: $2400 \\times 0.15$.\n    *Calculation for Step 1:* $2400 \\times 0.1 = 240$; $2400 \\times 0.05 = 120$. Сумма скидки — 360.\n    *Step 2:* Вычитаем скидку из первоначальной цены: $2400 - 360$.\n    *Calculation for Step 2:* $2400 - 360 = 2040$.\n\n    Итого две тысячи сорок. (Final check: The tone is dry, the steps are clear, and the final answer comes last.)",
+   "route_expect": "calc"
   },
   {
    "turn": 23,
@@ -686,7 +717,8 @@
    "ttft_s": 0.532,
    "tok_s": 68.3,
    "wall_s": 2.17,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "calc"
   },
   {
    "turn": 24,
@@ -701,7 +733,8 @@
    "eval_count": 33,
    "ttft_s": 0.651,
    "tok_s": 68.1,
-   "wall_s": 1.23
+   "wall_s": 1.23,
+   "route_expect": "world"
   },
   {
    "turn": 25,
@@ -720,7 +753,11 @@
    "eval_count": 54,
    "ttft_s": 0.492,
    "tok_s": 68.2,
-   "wall_s": 1.31
+   "wall_s": 1.31,
+   "route_expect": [
+    "chat",
+    "command"
+   ]
   },
   {
    "turn": 26,
@@ -734,7 +771,8 @@
    "eval_count": 122,
    "ttft_s": 0.499,
    "tok_s": 67.9,
-   "wall_s": 2.32
+   "wall_s": 2.32,
+   "route_expect": "command"
   },
   {
    "turn": 27,
@@ -748,7 +786,8 @@
    "eval_count": 8,
    "ttft_s": 0.483,
    "tok_s": 72.2,
-   "wall_s": 0.63
+   "wall_s": 0.63,
+   "route_expect": "calc"
   },
   {
    "turn": 28,
@@ -763,7 +802,8 @@
    "eval_count": 11,
    "ttft_s": 0.51,
    "tok_s": 71.0,
-   "wall_s": 0.7
+   "wall_s": 0.7,
+   "route_expect": "command"
   },
   {
    "turn": 29,
@@ -777,7 +817,8 @@
    "eval_count": 8,
    "ttft_s": 0.502,
    "tok_s": 70.7,
-   "wall_s": 0.64
+   "wall_s": 0.64,
+   "route_expect": "command"
   },
   {
    "turn": 30,
@@ -791,7 +832,8 @@
    "eval_count": 41,
    "ttft_s": 0.541,
    "tok_s": 68.4,
-   "wall_s": 1.17
+   "wall_s": 1.17,
+   "route_expect": "chat"
   },
   {
    "turn": 31,
@@ -806,7 +848,11 @@
    "eval_count": 77,
    "ttft_s": 0.494,
    "tok_s": 68.0,
-   "wall_s": 1.66
+   "wall_s": 1.66,
+   "route_expect": [
+    "memory",
+    "chat"
+   ]
   },
   {
    "turn": 32,
@@ -820,7 +866,8 @@
    "eval_count": 80,
    "ttft_s": 0.505,
    "tok_s": 66.2,
-   "wall_s": 1.74
+   "wall_s": 1.74,
+   "route_expect": "chat"
   },
   {
    "turn": 33,
@@ -834,7 +881,8 @@
    "eval_count": 41,
    "ttft_s": 0.506,
    "tok_s": 66.9,
-   "wall_s": 1.15
+   "wall_s": 1.15,
+   "route_expect": "chat"
   },
   {
    "turn": 34,
@@ -861,7 +909,8 @@
    "ttft_s": 0.752,
    "tok_s": 66.6,
    "wall_s": 1.32,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "memory"
   },
   {
    "turn": 35,
@@ -882,7 +931,8 @@
    "ttft_s": 0.5,
    "tok_s": 67.4,
    "wall_s": 0.9,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "memory"
   },
   {
    "turn": 36,
@@ -904,7 +954,11 @@
    "ttft_s": 0.507,
    "tok_s": 66.2,
    "wall_s": 4.67,
-   "thinking": "Thinking Process:\n\n1.  **Analyze the Request:** The user is asking for the answer to the second math problem (the one about the discount).\n2.  **Recall/Verify Previous Calculation:**\n    *   Original price: 2400.\n    *   Discount: 15%.\n    *   Calculation performed previously: Discount amount = 360. Final price = 2400 - 360 = 2040. (Wait, let me re-check the previous response).\n    *   *Self-Correction/Review of Previous Response:* The model said: \"Сумма скидки — триста шестьдесят. Вычитаем скидку из первоначальной цены: два тысяча четыреста минус триста шестьдесят. Итого две тысячи сорок.\" (2400 - 360 = 2040).\n    *   The user is asking for the final answer again, confirming the previous calculation.\n3.  **Apply Persona Constraints:** Dry, cynical, short, no unnecessary fluff, direct.\n4.  **Formulate Response (Internal Draft):** The price to pay is two thousand forty.\n5.  **Final Output Generation.**"
+   "thinking": "Thinking Process:\n\n1.  **Analyze the Request:** The user is asking for the answer to the second math problem (the one about the discount).\n2.  **Recall/Verify Previous Calculation:**\n    *   Original price: 2400.\n    *   Discount: 15%.\n    *   Calculation performed previously: Discount amount = 360. Final price = 2400 - 360 = 2040. (Wait, let me re-check the previous response).\n    *   *Self-Correction/Review of Previous Response:* The model said: \"Сумма скидки — триста шестьдесят. Вычитаем скидку из первоначальной цены: два тысяча четыреста минус триста шестьдесят. Итого две тысячи сорок.\" (2400 - 360 = 2040).\n    *   The user is asking for the final answer again, confirming the previous calculation.\n3.  **Apply Persona Constraints:** Dry, cynical, short, no unnecessary fluff, direct.\n4.  **Formulate Response (Internal Draft):** The price to pay is two thousand forty.\n5.  **Final Output Generation.**",
+   "route_expect": [
+    "memory",
+    "calc"
+   ]
   },
   {
    "turn": 37,
@@ -918,7 +972,11 @@
    "eval_count": 31,
    "ttft_s": 0.536,
    "tok_s": 67.6,
-   "wall_s": 1.09
+   "wall_s": 1.09,
+   "route_expect": [
+    "chat",
+    "command"
+   ]
   },
   {
    "turn": 38,
@@ -932,7 +990,8 @@
    "eval_count": 48,
    "ttft_s": 0.508,
    "tok_s": 67.2,
-   "wall_s": 1.26
+   "wall_s": 1.26,
+   "route_expect": "chat"
   },
   {
    "turn": 39,
@@ -946,7 +1005,8 @@
    "eval_count": 53,
    "ttft_s": 0.496,
    "tok_s": 65.5,
-   "wall_s": 1.34
+   "wall_s": 1.34,
+   "route_expect": "chat"
   },
   {
    "turn": 40,
@@ -961,7 +1021,8 @@
    "eval_count": 54,
    "ttft_s": 0.567,
    "tok_s": 66.2,
-   "wall_s": 1.42
+   "wall_s": 1.42,
+   "route_expect": "chat"
   },
   {
    "turn": 41,
@@ -975,7 +1036,8 @@
    "eval_count": 63,
    "ttft_s": 0.492,
    "tok_s": 66.9,
-   "wall_s": 1.47
+   "wall_s": 1.47,
+   "route_expect": "chat"
   },
   {
    "turn": 42,
@@ -989,7 +1051,8 @@
    "eval_count": 39,
    "ttft_s": 0.51,
    "tok_s": 67.3,
-   "wall_s": 1.13
+   "wall_s": 1.13,
+   "route_expect": "chat"
   },
   {
    "turn": 43,
@@ -1003,7 +1066,8 @@
    "eval_count": 34,
    "ttft_s": 0.501,
    "tok_s": 67.8,
-   "wall_s": 1.04
+   "wall_s": 1.04,
+   "route_expect": "chat"
   },
   {
    "turn": 44,
@@ -1017,7 +1081,8 @@
    "eval_count": 38,
    "ttft_s": 0.5,
    "tok_s": 67.2,
-   "wall_s": 1.1
+   "wall_s": 1.1,
+   "route_expect": "chat"
   },
   {
    "turn": 45,
@@ -1031,7 +1096,8 @@
    "eval_count": 25,
    "ttft_s": 0.486,
    "tok_s": 67.1,
-   "wall_s": 0.9
+   "wall_s": 0.9,
+   "route_expect": "chat"
   },
   {
    "turn": 46,
@@ -1046,7 +1112,12 @@
    "eval_count": 79,
    "ttft_s": 0.511,
    "tok_s": 66.5,
-   "wall_s": 1.74
+   "wall_s": 1.74,
+   "route_expect": [
+    "chat",
+    "memory",
+    "calc"
+   ]
   },
   {
    "turn": 47,
@@ -1060,7 +1131,8 @@
    "eval_count": 62,
    "ttft_s": 0.504,
    "tok_s": 65.9,
-   "wall_s": 1.48
+   "wall_s": 1.48,
+   "route_expect": "chat"
   },
   {
    "turn": 48,
@@ -1074,7 +1146,8 @@
    "eval_count": 18,
    "ttft_s": 0.498,
    "tok_s": 68.3,
-   "wall_s": 0.8
+   "wall_s": 0.8,
+   "route_expect": "chat"
   },
   {
    "turn": 49,
@@ -1098,7 +1171,8 @@
    "ttft_s": 0.756,
    "tok_s": 66.9,
    "wall_s": 1.35,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "memory"
   },
   {
    "turn": 50,
@@ -1122,7 +1196,8 @@
    "ttft_s": 0.496,
    "tok_s": 67.4,
    "wall_s": 0.85,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "memory"
   },
   {
    "turn": 51,
@@ -1145,7 +1220,11 @@
    "ttft_s": 0.494,
    "tok_s": 66.6,
    "wall_s": 0.98,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": [
+    "memory",
+    "command"
+   ]
   },
   {
    "turn": 52,
@@ -1170,7 +1249,8 @@
    "ttft_s": 0.507,
    "tok_s": 66.0,
    "wall_s": 1.17,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "memory"
   },
   {
    "turn": 53,
@@ -1194,7 +1274,8 @@
    "ttft_s": 0.487,
    "tok_s": 66.3,
    "wall_s": 1.19,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "memory"
   },
   {
    "turn": 54,
@@ -1217,7 +1298,8 @@
    "ttft_s": 0.507,
    "tok_s": 67.2,
    "wall_s": 0.95,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "memory"
   },
   {
    "turn": 55,
@@ -1241,7 +1323,11 @@
    "ttft_s": 0.493,
    "tok_s": 64.6,
    "wall_s": 8.32,
-   "thinking": "Thinking Process:\n\n1.  **Analyze the Request:** The user is asking for a calculation they previously asked me to perform (\"You already calculated it\"). This tests memory and consistency.\n2.  **Recall/Verify Previous Calculation:**\n    *   Departure time: 8:40 (20:40).\n    *   Travel time: 1 hour 35 minutes.\n    *   Calculation performed previously: 20:40 + 1h 35m = 22:15.\n3.  **Apply Persona Constraints:**\n    *   Be concise/direct (if not asking for detail).\n    *   No unnecessary pleasantries.\n    *   Maintain the dry, cynical tone.\n    *   Provide the calculation steps *before* the final answer (as per general instruction: \"Вычисления: сначала выкладка по шагам, итоговое число — только в конце\"). Even if it's a repeat, follow the format.\n4.  **Formulate Response:** Re-state the calculation clearly and give the result.\n\n*(Self-Correction/Refinement):* Since this is a direct recall of a previous answer, I can be slightly more efficient while still adhering to the step-by-step rule if needed, or just state the final time since it's simple addition. Given the instruction \"Вычисления: сначала выкладка по шагам...\", I must show the steps again.\n\n*Execution:*\n1. Start time: 20:40.\n2. Add hours: 20 + 1 = 21.\n3. Add minutes: 40 + 35 = 75 (which is 1 hour and 15 minutes).\n4. Total time: 21 + 1 hour = 22. Minutes: 15.\n5. Result: 22:15."
+   "thinking": "Thinking Process:\n\n1.  **Analyze the Request:** The user is asking for a calculation they previously asked me to perform (\"You already calculated it\"). This tests memory and consistency.\n2.  **Recall/Verify Previous Calculation:**\n    *   Departure time: 8:40 (20:40).\n    *   Travel time: 1 hour 35 minutes.\n    *   Calculation performed previously: 20:40 + 1h 35m = 22:15.\n3.  **Apply Persona Constraints:**\n    *   Be concise/direct (if not asking for detail).\n    *   No unnecessary pleasantries.\n    *   Maintain the dry, cynical tone.\n    *   Provide the calculation steps *before* the final answer (as per general instruction: \"Вычисления: сначала выкладка по шагам, итоговое число — только в конце\"). Even if it's a repeat, follow the format.\n4.  **Formulate Response:** Re-state the calculation clearly and give the result.\n\n*(Self-Correction/Refinement):* Since this is a direct recall of a previous answer, I can be slightly more efficient while still adhering to the step-by-step rule if needed, or just state the final time since it's simple addition. Given the instruction \"Вычисления: сначала выкладка по шагам...\", I must show the steps again.\n\n*Execution:*\n1. Start time: 20:40.\n2. Add hours: 20 + 1 = 21.\n3. Add minutes: 40 + 35 = 75 (which is 1 hour and 15 minutes).\n4. Total time: 21 + 1 hour = 22. Minutes: 15.\n5. Result: 22:15.",
+   "route_expect": [
+    "memory",
+    "calc"
+   ]
   },
   {
    "turn": 56,
@@ -1265,7 +1351,8 @@
    "ttft_s": 0.545,
    "tok_s": 65.2,
    "wall_s": 1.17,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "memory"
   },
   {
    "turn": 57,
@@ -1286,7 +1373,8 @@
    "ttft_s": 0.495,
    "tok_s": 65.3,
    "wall_s": 0.92,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": "memory"
   },
   {
    "turn": 58,
@@ -1308,7 +1396,11 @@
    "ttft_s": 0.489,
    "tok_s": 66.3,
    "wall_s": 1.07,
-   "thinking": ""
+   "thinking": "",
+   "route_expect": [
+    "memory",
+    "world"
+   ]
   },
   {
    "turn": 59,
@@ -1323,7 +1415,8 @@
    "eval_count": 15,
    "ttft_s": 0.698,
    "tok_s": 68.1,
-   "wall_s": 1.04
+   "wall_s": 1.04,
+   "route_expect": "chat"
   },
   {
    "turn": 60,
@@ -1338,7 +1431,11 @@
    "eval_count": 24,
    "ttft_s": 0.515,
    "tok_s": 66.0,
-   "wall_s": 0.92
+   "wall_s": 0.92,
+   "route_expect": [
+    "chat",
+    "command"
+   ]
   }
  ]
 }
