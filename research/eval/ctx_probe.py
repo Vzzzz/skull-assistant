@@ -167,7 +167,7 @@ def run_dialog(host, model, ctx, rows, seed, think_on=frozenset(), think_predict
         if policy and policy.get("prefix"):
             sent = policy["prefix"] + "\n" + sent
         if note:
-            sent = note + "\n\n" + sent
+            sent = sent + "\n\n" + note   # v3: memory after the user's words
         if trim == "tokens":
             est_new = len(sent) // 3 + 8
             budget = (policy["num_predict"] if policy else (think_predict if r.get("block") in think_on else 700))
@@ -232,6 +232,8 @@ def run_dialog(host, model, ctx, rows, seed, think_on=frozenset(), think_predict
         if memory is not None:
             entry["mem_hits"] = [{"turn": h[1]["turn"], "score": round(h[0], 3), "cos": round(h[2], 3), "kw": round(h[3], 3)} for h in hits]
             entry["mem_note_chars"] = len(note)
+            # did the reply copy the note (v2 defect) or talk about it?
+            entry["mem_note_copied"] = bool(note) and (note[:40] in reply or AssocMemory.NOTE_PREFIX.strip("( ") in reply.lower() or "[ты помнишь" in reply.lower())
         log.append(entry)
         tk = f" think={thinking_chars}ch" if think else ""
         rt = f" route={route['label'] or '?'}" if route else ""
@@ -344,6 +346,8 @@ def metrics(log, ctx):
         m["mem_probe_turns"] = len(pr)
         m["mem_retrieval_recall"] = round(len(got) / len(pr), 2) if pr else None
         m["mem_note_chars_mean"] = round(statistics.mean(e["mem_note_chars"] for e in mem))
+        m["mem_note_turns"] = sum(1 for e in mem if e["mem_note_chars"])
+        m["mem_note_copied"] = sum(1 for e in mem if e.get("mem_note_copied"))
     return m
 
 
@@ -398,7 +402,8 @@ def write_summary(model, tag, summary):
                   f"{j.get('persona_mean', '—')} | {(j.get('consistency') or {}).get('score', '—')} | "
                   f"{(j.get('hallucination') or {}).get('invented', '—')} | {m['ttft_last10_s']} | {m['tok_s_mean']} | {wall} | "
                   f"{m.get('thinking_chars_mean', '—')} | {m['ctx_tokens_end']} | "
-                  f"{m.get('mem_retrieval_recall', '—')} / {m.get('mem_note_chars_mean', '—')} | "
+                  f"{m.get('mem_retrieval_recall', '—')} / {m.get('mem_note_chars_mean', '—')}"
+                  + (f" (справка на {m.get('mem_note_turns')} ходах, скопирована на {m.get('mem_note_copied')})" if m.get("mem_note_turns") is not None else "") + " | "
                   f"{m.get('router_acc', '—')} / {m.get('router_s_mean', '—')} |")
     md += ["", "Recall по расстоянию (ход/проба@расстояние): ✓ попал, ✗ нет; для M-проб ✓ = повторил свой же ранний ответ.", ""]
     for m, _ in summary:
@@ -433,9 +438,9 @@ def main():
     ap.add_argument("--think-predict", type=int, default=2500,
                     help="num_predict on thinking turns (reasoning tokens share the budget); plain turns keep 700")
     ap.add_argument("--memory", default="off", choices=["off", "all", "dropped"],
-                    help="MEM-1: associative memory over past exchanges; 'all' retrieves among everything said, "
-                         "'dropped' only among exchanges that fell out of num_ctx")
-    ap.add_argument("--mem-k", type=int, default=3)
+                    help="MEM-1: associative memory over past exchanges; 'dropped' (the brain policy, D-026) retrieves only "
+                         "among exchanges that fell out of num_ctx; 'all' among everything said (at 8k it only confuses)")
+    ap.add_argument("--mem-k", type=int, default=2)
     ap.add_argument("--mem-mode", default="hybrid", choices=["hybrid", "embed", "kw"])
     ap.add_argument("--embed-model", default="embeddinggemma", help="ollama embedding model (/api/embed)")
     ap.add_argument("--router", default="off", choices=["off", "label", "apply"],
@@ -488,7 +493,7 @@ def main():
                                     "think_on": sorted(think_on), "think_predict": args.think_predict if think_on else None,
                                     "memory": args.memory, "mem_k": args.mem_k, "mem_mode": args.mem_mode,
                                     "embed_model": args.embed_model if args.memory != "off" else None, "router": args.router, "trim": trim,
-                                    "note_version": 2 if args.memory != "off" else None,
+                                    "note_version": 3 if args.memory != "off" else None,
                                     "persona_file": str(persona_file.relative_to(ROOT)) if persona_file.is_relative_to(ROOT) else str(persona_file),
                                     "persona_sha1": __import__("hashlib").sha1(PERSONA.encode("utf-8")).hexdigest()[:10],
                                     "metrics": m, "judge": j, "log": log}, ensure_ascii=False, indent=1), encoding="utf-8")

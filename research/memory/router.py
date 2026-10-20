@@ -91,6 +91,7 @@ POLICY = {
     "memory":  {"num_predict": 300, "memory": True},
     "calc":    {"num_predict": 500, "memory": False, "prefix": "Считай по шагам, все числа пиши цифрами, итог — в конце."},
     "explain": {"num_predict": 900, "memory": False},
-    "world":   {"num_predict": 300, "memory": False, "prefix": "Если ты этого не знаешь или не видел — так и скажи одной фразой, не выдумывай."},
+    "world":   {"num_predict": 300, "memory": False,
+                "prefix": "Если собеседник спрашивает о том, чего ты не видел и не знаешь, — скажи «не знаю» одной фразой, не выдумывай. Если он ничего не спрашивает — отвечай как обычно."},
     "command": {"num_predict": 200, "memory": True},
 }

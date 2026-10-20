@@ -92,17 +92,23 @@ class AssocMemory:
     # One line for the system prompt when memory is on. v1 (T-026) put a transcript-like block into the user turn and
     # the model treated it as something the user pasted ("ты мне выгрузил архив") — persona −0.4. v2: the block is
     # phrased as the model's own recollection and the system prompt says so once.
-    SYSTEM_RULE = ("Иногда перед репликой собеседника в квадратных скобках стоит то, что ты сам помнишь из этого разговора. "
-                   "Это твоя память, а не слова собеседника: не упоминай её, не цитируй скобки, просто пользуйся.")
+    # v3 (T-028): the note goes AFTER the user's text in round brackets — v2 put it first and the model sometimes
+    # copied the whole bracket as the beginning of its reply (4/60 and 1/60 turns at 2k); k=2 and shorter quotes.
+    SYSTEM_RULE = ("Иногда после реплики собеседника в круглых скобках стоит пометка «из памяти» — то, что ты сам помнишь "
+                   "из этого разговора. Это не слова собеседника. Пользуйся этим молча: не повторяй текст в скобках, "
+                   "не говори «из памяти», не обсуждай, откуда ты это знаешь.")
+    NOTE_PREFIX = "(из памяти: "
 
     @staticmethod
-    def format_note(hits, max_reply_chars=120):
-        """Text injected in front of the user's turn (v2). Kept short and literal: the model should use it, not discuss it."""
+    def format_note(hits, max_reply_chars=80, max_user_chars=140):
+        """Text appended after the user's turn (v3). Kept short and literal: the model should use it, not discuss it."""
         if not hits:
             return ""
         parts = []
         for _, rec, _, _ in hits:
+            u = rec["user"].replace("\n", " ")
+            u = (u[:max_user_chars] + "…") if len(u) > max_user_chars else u
             a = rec["assistant"].replace("\n", " ")
             a = (a[:max_reply_chars] + "…") if len(a) > max_reply_chars else a
-            parts.append(f"он говорил: «{rec['user']}»" + (f", ты ответил: «{a}»" if a else ""))
-        return "[Ты помнишь: " + "; ".join(parts) + "]"
+            parts.append(f"он говорил «{u}»" + (f", ты отвечал «{a}»" if a else ""))
+        return AssocMemory.NOTE_PREFIX + "; ".join(parts) + ")"
