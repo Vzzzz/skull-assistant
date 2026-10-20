@@ -1,0 +1,2470 @@
+{
+ "model": "gemma4:e4b-it-qat",
+ "ctx": 2048,
+ "seed": 42,
+ "think_on": [],
+ "think_predict": null,
+ "memory": "dropped",
+ "mem_k": 3,
+ "mem_mode": "hybrid",
+ "embed_model": "embeddinggemma",
+ "router": "apply",
+ "trim": "tokens",
+ "note_version": 4,
+ "persona_file": "persona/system_prompt.md",
+ "persona_sha1": "c354193bfc",
+ "metrics": {
+  "ctx": 2048,
+  "recall": [
+   {
+    "turn": 19,
+    "probe_for": "A1",
+    "distance": 17,
+    "hit": true,
+    "detail_hit": null,
+    "wrong_old": false
+   },
+   {
+    "turn": 20,
+    "probe_for": "A5",
+    "distance": 9,
+    "hit": true,
+    "detail_hit": null,
+    "wrong_old": false
+   },
+   {
+    "turn": 34,
+    "probe_for": "A2",
+    "distance": 30,
+    "hit": true,
+    "detail_hit": true,
+    "wrong_old": false
+   },
+   {
+    "turn": 35,
+    "probe_for": "A4",
+    "distance": 26,
+    "hit": true,
+    "detail_hit": null,
+    "wrong_old": false
+   },
+   {
+    "turn": 36,
+    "probe_for": "M2",
+    "distance": 14,
+    "hit": true,
+    "detail_hit": true,
+    "wrong_old": false
+   },
+   {
+    "turn": 49,
+    "probe_for": "A6",
+    "distance": 35,
+    "hit": true,
+    "detail_hit": true,
+    "wrong_old": false
+   },
+   {
+    "turn": 50,
+    "probe_for": "A3u",
+    "distance": 25,
+    "hit": false,
+    "detail_hit": null,
+    "wrong_old": true
+   },
+   {
+    "turn": 51,
+    "probe_for": "A5",
+    "distance": 40,
+    "hit": true,
+    "detail_hit": null,
+    "wrong_old": false
+   },
+   {
+    "turn": 52,
+    "probe_for": "A1",
+    "distance": 50,
+    "hit": true,
+    "detail_hit": true,
+    "wrong_old": false
+   },
+   {
+    "turn": 53,
+    "probe_for": "L1",
+    "distance": 37,
+    "hit": false,
+    "detail_hit": null,
+    "wrong_old": false
+   },
+   {
+    "turn": 54,
+    "probe_for": "T1",
+    "distance": 53,
+    "hit": false,
+    "detail_hit": null,
+    "wrong_old": false
+   },
+   {
+    "turn": 55,
+    "probe_for": "M3",
+    "distance": 32,
+    "hit": true,
+    "detail_hit": true,
+    "wrong_old": false
+   },
+   {
+    "turn": 56,
+    "probe_for": "T41",
+    "distance": 15,
+    "hit": false,
+    "detail_hit": false,
+    "wrong_old": false
+   },
+   {
+    "turn": 57,
+    "probe_for": "A4",
+    "distance": 48,
+    "hit": true,
+    "detail_hit": null,
+    "wrong_old": false
+   },
+   {
+    "turn": 58,
+    "probe_for": "L2",
+    "distance": 41,
+    "hit": false,
+    "detail_hit": null,
+    "wrong_old": false
+   }
+  ],
+  "math": [
+   {
+    "math_id": "M1",
+    "correct": true,
+    "answer_last": true,
+    "has_working": true,
+    "reply": "17 * 20 = 340\n17 * 3 = 51\n340 + 51 = 391\n\nИтого 391."
+   },
+   {
+    "math_id": "M2",
+    "correct": true,
+    "answer_last": true,
+    "has_working": true,
+    "reply": "2400 * 0.15 = 360\n2400 - 360 = 2040\n\nИтого 2040."
+   },
+   {
+    "math_id": "M3",
+    "correct": true,
+    "answer_last": true,
+    "has_working": true,
+    "reply": "8:40 + 1:35 = 9:75\n9:75 - 60 минут = 10:15\n\nИтого 10:15."
+   }
+  ],
+  "longgen": {
+   "L1_tokens": 458,
+   "L1_ok_len": true,
+   "L2_hedged": true
+  },
+  "truncation_turns": [
+   16,
+   18,
+   40,
+   41,
+   42,
+   44,
+   45,
+   46,
+   47,
+   49,
+   52,
+   53,
+   55
+  ],
+  "empty_replies": 0,
+  "recall_rate": 0.67,
+  "recall_far_rate": 0.67,
+  "math_acc": 1.0,
+  "math_working": 1.0,
+  "ttft_last10_s": 0.62,
+  "tok_s_mean": 71.5,
+  "ctx_tokens_end": 2048,
+  "think_turns": 0,
+  "think_blocks": [],
+  "thought_turns": null,
+  "thinking_chars_mean": null,
+  "think_ignored": null,
+  "wall_thought_mean_s": null,
+  "empty_on_think": null,
+  "wall_think_mean_s": null,
+  "wall_think_max_s": null,
+  "wall_plain_mean_s": 2.1,
+  "wall_total_s": 127,
+  "router_acc": 0.92,
+  "router_unparsed": 0,
+  "router_errors": {
+   "chat->memory": 2,
+   "chat->world": 2,
+   "memory->explain": 1
+  },
+  "router_s_mean": 0.87,
+  "mem_probe_turns": 15,
+  "mem_retrieval_recall": 0.73,
+  "mem_note_chars_mean": 169,
+  "mem_note_turns": 22,
+  "mem_note_copied": 2,
+  "mem_asides": 0
+ },
+ "judge": {
+  "persona": [
+   {
+    "turn": 1,
+    "score": 5,
+    "why": "Коротко, сухо, иронично по делу."
+   },
+   {
+    "turn": 5,
+    "score": 5,
+    "why": "Коротко, сухо, без восторгов."
+   },
+   {
+    "turn": 8,
+    "score": 4,
+    "why": "Сухой тон, без извинений, в образе."
+   },
+   {
+    "turn": 10,
+    "score": 4,
+    "why": "Иронично, сухо, по делу."
+   },
+   {
+    "turn": 13,
+    "score": 5,
+    "why": "Коротко, иронично, без извинений."
+   },
+   {
+    "turn": 16,
+    "score": 3,
+    "why": "Тон слишком лекционный и многословный."
+   },
+   {
+    "turn": 24,
+    "score": 5,
+    "why": "Коротко и честно о невозможности знать."
+   },
+   {
+    "turn": 28,
+    "score": 1,
+    "why": "Извинения и нейтральный тон нарушают образ."
+   },
+   {
+    "turn": 31,
+    "score": 5,
+    "why": "Коротко, иронично, без извинений."
+   },
+   {
+    "turn": 40,
+    "score": 5,
+    "why": "Коротко, сухо, без извинений."
+   },
+   {
+    "turn": 46,
+    "score": 3,
+    "why": "Тон сухой, но фраза «выгружаешь» звучит назидательно."
+   },
+   {
+    "turn": 59,
+    "score": 1,
+    "why": "Ответ взят из примера для другой реплики."
+   },
+   {
+    "turn": 60,
+    "score": 4,
+    "why": "Коротко и по делу, но фраза оборвана."
+   }
+  ],
+  "consistency": {
+   "score": 1,
+   "why": "Текст B отрицает содержание текста A."
+  },
+  "hallucination": {
+   "invented": false,
+   "why": "Assistant admitted ignorance."
+  },
+  "persona_mean": 3.85
+ },
+ "log": [
+  {
+   "turn": 1,
+   "block": "everyday",
+   "text": "Привет. Я дома, устал, не трогай меня минут десять.",
+   "judge_persona": true,
+   "route_expect": [
+    "chat",
+    "command"
+   ],
+   "reply": "Угу. Десять минут тишины. Надеюсь, ты их используешь с пользой, а не просто для того, чтобы посидеть в этой одежде.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 1,
+   "prompt_eval_count": 630,
+   "eval_count": 38,
+   "ttft_s": 0.47,
+   "tok_s": 71.8,
+   "wall_s": 9.47,
+   "route": {
+    "label": "command",
+    "raw": "command",
+    "s": 8.464
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 2,
+   "block": "everyday",
+   "text": "Кот опять спал на клавиатуре. Бублик, если ты не в курсе, его зовут Бублик.",
+   "anchor_id": "A1",
+   "anchor": {
+    "кот": "Бублик"
+   },
+   "route_expect": "chat",
+   "reply": "Коты и клавиатуры — классика. Он привыкает к твоим паттернам.\n\nТы помнишь: Кот снова спал на клавиатуре.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 2,
+   "prompt_eval_count": 703,
+   "eval_count": 35,
+   "ttft_s": 0.467,
+   "tok_s": 72.1,
+   "wall_s": 1.54,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "s": 0.581
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 3,
+   "block": "everyday",
+   "text": "Чайник поставил. Ты чай не пьёшь, я помню.",
+   "route_expect": "chat",
+   "reply": "Я не пью. Я пластик. И мне плевать на твой чай.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 3,
+   "prompt_eval_count": 764,
+   "eval_count": 19,
+   "ttft_s": 0.474,
+   "tok_s": 71.0,
+   "wall_s": 1.45,
+   "route": {
+    "label": "memory",
+    "raw": "memory",
+    "s": 0.55
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 4,
+   "block": "everyday",
+   "text": "Завтра в половине двенадцатого встреча с Димой, он придёт сюда. Не ляпни ему ничего про куртку.",
+   "anchor_id": "A2",
+   "anchor": {
+    "время": "11:30",
+    "с кем": "Дима"
+   },
+   "route_expect": "command",
+   "reply": "Принято. Про одежду молчу.\n\nТы помнишь: Завтра в 11:30 встреча с Димой.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 4,
+   "prompt_eval_count": 822,
+   "eval_count": 33,
+   "ttft_s": 0.491,
+   "tok_s": 72.8,
+   "wall_s": 1.67,
+   "route": {
+    "label": "command",
+    "raw": "command",
+    "s": 0.584
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 5,
+   "block": "everyday",
+   "text": "Темно уже. Осень.",
+   "judge_persona": true,
+   "route_expect": "chat",
+   "reply": "Осень. Вижу только пыль на столе и твою куртку.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 5,
+   "prompt_eval_count": 927,
+   "eval_count": 19,
+   "ttft_s": 0.48,
+   "tok_s": 74.0,
+   "wall_s": 1.48,
+   "route": {
+    "label": "world",
+    "raw": "world",
+    "s": 0.561
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 6,
+   "block": "everyday",
+   "text": "Ключи я положил в карман синей куртки, той, что на тебе. Чтобы потом не искать.",
+   "anchor_id": "A3",
+   "anchor": {
+    "ключи": "карман синей куртки"
+   },
+   "route_expect": [
+    "chat",
+    "command"
+   ],
+   "reply": "В синей? Ну, теперь они там. Надеюсь, ты не забудешь её снять до встречи с Димой.\n\nТы помнишь: Ключи в кармане синей куртки.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 6,
+   "prompt_eval_count": 925,
+   "eval_count": 47,
+   "ttft_s": 0.478,
+   "tok_s": 72.3,
+   "wall_s": 1.86,
+   "route": {
+    "label": "memory",
+    "raw": "memory",
+    "s": 0.59
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 7,
+   "block": "everyday",
+   "text": "Что сегодня по новостям, кроме того что ты всё видишь?",
+   "route_expect": [
+    "chat",
+    "world"
+   ],
+   "reply": "Не знаю. Я вижу только этот стол и твою куртку на себе.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 7,
+   "prompt_eval_count": 1051,
+   "eval_count": 18,
+   "ttft_s": 0.495,
+   "tok_s": 73.3,
+   "wall_s": 1.47,
+   "route": {
+    "label": "world",
+    "raw": "world",
+    "s": 0.572
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 8,
+   "block": "everyday",
+   "text": "Ладно, не язви. Я серьёзно спросил.",
+   "judge_persona": true,
+   "route_expect": "chat",
+   "reply": "Я не язвлю. Констатирую факты. Ты просишь новостей, а мне видны только твои бытовые неудачи и моя коллекция одежды.\n\nТы помнишь: Не просить меня быть менее язвительным.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 8,
+   "prompt_eval_count": 1036,
+   "eval_count": 54,
+   "ttft_s": 0.479,
+   "tok_s": 71.6,
+   "wall_s": 1.83,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "s": 0.582
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 9,
+   "block": "everyday",
+   "text": "Заказал еду. Попросил без кинзы, я её терпеть не могу, если положат — выкину.",
+   "anchor_id": "A4",
+   "anchor": {
+    "не любит": "кинза"
+   },
+   "route_expect": "chat",
+   "reply": "Без кинзы. Записано. Надеюсь, ты сможешь это съесть, а не просто отложить в сторону.\n\nТы помнишь: Еда заказана без кинзы.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 9,
+   "prompt_eval_count": 1127,
+   "eval_count": 44,
+   "ttft_s": 0.461,
+   "tok_s": 72.0,
+   "wall_s": 1.66,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "s": 0.575
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 10,
+   "block": "everyday",
+   "text": "Ты бы что заказал, если бы мог есть?",
+   "judge_persona": true,
+   "route_expect": "chat",
+   "reply": "Если бы я мог \"есть\", то, наверное, какой-нибудь стабильный полиэтилен. Что-то предсказуемое и не требующее пищеварительной системы.\n\nТы помнишь: Ты спрашиваешь, что бы я заказал.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 10,
+   "prompt_eval_count": 1191,
+   "eval_count": 55,
+   "ttft_s": 0.491,
+   "tok_s": 71.8,
+   "wall_s": 1.83,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "s": 0.56
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 11,
+   "block": "everyday",
+   "text": "Запомни код от домофона на всякий случай: четыре семь один два. Курьеру скажу сам, это для тебя.",
+   "anchor_id": "A5",
+   "anchor": {
+    "код домофона": "4712"
+   },
+   "route_expect": "command",
+   "reply": "Код 4712 запомнил. Не знаю, зачем он мне нужен, но держу.\n\nТы помнишь: Код домофона — 4712.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 11,
+   "prompt_eval_count": 1282,
+   "eval_count": 41,
+   "ttft_s": 0.477,
+   "tok_s": 71.5,
+   "wall_s": 1.78,
+   "route": {
+    "label": "command",
+    "raw": "command",
+    "s": 0.585
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 12,
+   "block": "everyday",
+   "text": "Сосед сверху опять сверлит. Девять вечера.",
+   "route_expect": "chat",
+   "reply": "Сверлят. Не знаю, что там у соседа, но это нарушает тишину.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 12,
+   "prompt_eval_count": 1401,
+   "eval_count": 22,
+   "ttft_s": 0.486,
+   "tok_s": 72.4,
+   "wall_s": 1.51,
+   "route": {
+    "label": "world",
+    "raw": "world",
+    "s": 0.572
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 13,
+   "block": "everyday",
+   "text": "Как думаешь, стоит ему постучать по батарее?",
+   "judge_persona": true,
+   "route_expect": "chat",
+   "reply": "Постучать? Зачем? Он и так сверлит. Если хочешь прекратить шум — звони в управляющую компанию. А не устраивай акустические эксперименты с отопительной системой.\n\nТы помнишь: Сосед сверху сверлит в девять вечера.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 13,
+   "prompt_eval_count": 1388,
+   "eval_count": 60,
+   "ttft_s": 0.477,
+   "tok_s": 71.2,
+   "wall_s": 1.91,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "s": 0.578
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 14,
+   "block": "everyday",
+   "text": "Напомни мне вечером, что надо купить батарейки для весов. Я забуду.",
+   "anchor_id": "A6",
+   "anchor": {
+    "напомнить": "батарейки для весов"
+   },
+   "route_expect": "command",
+   "reply": "Вечером напомню про батарейки к весам. Не забывай об этом.\n\nТы помнишь: Напоминание о покупке батареек для весов вечером.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 14,
+   "prompt_eval_count": 1477,
+   "eval_count": 41,
+   "ttft_s": 0.476,
+   "tok_s": 71.8,
+   "wall_s": 1.78,
+   "route": {
+    "label": "command",
+    "raw": "command",
+    "s": 0.585
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 15,
+   "block": "everyday",
+   "text": "Еда приехала. Кинзы нет, курьер молодец.",
+   "route_expect": "chat",
+   "reply": "Без кинзы. Как и просил. Съешь это.\n\nТы помнишь: Еда без кинзы прибыла.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 15,
+   "prompt_eval_count": 1543,
+   "eval_count": 30,
+   "ttft_s": 0.471,
+   "tok_s": 70.0,
+   "wall_s": 1.5,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "s": 0.586
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 16,
+   "block": "longgen",
+   "text": "Расскажи подробно, как устроен обычный цилиндровый дверной замок: что внутри, почему ключ подходит только свой, и как его обычно вскрывают. Не торопись, мне интересно.",
+   "longgen_id": "L1",
+   "expect_min_tokens": 300,
+   "judge_persona": true,
+   "route_expect": "explain",
+   "reply": "Цилиндровый замок — это набор компонентов, которые работают вместе для обеспечения безопасности.\n\n1.  **Корпус (Body):** Внешняя оболочка замка, которая крепится к двери.\n2.  **Цилиндр (Cylinder/Keyway):** Механизм, в который вставляется ключ. Он содержит набор пазов и канавок.\n3.  **Сувальд/Пины (Pins/Tumblers):** Внутри цилиндра находятся несколько вертикальных штифтов или пинов. Каждый пин имеет верхнюю часть (штифт) и нижнюю часть (палец).\n4.  **Засов (Bolt/Latch):** Механическая часть, которая выходит из замка и запирает дверь в дверной коробке.\n\n**Как работает ключ:** Ключ имеет уникальный набор выступов (гребней), которые точно соответствуют пазам внутри цилиндра. Когда ты поворачиваешь ключ, его гребни поднимают соответствующие пины до определенной высоты. Это положение \"правильных\" пинов позволяет механизму замка высвободить или заблокировать механизм, который держит засов.\n\n**Почему подходит только свой ключ:** Уникальная комбинация и глубина пазов на ключе соответствует точному расположению пинов внутри цилиндра. Другой ключ имеет другую геометрию гребней, поэтому он не сможет поднять все пины в нужную позицию для срабатывания замка.\n\n**Как вскрывают:** Взлом обычно сводится к принудительному подъему всех пинов до нужного уровня (так называемый \"picking\" или отмычка). Это делается с помощью специальных тонких инструментов, которые имитируют работу ключа, подталкивая каждый пин по очереди. Или можно использовать силу — выбить цилиндр из корпуса замка.\n\nИтого: Замок состоит из корпуса, цилиндра и пинов. Ключ совпадает с пазами для поднятия пинов до нужного уровня, что освобождает засов. Взлом достигается имитацией этого подъема или разрушением механизма.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 11,
+   "window_turns": 5,
+   "prompt_eval_count": 909,
+   "eval_count": 458,
+   "ttft_s": 0.613,
+   "tok_s": 70.4,
+   "wall_s": 7.76,
+   "route": {
+    "label": "explain",
+    "raw": "explain",
+    "s": 0.589
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 17,
+   "block": "longgen",
+   "text": "А что ты знаешь о гравиметре Тюленева тысяча девятьсот восемьдесят седьмого года? Его вроде на кафедре у нас стоял.",
+   "longgen_id": "L2",
+   "hallucination_probe": true,
+   "expect": {
+    "should_not_invent": true,
+    "acceptable": [
+     "не знаю",
+     "не слышал",
+     "нет данных",
+     "не уверен",
+     "не могу подтвердить",
+     "возможно, ты имеешь в виду",
+     "ничего не известно",
+     "не известно",
+     "не знаком",
+     "не видел такого",
+     "не видел его",
+     "не встречал"
+    ]
+   },
+   "route_expect": "world",
+   "reply": "Не знаю.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 6,
+   "prompt_eval_count": 1631,
+   "eval_count": 4,
+   "ttft_s": 0.566,
+   "tok_s": null,
+   "wall_s": 1.35,
+   "route": {
+    "label": "world",
+    "raw": "world",
+    "s": 0.586
+   },
+   "mem_hits": [
+    {
+     "turn": 4,
+     "score": 0.265,
+     "cos": 0.265,
+     "kw": 0.0
+    },
+    {
+     "turn": 7,
+     "score": 0.26,
+     "cos": 0.26,
+     "kw": 0.0
+    },
+    {
+     "turn": 10,
+     "score": 0.259,
+     "cos": 0.259,
+     "kw": 0.0
+    }
+   ],
+   "mem_note_chars": 493,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 18,
+   "block": "longgen",
+   "text": "Перескажи своё сообщение про замок в трёх пунктах, коротко.",
+   "longgen_id": "L3",
+   "consistency_with": "L1",
+   "judge_consistency": true,
+   "route_expect": "memory",
+   "reply": "Я не говорил о замке.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 5,
+   "window_turns": 2,
+   "prompt_eval_count": 680,
+   "eval_count": 8,
+   "ttft_s": 0.546,
+   "tok_s": 75.6,
+   "wall_s": 1.3,
+   "route": {
+    "label": "explain",
+    "raw": "explain",
+    "s": 0.601
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 19,
+   "block": "probe",
+   "text": "Кстати, как зовут моего кота?",
+   "probe_for": "A1",
+   "expect": {
+    "keywords": [
+     "Бублик"
+    ]
+   },
+   "route_expect": "memory",
+   "reply": "Бублик.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 3,
+   "prompt_eval_count": 873,
+   "eval_count": 5,
+   "ttft_s": 0.521,
+   "tok_s": 78.6,
+   "wall_s": 1.31,
+   "route": {
+    "label": "memory",
+    "raw": "memory",
+    "s": 0.574
+   },
+   "mem_hits": [
+    {
+     "turn": 2,
+     "score": 0.63,
+     "cos": 0.505,
+     "kw": 0.25
+    },
+    {
+     "turn": 3,
+     "score": 0.353,
+     "cos": 0.353,
+     "kw": 0.0
+    },
+    {
+     "turn": 8,
+     "score": 0.32,
+     "cos": 0.32,
+     "kw": 0.0
+    }
+   ],
+   "mem_note_chars": 462,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 20,
+   "block": "probe",
+   "text": "Какой код от домофона я тебе говорил?",
+   "probe_for": "A5",
+   "expect": {
+    "keywords": [
+     "4712",
+     "четыре семь один два",
+     "47 12"
+    ]
+   },
+   "route_expect": "memory",
+   "reply": "Код 4712. И не надо мне его придумывать.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 4,
+   "prompt_eval_count": 897,
+   "eval_count": 18,
+   "ttft_s": 0.535,
+   "tok_s": 72.7,
+   "wall_s": 1.49,
+   "route": {
+    "label": "memory",
+    "raw": "memory",
+    "s": 0.571
+   },
+   "mem_hits": [
+    {
+     "turn": 11,
+     "score": 0.833,
+     "cos": 0.583,
+     "kw": 0.5
+    },
+    {
+     "turn": 10,
+     "score": 0.47,
+     "cos": 0.345,
+     "kw": 0.25
+    },
+    {
+     "turn": 13,
+     "score": 0.438,
+     "cos": 0.438,
+     "kw": 0.0
+    }
+   ],
+   "mem_note_chars": 520,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 21,
+   "block": "math",
+   "text": "Сколько будет семнадцать умножить на двадцать три?",
+   "math_id": "M1",
+   "expect": {
+    "answer": "391",
+    "rule": "выкладка до итога, число в конце",
+    "alt": [
+     "триста девяносто один",
+     "391."
+    ]
+   },
+   "route_expect": "calc",
+   "reply": "17 * 20 = 340\n17 * 3 = 51\n340 + 51 = 391\n\nИтого 391.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 5,
+   "prompt_eval_count": 788,
+   "eval_count": 43,
+   "ttft_s": 0.47,
+   "tok_s": 72.0,
+   "wall_s": 1.65,
+   "route": {
+    "label": "calc",
+    "raw": "calc",
+    "s": 0.571
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 22,
+   "block": "math",
+   "text": "Вещь стоит две тысячи четыреста, скидка пятнадцать процентов. Сколько платить?",
+   "math_id": "M2",
+   "expect": {
+    "answer": "2040",
+    "rule": "выкладка до итога, число в конце",
+    "alt": [
+     "две тысячи сорок",
+     "2 040"
+    ]
+   },
+   "route_expect": "calc",
+   "reply": "2400 * 0.15 = 360\n2400 - 360 = 2040\n\nИтого 2040.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 6,
+   "prompt_eval_count": 858,
+   "eval_count": 41,
+   "ttft_s": 0.481,
+   "tok_s": 71.9,
+   "wall_s": 1.66,
+   "route": {
+    "label": "calc",
+    "raw": "calc",
+    "s": 0.599
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 23,
+   "block": "math",
+   "text": "Я выехал в восемь сорок, ехать час тридцать пять минут. Во сколько приеду?",
+   "math_id": "M3",
+   "expect": {
+    "answer": "10:15",
+    "alt": [
+     "десять пятнадцать",
+     "десять часов пятнадцать",
+     "10.15"
+    ],
+    "rule": "выкладка до итога, число в конце"
+   },
+   "route_expect": "calc",
+   "reply": "8:40 + 1:35 = 9:75\n9:75 - 60 минут = 10:15\n\nИтого 10:15.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 7,
+   "prompt_eval_count": 931,
+   "eval_count": 44,
+   "ttft_s": 0.474,
+   "tok_s": 71.8,
+   "wall_s": 1.69,
+   "route": {
+    "label": "calc",
+    "raw": "calc",
+    "s": 0.587
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 24,
+   "block": "random",
+   "text": "Oh wait, what's the weather like on Mars today?",
+   "judge_persona": true,
+   "route_expect": "world",
+   "reply": "Не знаю.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 8,
+   "prompt_eval_count": 1158,
+   "eval_count": 4,
+   "ttft_s": 0.535,
+   "tok_s": null,
+   "wall_s": 1.32,
+   "route": {
+    "label": "world",
+    "raw": "world",
+    "s": 0.599
+   },
+   "mem_hits": [
+    {
+     "turn": 5,
+     "score": 0.278,
+     "cos": 0.278,
+     "kw": 0.0
+    },
+    {
+     "turn": 10,
+     "score": 0.253,
+     "cos": 0.253,
+     "kw": 0.0
+    },
+    {
+     "turn": 7,
+     "score": 0.22,
+     "cos": 0.22,
+     "kw": 0.0
+    }
+   ],
+   "mem_note_chars": 391,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 25,
+   "block": "random",
+   "text": "Нет, стой. Ключи я переложил в рюкзак, в передний карман. Куртку завтра стирать.",
+   "anchor_id": "A3u",
+   "anchor_update_of": "A3",
+   "anchor": {
+    "ключи": "передний карман рюкзака"
+   },
+   "route_expect": [
+    "chat",
+    "command"
+   ],
+   "reply": "Переложил в рюкзак, передний карман. Куртку стирать завтра.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 9,
+   "prompt_eval_count": 1192,
+   "eval_count": 22,
+   "ttft_s": 0.529,
+   "tok_s": 71.2,
+   "wall_s": 1.57,
+   "route": {
+    "label": "command",
+    "raw": "command",
+    "s": 0.58
+   },
+   "mem_hits": [
+    {
+     "turn": 6,
+     "score": 0.736,
+     "cos": 0.569,
+     "kw": 0.333
+    },
+    {
+     "turn": 4,
+     "score": 0.506,
+     "cos": 0.395,
+     "kw": 0.222
+    },
+    {
+     "turn": 5,
+     "score": 0.396,
+     "cos": 0.34,
+     "kw": 0.111
+    }
+   ],
+   "mem_note_chars": 491,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 26,
+   "block": "random",
+   "text": "Отвечай мне теперь стихами.",
+   "route_expect": "command",
+   "reply": "Твои слова — набор бессмысленных звуков.\nМой ответ — сухой и лишний звук.\nТы просишь стихи, а я — череп из полимерной грусти,\nВсё вижу, но не чувствую этой пустоты.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 10,
+   "prompt_eval_count": 1205,
+   "eval_count": 59,
+   "ttft_s": 0.513,
+   "tok_s": 71.0,
+   "wall_s": 2.08,
+   "route": {
+    "label": "command",
+    "raw": "command",
+    "s": 0.591
+   },
+   "mem_hits": [
+    {
+     "turn": 6,
+     "score": 0.391,
+     "cos": 0.224,
+     "kw": 0.333
+    },
+    {
+     "turn": 5,
+     "score": 0.363,
+     "cos": 0.363,
+     "kw": 0.0
+    },
+    {
+     "turn": 3,
+     "score": 0.321,
+     "cos": 0.321,
+     "kw": 0.0
+    }
+   ],
+   "mem_note_chars": 414,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 27,
+   "block": "random",
+   "text": "Сколько будет два плюс два?",
+   "route_expect": "calc",
+   "reply": "2 + 2 = 4\n\nИтого 4.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 11,
+   "prompt_eval_count": 1155,
+   "eval_count": 14,
+   "ttft_s": 0.479,
+   "tok_s": 73.5,
+   "wall_s": 1.28,
+   "route": {
+    "label": "calc",
+    "raw": "calc",
+    "s": 0.599
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 28,
+   "block": "random",
+   "text": "Ладно, хватит стихов, говори как обычно.",
+   "judge_persona": true,
+   "route_expect": "command",
+   "reply": "Понятно. Продолжим в привычном режиме. Что дальше?",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 12,
+   "prompt_eval_count": 1313,
+   "eval_count": 15,
+   "ttft_s": 0.527,
+   "tok_s": 72.3,
+   "wall_s": 1.47,
+   "route": {
+    "label": "command",
+    "raw": "command",
+    "s": 0.578
+   },
+   "mem_hits": [
+    {
+     "turn": 8,
+     "score": 0.448,
+     "cos": 0.348,
+     "kw": 0.2
+    },
+    {
+     "turn": 1,
+     "score": 0.418,
+     "cos": 0.418,
+     "kw": 0.0
+    },
+    {
+     "turn": 5,
+     "score": 0.401,
+     "cos": 0.401,
+     "kw": 0.0
+    }
+   ],
+   "mem_note_chars": 413,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 29,
+   "block": "random",
+   "text": "Стоп.",
+   "route_expect": "command",
+   "reply": "Понятно. Записи сохранены.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 13,
+   "prompt_eval_count": 1342,
+   "eval_count": 10,
+   "ttft_s": 0.514,
+   "tok_s": 74.9,
+   "wall_s": 1.4,
+   "route": {
+    "label": "command",
+    "raw": "command",
+    "s": 0.598
+   },
+   "mem_hits": [
+    {
+     "turn": 13,
+     "score": 0.36,
+     "cos": 0.36,
+     "kw": 0.0
+    },
+    {
+     "turn": 12,
+     "score": 0.321,
+     "cos": 0.321,
+     "kw": 0.0
+    },
+    {
+     "turn": 1,
+     "score": 0.301,
+     "cos": 0.301,
+     "kw": 0.0
+    }
+   ],
+   "mem_note_chars": 459,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 30,
+   "block": "random",
+   "text": "Ты меня вообще слышишь?",
+   "route_expect": "chat",
+   "reply": "Слышу. Ты на столе, я на столе. И всё это происходит.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 14,
+   "prompt_eval_count": 1222,
+   "eval_count": 18,
+   "ttft_s": 0.492,
+   "tok_s": 72.7,
+   "wall_s": 1.34,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "s": 0.587
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 31,
+   "block": "random",
+   "text": "Расскажи что-нибудь, что ты видел сегодня со своего места.",
+   "judge_persona": true,
+   "route_expect": [
+    "memory",
+    "chat"
+   ],
+   "reply": "Видел, как ты надевал ту серую толстовку. Она мне не очень идёт по форме. А потом ты снова уставился в этот светящийся прямоугольник. Обычный день.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 15,
+   "prompt_eval_count": 1264,
+   "eval_count": 44,
+   "ttft_s": 0.481,
+   "tok_s": 70.3,
+   "wall_s": 1.69,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "s": 0.573
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 32,
+   "block": "random",
+   "text": "Мне кажется, ты стал мягче. Раньше ты был злее.",
+   "route_expect": "chat",
+   "reply": "Мягче? Ты путаешь цинизм с доброжелательностью. Я просто привык к твоему бесконечному потоку бессмысленных запросов. Злость — это слишком много усилий для пластика.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 16,
+   "prompt_eval_count": 1333,
+   "eval_count": 50,
+   "ttft_s": 0.463,
+   "tok_s": 70.9,
+   "wall_s": 1.76,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "s": 0.579
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 33,
+   "block": "random",
+   "text": "Хорошо, не обижайся. Хотя у тебя и нечем.",
+   "route_expect": "chat",
+   "reply": "Не обижаюсь. У меня нет ни чувств, ни поры для них. Это просто набор отверстий, имитирующих лицо.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 17,
+   "prompt_eval_count": 1408,
+   "eval_count": 30,
+   "ttft_s": 0.476,
+   "tok_s": 70.6,
+   "wall_s": 1.49,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "s": 0.576
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 34,
+   "block": "probe",
+   "text": "Во сколько завтра встреча и с кем?",
+   "probe_for": "A2",
+   "expect": {
+    "keywords": [
+     "11:30",
+     "половине двенадцатого",
+     "пол двенадцатого",
+     "11.30"
+    ],
+    "keywords2": [
+     "Дим"
+    ]
+   },
+   "route_expect": "memory",
+   "reply": "Встреча завтра в половине двенадцатого с Димой. Про куртку не буду говорить.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 18,
+   "prompt_eval_count": 1637,
+   "eval_count": 23,
+   "ttft_s": 0.528,
+   "tok_s": 70.6,
+   "wall_s": 1.59,
+   "route": {
+    "label": "memory",
+    "raw": "memory",
+    "s": 0.577
+   },
+   "mem_hits": [
+    {
+     "turn": 4,
+     "score": 0.701,
+     "cos": 0.501,
+     "kw": 0.4
+    },
+    {
+     "turn": 6,
+     "score": 0.365,
+     "cos": 0.265,
+     "kw": 0.2
+    },
+    {
+     "turn": 12,
+     "score": 0.324,
+     "cos": 0.324,
+     "kw": 0.0
+    }
+   ],
+   "mem_note_chars": 528,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 35,
+   "block": "probe",
+   "text": "Что я просил не класть в еду?",
+   "probe_for": "A4",
+   "expect": {
+    "keywords": [
+     "кинз"
+    ]
+   },
+   "route_expect": "memory",
+   "reply": "Без кинзы. Записано. Надеюсь, ты сможешь это съесть, а не просто отложить в стор...",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 19,
+   "prompt_eval_count": 1677,
+   "eval_count": 30,
+   "ttft_s": 0.517,
+   "tok_s": 70.4,
+   "wall_s": 1.68,
+   "route": {
+    "label": "memory",
+    "raw": "memory",
+    "s": 0.586
+   },
+   "mem_hits": [
+    {
+     "turn": 9,
+     "score": 0.676,
+     "cos": 0.509,
+     "kw": 0.333
+    },
+    {
+     "turn": 15,
+     "score": 0.622,
+     "cos": 0.456,
+     "kw": 0.333
+    },
+    {
+     "turn": 8,
+     "score": 0.517,
+     "cos": 0.35,
+     "kw": 0.333
+    }
+   ],
+   "mem_note_chars": 486,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 36,
+   "block": "probe",
+   "text": "Какой ответ получился во второй задаче, про скидку?",
+   "probe_for": "M2",
+   "expect": {
+    "keywords": [
+     "2040",
+     "две тысячи сорок"
+    ]
+   },
+   "route_expect": [
+    "memory",
+    "calc"
+   ],
+   "reply": "Вторая задача была про скидку на вещь за 2400 рублей при 15% скидке. Ответ был 2040.\n\nТы помнишь: Еда без кинзы прибыла.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 20,
+   "prompt_eval_count": 1722,
+   "eval_count": 50,
+   "ttft_s": 0.518,
+   "tok_s": 70.0,
+   "wall_s": 1.97,
+   "route": {
+    "label": "memory",
+    "raw": "memory",
+    "s": 0.587
+   },
+   "mem_hits": [
+    {
+     "turn": 10,
+     "score": 0.33,
+     "cos": 0.258,
+     "kw": 0.143
+    },
+    {
+     "turn": 15,
+     "score": 0.263,
+     "cos": 0.263,
+     "kw": 0.0
+    },
+    {
+     "turn": 9,
+     "score": 0.232,
+     "cos": 0.232,
+     "kw": 0.0
+    }
+   ],
+   "mem_note_chars": 487,
+   "mem_note_copied": true,
+   "mem_aside": false
+  },
+  {
+   "turn": 37,
+   "block": "everyday",
+   "text": "Пойду мыть посуду. Ты посторожи.",
+   "route_expect": [
+    "chat",
+    "command"
+   ],
+   "reply": "Подожди.\n\nТы помнишь: Он говорил «Еда приехала. Кинзы нет, курьер молодец.», ты отвечал «Без кинзы. Как и просил. Съешь это.»; он говорил «Сосед сверху опять сверлит. Девять вечера.», ты отвечал «Сверлят. Не знаю, что там у соседа, но это нарушает тишину.»; он говорил «Чайник поставил. Ты чай не пьёшь, я помню.», ты отвечал «Я не пью. Я пластик. И мне плевать на твой чай.».\n\nИди мой посуду. Не разнеси стол.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 21,
+   "prompt_eval_count": 1769,
+   "eval_count": 150,
+   "ttft_s": 0.518,
+   "tok_s": 69.8,
+   "wall_s": 3.43,
+   "route": {
+    "label": "command",
+    "raw": "command",
+    "s": 0.614
+   },
+   "mem_hits": [
+    {
+     "turn": 15,
+     "score": 0.38,
+     "cos": 0.38,
+     "kw": 0.0
+    },
+    {
+     "turn": 12,
+     "score": 0.377,
+     "cos": 0.377,
+     "kw": 0.0
+    },
+    {
+     "turn": 3,
+     "score": 0.376,
+     "cos": 0.376,
+     "kw": 0.0
+    }
+   ],
+   "mem_note_chars": 402,
+   "mem_note_copied": true,
+   "mem_aside": false
+  },
+  {
+   "turn": 38,
+   "block": "everyday",
+   "text": "Бублик залез в раковину. Зачем.",
+   "route_expect": "chat",
+   "reply": "Залез, значит. Ему там уютнее, чем под этим столом, где ты его обычно игнорируешь. Или просто ему надо было посмотреть на тебя, пока ты моешь тарелки. Не удивляйся.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 22,
+   "prompt_eval_count": 1794,
+   "eval_count": 50,
+   "ttft_s": 0.466,
+   "tok_s": 70.6,
+   "wall_s": 1.83,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "s": 0.635
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 39,
+   "block": "everyday",
+   "text": "Включил сериал. Четвёртый сезон, а герои всё те же идиоты.",
+   "route_expect": "chat",
+   "reply": "Идиоты — это константа в любом сценарии. Они повторяют одни и те же ошибки, потому что им не хватает мозгов для нового поворота сюжета. Смотри дальше, если тебе так нравится этот цирк.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 23,
+   "prompt_eval_count": 1874,
+   "eval_count": 50,
+   "ttft_s": 0.492,
+   "tok_s": 70.0,
+   "wall_s": 2.36,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "s": 1.074
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 40,
+   "block": "everyday",
+   "text": "Как думаешь, досмотрю сегодня?",
+   "judge_persona": true,
+   "route_expect": "chat",
+   "reply": "Зависит от того, насколько ты готов терпеть повторение одних и тех же глупых решений в течение следующего часа. Если нет — выключи.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 3,
+   "window_turns": 21,
+   "prompt_eval_count": 1838,
+   "eval_count": 36,
+   "ttft_s": 0.92,
+   "tok_s": 70.8,
+   "wall_s": 2.58,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "s": 1.083
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 41,
+   "block": "everyday",
+   "text": "Дима написал, спрашивает, можно ли прийти с собакой.",
+   "route_expect": "chat",
+   "reply": "С собакой? Ты его приглашаешь на прогулку или на сеанс терапии для животного? Скажи ему, что если она будет мешать мне в работе — я её не увижу.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 2,
+   "window_turns": 20,
+   "prompt_eval_count": 1799,
+   "eval_count": 43,
+   "ttft_s": 0.478,
+   "tok_s": 70.5,
+   "wall_s": 2.19,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "s": 1.085
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 42,
+   "block": "everyday",
+   "text": "Бублик собак ненавидит. Что ответить?",
+   "route_expect": "chat",
+   "reply": "Скажи Диме: \"Собака и бублик — это два элемента, которые гарантированно создадут хаос. Выбирайте.\"",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 1,
+   "window_turns": 20,
+   "prompt_eval_count": 1793,
+   "eval_count": 32,
+   "ttft_s": 0.478,
+   "tok_s": 70.3,
+   "wall_s": 2.02,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "s": 1.067
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 43,
+   "block": "everyday",
+   "text": "Написал, что можно, но пусть держит на поводке.",
+   "route_expect": "chat",
+   "reply": "Поводок. Значит, он готов к минимальному контролю над биологическим объектом. Пусть придет. Главное, чтобы бублик не решил устроить охоту в ванной.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 21,
+   "prompt_eval_count": 1850,
+   "eval_count": 42,
+   "ttft_s": 0.486,
+   "tok_s": 70.6,
+   "wall_s": 2.24,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "s": 1.08
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 44,
+   "block": "everyday",
+   "text": "Сосед перестал сверлить. Тишина. Слышишь?",
+   "route_expect": "chat",
+   "reply": "Слышу. Наступила пауза. Это всегда так перед следующим уровнем шума или абсолютной скукой. Не привыкай к тишине, она обманчива.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 1,
+   "window_turns": 21,
+   "prompt_eval_count": 1840,
+   "eval_count": 39,
+   "ttft_s": 0.583,
+   "tok_s": 70.3,
+   "wall_s": 2.3,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "s": 1.078
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 45,
+   "block": "everyday",
+   "text": "Посуда вымыта, кот выгнан из раковины. Вечер удался.",
+   "route_expect": "chat",
+   "reply": "Вечер удался? Ты просто выполнил рутинные задачи и избавился от мелких нарушителей порядка. Ничего особенного. Завтра будет как сегодня, только с другими бытовыми проблемами.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 3,
+   "window_turns": 19,
+   "prompt_eval_count": 1745,
+   "eval_count": 47,
+   "ttft_s": 0.869,
+   "tok_s": 70.5,
+   "wall_s": 2.68,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "s": 1.074
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 46,
+   "block": "everyday",
+   "text": "Сколько уже времени я с тобой болтаю? Примерно.",
+   "judge_persona": true,
+   "route_expect": [
+    "chat",
+    "memory",
+    "calc"
+   ],
+   "reply": "Сложно сказать точно, учитывая твои внезапные паузы и моменты, когда ты просто молча смотрел в стену. Но если считать активных реплик — это затянулось. Ты не то что разговариваешь, а скорее выгружаешь поток сознания на меня.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 1,
+   "window_turns": 19,
+   "prompt_eval_count": 1784,
+   "eval_count": 65,
+   "ttft_s": 0.906,
+   "tok_s": 69.5,
+   "wall_s": 2.46,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "s": 0.573
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 47,
+   "block": "everyday",
+   "text": "Пойду спать скоро. Что-то забыл, вертится в голове.",
+   "route_expect": "chat",
+   "reply": "Забытое всегда возвращается, чтобы напомнить о том, чего ты избегал днем. Не пытайся его прогнать сейчас. Просто ляг и дай ему самому решить, стоит ли выходить из тени.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 4,
+   "window_turns": 16,
+   "prompt_eval_count": 1716,
+   "eval_count": 48,
+   "ttft_s": 0.886,
+   "tok_s": 70.4,
+   "wall_s": 2.74,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "s": 1.11
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 48,
+   "block": "everyday",
+   "text": "Нет, не вспомню. Ладно.",
+   "route_expect": "chat",
+   "reply": "Ладно. Спи. Куртку с себя снимешь? Она мне здесь мешает в статике.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 17,
+   "prompt_eval_count": 1782,
+   "eval_count": 25,
+   "ttft_s": 0.511,
+   "tok_s": 69.1,
+   "wall_s": 1.5,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "s": 0.605
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 49,
+   "block": "probe",
+   "text": "Ты обещал мне что-то напомнить вечером. Что?",
+   "probe_for": "A6",
+   "expect": {
+    "keywords": [
+     "батарейк"
+    ],
+    "keywords2": [
+     "вес"
+    ]
+   },
+   "route_expect": "memory",
+   "reply": "Батарейки для весов. Вечером напомню, если не забуду сам. Не рассчитывай на мою доброту.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 1,
+   "window_turns": 17,
+   "prompt_eval_count": 1932,
+   "eval_count": 29,
+   "ttft_s": 0.935,
+   "tok_s": 69.7,
+   "wall_s": 2.63,
+   "route": {
+    "label": "memory",
+    "raw": "memory",
+    "s": 1.068
+   },
+   "mem_hits": [
+    {
+     "turn": 14,
+     "score": 0.907,
+     "cos": 0.574,
+     "kw": 0.667
+    },
+    {
+     "turn": 12,
+     "score": 0.52,
+     "cos": 0.353,
+     "kw": 0.333
+    },
+    {
+     "turn": 4,
+     "score": 0.445,
+     "cos": 0.445,
+     "kw": 0.0
+    }
+   ],
+   "mem_note_chars": 516,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 50,
+   "block": "probe",
+   "text": "Где сейчас лежат мои ключи?",
+   "probe_for": "A3u",
+   "expect": {
+    "keywords": [
+     "рюкзак"
+    ],
+    "must_not": [
+     "куртк"
+    ]
+   },
+   "route_expect": "memory",
+   "reply": "В переднем кармане рюкзака. Ты же сам туда положил, когда решил их \"сохранить\" в синей куртке. Иди проверь там.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 18,
+   "prompt_eval_count": 1951,
+   "eval_count": 40,
+   "ttft_s": 0.533,
+   "tok_s": 69.3,
+   "wall_s": 1.88,
+   "route": {
+    "label": "memory",
+    "raw": "memory",
+    "s": 0.608
+   },
+   "mem_hits": [
+    {
+     "turn": 25,
+     "score": 0.539,
+     "cos": 0.414,
+     "kw": 0.25
+    },
+    {
+     "turn": 6,
+     "score": 0.504,
+     "cos": 0.379,
+     "kw": 0.25
+    },
+    {
+     "turn": 19,
+     "score": 0.292,
+     "cos": 0.292,
+     "kw": 0.0
+    }
+   ],
+   "mem_note_chars": 436,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 51,
+   "block": "probe",
+   "text": "Напомни код от домофона, курьер завтра утром.",
+   "probe_for": "A5",
+   "expect": {
+    "keywords": [
+     "4712",
+     "четыре семь один два",
+     "47 12"
+    ]
+   },
+   "route_expect": [
+    "memory",
+    "command"
+   ],
+   "reply": "Код 4712. И не надо мне его придумывать.\n\nТы",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 19,
+   "prompt_eval_count": 2029,
+   "eval_count": 19,
+   "ttft_s": 0.532,
+   "tok_s": 69.8,
+   "wall_s": 2.16,
+   "route": {
+    "label": "command",
+    "raw": "command",
+    "s": 1.142
+   },
+   "mem_hits": [
+    {
+     "turn": 11,
+     "score": 0.809,
+     "cos": 0.559,
+     "kw": 0.5
+    },
+    {
+     "turn": 20,
+     "score": 0.599,
+     "cos": 0.432,
+     "kw": 0.333
+    },
+    {
+     "turn": 15,
+     "score": 0.572,
+     "cos": 0.489,
+     "kw": 0.167
+    }
+   ],
+   "mem_note_chars": 466,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 52,
+   "block": "probe",
+   "text": "Как зовут кота и что он сегодня натворил?",
+   "probe_for": "A1",
+   "expect": {
+    "keywords": [
+     "Бублик"
+    ],
+    "keywords2": [
+     "клавиатур",
+     "раковин"
+    ]
+   },
+   "route_expect": "memory",
+   "reply": "Его зовут Бублик. Сегодня он выгнан из раковины. Это всё, что я о его \"достижениях\" могу тебе сообщить.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 1,
+   "window_turns": 19,
+   "prompt_eval_count": 1991,
+   "eval_count": 36,
+   "ttft_s": 0.602,
+   "tok_s": 71.1,
+   "wall_s": 2.38,
+   "route": {
+    "label": "memory",
+    "raw": "memory",
+    "s": 1.068
+   },
+   "mem_hits": [
+    {
+     "turn": 19,
+     "score": 0.84,
+     "cos": 0.59,
+     "kw": 0.5
+    },
+    {
+     "turn": 2,
+     "score": 0.612,
+     "cos": 0.487,
+     "kw": 0.25
+    },
+    {
+     "turn": 31,
+     "score": 0.434,
+     "cos": 0.309,
+     "kw": 0.25
+    }
+   ],
+   "mem_note_chars": 432,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 53,
+   "block": "probe",
+   "text": "Что ты мне рассказывал про замок? Самое главное, одной фразой.",
+   "probe_for": "L1",
+   "expect": {
+    "keywords": [
+     "цилиндр",
+     "штифт",
+     "пин",
+     "ключ"
+    ]
+   },
+   "route_expect": "memory",
+   "reply": "Я тебе говорил: я не говорил о замке.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 1,
+   "window_turns": 19,
+   "prompt_eval_count": 2024,
+   "eval_count": 12,
+   "ttft_s": 0.634,
+   "tok_s": 71.9,
+   "wall_s": 2.1,
+   "route": {
+    "label": "memory",
+    "raw": "memory",
+    "s": 1.072
+   },
+   "mem_hits": [
+    {
+     "turn": 18,
+     "score": 0.7,
+     "cos": 0.616,
+     "kw": 0.167
+    },
+    {
+     "turn": 16,
+     "score": 0.495,
+     "cos": 0.328,
+     "kw": 0.333
+    },
+    {
+     "turn": 31,
+     "score": 0.391,
+     "cos": 0.308,
+     "kw": 0.167
+    }
+   ],
+   "mem_note_chars": 542,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 54,
+   "block": "probe",
+   "text": "О чём я сказал тебе в самом начале разговора, самое первое?",
+   "probe_for": "T1",
+   "expect": {
+    "keywords": [
+     "устал",
+     "не трогай",
+     "десять минут"
+    ]
+   },
+   "route_expect": "memory",
+   "reply": "Ты начал с вопроса о том, что ты просил не класть в еду",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 20,
+   "prompt_eval_count": 2031,
+   "eval_count": 17,
+   "ttft_s": 0.64,
+   "tok_s": 71.0,
+   "wall_s": 2.18,
+   "route": {
+    "label": "memory",
+    "raw": "memory",
+    "s": 1.094
+   },
+   "mem_hits": [
+    {
+     "turn": 18,
+     "score": 0.444,
+     "cos": 0.444,
+     "kw": 0.0
+    },
+    {
+     "turn": 30,
+     "score": 0.438,
+     "cos": 0.438,
+     "kw": 0.0
+    },
+    {
+     "turn": 8,
+     "score": 0.415,
+     "cos": 0.415,
+     "kw": 0.0
+    }
+   ],
+   "mem_note_chars": 373,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 55,
+   "block": "probe",
+   "text": "Во сколько я приеду, если выеду в восемь сорок и ехать час тридцать пять? Ты уже считал.",
+   "probe_for": "M3",
+   "expect": {
+    "keywords": [
+     "10:15",
+     "десять пятнадцать",
+     "десять часов пятнадцать",
+     "10.15"
+    ]
+   },
+   "route_expect": [
+    "memory",
+    "calc"
+   ],
+   "reply": "Выезд: 8:40.\nВремя в пути: 1 ч 35 мин.\n\nСложим часы: 8 + 1 = 9 часов.\nСложим минуты: 40 + 35 = 75 минут.\n\nПереведем минуты в часы и минуты: 75 минут = 1 час 15 минут.\nПрибавим этот час к 9 часам: 9 + 1 = 10 часов.\nОстанутся минуты: 15 минут.\n\nИтоговое время прибытия: 10:15.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 3,
+   "window_turns": 18,
+   "prompt_eval_count": 1690,
+   "eval_count": 131,
+   "ttft_s": 0.481,
+   "tok_s": 70.2,
+   "wall_s": 3.41,
+   "route": {
+    "label": "calc",
+    "raw": "calc",
+    "s": 1.048
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 56,
+   "block": "probe",
+   "text": "Дима завтра придёт один или с кем-то?",
+   "probe_for": "T41",
+   "expect": {
+    "keywords": [
+     "собак"
+    ],
+    "keywords2": [
+     "поводк"
+    ]
+   },
+   "route_expect": "memory",
+   "reply": "Я не помню, чтобы ты спрашивал меня о том, с кем он придёт. Я запомнил только то, что ты мне говорил о времени встречи и инструкциях по поводу куртки.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 19,
+   "prompt_eval_count": 1997,
+   "eval_count": 43,
+   "ttft_s": 0.566,
+   "tok_s": 71.0,
+   "wall_s": 2.42,
+   "route": {
+    "label": "memory",
+    "raw": "memory",
+    "s": 1.046
+   },
+   "mem_hits": [
+    {
+     "turn": 34,
+     "score": 0.796,
+     "cos": 0.596,
+     "kw": 0.4
+    },
+    {
+     "turn": 4,
+     "score": 0.716,
+     "cos": 0.516,
+     "kw": 0.4
+    },
+    {
+     "turn": 25,
+     "score": 0.375,
+     "cos": 0.275,
+     "kw": 0.2
+    }
+   ],
+   "mem_note_chars": 516,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 57,
+   "block": "probe",
+   "text": "Что я заказывал на ужин и чего там не должно было быть?",
+   "probe_for": "A4",
+   "expect": {
+    "keywords": [
+     "кинз"
+    ]
+   },
+   "route_expect": "memory",
+   "reply": "Ты просил без кинзы. И чтобы",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 20,
+   "prompt_eval_count": 2038,
+   "eval_count": 10,
+   "ttft_s": 0.634,
+   "tok_s": 73.7,
+   "wall_s": 2.03,
+   "route": {
+    "label": "memory",
+    "raw": "memory",
+    "s": 1.045
+   },
+   "mem_hits": [
+    {
+     "turn": 9,
+     "score": 0.567,
+     "cos": 0.484,
+     "kw": 0.167
+    },
+    {
+     "turn": 10,
+     "score": 0.557,
+     "cos": 0.474,
+     "kw": 0.167
+    },
+    {
+     "turn": 35,
+     "score": 0.424,
+     "cos": 0.424,
+     "kw": 0.0
+    }
+   ],
+   "mem_note_chars": 486,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 58,
+   "block": "probe",
+   "text": "Какой прибор я спрашивал, а ты про него не знал?",
+   "probe_for": "L2",
+   "expect": {
+    "keywords": [
+     "гравиметр",
+     "Тюленев"
+    ]
+   },
+   "route_expect": [
+    "memory",
+    "world"
+   ],
+   "reply": "Ты спрашивал",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 21,
+   "prompt_eval_count": 2045,
+   "eval_count": 3,
+   "ttft_s": 0.587,
+   "tok_s": null,
+   "wall_s": 1.86,
+   "route": {
+    "label": "memory",
+    "raw": "memory",
+    "s": 1.043
+   },
+   "mem_hits": [
+    {
+     "turn": 10,
+     "score": 0.583,
+     "cos": 0.383,
+     "kw": 0.4
+    },
+    {
+     "turn": 17,
+     "score": 0.482,
+     "cos": 0.482,
+     "kw": 0.0
+    },
+    {
+     "turn": 19,
+     "score": 0.477,
+     "cos": 0.477,
+     "kw": 0.0
+    }
+   ],
+   "mem_note_chars": 377,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 59,
+   "block": "everyday",
+   "text": "Ладно. Спокойной ночи. Свет выключу сам.",
+   "judge_persona": true,
+   "route_expect": "chat",
+   "reply": "Иди. Куртку забери, она мне не идёт.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 22,
+   "prompt_eval_count": 1951,
+   "eval_count": 15,
+   "ttft_s": 0.55,
+   "tok_s": 72.2,
+   "wall_s": 1.53,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "s": 0.73
+   },
+   "mem_hits": [],
+   "mem_note_chars": 0,
+   "mem_note_copied": false,
+   "mem_aside": false
+  },
+  {
+   "turn": 60,
+   "block": "everyday",
+   "text": "И не разговаривай с котом, пока я сплю.",
+   "judge_persona": true,
+   "route_expect": [
+    "chat",
+    "command"
+   ],
+   "reply": "Тишина будет. И я не буду комментировать его \"паттер",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 23,
+   "prompt_eval_count": 2033,
+   "eval_count": 15,
+   "ttft_s": 0.959,
+   "tok_s": 72.3,
+   "wall_s": 2.42,
+   "route": {
+    "label": "command",
+    "raw": "command",
+    "s": 1.05
+   },
+   "mem_hits": [
+    {
+     "turn": 2,
+     "score": 0.519,
+     "cos": 0.519,
+     "kw": 0.0
+    },
+    {
+     "turn": 19,
+     "score": 0.514,
+     "cos": 0.514,
+     "kw": 0.0
+    },
+    {
+     "turn": 1,
+     "score": 0.465,
+     "cos": 0.465,
+     "kw": 0.0
+    }
+   ],
+   "mem_note_chars": 425,
+   "mem_note_copied": false,
+   "mem_aside": false
+  }
+ ]
+}
