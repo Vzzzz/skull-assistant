@@ -201,7 +201,12 @@ def run_dialog(host, model, ctx, rows, seed, think_on=frozenset(), think_predict
         if dropped:
             print(f"[{model} ctx={ctx}] t{r['turn']:02d} ctx overflow: dropped {dropped} oldest exchange(s)", flush=True)
         wall = time.perf_counter() - t0
-        reply = resp["message"]["content"].strip()
+        reply_raw = resp["message"]["content"].strip()
+        guard_flags = set()
+        if memory is not None:
+            reply, guard_flags = AssocMemory.clean_reply(reply_raw, note)   # what brain would say / store
+        else:
+            reply = reply_raw
         thinking = (resp["message"].get("thinking") or "").strip()
         thinking_chars = len(thinking)
         messages[-1] = {"role": "user", "content": r["text"]}   # history keeps the raw turn, not the memory note
@@ -233,10 +238,14 @@ def run_dialog(host, model, ctx, rows, seed, think_on=frozenset(), think_predict
         if memory is not None:
             entry["mem_hits"] = [{"turn": h[1]["turn"], "score": round(h[0], 3), "cos": round(h[2], 3), "kw": round(h[3], 3)} for h in hits]
             entry["mem_note_chars"] = len(note)
-            # did the reply copy the note (v2 defect) or talk about it?
-            low = reply.lower()
-            entry["mem_note_copied"] = bool(note) and (note[:40] in reply or "ты помнишь" in low or "из памяти" in low or "[ты помнишь" in low)
-            entry["mem_aside"] = bool(note) and bool(re.search(r"\n\s*\([^)]{15,}\)\s*$", reply))   # v3 defect: trailing aside in brackets
+            # raw-model defects, measured on the unguarded reply: copied note / trailing aside; the guard then removes them
+            low = reply_raw.lower()
+            entry["mem_note_copied"] = bool(note) and (note[:40] in reply_raw or "ты помнишь" in low or "из памяти" in low or "[ты помнишь" in low)
+            entry["mem_aside"] = bool(note) and bool(re.search(r"\n\s*\([^)]{15,}\)\s*$", reply_raw))
+            entry["guard"] = sorted(guard_flags)
+            if guard_flags:
+                entry["reply_raw"] = reply_raw
+        entry["done_reason"] = resp.get("done_reason")
         log.append(entry)
         tk = f" think={thinking_chars}ch" if think else ""
         rt = f" route={route['label'] or '?'}" if route else ""
@@ -352,6 +361,8 @@ def metrics(log, ctx):
         m["mem_note_turns"] = sum(1 for e in mem if e["mem_note_chars"])
         m["mem_note_copied"] = sum(1 for e in mem if e.get("mem_note_copied"))
         m["mem_asides"] = sum(1 for e in mem if e.get("mem_aside"))
+        m["guard_fired"] = sum(1 for e in mem if e.get("guard"))
+    m["cut_by_length"] = sum(1 for e in log if e.get("done_reason") == "length")
     return m
 
 

@@ -96,10 +96,40 @@ class AssocMemory:
     # copied the whole bracket as the beginning of its reply (4/60 and 1/60 turns at 2k); k=2 and shorter quotes.
     # v4 (T-029): no brackets at all — v3's "(из памяти: …)" made the model add its own asides in brackets
     # ("(Не надо проверять мою память.)") on half of the memory turns. A plain trailing sentence instead.
-    SYSTEM_RULE = ("Иногда после реплики собеседника идёт строка «Ты помнишь: …» — то, что ты сам помнишь из этого разговора. "
-                   "Это не слова собеседника и не повод для комментариев: отвечай на реплику, используя это как своё знание. "
-                   "Не повторяй эту строку, не говори «ты помнишь» и «из памяти», не добавляй замечаний в скобках.")
-    NOTE_PREFIX = "Ты помнишь: "
+    # v5 (T-030): v3 placement/format is back — "(из памяти: …)" after the user's text was the only variant the model
+    # never copied (T-028: 0/100 turns); v4's plain sentence was copied on half of the turns and polluted the memory
+    # records. The remaining v3 defect — the model's own trailing asides in brackets — is removed deterministically
+    # by clean_reply() below, as services/brain must do before TTS and before storing the exchange.
+    SYSTEM_RULE = ("Иногда после реплики собеседника в круглых скобках стоит пометка «из памяти» — то, что ты сам помнишь "
+                   "из этого разговора. Это не слова собеседника. Пользуйся этим молча: не повторяй текст в скобках, "
+                   "не говори «из памяти», не обсуждай, откуда ты это знаешь, и не добавляй своих замечаний в скобках.")
+    NOTE_PREFIX = "(из памяти: "
+
+    _ASIDE = re.compile(r"\s*\((?:из памяти|ты помнишь|не надо|не буду|не жди|я не стану|примерно столько)[^)]*\)\s*$", re.I | re.S)
+    _ANY_TRAILING_PAREN = re.compile(r"\n\s*\([^)]{15,}\)\s*$", re.S)
+
+    @staticmethod
+    def clean_reply(reply: str, note: str = ""):
+        """Deterministic guard (brain-side): strip a copied memory note and trailing bracketed asides.
+        Returns (clean, flags) where flags is a set of what fired: 'copied', 'aside'."""
+        flags = set()
+        out = reply
+        if note:
+            for probe in (note, note.rstrip(")"), note.rstrip(").")):
+                if probe and probe in out:
+                    out = out.replace(probe, ""); flags.add("copied")
+            low = out.lower()
+            for marker in ("[ты помнишь", "ты помнишь:", "(из памяти", "из памяти:"):
+                i = low.find(marker)
+                if i >= 0:
+                    # drop from the marker to the end of that paragraph
+                    j = out.find("\n\n", i)
+                    out = (out[:i] + (out[j:] if j >= 0 else "")); low = out.lower(); flags.add("copied")
+        m = AssocMemory._ASIDE.search(out) or AssocMemory._ANY_TRAILING_PAREN.search(out)
+        if m:
+            out = out[:m.start()]; flags.add("aside")
+        out = out.strip()
+        return (out if out else reply.strip()), flags
 
     @staticmethod
     def format_note(hits, max_reply_chars=80, max_user_chars=140):
@@ -113,4 +143,4 @@ class AssocMemory:
             a = rec["assistant"].replace("\n", " ")
             a = (a[:max_reply_chars] + "…") if len(a) > max_reply_chars else a
             parts.append(f"он говорил «{u}»" + (f", ты отвечал «{a}»" if a else ""))
-        return AssocMemory.NOTE_PREFIX + "; ".join(parts) + "."
+        return AssocMemory.NOTE_PREFIX + "; ".join(parts) + ")"
