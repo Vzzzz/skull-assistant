@@ -25,6 +25,7 @@ Done: измеримый критерий.
 
 | ID | Статус | Задача | Связь |
 |---|---|---|---|
+| T-026 | open | MEM-1 + E-3: ассоциативная память (`--memory`) и роутер типов (`--router`) на CTX-1 — e4b-it-qat @8k/@2k, e2b @8k | MEMORY_TRACK, COGNITION_4B E-3 |
 | T-001 | open | STT: убрать двойной `transcribe` | I-01 |
 | T-002 | open | Brain: история диалога в Redis | I-05 |
 | T-016 | open | Brain: модель и `num_ctx` из манифеста, не хардкод | D-016 |
@@ -51,6 +52,34 @@ Done: измеримый критерий.
 | T-008 | blocked | Оценочный набор `research/eval/` | Q-029 |
 
 ## Карточки
+
+### T-026 · MEM-1 + E-3: ассоциативная память и роутер типов реплик на CTX-1 · open
+Зачем: память модели кончается вместе с окном (gemma4 e4b @4k recall 0.47, D-016), между днями и режимами A↔B контекста нет; thinking память не улучшает (D-025). Прототип в `research/memory/` подаёт в промпт top-k прошлых обменов (эмбеддинг + ключевые слова) и классифицирует ход роутером (6 типов), чтобы справка из памяти и правила включались только где уместно. Устройство и гейты — `docs/MEMORY_TRACK.md` §2–3. Стенд, ollama.
+Предусловие: `git pull --ff-only origin main`; сервисный режим, системный ollama; `ollama pull embeddinggemma` (300M, ~600 МБ VRAM рядом с e4b — помещается); проверка: `curl -s localhost:11434/api/embed -d '{"model":"embeddinggemma","input":"тест"}' | head -c 200` даёт `embeddings`.
+Файлы: `research/memory/assoc_memory.py`, `research/memory/router.py`, `research/eval/ctx_probe.py` (флаги `--memory off|all|dropped`, `--mem-k`, `--mem-mode hybrid|embed|kw`, `--embed-model`, `--router off|label|apply`), `research/eval/ctx_probe_dialog.jsonl` (поле `route_expect`). Результаты — `research/eval/results/` (суффиксы `_mem-<scope>-<mode>-k3`, `_rt-<mode>` в именах).
+Шаги (порядок = приоритет; каждый прогон 1.5–3 мин + судья):
+```bash
+cd ~/skull-assistant && git pull --ff-only origin main && ollama pull embeddinggemma
+M=gemma4:e4b-it-qat; L=research/eval/results/ctx_probe_t026.log; J="--judge qwen3.5:9b"
+# 1. роутер: точность на 60 ходах, ничего не меняет
+.venv/bin/python research/eval/ctx_probe.py --model $M --ctx 8192 --router label $J 2>&1 | tee -a $L
+# 2. память за окном: база @2k (промпт v3 — такой базы ещё нет) против памяти по выпавшим обменам, два seed
+for s in 42 7; do .venv/bin/python research/eval/ctx_probe.py --model $M --ctx 2048 --seed $s $J 2>&1 | tee -a $L; .venv/bin/python research/eval/ctx_probe.py --model $M --ctx 2048 --seed $s --memory dropped $J 2>&1 | tee -a $L; done
+# 3. память везде @8k и память по роутеру @8k, два seed
+for s in 42 7; do .venv/bin/python research/eval/ctx_probe.py --model $M --ctx 8192 --seed $s --memory all $J 2>&1 | tee -a $L; .venv/bin/python research/eval/ctx_probe.py --model $M --ctx 8192 --seed $s --memory all --router apply $J 2>&1 | tee -a $L; done
+# 4. нужен ли эмбеддер: только ключевые слова @2k
+.venv/bin/python research/eval/ctx_probe.py --model $M --ctx 2048 --memory dropped --mem-mode kw $J 2>&1 | tee -a $L
+# 5. e2b: роутер и память везде @8k
+for s in 42 7; do .venv/bin/python research/eval/ctx_probe.py --model gemma4:e2b-it-qat --ctx 8192 --seed $s --memory all $J 2>&1 | tee -a $L; done
+.venv/bin/python research/eval/ctx_probe.py --model gemma4:e2b-it-qat --ctx 8192 --router label $J 2>&1 | tee -a $L
+ollama stop $M; ollama stop gemma4:e2b-it-qat; ollama stop embeddinggemma
+git add research/eval/results && git commit -m "eval: T-026 MEM-1 + E-3 (память и роутер на CTX-1)" && git push origin main
+```
+В терминале на каждом ходу: `route=<тип>` и `mem=[ходы]` — какие обмены подставлены. Если `/api/embed` падает или `embeddinggemma` не тянется — `--embed-model bge-m3` (`ollama pull bge-m3`), отметить в отчёте. Если роутер массово отвечает не меткой (в сводке «router_unparsed» > 5) — не чинить, записать примеры `route.raw` из JSON.
+Проверка: JSON с полями `route` (label/raw/s) и `mem_hits` (turn/score/cos/kw) на ходах; в сводке колонки «память: recall выборки / символов справки» и «роутер: точность / с на ход», строка «ошибки роутера (истина->ответ)».
+Done: 14 прогонов в git; строка в «Закрытые» с: router_acc и время роутера на ход; recall @2k база vs `dropped`; recall/персона(9b) @8k база vs `all` vs `all+apply`; `mem_retrieval_recall` по каждому; kw vs hybrid.
+Записать: строка «Закрытые»; ядро: оценка персоны по D-017, D-NNN по гейтам MEMORY_TRACK §3, строка в COGNITION_4B E-3, §4 MEMORY_TRACK (что дальше), при положительном итоге — карточка сервиса памяти (M6).
+Связь: MEMORY_TRACK, COGNITION_4B (E-2/E-3, рычаги 1/5), P-007, P-014, P-018, Q-012, Q-034, D-016, D-025, T-002 (история в Redis — согласовать с хранилищем памяти).
 
 ### T-025 · E-1: выборочное thinking на CTX-1 · done (2026-10-19, D-025)
 Сделано владельцем в тот же вечер (8 прогонов, 23:16–23:34), оценено ядром: сводка `research/eval/results/ctx_probe_t025_2026-10-19.md`. Строка «think requested but no thinking returned» в логе — не отказ ollama, а адаптивное решение модели (сообщение в скрипте переформулировано). По ходу исправлена метрика recall (Q-050) и пересчитаны 12 JSON (базовые e4b-it-qat: 0.93 / 1.0). Хвост: результаты закоммитить из WSL (`git add research/eval/results && git commit && git push`). Ниже — исходная карточка.

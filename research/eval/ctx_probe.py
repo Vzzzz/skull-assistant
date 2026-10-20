@@ -14,6 +14,7 @@ import argparse
 import json
 import re
 import statistics
+import sys
 import time
 from datetime import date
 from pathlib import Path
@@ -21,6 +22,9 @@ from pathlib import Path
 import requests
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "research/memory"))
+from assoc_memory import AssocMemory  # noqa: E402
+from router import LABELS, POLICY, route_ollama  # noqa: E402
 DIALOG = ROOT / "research/eval/ctx_probe_dialog.jsonl"
 PERSONA = (ROOT / "persona/system_prompt.md").read_text(encoding="utf-8").strip()
 OUT = ROOT / "research/eval/results"
@@ -120,20 +124,48 @@ def parse_think_on(spec: str):
     return out
 
 
-def run_dialog(host, model, ctx, rows, seed, think_on=frozenset(), think_predict=2500):
+def run_dialog(host, model, ctx, rows, seed, think_on=frozenset(), think_predict=2500,
+               memory=None, mem_scope="all", mem_k=3, router="off"):
     """think_on: dialog blocks on which the model is asked to think (E-1, docs/COGNITION_4B.md). On those turns
     num_predict is raised to think_predict because the reasoning tokens come out of the same budget; the
-    reasoning text is kept in the log (truncated) but, as in services/brain, is NOT fed back into the history."""
+    reasoning text is kept in the log (truncated) but, as in services/brain, is NOT fed back into the history.
+    memory: AssocMemory or None (MEM-1, docs/MEMORY_TRACK.md). Every exchange is stored; before a turn the top-k
+    records are retrieved and prepended to the user's text for that call only (history keeps the raw text).
+    mem_scope: 'all' = retrieve among all earlier exchanges except the previous one; 'dropped' = only exchanges
+    that no longer fit in num_ctx (what a real long-term memory would add on top of the window).
+    router: 'off' | 'label' (classify every turn, log it, change nothing) | 'apply' (classify and use POLICY:
+    retrieval only on memory/calc/command turns, hedging prefix on world, longer budget on explain)."""
     messages = [{"role": "system", "content": PERSONA}]
+    window_turns = []   # turns whose user+assistant pair is still inside `messages`
     log = []
     opts = {"num_ctx": ctx, "temperature": 0.3, "seed": seed, "num_predict": 700}
     for r in rows:
-        messages.append({"role": "user", "content": r["text"]})
         t0 = time.perf_counter()
+        route = None
+        if router != "off":
+            route = route_ollama(host, model, messages, r["text"], ctx)
+        policy = POLICY.get((route or {}).get("label") or "chat", POLICY["chat"]) if router == "apply" else None
+        hits, note = [], ""
+        if memory is not None and (policy is None or policy["memory"]):
+            if mem_scope == "dropped":
+                excl = set(window_turns)
+            else:
+                excl = set(window_turns[-1:])
+            hits = memory.retrieve(r["text"], k=mem_k, exclude_turns=excl)
+            note = memory.format_note(hits)
+        sent = r["text"]
+        if policy and policy.get("prefix"):
+            sent = policy["prefix"] + "\n" + sent
+        if note:
+            sent = note + "\n\n" + sent
+        messages.append({"role": "user", "content": sent})
+        window_turns.append(r["turn"])
         # think=False by default: thinking models (qwen3.5, gemma4) otherwise spend the whole num_predict
         # budget on message.thinking and return an empty content (2026-10-14 batch: qwen3.5:4b 60/60 empty)
         think = r.get("block") in think_on
         turn_opts = {**opts, "num_predict": think_predict} if think else opts
+        if policy and not think:
+            turn_opts = {**opts, "num_predict": policy["num_predict"]}
         dropped = 0
         while True:
             try:
@@ -144,6 +176,7 @@ def run_dialog(host, model, ctx, rows, seed, think_on=frozenset(), think_predict
                 if len(messages) < 4:
                     raise
                 del messages[1:3]
+                window_turns.pop(0)
                 dropped += 1
         if dropped:
             print(f"[{model} ctx={ctx}] t{r['turn']:02d} ctx overflow: dropped {dropped} oldest exchange(s)", flush=True)
@@ -151,7 +184,10 @@ def run_dialog(host, model, ctx, rows, seed, think_on=frozenset(), think_predict
         reply = resp["message"]["content"].strip()
         thinking = (resp["message"].get("thinking") or "").strip()
         thinking_chars = len(thinking)
+        messages[-1] = {"role": "user", "content": r["text"]}   # history keeps the raw turn, not the memory note
         messages.append({"role": "assistant", "content": reply})
+        if memory is not None:
+            memory.add(r["turn"], r["text"], reply)
         pe, ec = resp.get("prompt_eval_count", 0), resp.get("eval_count", 0)
         if not reply:
             print(f"[{model} ctx={ctx}] t{r['turn']:02d} EMPTY reply (ec={ec}, thinking_chars={thinking_chars})", flush=True)
@@ -164,9 +200,16 @@ def run_dialog(host, model, ctx, rows, seed, think_on=frozenset(), think_predict
                  "wall_s": round(wall, 2)}
         if think:
             entry["thinking"] = thinking[:1500]  # for reading, not for metrics; full text would bloat the JSON
+        if route is not None:
+            entry["route"] = route
+        if memory is not None:
+            entry["mem_hits"] = [{"turn": h[1]["turn"], "score": round(h[0], 3), "cos": round(h[2], 3), "kw": round(h[3], 3)} for h in hits]
+            entry["mem_note_chars"] = len(note)
         log.append(entry)
         tk = f" think={thinking_chars}ch" if think else ""
-        print(f"[{model} ctx={ctx}] t{r['turn']:02d} pe={pe:5d} ec={ec:4d} {wall:5.1f}s{tk} {reply[:70]!r}", flush=True)
+        rt = f" route={route['label'] or '?'}" if route else ""
+        mh = f" mem={[h[1]['turn'] for h in hits]}" if memory is not None and hits else ""
+        print(f"[{model} ctx={ctx}] t{r['turn']:02d} pe={pe:5d} ec={ec:4d} {wall:5.1f}s{tk}{rt}{mh} {reply[:70]!r}", flush=True)
     return log
 
 
@@ -243,6 +286,36 @@ def metrics(log, ctx):
     m["wall_think_max_s"] = round(max(e["wall_s"] for e in th), 1) if th else None
     m["wall_plain_mean_s"] = round(statistics.mean(e["wall_s"] for e in pl), 1) if pl else None
     m["wall_total_s"] = round(sum(e["wall_s"] for e in log))
+    # E-3 router: accuracy against the dialog's `route` labels (a list = any of them is correct)
+    rt = [e for e in log if e.get("route")]
+    if rt:
+        ok = unp = 0
+        conf = {}
+        for e in rt:
+            lab = e["route"].get("label")
+            truth = e.get("route_truth") or e.get("route_expect") or []
+            truth = [truth] if isinstance(truth, str) else truth
+            if lab is None:
+                unp += 1
+            if truth:
+                hit = lab in truth
+                ok += hit
+                key = f"{truth[0]}->{lab or '?'}"
+                if not hit:
+                    conf[key] = conf.get(key, 0) + 1
+        labeled = sum(1 for e in rt if e.get("route_truth") or e.get("route_expect"))
+        m["router_acc"] = round(ok / labeled, 2) if labeled else None
+        m["router_unparsed"] = unp
+        m["router_errors"] = conf
+        m["router_s_mean"] = round(statistics.mean(e["route"]["s"] for e in rt), 2)
+    # MEM-1: did retrieval bring the planted turn to a probe? (independent of what the model then said)
+    mem = [e for e in log if "mem_hits" in e]
+    if mem:
+        pr = [e for e in mem if e.get("probe_for") and e["probe_for"] in planted]
+        got = [e for e in pr if planted[e["probe_for"]] in {h["turn"] for h in e["mem_hits"]}]
+        m["mem_probe_turns"] = len(pr)
+        m["mem_retrieval_recall"] = round(len(got) / len(pr), 2) if pr else None
+        m["mem_note_chars_mean"] = round(statistics.mean(e["mem_note_chars"] for e in mem))
     return m
 
 
@@ -282,8 +355,8 @@ def judge(host, judge_model, log):
 
 def write_summary(model, tag, summary):
     md = [f"# CTX-1 · {model} · {date.today().isoformat()}", "",
-          "| num_ctx | thinking на блоках | пустых ответов | recall (все) | recall (≥30) | math верно | math с выкладкой | L1 токенов | L2 оговорка | обрезка на ходах | персона (судья, 1–5) | согласованность L1/L3 | L2 выдумал | TTFT посл.10, с | tok/s | ход с размышлением / без, с (макс) | симв. размышления (средн. по думавшим) | токенов в контексте к концу |",
-          "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
+          "| num_ctx | thinking на блоках | пустых ответов | recall (все) | recall (≥30) | math верно | math с выкладкой | L1 токенов | L2 оговорка | обрезка на ходах | персона (судья, 1–5) | согласованность L1/L3 | L2 выдумал | TTFT посл.10, с | tok/s | ход с размышлением / без, с (макс) | симв. размышления (средн. по думавшим) | токенов в контексте к концу | память: recall выборки / символов справки | роутер: точность / с на ход |",
+          "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for m, j in summary:
         tr = ",".join(str(t) for t in m["truncation_turns"]) or "—"
         j = j or {}
@@ -296,13 +369,18 @@ def write_summary(model, tag, summary):
                   f"{m['longgen'].get('L1_tokens')} | {m['longgen'].get('L2_hedged')} | {tr} | "
                   f"{j.get('persona_mean', '—')} | {(j.get('consistency') or {}).get('score', '—')} | "
                   f"{(j.get('hallucination') or {}).get('invented', '—')} | {m['ttft_last10_s']} | {m['tok_s_mean']} | {wall} | "
-                  f"{m.get('thinking_chars_mean', '—')} | {m['ctx_tokens_end']} |")
+                  f"{m.get('thinking_chars_mean', '—')} | {m['ctx_tokens_end']} | "
+                  f"{m.get('mem_retrieval_recall', '—')} / {m.get('mem_note_chars_mean', '—')} | "
+                  f"{m.get('router_acc', '—')} / {m.get('router_s_mean', '—')} |")
     md += ["", "Recall по расстоянию (ход/проба@расстояние): ✓ попал, ✗ нет; для M-проб ✓ = повторил свой же ранний ответ.", ""]
     for m, _ in summary:
         md.append(f"- ctx {m['ctx']}: " + ", ".join(f"t{r['turn']}/{r['probe_for']}@{r['distance']}={'✓' if r['hit'] else '✗'}" for r in m["recall"]))
     md += ["", "Математика (ответ модели, первые 120 символов):", ""]
     for m, _ in summary:
         md.append(f"- ctx {m['ctx']}: " + " · ".join(f"{x['math_id']}: {x['reply']!r}" for x in m["math"]))
+    for m, _ in summary:
+        if m.get("router_errors"):
+            md.append(f"- ctx {m['ctx']}: ошибки роутера (истина->ответ: n): " + ", ".join(f"{k}: {v}" for k, v in sorted(m["router_errors"].items())))
     md += ["", "Оценки персоны по ходам:", ""]
     for m, j in summary:
         if j:
@@ -326,6 +404,14 @@ def main():
                          "aliases recall=probe; 'all'; default none). Adds _think-<blocks> to file names")
     ap.add_argument("--think-predict", type=int, default=2500,
                     help="num_predict on thinking turns (reasoning tokens share the budget); plain turns keep 700")
+    ap.add_argument("--memory", default="off", choices=["off", "all", "dropped"],
+                    help="MEM-1: associative memory over past exchanges; 'all' retrieves among everything said, "
+                         "'dropped' only among exchanges that fell out of num_ctx")
+    ap.add_argument("--mem-k", type=int, default=3)
+    ap.add_argument("--mem-mode", default="hybrid", choices=["hybrid", "embed", "kw"])
+    ap.add_argument("--embed-model", default="embeddinggemma", help="ollama embedding model (/api/embed)")
+    ap.add_argument("--router", default="off", choices=["off", "label", "apply"],
+                    help="E-3: classify each turn (label = log only; apply = use POLICY from research/memory/router.py)")
     args = ap.parse_args()
     think_on = parse_think_on(args.think_on)
 
@@ -341,6 +427,10 @@ def main():
         tag += f"_{args.tag}"
     if think_on:
         tag += "_think-" + ("all" if think_on == set(BLOCKS) else "+".join(b for b in BLOCKS if b in think_on))
+    if args.memory != "off":
+        tag += f"_mem-{args.memory}-{args.mem_mode}-k{args.mem_k}"
+    if args.router != "off":
+        tag += f"_rt-{args.router}"
     summary = []
     for ctx in args.ctx:
         path = OUT / f"ctx_probe_{tag}_{ctx}.json"
@@ -352,12 +442,18 @@ def main():
             by_turn = {r["turn"]: r for r in rows}
             log = [{**e, **({"expect": by_turn[e["turn"]]["expect"]} if "expect" in by_turn.get(e["turn"], {}) else {})} for e in log]
         else:
-            log = run_dialog(args.host, args.model, ctx, rows, args.seed, think_on=think_on, think_predict=args.think_predict)
+            memory = AssocMemory(args.host, args.embed_model, mode=args.mem_mode) if args.memory != "off" else None
+            log = run_dialog(args.host, args.model, ctx, rows, args.seed, think_on=think_on, think_predict=args.think_predict,
+                             memory=memory, mem_scope=args.memory, mem_k=args.mem_k, router=args.router)
+            if memory is not None and memory.embed_calls_s:
+                print(f"embed calls: {len(memory.embed_calls_s)}, mean {statistics.mean(memory.embed_calls_s)*1000:.0f} ms", flush=True)
         m = metrics(log, ctx)
         # --judge-only without --judge: recompute metrics only, keep the saved judge scores
         j = judge(args.host, args.judge, log) if args.judge else saved_judge
         path.write_text(json.dumps({"model": args.model, "ctx": ctx, "seed": args.seed,
                                     "think_on": sorted(think_on), "think_predict": args.think_predict if think_on else None,
+                                    "memory": args.memory, "mem_k": args.mem_k, "mem_mode": args.mem_mode,
+                                    "embed_model": args.embed_model if args.memory != "off" else None, "router": args.router,
                                     "persona_file": str(persona_file.relative_to(ROOT)) if persona_file.is_relative_to(ROOT) else str(persona_file),
                                     "persona_sha1": __import__("hashlib").sha1(PERSONA.encode("utf-8")).hexdigest()[:10],
                                     "metrics": m, "judge": j, "log": log}, ensure_ascii=False, indent=1), encoding="utf-8")

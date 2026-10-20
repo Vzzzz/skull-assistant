@@ -28,9 +28,9 @@ AGENTS.md          этот файл; CLAUDE.md — обёртка для Claude
 services/<name>/   прод: код + manifest.yaml (бюджет по пикам, резидентность A/B/C, freeze/thaw, топики)
 core/              общий код; диспетчер появится в M8
 deploy/systemd/    skull.target + юниты (@REPO@), install.sh, drop-in ollama; deploy/stand/ — запуск стенда из Git Bash; sync-win.sh — зеркало; fetch_models.sh — кандидаты
-research/          bench/ (замеры), eval/ (оценочный набор, CTX-1), tts/ — ничего отсюда не запускается юнитом; results/ — CSV/JSON + сводки .md
+research/          bench/ (замеры), eval/ (оценочный набор, CTX-1), memory/ (прототип памяти и роутера), tts/ — ничего отсюда не запускается юнитом; results/ — CSV/JSON + сводки .md
 docs/              JOURNAL (журнал сессий), TASKS (очередь), OPEN_QUESTIONS (открытые вопросы), ROADMAP, DECISION_LOG, MEMORY_BUDGET,
-                   PUBLICATIONS, ISSUES, UX_BACKLOG, TTS_TRACK, AMBIENT_MODE, COGNITION_4B, JETSON_BRINGUP, roadmap-v1; agents/ — онбординг ролей
+                   PUBLICATIONS, ISSUES, UX_BACKLOG, TTS_TRACK, AMBIENT_MODE, COGNITION_4B, MEMORY_TRACK, JETSON_BRINGUP, roadmap-v1; agents/ — онбординг ролей
 persona/           system_prompt.md; dataset/ приватный (не в git)
 models/            веса (не в git) + README с источниками
 ```
@@ -73,4 +73,5 @@ models/            веса (не в git) + README с источниками
 | Первый день на Jetson | `docs/JETSON_BRINGUP.md` |
 | Контекстное окно vs персона/память | `research/eval/CTX_PROBE.md` |
 | Как выжать больше из 4B: состояние, инструменты, thinking, роутер | `docs/COGNITION_4B.md` |
+| Ассоциативная память, роутер типов реплик, проверка через сеть | `docs/MEMORY_TRACK.md` (прототип — `research/memory/`) |
 | Идеи на потом | `docs/UX_BACKLOG.md` (U-NNN) |
