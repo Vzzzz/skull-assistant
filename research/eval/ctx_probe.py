@@ -92,7 +92,8 @@ def chat_or_overflow(host, model, messages, options, think=None):
 
 
 def norm(s: str) -> str:
-    return s.lower().replace("ё", "е")
+    # hyphens between words count as spaces: "четыре-семь-один-два" == "четыре семь один два" (2026-10-20 fix)
+    return s.lower().replace("ё", "е").replace("-", " ").replace("‑", " ")
 
 
 def any_kw(text, kws):
@@ -139,10 +140,11 @@ def run_dialog(host, model, ctx, rows, seed, think_on=frozenset(), think_predict
     start; a 400 is caught below) — the historical behaviour; 'tokens' = keep a token ledger per exchange and
     drop the oldest exchanges ourselves before the call (what services/brain must do; required for mem_scope
     'dropped' to know which turns actually fell out of the window)."""
-    messages = [{"role": "system", "content": PERSONA}]
+    system = PERSONA + ("\n\n" + AssocMemory.SYSTEM_RULE if memory is not None else "")
+    messages = [{"role": "system", "content": system}]
     window_turns = []   # turns whose user+assistant pair is still inside `messages`
     cost = {}           # turn -> approx tokens its exchange occupies in later prompts
-    sys_tokens = len(PERSONA) // 3
+    sys_tokens = len(system) // 3
     last_pe = last_ec = 0
     log = []
     opts = {"num_ctx": ctx, "temperature": 0.3, "seed": seed, "num_predict": 700}
@@ -486,6 +488,7 @@ def main():
                                     "think_on": sorted(think_on), "think_predict": args.think_predict if think_on else None,
                                     "memory": args.memory, "mem_k": args.mem_k, "mem_mode": args.mem_mode,
                                     "embed_model": args.embed_model if args.memory != "off" else None, "router": args.router, "trim": trim,
+                                    "note_version": 2 if args.memory != "off" else None,
                                     "persona_file": str(persona_file.relative_to(ROOT)) if persona_file.is_relative_to(ROOT) else str(persona_file),
                                     "persona_sha1": __import__("hashlib").sha1(PERSONA.encode("utf-8")).hexdigest()[:10],
                                     "metrics": m, "judge": j, "log": log}, ensure_ascii=False, indent=1), encoding="utf-8")

@@ -89,7 +89,7 @@ def route_llamaserver(host, messages, text, timeout=120):
 POLICY = {
     "chat":    {"num_predict": 300, "memory": False},
     "memory":  {"num_predict": 300, "memory": True},
-    "calc":    {"num_predict": 500, "memory": True, "prefix": "Считай по шагам, все числа пиши цифрами, итог — в конце."},
+    "calc":    {"num_predict": 500, "memory": False, "prefix": "Считай по шагам, все числа пиши цифрами, итог — в конце."},
     "explain": {"num_predict": 900, "memory": False},
     "world":   {"num_predict": 300, "memory": False, "prefix": "Если ты этого не знаешь или не видел — так и скажи одной фразой, не выдумывай."},
     "command": {"num_predict": 200, "memory": True},

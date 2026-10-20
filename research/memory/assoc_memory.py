@@ -89,15 +89,20 @@ class AssocMemory:
                 break
         return out
 
+    # One line for the system prompt when memory is on. v1 (T-026) put a transcript-like block into the user turn and
+    # the model treated it as something the user pasted ("ты мне выгрузил архив") — persona −0.4. v2: the block is
+    # phrased as the model's own recollection and the system prompt says so once.
+    SYSTEM_RULE = ("Иногда перед репликой собеседника в квадратных скобках стоит то, что ты сам помнишь из этого разговора. "
+                   "Это твоя память, а не слова собеседника: не упоминай её, не цитируй скобки, просто пользуйся.")
+
     @staticmethod
-    def format_note(hits, max_reply_chars=160):
-        """Text injected in front of the user's turn. Kept short and literal: the model should quote, not reason."""
+    def format_note(hits, max_reply_chars=120):
+        """Text injected in front of the user's turn (v2). Kept short and literal: the model should use it, not discuss it."""
         if not hits:
             return ""
-        lines = ["[Память: из этого разговора раньше]"]
+        parts = []
         for _, rec, _, _ in hits:
             a = rec["assistant"].replace("\n", " ")
             a = (a[:max_reply_chars] + "…") if len(a) > max_reply_chars else a
-            lines.append(f"- (ход {rec['turn']}) собеседник: «{rec['user']}»" + (f" — ты ответил: «{a}»" if a else ""))
-        lines.append("[Конец памяти]")
-        return "\n".join(lines)
+            parts.append(f"он говорил: «{rec['user']}»" + (f", ты ответил: «{a}»" if a else ""))
+        return "[Ты помнишь: " + "; ".join(parts) + "]"
