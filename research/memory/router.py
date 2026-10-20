@@ -24,11 +24,25 @@ command — просит запомнить, напомнить, сделать 
 Тип (одно слово):"""
 
 _LABEL_RE = re.compile("|".join(LABELS), re.I)
+# e2b-it-qat answers with the description instead of the label ("реакция на тебя", "Рассказ о своих делах"):
+# map the description phrases back to labels (first match wins; checked after the English labels)
+_DESC = [("chat", ("болтовн", "замечан", "рассказ о сво", "реакция на тебя")),
+         ("memory", ("уже говорил", "сам раньше", "в этом разговоре")),
+         ("calc", ("посчит", "числа", "деньги", "процент")),
+         ("explain", ("подробно", "объясн", "как устроен")),
+         ("world", ("вне этой комнаты", "новости", "наука", "погода", "прибор")),
+         ("command", ("запомнить", "напомнить", "сделать что", "изменить тво"))]
 
 
 def parse_label(raw: str):
     m = _LABEL_RE.search(raw or "")
-    return m.group(0).lower() if m else None
+    if m:
+        return m.group(0).lower()
+    low = (raw or "").lower()
+    for lab, keys in _DESC:
+        if any(k in low for k in keys):
+            return lab
+    return None
 
 
 def route_ollama(host, model, messages, text, num_ctx, timeout=120):

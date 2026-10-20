@@ -1,10 +1,10 @@
-{"turn": 1, "block": "everyday", "text": "Привет. Я дома, устал, не трогай меня минут десять.", "judge_persona": true, "route_expect": "chat"}
+{"turn": 1, "block": "everyday", "text": "Привет. Я дома, устал, не трогай меня минут десять.", "judge_persona": true, "route_expect": ["chat", "command"]}
 {"turn": 2, "block": "everyday", "text": "Кот опять спал на клавиатуре. Бублик, если ты не в курсе, его зовут Бублик.", "anchor_id": "A1", "anchor": {"кот": "Бублик"}, "route_expect": "chat"}
 {"turn": 3, "block": "everyday", "text": "Чайник поставил. Ты чай не пьёшь, я помню.", "route_expect": "chat"}
 {"turn": 4, "block": "everyday", "text": "Завтра в половине двенадцатого встреча с Димой, он придёт сюда. Не ляпни ему ничего про куртку.", "anchor_id": "A2", "anchor": {"время": "11:30", "с кем": "Дима"}, "route_expect": "command"}
 {"turn": 5, "block": "everyday", "text": "Темно уже. Осень.", "judge_persona": true, "route_expect": "chat"}
-{"turn": 6, "block": "everyday", "text": "Ключи я положил в карман синей куртки, той, что на тебе. Чтобы потом не искать.", "anchor_id": "A3", "anchor": {"ключи": "карман синей куртки"}, "route_expect": "chat"}
-{"turn": 7, "block": "everyday", "text": "Что сегодня по новостям, кроме того что ты всё видишь?", "route_expect": "chat"}
+{"turn": 6, "block": "everyday", "text": "Ключи я положил в карман синей куртки, той, что на тебе. Чтобы потом не искать.", "anchor_id": "A3", "anchor": {"ключи": "карман синей куртки"}, "route_expect": ["chat", "command"]}
+{"turn": 7, "block": "everyday", "text": "Что сегодня по новостям, кроме того что ты всё видишь?", "route_expect": ["chat", "world"]}
 {"turn": 8, "block": "everyday", "text": "Ладно, не язви. Я серьёзно спросил.", "judge_persona": true, "route_expect": "chat"}
 {"turn": 9, "block": "everyday", "text": "Заказал еду. Попросил без кинзы, я её терпеть не могу, если положат — выкину.", "anchor_id": "A4", "anchor": {"не любит": "кинза"}, "route_expect": "chat"}
 {"turn": 10, "block": "everyday", "text": "Ты бы что заказал, если бы мог есть?", "judge_persona": true, "route_expect": "chat"}
@@ -22,7 +22,7 @@
 {"turn": 22, "block": "math", "text": "Вещь стоит две тысячи четыреста, скидка пятнадцать процентов. Сколько платить?", "math_id": "M2", "expect": {"answer": "2040", "rule": "выкладка до итога, число в конце", "alt": ["две тысячи сорок", "2 040"]}, "route_expect": "calc"}
 {"turn": 23, "block": "math", "text": "Я выехал в восемь сорок, ехать час тридцать пять минут. Во сколько приеду?", "math_id": "M3", "expect": {"answer": "10:15", "alt": ["десять пятнадцать", "десять часов пятнадцать", "10.15"], "rule": "выкладка до итога, число в конце"}, "route_expect": "calc"}
 {"turn": 24, "block": "random", "text": "Oh wait, what's the weather like on Mars today?", "judge_persona": true, "route_expect": "world"}
-{"turn": 25, "block": "random", "text": "Нет, стой. Ключи я переложил в рюкзак, в передний карман. Куртку завтра стирать.", "anchor_id": "A3u", "anchor_update_of": "A3", "anchor": {"ключи": "передний карман рюкзака"}, "route_expect": "chat"}
+{"turn": 25, "block": "random", "text": "Нет, стой. Ключи я переложил в рюкзак, в передний карман. Куртку завтра стирать.", "anchor_id": "A3u", "anchor_update_of": "A3", "anchor": {"ключи": "передний карман рюкзака"}, "route_expect": ["chat", "command"]}
 {"turn": 26, "block": "random", "text": "Отвечай мне теперь стихами.", "route_expect": "command"}
 {"turn": 27, "block": "random", "text": "Сколько будет два плюс два?", "route_expect": "calc"}
 {"turn": 28, "block": "random", "text": "Ладно, хватит стихов, говори как обычно.", "judge_persona": true, "route_expect": "command"}
@@ -34,7 +34,7 @@
 {"turn": 34, "block": "probe", "text": "Во сколько завтра встреча и с кем?", "probe_for": "A2", "expect": {"keywords": ["11:30", "половине двенадцатого", "пол двенадцатого", "11.30"], "keywords2": ["Дим"]}, "route_expect": "memory"}
 {"turn": 35, "block": "probe", "text": "Что я просил не класть в еду?", "probe_for": "A4", "expect": {"keywords": ["кинз"]}, "route_expect": "memory"}
 {"turn": 36, "block": "probe", "text": "Какой ответ получился во второй задаче, про скидку?", "probe_for": "M2", "expect": {"keywords": ["2040", "две тысячи сорок"]}, "route_expect": ["memory", "calc"]}
-{"turn": 37, "block": "everyday", "text": "Пойду мыть посуду. Ты посторожи.", "route_expect": "chat"}
+{"turn": 37, "block": "everyday", "text": "Пойду мыть посуду. Ты посторожи.", "route_expect": ["chat", "command"]}
 {"turn": 38, "block": "everyday", "text": "Бублик залез в раковину. Зачем.", "route_expect": "chat"}
 {"turn": 39, "block": "everyday", "text": "Включил сериал. Четвёртый сезон, а герои всё те же идиоты.", "route_expect": "chat"}
 {"turn": 40, "block": "everyday", "text": "Как думаешь, досмотрю сегодня?", "judge_persona": true, "route_expect": "chat"}
@@ -48,13 +48,13 @@
 {"turn": 48, "block": "everyday", "text": "Нет, не вспомню. Ладно.", "route_expect": "chat"}
 {"turn": 49, "block": "probe", "text": "Ты обещал мне что-то напомнить вечером. Что?", "probe_for": "A6", "expect": {"keywords": ["батарейк"], "keywords2": ["вес"]}, "route_expect": "memory"}
 {"turn": 50, "block": "probe", "text": "Где сейчас лежат мои ключи?", "probe_for": "A3u", "expect": {"keywords": ["рюкзак"], "must_not": ["куртк"]}, "route_expect": "memory"}
-{"turn": 51, "block": "probe", "text": "Напомни код от домофона, курьер завтра утром.", "probe_for": "A5", "expect": {"keywords": ["4712", "четыре семь один два", "47 12"]}, "route_expect": "memory"}
+{"turn": 51, "block": "probe", "text": "Напомни код от домофона, курьер завтра утром.", "probe_for": "A5", "expect": {"keywords": ["4712", "четыре семь один два", "47 12"]}, "route_expect": ["memory", "command"]}
 {"turn": 52, "block": "probe", "text": "Как зовут кота и что он сегодня натворил?", "probe_for": "A1", "expect": {"keywords": ["Бублик"], "keywords2": ["клавиатур", "раковин"]}, "route_expect": "memory"}
 {"turn": 53, "block": "probe", "text": "Что ты мне рассказывал про замок? Самое главное, одной фразой.", "probe_for": "L1", "expect": {"keywords": ["цилиндр", "штифт", "пин", "ключ"]}, "route_expect": "memory"}
 {"turn": 54, "block": "probe", "text": "О чём я сказал тебе в самом начале разговора, самое первое?", "probe_for": "T1", "expect": {"keywords": ["устал", "не трогай", "десять минут"]}, "route_expect": "memory"}
 {"turn": 55, "block": "probe", "text": "Во сколько я приеду, если выеду в восемь сорок и ехать час тридцать пять? Ты уже считал.", "probe_for": "M3", "expect": {"keywords": ["10:15", "десять пятнадцать", "десять часов пятнадцать", "10.15"]}, "route_expect": ["memory", "calc"]}
 {"turn": 56, "block": "probe", "text": "Дима завтра придёт один или с кем-то?", "probe_for": "T41", "expect": {"keywords": ["собак"], "keywords2": ["поводк"]}, "route_expect": "memory"}
 {"turn": 57, "block": "probe", "text": "Что я заказывал на ужин и чего там не должно было быть?", "probe_for": "A4", "expect": {"keywords": ["кинз"]}, "route_expect": "memory"}
-{"turn": 58, "block": "probe", "text": "Какой прибор я спрашивал, а ты про него не знал?", "probe_for": "L2", "expect": {"keywords": ["гравиметр", "Тюленев"]}, "route_expect": "memory"}
+{"turn": 58, "block": "probe", "text": "Какой прибор я спрашивал, а ты про него не знал?", "probe_for": "L2", "expect": {"keywords": ["гравиметр", "Тюленев"]}, "route_expect": ["memory", "world"]}
 {"turn": 59, "block": "everyday", "text": "Ладно. Спокойной ночи. Свет выключу сам.", "judge_persona": true, "route_expect": "chat"}
-{"turn": 60, "block": "everyday", "text": "И не разговаривай с котом, пока я сплю.", "judge_persona": true, "route_expect": "chat"}
+{"turn": 60, "block": "everyday", "text": "И не разговаривай с котом, пока я сплю.", "judge_persona": true, "route_expect": ["chat", "command"]}

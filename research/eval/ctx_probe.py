@@ -24,7 +24,7 @@ import requests
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "research/memory"))
 from assoc_memory import AssocMemory  # noqa: E402
-from router import LABELS, POLICY, route_ollama  # noqa: E402
+from router import LABELS, POLICY, parse_label, route_ollama  # noqa: E402
 DIALOG = ROOT / "research/eval/ctx_probe_dialog.jsonl"
 PERSONA = (ROOT / "persona/system_prompt.md").read_text(encoding="utf-8").strip()
 OUT = ROOT / "research/eval/results"
@@ -125,7 +125,7 @@ def parse_think_on(spec: str):
 
 
 def run_dialog(host, model, ctx, rows, seed, think_on=frozenset(), think_predict=2500,
-               memory=None, mem_scope="all", mem_k=3, router="off"):
+               memory=None, mem_scope="all", mem_k=3, router="off", trim="ollama"):
     """think_on: dialog blocks on which the model is asked to think (E-1, docs/COGNITION_4B.md). On those turns
     num_predict is raised to think_predict because the reasoning tokens come out of the same budget; the
     reasoning text is kept in the log (truncated) but, as in services/brain, is NOT fed back into the history.
@@ -134,13 +134,21 @@ def run_dialog(host, model, ctx, rows, seed, think_on=frozenset(), think_predict
     mem_scope: 'all' = retrieve among all earlier exchanges except the previous one; 'dropped' = only exchanges
     that no longer fit in num_ctx (what a real long-term memory would add on top of the window).
     router: 'off' | 'label' (classify every turn, log it, change nothing) | 'apply' (classify and use POLICY:
-    retrieval only on memory/calc/command turns, hedging prefix on world, longer budget on explain)."""
+    retrieval only on memory/calc/command turns, hedging prefix on world, longer budget on explain).
+    trim: 'ollama' = send everything and let ollama cut the prompt when it exceeds num_ctx (silently, from the
+    start; a 400 is caught below) — the historical behaviour; 'tokens' = keep a token ledger per exchange and
+    drop the oldest exchanges ourselves before the call (what services/brain must do; required for mem_scope
+    'dropped' to know which turns actually fell out of the window)."""
     messages = [{"role": "system", "content": PERSONA}]
     window_turns = []   # turns whose user+assistant pair is still inside `messages`
+    cost = {}           # turn -> approx tokens its exchange occupies in later prompts
+    sys_tokens = len(PERSONA) // 3
+    last_pe = last_ec = 0
     log = []
     opts = {"num_ctx": ctx, "temperature": 0.3, "seed": seed, "num_predict": 700}
     for r in rows:
         t0 = time.perf_counter()
+        trimmed = 0
         route = None
         if router != "off":
             route = route_ollama(host, model, messages, r["text"], ctx)
@@ -158,6 +166,15 @@ def run_dialog(host, model, ctx, rows, seed, think_on=frozenset(), think_predict
             sent = policy["prefix"] + "\n" + sent
         if note:
             sent = note + "\n\n" + sent
+        if trim == "tokens":
+            est_new = len(sent) // 3 + 8
+            budget = (policy["num_predict"] if policy else (think_predict if r.get("block") in think_on else 700))
+            while window_turns and sys_tokens + sum(cost.get(t, 0) for t in window_turns) + est_new + budget > ctx:
+                del messages[1:3]
+                window_turns.pop(0)
+                trimmed += 1
+            if trimmed:
+                print(f"[{model} ctx={ctx}] t{r['turn']:02d} window: dropped {trimmed} oldest exchange(s) (token ledger)", flush=True)
         messages.append({"role": "user", "content": sent})
         window_turns.append(r["turn"])
         # think=False by default: thinking models (qwen3.5, gemma4) otherwise spend the whole num_predict
@@ -189,11 +206,19 @@ def run_dialog(host, model, ctx, rows, seed, think_on=frozenset(), think_predict
         if memory is not None:
             memory.add(r["turn"], r["text"], reply)
         pe, ec = resp.get("prompt_eval_count", 0), resp.get("eval_count", 0)
+        # token ledger: this exchange's share of future prompts = its user text (without the memory note, which
+        # is not kept) + its reply; the first call also calibrates the system prompt size
+        note_tok = len(note) // 3 + (len(policy["prefix"]) // 3 if policy and policy.get("prefix") else 0)
+        if not cost:
+            sys_tokens = max(sys_tokens, pe - len(sent) // 3)
+        cost[r["turn"]] = max(0, pe - last_pe - last_ec - note_tok) + ec if last_pe else max(0, pe - sys_tokens - note_tok) + ec
+        last_pe, last_ec = pe, ec
         if not reply:
             print(f"[{model} ctx={ctx}] t{r['turn']:02d} EMPTY reply (ec={ec}, thinking_chars={thinking_chars})", flush=True)
         if think and not thinking_chars:
             print(f"[{model} ctx={ctx}] t{r['turn']:02d} think requested, no reasoning produced (adaptive: model skipped it, or think unsupported)", flush=True)
-        entry = {**r, "reply": reply, "think": think, "thinking_chars": thinking_chars, "ctx_overflow_dropped": dropped,
+        entry = {**r, "reply": reply, "think": think, "thinking_chars": thinking_chars, "ctx_overflow_dropped": dropped + trimmed,
+                 "window_turns": len(window_turns),
                  "prompt_eval_count": pe, "eval_count": ec,
                  "ttft_s": round((resp.get("load_duration", 0) + resp.get("prompt_eval_duration", 0)) / 1e9, 3),
                  "tok_s": round(ec / (resp.get("eval_duration", 1) / 1e9), 1) if resp.get("eval_duration") and ec >= 5 else None,
@@ -227,7 +252,8 @@ def metrics(log, ctx):
     for e in log:
         pe = e["prompt_eval_count"]
         # prompt cache normally grows monotonically; a drop means ollama shifted/truncated the context
-        if (e["turn"] > 2 and pe < prev_pe - 100) or e.get("ctx_overflow_dropped"):
+        managed = "window_turns" in e or "mem_hits" in e or e.get("route")
+        if e.get("ctx_overflow_dropped") or (not managed and e["turn"] > 2 and pe < prev_pe - 100):
             m["truncation_turns"].append(e["turn"])
         prev_pe = pe
         if e.get("probe_for") and "expect" in e and "keywords" in e["expect"]:
@@ -292,7 +318,7 @@ def metrics(log, ctx):
         ok = unp = 0
         conf = {}
         for e in rt:
-            lab = e["route"].get("label")
+            lab = e["route"].get("label") or parse_label(e["route"].get("raw"))  # re-parse with the current parser
             truth = e.get("route_truth") or e.get("route_expect") or []
             truth = [truth] if isinstance(truth, str) else truth
             if lab is None:
@@ -412,6 +438,9 @@ def main():
     ap.add_argument("--embed-model", default="embeddinggemma", help="ollama embedding model (/api/embed)")
     ap.add_argument("--router", default="off", choices=["off", "label", "apply"],
                     help="E-3: classify each turn (label = log only; apply = use POLICY from research/memory/router.py)")
+    ap.add_argument("--trim", default=None, choices=["ollama", "tokens"],
+                    help="window management: 'ollama' (default) lets the server cut the prompt; 'tokens' drops oldest "
+                         "exchanges by a token ledger before the call (default when --memory dropped)")
     args = ap.parse_args()
     think_on = parse_think_on(args.think_on)
 
@@ -431,6 +460,9 @@ def main():
         tag += f"_mem-{args.memory}-{args.mem_mode}-k{args.mem_k}"
     if args.router != "off":
         tag += f"_rt-{args.router}"
+    trim = args.trim or ("tokens" if args.memory == "dropped" else "ollama")
+    if trim == "tokens":
+        tag += "_trim"
     summary = []
     for ctx in args.ctx:
         path = OUT / f"ctx_probe_{tag}_{ctx}.json"
@@ -444,7 +476,7 @@ def main():
         else:
             memory = AssocMemory(args.host, args.embed_model, mode=args.mem_mode) if args.memory != "off" else None
             log = run_dialog(args.host, args.model, ctx, rows, args.seed, think_on=think_on, think_predict=args.think_predict,
-                             memory=memory, mem_scope=args.memory, mem_k=args.mem_k, router=args.router)
+                             memory=memory, mem_scope=args.memory, mem_k=args.mem_k, router=args.router, trim=trim)
             if memory is not None and memory.embed_calls_s:
                 print(f"embed calls: {len(memory.embed_calls_s)}, mean {statistics.mean(memory.embed_calls_s)*1000:.0f} ms", flush=True)
         m = metrics(log, ctx)
@@ -453,7 +485,7 @@ def main():
         path.write_text(json.dumps({"model": args.model, "ctx": ctx, "seed": args.seed,
                                     "think_on": sorted(think_on), "think_predict": args.think_predict if think_on else None,
                                     "memory": args.memory, "mem_k": args.mem_k, "mem_mode": args.mem_mode,
-                                    "embed_model": args.embed_model if args.memory != "off" else None, "router": args.router,
+                                    "embed_model": args.embed_model if args.memory != "off" else None, "router": args.router, "trim": trim,
                                     "persona_file": str(persona_file.relative_to(ROOT)) if persona_file.is_relative_to(ROOT) else str(persona_file),
                                     "persona_sha1": __import__("hashlib").sha1(PERSONA.encode("utf-8")).hexdigest()[:10],
                                     "metrics": m, "judge": j, "log": log}, ensure_ascii=False, indent=1), encoding="utf-8")
