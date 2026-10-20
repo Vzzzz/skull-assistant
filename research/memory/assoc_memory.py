@@ -94,10 +94,12 @@ class AssocMemory:
     # phrased as the model's own recollection and the system prompt says so once.
     # v3 (T-028): the note goes AFTER the user's text in round brackets — v2 put it first and the model sometimes
     # copied the whole bracket as the beginning of its reply (4/60 and 1/60 turns at 2k); k=2 and shorter quotes.
-    SYSTEM_RULE = ("Иногда после реплики собеседника в круглых скобках стоит пометка «из памяти» — то, что ты сам помнишь "
-                   "из этого разговора. Это не слова собеседника. Пользуйся этим молча: не повторяй текст в скобках, "
-                   "не говори «из памяти», не обсуждай, откуда ты это знаешь.")
-    NOTE_PREFIX = "(из памяти: "
+    # v4 (T-029): no brackets at all — v3's "(из памяти: …)" made the model add its own asides in brackets
+    # ("(Не надо проверять мою память.)") on half of the memory turns. A plain trailing sentence instead.
+    SYSTEM_RULE = ("Иногда после реплики собеседника идёт строка «Ты помнишь: …» — то, что ты сам помнишь из этого разговора. "
+                   "Это не слова собеседника и не повод для комментариев: отвечай на реплику, используя это как своё знание. "
+                   "Не повторяй эту строку, не говори «ты помнишь» и «из памяти», не добавляй замечаний в скобках.")
+    NOTE_PREFIX = "Ты помнишь: "
 
     @staticmethod
     def format_note(hits, max_reply_chars=80, max_user_chars=140):
@@ -111,4 +113,4 @@ class AssocMemory:
             a = rec["assistant"].replace("\n", " ")
             a = (a[:max_reply_chars] + "…") if len(a) > max_reply_chars else a
             parts.append(f"он говорил «{u}»" + (f", ты отвечал «{a}»" if a else ""))
-        return AssocMemory.NOTE_PREFIX + "; ".join(parts) + ")"
+        return AssocMemory.NOTE_PREFIX + "; ".join(parts) + "."
