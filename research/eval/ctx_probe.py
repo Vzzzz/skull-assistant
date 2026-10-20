@@ -144,7 +144,7 @@ def run_dialog(host, model, ctx, rows, seed, think_on=frozenset(), think_predict
     messages = [{"role": "system", "content": system}]
     window_turns = []   # turns whose user+assistant pair is still inside `messages`
     cost = {}           # turn -> approx tokens its exchange occupies in later prompts
-    sys_tokens = len(system) // 3
+    sys_tokens = int(len(system) / 2.3)
     last_pe = last_ec = 0
     log = []
     opts = {"num_ctx": ctx, "temperature": 0.3, "seed": seed, "num_predict": 700}
@@ -157,7 +157,7 @@ def run_dialog(host, model, ctx, rows, seed, think_on=frozenset(), think_predict
         policy = POLICY.get((route or {}).get("label") or "chat", POLICY["chat"]) if router == "apply" else None
         # window first (an exchange dropped on this very turn is then retrievable), retrieval second, message third
         if trim == "tokens":
-            est_new = len(r["text"]) // 3 + 8 + (150 if memory is not None else 0)   # + allowance for the memory note
+            est_new = int(len(r["text"]) / 2.3) + 8 + (250 if memory is not None else 0)   # Cyrillic ≈ 2.3 chars/token; allowance for the note
             budget = (policy["num_predict"] if policy else (think_predict if r.get("block") in think_on else 700))
             while window_turns and sys_tokens + sum(cost.get(t, 0) for t in window_turns) + est_new + budget > ctx:
                 del messages[1:3]
@@ -216,9 +216,9 @@ def run_dialog(host, model, ctx, rows, seed, think_on=frozenset(), think_predict
         pe, ec = resp.get("prompt_eval_count", 0), resp.get("eval_count", 0)
         # token ledger: this exchange's share of future prompts = its user text (without the memory note, which
         # is not kept) + its reply; the first call also calibrates the system prompt size
-        note_tok = len(note) // 3 + (len(policy["prefix"]) // 3 if policy and policy.get("prefix") else 0)
+        note_tok = int(len(note) / 2.3) + (int(len(policy["prefix"]) / 2.3) if policy and policy.get("prefix") else 0)
         if not cost:
-            sys_tokens = max(sys_tokens, pe - len(sent) // 3)
+            sys_tokens = max(sys_tokens, pe - int(len(sent) / 2.3))
         cost[r["turn"]] = max(0, pe - last_pe - last_ec - note_tok) + ec if last_pe else max(0, pe - sys_tokens - note_tok) + ec
         last_pe, last_ec = pe, ec
         if not reply:
@@ -418,7 +418,7 @@ def write_summary(model, tag, summary):
                   f"{(j.get('hallucination') or {}).get('invented', '—')} | {m['ttft_last10_s']} | {m['tok_s_mean']} | {wall} | "
                   f"{m.get('thinking_chars_mean', '—')} | {m['ctx_tokens_end']} | "
                   f"{m.get('mem_retrieval_recall', '—')} / {m.get('mem_note_chars_mean', '—')}"
-                  + (f" (справка на {m.get('mem_note_turns')} ходах, скопирована на {m.get('mem_note_copied')}, ремарок в скобках {m.get('mem_asides')})" if m.get("mem_note_turns") is not None else "") + " | "
+                  + (f" (справка на {m.get('mem_note_turns')} ходах; сырая модель: скопировала на {m.get('mem_note_copied')}, ремарок {m.get('mem_asides')}; фильтр сработал на {m.get('guard_fired')})" if m.get("mem_note_turns") is not None else "") + (f"; обрезано по длине {m.get('cut_by_length')}" if m.get("cut_by_length") else "") + " | "
                   f"{m.get('router_acc', '—')} / {m.get('router_s_mean', '—')} |")
     md += ["", "Recall по расстоянию (ход/проба@расстояние): ✓ попал, ✗ нет; для M-проб ✓ = повторил свой же ранний ответ.", ""]
     for m, _ in summary:
@@ -508,7 +508,7 @@ def main():
                                     "think_on": sorted(think_on), "think_predict": args.think_predict if think_on else None,
                                     "memory": args.memory, "mem_k": args.mem_k, "mem_mode": args.mem_mode,
                                     "embed_model": args.embed_model if args.memory != "off" else None, "router": args.router, "trim": trim,
-                                    "note_version": 4 if args.memory != "off" else None,
+                                    "note_version": 5 if args.memory != "off" else None,
                                     "persona_file": str(persona_file.relative_to(ROOT)) if persona_file.is_relative_to(ROOT) else str(persona_file),
                                     "persona_sha1": __import__("hashlib").sha1(PERSONA.encode("utf-8")).hexdigest()[:10],
                                     "metrics": m, "judge": j, "log": log}, ensure_ascii=False, indent=1), encoding="utf-8")
