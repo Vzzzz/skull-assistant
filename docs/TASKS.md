@@ -65,7 +65,7 @@ Done: измеримый критерий.
 Предусловие: стенд в обычном режиме, но **ollama без загруженных моделей** (`ollama ps` пуст; скрипт проверит), brain остановлен (скрипт гасит `skull.target` и поднимает только голосовые юниты). Скачать: проектор зрения и YOLO ONNX:
 ```bash
 cd ~/skull-assistant && git pull --ff-only origin main
-HF_HUB_DISABLE_XET=1 hf download ggml-org/gemma-4-E4B-it-GGUF --include "mmproj*" --local-dir models/hf/gemma-4-E4B-it-GGUF
+HF_HUB_DISABLE_XET=1 hf download ggml-org/gemma-4-E4B-it-GGUF mmproj-gemma-4-E4B-it-Q8_0.gguf --local-dir models/hf/gemma-4-E4B-it-GGUF   # 560 МБ; маска mmproj* тянула бы ещё BF16 на 992 МБ
 mkdir -p models/vision && aria2c -x 4 -d models/vision -o yolo11n_640.onnx https://huggingface.co/giangndm/yolo11-onnx/resolve/main/yolo11n_640.onnx
 ls -la models/hf/gemma-4-E4B-it-GGUF/mmproj* models/vision/
 ```
