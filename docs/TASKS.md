@@ -40,6 +40,7 @@ Done: измеримый критерий.
 | T-015 | open | Арифметика через инструмент `calc` | D-016 п.3 |
 | T-004 | open | Сервис KWS быстрых команд, `tts:stop` | I-10, P-002 |
 | T-005 | open | Захват звука переживает переподключение микрофона | D-013, I-07 |
+| T-034 | open | CTX-1 + tool-calling smoke на Spark-X2.6-4B (текстовая 4B «для агентов», P-028) — кандидат на мозг инструментов / B-lite; по желанию, 30 мин | P-028, D-027 блок (4), T-015 |
 | T-011 | open | Фоновый режим: замеры 1–2 | AMBIENT_MODE |
 | T-017 | open | Обучить головы openWakeWord: «стоп», «тише», «Костян» | I-04, D-013 п.3 |
 | T-019 | open | Очистка диска от моделей, не прошедших отбор (после T-018, T-013, bench) | D-018, Q-009 |
@@ -59,6 +60,18 @@ Done: измеримый критерий.
 | T-008 | blocked | Оценочный набор `research/eval/` | Q-029 |
 
 ## Карточки
+
+### T-034 · CTX-1 и tool-calling на Spark-X2.6-4B · open (по желанию, после T-030/T-033)
+Зачем: P-028 — текстовая 4B с заявленными инструментами и управляемым thinking; без зрения мозгом режима A быть не может, но может стать «мозгом инструментов» для блока (4) порога (D-027) или B-lite. Вопрос один: держит ли русский и персону (у Qwen3.5-4B — 1.9).
+Шаги (стенд, сервисный режим не нужен — ollama):
+```bash
+cd ~/skull-assistant && HF_HUB_DISABLE_XET=1 hf download XHToken/Spark-X2.6-4B-GGUF Spark-X2.6-4B-Q4_K_M.gguf --local-dir models/hf/Spark-X2.6-4B-GGUF
+printf 'FROM %s/models/hf/Spark-X2.6-4B-GGUF/Spark-X2.6-4B-Q4_K_M.gguf\n' "$PWD" > models/hf/Spark-X2.6-4B-GGUF/Modelfile && ollama create spark-x2.6-4b -f models/hf/Spark-X2.6-4B-GGUF/Modelfile
+for s in 42 7; do .venv/bin/python research/eval/ctx_probe.py --model spark-x2.6-4b --ctx 8192 --seed $s --judge qwen3.5:9b 2>&1 | tee -a research/eval/results/ctx_probe_t034.log; done; ollama stop spark-x2.6-4b
+```
+Если `ollama create` не знает архитектуру `spark2_5` — записать версию ollama и остановиться (llama-server её знает с b10829; прогон CTX-1 на llama-server — отдельная доработка скрипта, не сейчас). Если персона ≥ 3.5 — шаг 2: bench памяти @8k (`MODELS="spark-x2.6-4b" CTXS="8192" bash research/bench/bench_vlm_mem.sh …`) и tool-calling на трёх задачах math через ollama `tools` (черновик в T-015).
+Done: 2 JSON + сводка в git; строка в «Закрытые» с персоной 9b / recall / math / пустыми ответами. Записать: ядро — оценка по D-017, строка в MEMORY_BUDGET §3, статус в P-028.
+Связь: P-028, D-027, T-015, T-018 (протокол CTX-1), M8b.
 
 ### T-033 · Память полного набора режима A на стенде (голос + VLM с проектором + эмбеддер + YOLO) · open
 Зачем: D-027 блок (1) и (2): до Jetson нужно знать, влезает ли весь набор режима A одновременно — пока в MEMORY_BUDGET §1 VLM измерена отдельно, голосовой стек отдельно (`voice_rss_*.csv`), проектор зрения и детектор не измерены вовсе. Стенд: VRAM через nvidia-smi + RSS процессов ≈ оценка unified memory Orin (с оговоркой dGPU ≠ unified).
