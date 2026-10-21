@@ -26,6 +26,7 @@ Done: измеримый критерий.
 | ID | Статус | Задача | Связь |
 |---|---|---|---|
 | T-030 | open | MEM-5: формат v3 (скобки в конце) + детерминированный фильтр копий и ремарок в brain-логике скрипта + оценка токенов для кириллицы — e4b @2k dropped+apply ×2, @2k dropped ×2 | D-026, T-029 |
+| T-033 | open | Память полного набора режима A на стенде: голосовые юниты + llama-server (IQ4_XS, mmproj) + эмбеддер CPU + YOLO ONNX — по шагам, три точки, итог | D-027, MEMORY_BUDGET §1–2, T-031 |
 | T-013 | open | TTS/omni-кандидаты на стенде | TTS_TRACK §7 |
 | T-001 | open | STT: убрать двойной `transcribe` | I-01 |
 | T-002 | open | Brain: история диалога в Redis | I-05 |
@@ -58,6 +59,25 @@ Done: измеримый критерий.
 | T-008 | blocked | Оценочный набор `research/eval/` | Q-029 |
 
 ## Карточки
+
+### T-033 · Память полного набора режима A на стенде (голос + VLM с проектором + эмбеддер + YOLO) · open
+Зачем: D-027 блок (1) и (2): до Jetson нужно знать, влезает ли весь набор режима A одновременно — пока в MEMORY_BUDGET §1 VLM измерена отдельно, голосовой стек отдельно (`voice_rss_*.csv`), проектор зрения и детектор не измерены вовсе. Стенд: VRAM через nvidia-smi + RSS процессов ≈ оценка unified memory Orin (с оговоркой dGPU ≠ unified).
+Предусловие: стенд в обычном режиме, но **ollama без загруженных моделей** (`ollama ps` пуст; скрипт проверит), brain остановлен (скрипт гасит `skull.target` и поднимает только голосовые юниты). Скачать: проектор зрения и YOLO ONNX:
+```bash
+cd ~/skull-assistant && git pull --ff-only origin main
+HF_HUB_DISABLE_XET=1 hf download ggml-org/gemma-4-E4B-it-GGUF --include "mmproj*" --local-dir models/hf/gemma-4-E4B-it-GGUF
+mkdir -p models/vision && aria2c -x 4 -d models/vision -o yolo11n_640.onnx https://huggingface.co/giangndm/yolo11-onnx/resolve/main/yolo11n_640.onnx
+ls -la models/hf/gemma-4-E4B-it-GGUF/mmproj* models/vision/
+```
+Файлы: `research/bench/bench_stack.sh` (есть), `research/vision/yolo_probe.py` (есть; onnxruntime CPU, синтетический кадр, 5 fps), результаты `research/bench/results/stack_<дата>.csv`.
+Шаги:
+1. `bash research/bench/bench_stack.sh 2>&1 | tee research/bench/results/stack_$(date +%F).log` — шаги P0 (пусто) → P1 (capture, wakeword, stt, tts, redis) → P2 (llama-server IQ4_XS @8k) → P3 (+mmproj, один запрос с картинкой 640×480, затем текстовый) → P4 (эмбеддер: `embeddinggemma` GGUF из ollama через `llama-server --embeddings -ngl 0`) → P5 (YOLO 11n ONNX, 5 fps) → P6 итоги (сумма RSS, дельта VRAM и RAM к P0). ~5 мин.
+2. Если проектор не скачался — P3 пропускается автоматически; если `yolo_probe.py` падает на модели — попробовать `webnn/yolo11n` (`onnx/yolo11n.onnx`) и записать.
+3. `git add research/bench/results && git commit -m "bench: T-033 память полного набора режима A" && git push origin main`.
+Проверка: CSV с строками P0…P6; в P3 две строки после запросов (пик с картинкой выше, чем idle); в P5 в note — ms/frame.
+Done: CSV + лог в git; строка в «Закрытые» с: VRAM P0/P2/P3 (пик с картинкой), RSS каждого юнита, RSS эмбеддера и YOLO, ms/frame YOLO, итоговые дельты.
+Записать: ядро — MEMORY_BUDGET §1 (три точки для VLM с проектором, строки «эмбеддер», «детектор»), §2 бюджет режима A как сумма, T-031 (детектор: CPU или GPU по ms/frame), D-NNN при необходимости.
+Связь: D-027, MEMORY_BUDGET, T-031, T-016 (mmproj), P-022 (у NVIDIA на Orin при полном стеке оставалось 223 МБ).
 
 ### T-031 · M7-lite: визуальный триггер на 2–3 объекта · open (черновик, уточнить после M5)
 Зачем: блок (2) порога №2 (D-027): ассистент должен реагировать на то, что видит, хотя бы на пару объектов — иначе «зрение» в проекте существует только в названии VLM. Полный M7 (YOLO-триггеры на стенде и устройстве, манифест) — после порога.
