@@ -106,6 +106,11 @@ PRESETS = {
     "robot": lambda x: normalize(soft_clip(butter(butter(channel_vocoder(x, f0=110.0, dry=0.25), "high", 250), "low", 4500), 3.0)),
     # hollow plastic cavity: short comb resonance + small-room reverb + gentle low cut
     "hollow": lambda x: normalize(comb_reverb(butter(x, "high", 120), decay=0.5, wet=0.3)),
+    # the candidate "skull" voice (owner, 2026-10-22): vocoder at 50 % mix, distortion at 50 % parallel mix,
+    # reverb at half the hollow wet level
+    "skull": lambda x: normalize(comb_reverb(
+        0.5 * channel_vocoder(x, f0=100.0, dry=0.5) + 0.5 * soft_clip(channel_vocoder(x, f0=100.0, dry=0.5), 4.0),
+        decay=0.5, wet=0.15)),
 }
 
 
