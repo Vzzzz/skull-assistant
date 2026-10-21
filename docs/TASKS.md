@@ -376,6 +376,17 @@ Done: сводная таблица; для каждой модели — JSON �
 Связь: CTX_PROBE.md, D-016, Q-010, Q-009, T-014, MEMORY_BUDGET §3.
 
 ### T-013 · TTS/omni-кандидаты на стенде · open
+**Шаг 1 (2026-10-21, по просьбе владельца — «чтобы цифры хоть как-то уточнились»): Qwen3-TTS 0.6B через qwentts.cpp.** На стенде уже лежат `models/hf/Qwen3-TTS-GGUF/` (talker 0.6B CustomVoice Q8_0 993 МБ и Q4_K_M 629 МБ, tokenizer 12Hz Q8_0 291 МБ) — формат рантайма [qwentts.cpp](https://github.com/ServeurpersoCom/qwentts.cpp) (C++17/GGML, MIT; CPU/CUDA; потоковый синтез — первый кадр после первого шага Talker; OpenAI-совместимый `tts-server` с PCM-стримом). Именованные голоса CustomVoice: serena, vivian, uncle_fu, ryan, aiden, ono_anna, sohee, eric, dylan — русский заявлен у модели, носителя среди голосов нет, качество на слух — владелец.
+```bash
+# сборка (CUDA toolkit уже есть; ~5 мин)
+cd ~ && git clone --recurse-submodules https://github.com/ServeurpersoCom/qwentts.cpp.git && cd qwentts.cpp && ./buildcuda.sh && ls build/tts-server build/qwen-tts
+# замер: стенд погашен (GPU пуст), Q8_0 и Q4_K_M, CUDA и CPU, 15 реплик из research/eval/tts_lines.txt
+cd ~/skull-assistant && git pull --ff-only origin main
+bash research/tts/bench_qwentts.sh 2>&1 | tee research/tts/results/qwentts_$(date +%F).log
+TALKER=models/hf/Qwen3-TTS-GGUF/qwen-talker-0.6b-customvoice-Q4_K_M.gguf bash research/tts/bench_qwentts.sh 2>&1 | tee -a research/tts/results/qwentts_$(date +%F).log
+```
+Скрипт `research/tts/bench_qwentts.sh` пишет `research/tts/results/qwentts_<дата>.csv` (backend, talker, TTFA = первый байт PCM, total, audio_s, RT, VRAM idle/loaded/peak, RSS/VmHWM сервера, load_s) и wav-файлы в `research/tts/results/qwentts/` (не в git) для прослушивания. Если `tts-server` не отвечает на `/v1/models` — заменить проверку на `/health` или просто `sleep 20`; если `--speaker ryan` не принимается для русского — попробовать `serena`/`aiden`; если CPU-прогон слишком долгий (RT > 3) — ограничить `BACKENDS="CUDA0"` и 5 реплик. Коммит: `git add research/tts/results/*.csv research/tts/results/*.log` (wav — нет).
+Шаг 2 (позже): transformers-путь `qwen-tts` для эталона качества и Chatterbox ONNX, MiniCPM-o — по исходной карточке ниже.
 Зачем: TTS_TRACK §7 — проверить новый класс речевых моделей на русском до bake-off; Piper — базовая линия (RT 0.055–0.09, `research/tts/results/piper_rt_2026-10-12.csv`).
 Предусловие: модели скачаны `deploy/fetch_models.sh tts` (сервисный режим стенда). Если каких-то нет — замерять те, что есть, остальные в отчёт.
 Файлы: создать `research/tts/bench_tts.py` (по образцу `research/tts/piper_rt.py`: те же колонки + `vram_peak_mb`), результаты в `research/tts/results/`.
