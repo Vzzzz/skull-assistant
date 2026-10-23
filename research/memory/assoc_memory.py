@@ -132,15 +132,24 @@ class AssocMemory:
         return (out if out else reply.strip()), flags
 
     @staticmethod
-    def format_note(hits, max_reply_chars=80, max_user_chars=140):
-        """Text appended after the user's turn (v3). Kept short and literal: the model should use it, not discuss it."""
+    def format_note(hits, max_reply_chars=80, max_user_chars=140, chronological=True):
+        """Text appended after the user's turn (v3/v5). Kept short and literal: the model should use it, not discuss it.
+        v6 (T-036): records in time order with markers — T-030 showed the model picking the stale fact («ключи в куртке»)
+        when the update («переложил в рюкзак») was listed without any notion of which came later."""
         if not hits:
             return ""
+        recs = [h[1] for h in hits]
+        if chronological:
+            recs = sorted(recs, key=lambda r: r["turn"])
         parts = []
-        for _, rec, _, _ in hits:
+        n = len(recs)
+        for i, rec in enumerate(recs):
             u = rec["user"].replace("\n", " ")
             u = (u[:max_user_chars] + "…") if len(u) > max_user_chars else u
             a = rec["assistant"].replace("\n", " ")
             a = (a[:max_reply_chars] + "…") if len(a) > max_reply_chars else a
-            parts.append(f"он говорил «{u}»" + (f", ты отвечал «{a}»" if a else ""))
+            mark = ""
+            if chronological and n > 1:
+                mark = "сначала " if i == 0 else ("позже всего " if i == n - 1 else "потом ")
+            parts.append(f"{mark}он говорил «{u}»" + (f", ты отвечал «{a}»" if a else ""))
         return AssocMemory.NOTE_PREFIX + "; ".join(parts) + ")"

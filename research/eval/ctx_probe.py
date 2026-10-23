@@ -508,7 +508,7 @@ def main():
                                     "think_on": sorted(think_on), "think_predict": args.think_predict if think_on else None,
                                     "memory": args.memory, "mem_k": args.mem_k, "mem_mode": args.mem_mode,
                                     "embed_model": args.embed_model if args.memory != "off" else None, "router": args.router, "trim": trim,
-                                    "note_version": 5 if args.memory != "off" else None,
+                                    "note_version": 6 if args.memory != "off" else None,
                                     "persona_file": str(persona_file.relative_to(ROOT)) if persona_file.is_relative_to(ROOT) else str(persona_file),
                                     "persona_sha1": __import__("hashlib").sha1(PERSONA.encode("utf-8")).hexdigest()[:10],
                                     "metrics": m, "judge": j, "log": log}, ensure_ascii=False, indent=1), encoding="utf-8")
