@@ -1,0 +1,7 @@
+step,component,pid,rss_mb,vmhwm_mb,vram_used_mb,ram_used_mb,note
+P0,baseline,-,-,-,0,525,skull.target stopped, ollama idle
+P3,llama-server-vision,2459,3269,5220,3758,893,+mmproj loaded, idle
+P3,llama-server-vision,2459,3270,5220,3758,925,after 1 image request 640x480: ERR {'error': {'code': 400, 'message': '[json.exception.parse_error.101] parse error
+P3,llama-server-vision,2459,3353,5220,3762,1011,after text request (steady)
+P4,embedder-cpu,2561,650,650,3938,1184,embeddinggemma-300M (ollama blob) -ngl 0 -t 4 pooling=mean dim=768; 1 embedding 41 ms
+P6,totals,-,4003,-,3938,1184,sum RSS of all skull processes; vram delta vs P0 = 3938; ram delta vs P0 = 642

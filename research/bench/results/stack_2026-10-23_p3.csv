@@ -1,0 +1,6 @@
+step,component,pid,rss_mb,vmhwm_mb,vram_used_mb,ram_used_mb,note
+P0,baseline,-,-,-,0,522,skull.target stopped, ollama idle
+P3,llama-server-vision,2736,3269,5220,3758,866,+mmproj loaded, idle
+P3,llama-server-vision,2736,3606,5220,3804,1207,after 1 image request 640x480: ok prompt_tokens=158
+P3,llama-server-vision,2736,3621,5220,3804,1230,after text request (steady)
+P6,totals,-,3621,-,3804,1236,sum RSS of all skull processes; vram delta vs P0 = 3804; ram delta vs P0 = 732
