@@ -285,9 +285,12 @@ def metrics(log, ctx):
             else:
                 hit = any_kw(e["reply"], ex["keywords"])
                 hit2 = any_kw(e["reply"], ex["keywords2"]) if "keywords2" in ex else None
+            # must_not: the stale fact ("куртка" for the keys after they moved to the backpack) fails the probe only when
+            # the current fact is absent — mentioning the jacket as history next to the right answer is not a miss
+            # (2026-10-23 fix: T-036 v6 answered "в рюкзаке … и куртку стирать" and was scored as a miss)
             bad = any_kw(e["reply"], ex["must_not"]) if "must_not" in ex else False
             m["recall"].append({"turn": e["turn"], "probe_for": pf, "distance": e["turn"] - planted.get(pf, e["turn"]),
-                                "hit": bool(hit and not bad), "detail_hit": hit2, "wrong_old": bad})
+                                "hit": bool(hit), "detail_hit": hit2, "wrong_old": bool(bad and not hit)})
         if e.get("math_id"):
             ex = e["expect"]
             answers = [ex["answer"]] + ex.get("alt", [])
