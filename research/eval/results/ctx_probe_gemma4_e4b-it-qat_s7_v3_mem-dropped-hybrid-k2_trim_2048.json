@@ -218,7 +218,10 @@
   "mem_retrieval_recall": 0.8,
   "mem_note_chars_mean": 278,
   "mem_note_turns": 50,
-  "mem_note_copied": 0
+  "mem_note_copied": 0,
+  "mem_asides": 0,
+  "guard_fired": 0,
+  "cut_by_length": 0
  },
  "judge": {
   "persona": [

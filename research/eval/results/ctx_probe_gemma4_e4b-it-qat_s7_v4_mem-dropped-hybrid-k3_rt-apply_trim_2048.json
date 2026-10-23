@@ -210,7 +210,9 @@
   "mem_note_chars_mean": 170,
   "mem_note_turns": 24,
   "mem_note_copied": 0,
-  "mem_asides": 0
+  "mem_asides": 0,
+  "guard_fired": 0,
+  "cut_by_length": 0
  },
  "judge": {
   "persona": [

@@ -189,7 +189,8 @@
   "wall_think_mean_s": 3.7,
   "wall_think_max_s": 18.6,
   "wall_plain_mean_s": null,
-  "wall_total_s": 219
+  "wall_total_s": 219,
+  "cut_by_length": 0
  },
  "judge": {
   "persona": [

@@ -64,9 +64,9 @@
     "turn": 50,
     "probe_for": "A3u",
     "distance": 25,
-    "hit": false,
+    "hit": true,
     "detail_hit": null,
-    "wrong_old": true
+    "wrong_old": false
    },
    {
     "turn": 51,
@@ -163,7 +163,7 @@
   },
   "truncation_turns": [],
   "empty_replies": 0,
-  "recall_rate": 0.73,
+  "recall_rate": 0.8,
   "recall_far_rate": 0.89,
   "math_acc": 0.0,
   "math_working": 0.0,
@@ -183,7 +183,8 @@
   "wall_think_mean_s": 1.2,
   "wall_think_max_s": 5.1,
   "wall_plain_mean_s": 1.3,
-  "wall_total_s": 75
+  "wall_total_s": 75,
+  "cut_by_length": 0
  },
  "judge": {
   "persona": [

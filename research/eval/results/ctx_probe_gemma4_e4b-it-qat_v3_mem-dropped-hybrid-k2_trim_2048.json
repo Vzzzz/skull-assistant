@@ -68,9 +68,9 @@
     "turn": 50,
     "probe_for": "A3u",
     "distance": 25,
-    "hit": false,
+    "hit": true,
     "detail_hit": null,
-    "wrong_old": true
+    "wrong_old": false
    },
    {
     "turn": 51,
@@ -201,7 +201,7 @@
    59
   ],
   "empty_replies": 0,
-  "recall_rate": 0.8,
+  "recall_rate": 0.87,
   "recall_far_rate": 0.89,
   "math_acc": 0.33,
   "math_working": 0.33,
@@ -223,7 +223,10 @@
   "mem_retrieval_recall": 0.87,
   "mem_note_chars_mean": 296,
   "mem_note_turns": 51,
-  "mem_note_copied": 0
+  "mem_note_copied": 0,
+  "mem_asides": 0,
+  "guard_fired": 0,
+  "cut_by_length": 0
  },
  "judge": {
   "persona": [

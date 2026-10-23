@@ -196,7 +196,12 @@
   "router_s_mean": 0.68,
   "mem_probe_turns": 15,
   "mem_retrieval_recall": 0.73,
-  "mem_note_chars_mean": 195
+  "mem_note_chars_mean": 195,
+  "mem_note_turns": 23,
+  "mem_note_copied": 0,
+  "mem_asides": 0,
+  "guard_fired": 0,
+  "cut_by_length": 0
  },
  "judge": {
   "persona": [

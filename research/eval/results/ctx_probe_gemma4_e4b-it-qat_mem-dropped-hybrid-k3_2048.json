@@ -185,7 +185,12 @@
   "wall_total_s": 110,
   "mem_probe_turns": 15,
   "mem_retrieval_recall": 0.0,
-  "mem_note_chars_mean": 0
+  "mem_note_chars_mean": 0,
+  "mem_note_turns": 0,
+  "mem_note_copied": 0,
+  "mem_asides": 0,
+  "guard_fired": 0,
+  "cut_by_length": 0
  },
  "judge": {
   "persona": [

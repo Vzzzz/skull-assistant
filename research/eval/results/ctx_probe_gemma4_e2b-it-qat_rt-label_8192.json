@@ -197,7 +197,8 @@
    "memory->explain": 3,
    "memory->world": 1
   },
-  "router_s_mean": 0.66
+  "router_s_mean": 0.66,
+  "cut_by_length": 0
  },
  "judge": {
   "persona": [

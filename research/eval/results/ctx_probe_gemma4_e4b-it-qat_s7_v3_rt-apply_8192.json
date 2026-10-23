@@ -192,7 +192,8 @@
    "chat->world": 2,
    "memory->world": 1
   },
-  "router_s_mean": 0.68
+  "router_s_mean": 0.68,
+  "cut_by_length": 0
  },
  "judge": {
   "persona": [

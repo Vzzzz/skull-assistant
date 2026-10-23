@@ -175,7 +175,8 @@
   "wall_think_mean_s": null,
   "wall_think_max_s": null,
   "wall_plain_mean_s": 1.3,
-  "wall_total_s": 75
+  "wall_total_s": 75,
+  "cut_by_length": 0
  },
  "judge": {
   "judge_model": "claude-fable-5-1 (chat)",
