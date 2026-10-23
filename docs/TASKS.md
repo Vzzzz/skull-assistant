@@ -67,7 +67,7 @@ Done: измеримый критерий.
 Зачем: P-028 — текстовая 4B с заявленными инструментами и управляемым thinking; без зрения мозгом режима A быть не может, но может стать «мозгом инструментов» для блока (4) порога (D-027) или B-lite. Вопрос один: держит ли русский и персону (у Qwen3.5-4B — 1.9).
 Шаги (стенд, сервисный режим не нужен — ollama):
 ```bash
-cd ~/skull-assistant && HF_HUB_DISABLE_XET=1 hf download XHToken/Spark-X2.6-4B-GGUF Spark-X2.6-4B-Q4_K_M.gguf --local-dir models/hf/Spark-X2.6-4B-GGUF
+cd ~/skull-assistant && hf download XHToken/Spark-X2.6-4B-GGUF Spark-X2.6-4B-Q4_K_M.gguf --local-dir models/hf/Spark-X2.6-4B-GGUF
 printf 'FROM %s/models/hf/Spark-X2.6-4B-GGUF/Spark-X2.6-4B-Q4_K_M.gguf\n' "$PWD" > models/hf/Spark-X2.6-4B-GGUF/Modelfile && ollama create spark-x2.6-4b -f models/hf/Spark-X2.6-4B-GGUF/Modelfile
 for s in 42 7; do .venv/bin/python research/eval/ctx_probe.py --model spark-x2.6-4b --ctx 8192 --seed $s --judge qwen3.5:9b 2>&1 | tee -a research/eval/results/ctx_probe_t034.log; done; ollama stop spark-x2.6-4b
 ```
@@ -76,13 +76,13 @@ Done: 2 JSON + сводка в git; строка в «Закрытые» с пе
 Связь: P-028, D-027, T-015, T-018 (протокол CTX-1), M8b.
 
 ### T-033 · Память полного набора режима A на стенде (голос + VLM с проектором + эмбеддер + YOLO) · done (2026-10-23)
-Хвост 2 (2026-10-23): P3-картинка не дошла (тело ~0.8 МБ в аргументе curl → теперь из файла), эмбеддер из ollama-блоба llama.cpp не читает (316 vs 314 тензоров) → официальный GGUF: `HF_HUB_DISABLE_XET=1 hf download ggml-org/embeddinggemma-300M-GGUF embeddinggemma-300M-Q8_0.gguf --local-dir models/hf/embeddinggemma-300M-GGUF` (334 МБ), затем снова `STEPS="P3 P4" bash research/bench/bench_stack.sh research/bench/results/stack_$(date +%F)_p34b.csv`.
+Хвост 2 (2026-10-23): P3-картинка не дошла (тело ~0.8 МБ в аргументе curl → теперь из файла), эмбеддер из ollama-блоба llama.cpp не читает (316 vs 314 тензоров) → официальный GGUF: `hf download ggml-org/embeddinggemma-300M-GGUF embeddinggemma-300M-Q8_0.gguf --local-dir models/hf/embeddinggemma-300M-GGUF` (334 МБ), затем снова `STEPS="P3 P4" bash research/bench/bench_stack.sh research/bench/results/stack_$(date +%F)_p34b.csv`.
 Состояние: прогон владельца 2026-10-21 — P0…P5 сняты (сводка `research/bench/results/stack_2026-10-21.md`): голос 559 МБ, VLM IQ4_XS @8k 3038 VRAM, **проектор +720**, YOLO 11n CPU 160 МБ / 50 мс на кадр. Два дефекта скрипта: PNG для запроса с картинкой не сгенерировался (пик с картинкой не замерен), эмбеддер не поднялся при отключённом логе. Исправлено; хвост: `STEPS="P3 P4" bash research/bench/bench_stack.sh research/bench/results/stack_$(date +%F)_p34.csv 2>&1 | tee -a research/bench/results/stack_p34.log` (3 мин). Ниже — исходная карточка.
 Зачем: D-027 блок (1) и (2): до Jetson нужно знать, влезает ли весь набор режима A одновременно — пока в MEMORY_BUDGET §1 VLM измерена отдельно, голосовой стек отдельно (`voice_rss_*.csv`), проектор зрения и детектор не измерены вовсе. Стенд: VRAM через nvidia-smi + RSS процессов ≈ оценка unified memory Orin (с оговоркой dGPU ≠ unified).
 Предусловие: стенд в обычном режиме, но **ollama без загруженных моделей** (`ollama ps` пуст; скрипт проверит), brain остановлен (скрипт гасит `skull.target` и поднимает только голосовые юниты). Скачать: проектор зрения и YOLO ONNX:
 ```bash
 cd ~/skull-assistant && git pull --ff-only origin main
-HF_HUB_DISABLE_XET=1 hf download ggml-org/gemma-4-E4B-it-GGUF mmproj-gemma-4-E4B-it-Q8_0.gguf --local-dir models/hf/gemma-4-E4B-it-GGUF   # 560 МБ; маска mmproj* тянула бы ещё BF16 на 992 МБ
+hf download ggml-org/gemma-4-E4B-it-GGUF mmproj-gemma-4-E4B-it-Q8_0.gguf --local-dir models/hf/gemma-4-E4B-it-GGUF   # 560 МБ; маска mmproj* тянула бы ещё BF16 на 992 МБ
 mkdir -p models/vision && aria2c -x 4 -d models/vision -o yolo11n_640.onnx https://huggingface.co/giangndm/yolo11-onnx/resolve/main/yolo11n_640.onnx
 ls -la models/hf/gemma-4-E4B-it-GGUF/mmproj* models/vision/
 ```

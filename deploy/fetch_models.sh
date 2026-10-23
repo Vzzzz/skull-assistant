@@ -36,7 +36,7 @@ hf()   { for r in "$@"; do echo "=== hf download $r"; "$HF_CLI" download "$r" --
 # Flaky link + large file (2026-10-19, 16 GB BF16): the Xet backend of `hf download` does NOT resume after a drop.
 # Either HF_HUB_DISABLE_XET=1 (plain HTTP, resumes via .incomplete) or fetch the single file with aria2c/wget -c:
 #   aria2c -c -x 8 -s 8 -k 1M --max-tries=0 -o <file> https://huggingface.co/<repo>/resolve/main/<file>
-export HF_HUB_DISABLE_XET="${HF_HUB_DISABLE_XET:-1}"
+export HF_HUB_DISABLE_XET="${HF_HUB_DISABLE_XET:-0}"   # 2026-10-23: with =1 downloads do not start on the owner's WSL; keep Xet on, resume big files with aria2c
 hf_inc() { r="$1"; shift; echo "=== hf download $r ($*)"; "$HF_CLI" download "$r" --local-dir "$HF_DIR/${r#*/}" --include "$@" 2>&1 | tail -1; }
 
 case "$what" in
