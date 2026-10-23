@@ -67,7 +67,7 @@ Done: измеримый критерий.
 Зачем: P-028 — текстовая 4B с заявленными инструментами и управляемым thinking; без зрения мозгом режима A быть не может, но может стать «мозгом инструментов» для блока (4) порога (D-027) или B-lite. Вопрос один: держит ли русский и персону (у Qwen3.5-4B — 1.9).
 Шаги (стенд, сервисный режим не нужен — ollama):
 ```bash
-cd ~/skull-assistant && hf download XHToken/Spark-X2.6-4B-GGUF Spark-X2.6-4B-Q4_K_M.gguf --local-dir models/hf/Spark-X2.6-4B-GGUF
+cd ~/skull-assistant && mkdir -p models/hf/Spark-X2.6-4B-GGUF && aria2c -x 8 -s 8 -c -d models/hf/Spark-X2.6-4B-GGUF -o Spark-X2.6-4B-Q4_K_M.gguf https://huggingface.co/XHToken/Spark-X2.6-4B-GGUF/resolve/main/Spark-X2.6-4B-Q4_K_M.gguf
 printf 'FROM %s/models/hf/Spark-X2.6-4B-GGUF/Spark-X2.6-4B-Q4_K_M.gguf\n' "$PWD" > models/hf/Spark-X2.6-4B-GGUF/Modelfile && ollama create spark-x2.6-4b -f models/hf/Spark-X2.6-4B-GGUF/Modelfile
 for s in 42 7; do .venv/bin/python research/eval/ctx_probe.py --model spark-x2.6-4b --ctx 8192 --seed $s --judge qwen3.5:9b 2>&1 | tee -a research/eval/results/ctx_probe_t034.log; done; ollama stop spark-x2.6-4b
 ```

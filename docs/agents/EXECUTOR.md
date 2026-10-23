@@ -86,4 +86,4 @@ git pull win main                              # забрать правки doc
 
 Если remote `win` не настроен: `git remote add win /mnt/c/Users/valer/git/skull-assistant`.
 
-Загрузка моделей с HF (2026-10-23): `hf download …` **без** `HF_HUB_DISABLE_XET=1` — с флагом на стенде владельца загрузка не начинается; если Xet не докачивает большой файл после обрыва — `aria2c -x 8 -c <resolve-URL>` (как в T-023).
+Загрузка моделей с HF (2026-10-23, владелец): `hf download` через Xet стартует, но скорость падает до сотен КБ/с и закачка рвётся; с `HF_HUB_DISABLE_XET=1` не стартует вовсе. **Штатный путь для файлов > 1 ГБ — aria2c**: `aria2c -x 8 -s 8 -c -d <dir> -o <file> https://huggingface.co/<repo>/resolve/main/<file>` (докачка по `.aria2`); `hf download` — только для мелких файлов (конфиги, проекторы до ~0.5 ГБ).
