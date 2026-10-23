@@ -105,7 +105,7 @@ def main():
                         "ties": wins["tie"], "flips": flips, "unparsed": unparsed, "flip_rate": round(flips / n, 2) if n else None,
                         "pref": pref, "expect": exp, "agree": agree, "s": round(time.perf_counter() - t0)})
         print(f"== {label}: A {wins['A']} / B {wins['B']} / tie {wins['tie']} / flip {flips} / unparsed {unparsed} -> {pref} (expect {exp})", flush=True)
-    stamp = date.today().isoformat()
+    stamp = date.today().isoformat() + "_" + re.sub(r"[^a-z0-9]+", "-", args.judge.lower())
     with open(OUT / f"judge_pairs_{stamp}.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=list(rows[0].keys())); w.writeheader(); w.writerows(rows)
     md = [f"# Парный слепой судья ({args.judge}) · {stamp}", "",
