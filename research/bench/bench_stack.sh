@@ -62,8 +62,10 @@ if has P3 && [ -n "$MMPROJ" ] && [ -f "$MMPROJ" ]; then
   start_llama "--mmproj $MMPROJ"
   row P3 llama-server-vision "$SRV" "$(rss_of "$SRV")" "$(hwm_of "$SRV")" "$(vram)" "$(ram_used)" "+mmproj loaded, idle"
   # one image request: 640x480 synthetic PNG (pure python, no PIL)
-  PNG=$(python3 - <<'EOF'
-import zlib, struct, base64
+  # synthetic 640x480 PNG -> request body written straight to a file (a 0.8 MB base64 string exceeds the 128 KB
+  # per-argument limit of Linux, so it must never pass through argv)
+  python3 - <<'EOF'
+import zlib, struct, base64, json
 w, h = 640, 480
 rows = []
 for y in range(h):
@@ -74,14 +76,10 @@ for y in range(h):
 raw = b"".join(rows)
 def chunk(t, d): return struct.pack(">I", len(d)) + t + d + struct.pack(">I", zlib.crc32(t + d) & 0xffffffff)
 png = b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", w, h, 8, 2, 0, 0, 0)) + chunk(b"IDAT", zlib.compress(raw, 6)) + chunk(b"IEND", b"")
-print(base64.b64encode(png).decode())
+b64 = base64.b64encode(png).decode()
+json.dump({"messages": [{"role": "user", "content": [{"type": "text", "text": "Что на картинке? Одной фразой."}, {"type": "image_url", "image_url": {"url": "data:image/png;base64," + b64}}]}], "max_tokens": 60}, open("/tmp/img_body.json", "w"))
+print("png bytes", len(png))
 EOF
-)
-  [ ${#PNG} -gt 1000 ] || echo "PNG generation failed (len ${#PNG})"
-  python3 - "$PNG" <<'EOF2' > /tmp/img_body.json
-import json, sys
-print(json.dumps({"messages": [{"role": "user", "content": [{"type": "text", "text": "Что на картинке? Одной фразой."}, {"type": "image_url", "image_url": {"url": "data:image/png;base64," + sys.argv[1]}}]}], "max_tokens": 60}))
-EOF2
   IMG_RESP=$(curl -s "http://127.0.0.1:$PORT/v1/chat/completions" -H 'Content-Type: application/json' -d @/tmp/img_body.json)
   printf '%s' "$IMG_RESP" | head -c 300 > /tmp/img_resp.txt
   IMG_NOTE=$(printf '%s' "$IMG_RESP" | python3 -c 'import json,sys; d=json.load(sys.stdin); u=d.get("usage",{}); print("ok prompt_tokens=%s" % u.get("prompt_tokens") if "choices" in d else "ERR " + str(d)[:80])' 2>/dev/null || echo "no json: $(head -c 120 /tmp/img_resp.txt | tr ',' ';')")
