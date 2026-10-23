@@ -10,7 +10,7 @@ set -u
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"; cd "$ROOT"
 GGUF="${GGUF:-$ROOT/models/quant/kostyan-e4b-iq4xs-imx.gguf}"
 MMPROJ="${MMPROJ:-$(ls "$ROOT"/models/hf/gemma-4-E4B-it-GGUF/mmproj*.gguf 2>/dev/null | head -1)}"
-EMBED_GGUF="${EMBED_GGUF:-$(ollama show embeddinggemma --modelfile 2>/dev/null | awk '/^FROM/ {print $2}' | head -1)}"
+EMBED_GGUF="${EMBED_GGUF:-$(ls "$ROOT"/models/hf/embeddinggemma-300M-GGUF/embeddinggemma-300M-Q8_0.gguf 2>/dev/null | head -1)}"   # ollama's blob fails in llama.cpp (316 vs 314 tensors)
 YOLO_ONNX="${YOLO_ONNX:-$ROOT/models/vision/yolo11n_640.onnx}"
 LLAMA_BIN="${LLAMA_BIN:-$HOME/llama.cpp/build-cuda/bin}"
 CTX="${CTX:-8192}"; WAIT="${WAIT:-45}"
@@ -78,8 +78,13 @@ print(base64.b64encode(png).decode())
 EOF
 )
   [ ${#PNG} -gt 1000 ] || echo "PNG generation failed (len ${#PNG})"
-  IMG_RESP=$(curl -s "http://127.0.0.1:$PORT/v1/chat/completions" -H 'Content-Type: application/json' -d "{\"messages\":[{\"role\":\"user\",\"content\":[{\"type\":\"text\",\"text\":\"Что на картинке? Одной фразой.\"},{\"type\":\"image_url\",\"image_url\":{\"url\":\"data:image/png;base64,$PNG\"}}]}],\"max_tokens\":60}")
-  IMG_NOTE=$(printf '%s' "$IMG_RESP" | python3 -c 'import json,sys; d=json.load(sys.stdin); u=d.get("usage",{}); print("ok prompt_tokens=%s" % u.get("prompt_tokens") if "choices" in d else "ERR " + str(d)[:80])' 2>/dev/null || echo "no json")
+  python3 - "$PNG" <<'EOF2' > /tmp/img_body.json
+import json, sys
+print(json.dumps({"messages": [{"role": "user", "content": [{"type": "text", "text": "Что на картинке? Одной фразой."}, {"type": "image_url", "image_url": {"url": "data:image/png;base64," + sys.argv[1]}}]}], "max_tokens": 60}))
+EOF2
+  IMG_RESP=$(curl -s "http://127.0.0.1:$PORT/v1/chat/completions" -H 'Content-Type: application/json' -d @/tmp/img_body.json)
+  printf '%s' "$IMG_RESP" | head -c 300 > /tmp/img_resp.txt
+  IMG_NOTE=$(printf '%s' "$IMG_RESP" | python3 -c 'import json,sys; d=json.load(sys.stdin); u=d.get("usage",{}); print("ok prompt_tokens=%s" % u.get("prompt_tokens") if "choices" in d else "ERR " + str(d)[:80])' 2>/dev/null || echo "no json: $(head -c 120 /tmp/img_resp.txt | tr ',' ';')")
   row P3 llama-server-vision "$SRV" "$(rss_of "$SRV")" "$(hwm_of "$SRV")" "$(vram)" "$(ram_used)" "after 1 image request 640x480: $IMG_NOTE"
   chat '{"messages":[{"role":"user","content":"И ещё одну фразу."}],"max_tokens":40}'
   row P3 llama-server-vision "$SRV" "$(rss_of "$SRV")" "$(hwm_of "$SRV")" "$(vram)" "$(ram_used)" "after text request (steady)"
