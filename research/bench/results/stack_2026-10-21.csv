@@ -1,0 +1,14 @@
+step,component,pid,rss_mb,vmhwm_mb,vram_used_mb,ram_used_mb,note
+P0,baseline,-,-,-,0,463,skull.target stopped, ollama idle
+P1,skull-capture,1372,43,43,0,863,after 45s
+P1,skull-wakeword,1374,175,175,0,870,after 45s
+P1,skull-stt,1376,184,319,0,900,after 45s
+P1,skull-tts,1378,144,144,0,879,after 45s
+P1,redis,200,13,13,0,882,
+P2,llama-server-text,1559,3461,5223,3038,1413,kostyan-e4b-iq4xs-imx.gguf ctx=8192 q8_0 fa, after 1 chat
+P3,llama-server-vision,1627,3269,5220,3758,1303,+mmproj loaded, idle
+P3,llama-server-vision,1627,3270,5220,3758,1312,after 1 image request 640x480
+P3,llama-server-vision,1627,3353,5220,3762,1393,after text request (steady)
+P4,embedder-cpu,1715,NA,NA,3762,1272,sha256-0800cbac9c2064dde519420e75e512a83cb360de3ad5df176185dc69652fc515 -ngl 0, 1 embedding 6 ms
+P5,yolo-onnx,1941,159,163,3762,1411,frames=75 ms/frame median=51.2 p95=55.5 rss=159MB out=[(1; 84; 8400)]
+P6,totals,-,4064,-,3762,1429,sum RSS of all skull processes; vram delta vs P0 = 3762; ram delta vs P0 = 977

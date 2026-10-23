@@ -1,0 +1,7 @@
+step,component,pid,rss_mb,vmhwm_mb,vram_used_mb,ram_used_mb,note
+P0,baseline,-,-,-,0,516,skull.target stopped, ollama idle
+P3,llama-server-vision,1320,3269,5220,3758,872,+mmproj loaded, idle
+P3,llama-server-vision,1320,3269,5220,3758,908,after 1 image request 640x480: no json
+P3,llama-server-vision,1320,3353,5220,3762,986,after text request (steady)
+P4,embedder-cpu,1416,NA,NA,3762,991,embeddinggemma-300M (ollama blob) -ngl 0 -t 4 pooling=mean dim=?; 1 embedding 6 ms
+P6,totals,-,3353,-,3762,994,sum RSS of all skull processes; vram delta vs P0 = 3762; ram delta vs P0 = 496

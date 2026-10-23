@@ -1,0 +1,16 @@
+backend,talker,speaker,lang,line,chars,ttfa_s,total_s,audio_s,rt,vram_idle_mb,vram_loaded_mb,vram_peak_mb,rss_mb,vmhwm_mb,load_s
+CUDA0,qwen-talker-0.6b-customvoice-Q8_0,serena,Russian,1,72,0.043,0.848,5.60,0.151,0,2246,2418,1818,1818,1.0
+CUDA0,qwen-talker-0.6b-customvoice-Q8_0,serena,Russian,2,54,0.029,0.726,4.48,0.162,0,2246,2418,1818,1818,1.0
+CUDA0,qwen-talker-0.6b-customvoice-Q8_0,serena,Russian,3,62,0.031,0.823,5.12,0.161,0,2246,2418,1818,1818,1.0
+CUDA0,qwen-talker-0.6b-customvoice-Q8_0,serena,Russian,4,71,0.034,0.887,5.52,0.161,0,2246,2418,1818,1818,1.0
+CUDA0,qwen-talker-0.6b-customvoice-Q8_0,serena,Russian,5,71,0.031,0.957,6.00,0.160,0,2246,2418,1818,1818,1.0
+CUDA0,qwen-talker-0.6b-customvoice-Q8_0,serena,Russian,6,71,0.026,1.095,7.12,0.154,0,2246,2418,1818,1818,1.0
+CUDA0,qwen-talker-0.6b-customvoice-Q8_0,serena,Russian,7,53,0.024,0.651,4.24,0.154,0,2246,2418,1819,1819,1.0
+CUDA0,qwen-talker-0.6b-customvoice-Q8_0,serena,Russian,8,74,0.025,1.392,9.28,0.150,0,2246,2418,1819,1819,1.0
+CUDA0,qwen-talker-0.6b-customvoice-Q8_0,serena,Russian,9,63,0.024,0.674,4.40,0.153,0,2246,2418,1819,1819,1.0
+CUDA0,qwen-talker-0.6b-customvoice-Q8_0,serena,Russian,10,48,0.024,0.641,4.16,0.154,0,2246,2418,1819,1819,1.0
+CUDA0,qwen-talker-0.6b-customvoice-Q8_0,serena,Russian,11,145,0.031,1.407,9.28,0.152,0,2246,2418,1819,1819,1.0
+CUDA0,qwen-talker-0.6b-customvoice-Q8_0,serena,Russian,12,87,0.025,1.042,6.80,0.153,0,2246,2418,1820,1820,1.0
+CUDA0,qwen-talker-0.6b-customvoice-Q8_0,serena,Russian,13,135,0.026,1.391,9.04,0.154,0,2246,2418,1820,1820,1.0
+CUDA0,qwen-talker-0.6b-customvoice-Q8_0,serena,Russian,14,262,0.031,2.310,15.36,0.150,0,2246,2430,1827,1827,1.0
+CUDA0,qwen-talker-0.6b-customvoice-Q8_0,serena,Russian,15,79,0.024,1.008,6.72,0.150,0,2246,2430,1827,1827,1.0
