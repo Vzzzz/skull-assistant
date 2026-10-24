@@ -4,11 +4,14 @@ Unlike ctx_probe.py this does not call the model itself: it tests the service as
 token window, router, memory, reply filter). Per-turn details come from the `meta` field brain puts on
 events:reply; metrics are the same as ctx_probe.metrics. The history is reset (/reset) before the run.
 
-  .venv/bin/python research/eval/ctx_bus.py --tag run1     # brain's num_ctx is read from llama-server /props
+  systemctl --user stop skull-tts skull-wakeword skull-stt     # TTS would speak every reply of the run
+  .venv/bin/python research/eval/ctx_bus.py --tag run1         # brain's num_ctx is read from llama-server /props
+  systemctl --user start skull.target                          # afterwards
 """
 import argparse
 import json
 import re
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -36,7 +39,12 @@ def say(r, text, timeout=300):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--tag", default="", help="suffix for the output file, e.g. run1")
+    ap.add_argument("--allow-tts", action="store_true", help="run even if skull-tts is active (it will speak all 60 replies)")
     args = ap.parse_args()
+    tts = subprocess.run(["systemctl", "--user", "is-active", "skull-tts"], capture_output=True, text=True).stdout.strip()
+    if tts == "active" and not args.allow_tts:
+        # 2026-10-24: runs with TTS on queued ~500 replies; the speaker played them for an hour with the mic muted
+        raise SystemExit("skull-tts is active: stop it first (systemctl --user stop skull-tts skull-wakeword skull-stt)")
     params = yaml.safe_load((ROOT / "services/brain/manifest.yaml").read_text(encoding="utf-8"))["params"]
     ctx = requests.get(f"{params['host']}/props", timeout=5).json()["default_generation_settings"]["n_ctx"]
     model = Path(params["gguf"]).stem
