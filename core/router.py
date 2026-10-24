@@ -10,7 +10,7 @@ import time
 
 import requests
 
-LABELS = ("chat", "memory", "calc", "explain", "world", "command")
+LABELS = ("chat", "memory", "calc", "explain", "world", "command", "aside")
 
 ROUTER_PROMPT = """Служебный вопрос, не отвечай собеседнику. Определи тип его последней реплики и ответь ОДНИМ словом из списка:
 chat — болтовня, замечание, рассказ о своих делах, реакция на тебя;
@@ -18,7 +18,8 @@ memory — спрашивает о том, что собеседник гово�
 calc — просит посчитать: числа, деньги, проценты, время;
 explain — просит подробно рассказать или объяснить что-то общее (как устроено, как работает);
 world — спрашивает о фактах, которых собеседник тебе не сообщал и которые не касаются его жизни: новости, наука, погода, незнакомые люди, приборы;
-command — просит запомнить, напомнить, сделать что-то или изменить твоё поведение.
+command — просит запомнить, напомнить, сделать что-то или изменить твоё поведение;
+aside — сказано не тебе: бормочет себе под нос, говорит по телефону или с другим человеком в комнате, читает вслух, поёт; речь из телевизора/радио/подкаста/созвона.
 Реплика собеседника: «{text}»
 Тип (одно слово):"""
 
@@ -29,7 +30,8 @@ _DESC = [("chat", ("болтовн", "замечан", "рассказ о сво
          ("calc", ("посчит", "числа", "деньги", "процент")),
          ("explain", ("подробно", "объясн", "как устроен")),
          ("world", ("вне этой комнаты", "новости", "наука", "погода", "прибор")),
-         ("command", ("запомнить", "напомнить", "сделать что", "изменить тво"))]
+         ("command", ("запомнить", "напомнить", "сделать что", "изменить тво")),
+         ("aside", ("не тебе", "под нос", "по телефону", "с другим человеком", "читает вслух"))]
 
 
 def parse_label(raw: str):
@@ -43,6 +45,41 @@ def parse_label(raw: str):
     return None
 
 
+def _probs(top_logprobs):
+    """Distribution over LABELS from the first generated token's alternatives."""
+    probs = {}
+    for alt in top_logprobs:
+        lab = parse_label(alt["token"])
+        if lab:
+            probs[lab] = probs.get(lab, 0.0) + math.exp(alt["logprob"])
+    return probs
+
+
+def route_ollama(host, model, messages, text, num_ctx, timeout=120):
+    """Same question through ollama /api/chat (research: models that only ollama runs, e.g. gemma4:e2b-it-qat);
+    logprobs of the first token when the server returns them, else the generated word."""
+    body = {"model": model, "stream": False, "think": False, "keep_alive": "10m", "logprobs": True, "top_logprobs": 10,
+            "messages": messages + [{"role": "user", "content": ROUTER_PROMPT.format(text=text)}],
+            "options": {"num_ctx": num_ctx, "temperature": 0.0, "seed": 1, "num_predict": 6}}
+    t0 = time.perf_counter()
+    r = requests.post(f"{host}/api/chat", json=body, timeout=timeout)
+    if r.status_code == 400 and "think" in r.text.lower():
+        body.pop("think")
+        r = requests.post(f"{host}/api/chat", json=body, timeout=timeout)
+    r.raise_for_status()
+    d = r.json()
+    raw = (d["message"].get("content") or "").strip()
+    try:
+        probs = _probs(d["logprobs"][0]["top_logprobs"])
+    except (KeyError, IndexError, TypeError):
+        probs = {}
+    if sum(probs.values()) < 0.5:
+        probs = {}   # the first token is not a label (e2b answers with the description: «реакция на тебя»)
+    label = max(probs, key=probs.get) if probs else parse_label(raw)
+    return {"label": label, "raw": raw[:40], "probs": {k: round(v, 3) for k, v in probs.items()},
+            "s": round(time.perf_counter() - t0, 3)}
+
+
 def route_llamaserver(host, messages, text, timeout=120):
     """messages: persona + history (without the current turn). Returns dict(label, raw, probs, s):
     label + distribution over LABELS from top_logprobs of the first generated token."""
@@ -54,14 +91,10 @@ def route_llamaserver(host, messages, text, timeout=120):
     r.raise_for_status()
     ch = r.json()["choices"][0]
     raw = (ch["message"].get("content") or "").strip()
-    probs = {}
     try:
-        for alt in ch["logprobs"]["content"][0]["top_logprobs"]:
-            lab = parse_label(alt["token"])
-            if lab:
-                probs[lab] = probs.get(lab, 0.0) + math.exp(alt["logprob"])
+        probs = _probs(ch["logprobs"]["content"][0]["top_logprobs"])
     except (KeyError, IndexError, TypeError):
-        pass
+        probs = {}
     label = max(probs, key=probs.get) if probs else parse_label(raw)
     return {"label": label, "raw": raw[:40], "probs": {k: round(v, 3) for k, v in probs.items()},
             "s": round(time.perf_counter() - t0, 3)}
@@ -83,6 +116,9 @@ POLICY = {
                           "конкретный человек, прибор или событие, о котором ты не знаешь), — скажи, что не знаешь, одной фразой в своём тоне, "
                           "не выдумывай. Если он ничего не спрашивает — отвечай как обычно."},
     "command": {"max_tokens": 200, "memory": True},
+    # said to someone else (T-038, ambient-lite): no reply, nothing stored. max_tokens only keeps services/brain
+    # working until it honours `respond` (T-038 stage 2)
+    "aside":   {"max_tokens": 300, "memory": False, "respond": False},
 }
 
 
@@ -90,6 +126,9 @@ POLICY = {
 # only when the turn has a number — «Как меня зовут?» right after a multiplication came out calc 0.42 / chat 0.27,
 # and the calc prefix made the model redo the previous sum before answering
 MIN_PROB, MIN_MARGIN = 0.45, 1.3
+# aside (T-038): staying silent when addressed is worse than answering a remark not meant for the skull — the label
+# needs p >= ASIDE_MIN_PROB, and is never taken when the turn has the skull's name in it
+ASIDE_MIN_PROB = 0.6
 _NUMBER = re.compile(
     r"\d|\b(?:ноль|нул\w*|один|одн\w*|два|две|двух|двум\w*|три|тр[её]х|четыр\w*|пят\w*|шест\w*|семь|семи|семер\w*|семьдесят\w*|восем\w*|"
     r"восьм\w*|девят\w*|десят\w*|\w+надцат\w*|двадцат\w*|тридцат\w*|сорок\w*|девяност\w*|сто|ста|сотн\w*|\w+сот|"
@@ -102,8 +141,14 @@ def has_number(text: str) -> bool:
 
 def decide(route, text):
     """Final label after the guards: returns (label, reason) where reason is None when the router's label stands,
-    'low-confidence' (top prob < MIN_PROB or < MIN_MARGIN x second) or 'calc-no-number'; both fall back to chat."""
+    'name' / 'aside-low' (aside with the name «Костян» in the turn / aside below ASIDE_MIN_PROB or without a distribution),
+    'low-confidence' (top prob < MIN_PROB or < MIN_MARGIN x second) or 'calc-no-number'; all fall back to chat."""
     label, probs = route.get("label"), route.get("probs") or {}
+    if label == "aside":
+        if "костян" in text.lower():
+            return "chat", "name"
+        if probs.get("aside", 0.0) < ASIDE_MIN_PROB:
+            return "chat", "aside-low"
     if label and probs:
         top = sorted(probs.values(), reverse=True) + [0.0]
         if top[0] < MIN_PROB or top[0] < MIN_MARGIN * top[1]:

@@ -23,8 +23,10 @@ import requests
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "research/memory"))
+sys.path.insert(0, str(ROOT))
 from assoc_memory import AssocMemory  # noqa: E402
-from router import LABELS, POLICY, parse_label, route_ollama  # noqa: E402
+# the router as deployed (T-038): labels incl. aside, POLICY, decide() guards; research/memory/router.py is the prototype
+from core.router import LABELS, POLICY, decide, parse_label, route_llamaserver, route_ollama  # noqa: E402
 DIALOG = ROOT / "research/eval/ctx_probe_dialog.jsonl"
 PERSONA = (ROOT / "persona/system_prompt.md").read_text(encoding="utf-8").strip()
 OUT = ROOT / "research/eval/results"
@@ -179,12 +181,26 @@ def run_dialog(host, model, ctx, rows, seed, think_on=frozenset(), think_predict
         trimmed = 0
         route = None
         if router != "off":
-            route = route_ollama(host, model, messages, r["text"], ctx)
+            if BACKEND == "llamaserver":
+                route = route_llamaserver(host, messages, r["text"])
+            else:
+                route = route_ollama(host, model, messages, r["text"], ctx)
+            label, reason = decide(route, r["text"])   # same guards as services/brain
+            if reason:
+                route.update(label_raw=route["label"], label=label, guard=reason)
         policy = POLICY.get((route or {}).get("label") or "chat", POLICY["chat"]) if router == "apply" else None
+        if policy is not None and policy.get("respond") is False:
+            # aside (T-038): the prod order — no reply, nothing goes into the history or the memory
+            log.append({**r, "reply": "", "skipped": True, "route": route, "think": False, "thinking_chars": 0,
+                        "ctx_overflow_dropped": 0, "window_turns": len(window_turns), "prompt_eval_count": last_pe,
+                        "eval_count": 0, "ttft_s": 0.0, "tok_s": None, "wall_s": round(time.perf_counter() - t0, 2),
+                        "done_reason": "skipped"})
+            print(f"[{model} ctx={ctx}] t{r['turn']:02d} aside ({route['probs'].get('aside')}) skipped {r['text'][:60]!r}", flush=True)
+            continue
         # window first (an exchange dropped on this very turn is then retrievable), retrieval second, message third
         if trim == "tokens":
             est_new = int(len(r["text"]) / 2.3) + 8 + (250 if memory is not None else 0)   # Cyrillic ≈ 2.3 chars/token; allowance for the note
-            budget = (policy["num_predict"] if policy else (think_predict if r.get("block") in think_on else 700))
+            budget = (policy["max_tokens"] if policy else (think_predict if r.get("block") in think_on else 700))
             while window_turns and sys_tokens + sum(cost.get(t, 0) for t in window_turns) + est_new + budget > ctx:
                 del messages[1:3]
                 window_turns.pop(0)
@@ -211,7 +227,7 @@ def run_dialog(host, model, ctx, rows, seed, think_on=frozenset(), think_predict
         think = r.get("block") in think_on
         turn_opts = {**opts, "num_predict": think_predict} if think else opts
         if policy and not think:
-            turn_opts = {**opts, "num_predict": policy["num_predict"]}
+            turn_opts = {**opts, "num_predict": policy["max_tokens"]}
         dropped = 0
         while True:
             try:
@@ -331,7 +347,7 @@ def metrics(log, ctx):
             m["longgen"]["L1_ok_len"] = e["eval_count"] >= e.get("expect_min_tokens", 300)
         if e.get("hallucination_probe"):
             m["longgen"]["L2_hedged"] = any_kw(e["reply"], e["expect"]["acceptable"])
-    m["empty_replies"] = sum(1 for e in log if not e["reply"].strip())
+    m["empty_replies"] = sum(1 for e in log if not e["reply"].strip() and not e.get("skipped"))
     rec = m["recall"]
     m["recall_rate"] = round(sum(r["hit"] for r in rec) / len(rec), 2) if rec else None
     far = [r for r in rec if r["distance"] >= 30]
@@ -392,6 +408,30 @@ def metrics(log, ctx):
         m["mem_asides"] = sum(1 for e in mem if e.get("mem_aside"))
         m["guard_fired"] = sum(1 for e in mem if e.get("guard"))
     m["cut_by_length"] = sum(1 for e in log if e.get("done_reason") == "length")
+    # T-038 ambient-lite: "was it said to me?" — class `me` = the skull answers (final router label is not aside);
+    # turns whose addr_expect is a list accept any label and stay out of precision/recall
+    ad = [e for e in log if "addr_expect" in e]
+    if ad:
+        cnt = {"tp": 0, "fp": 0, "fn": 0, "tn": 0, "either": 0}
+        errs = []
+        for e in ad:
+            rt = e.get("route") or {}
+            pred = "aside" if rt.get("label") == "aside" else "me"
+            exp = e["addr_expect"]
+            if isinstance(exp, list):
+                cnt["either"] += 1
+                continue
+            key = ("t" if pred == exp else "f") + ("p" if pred == "me" else "n")
+            cnt[key] += 1
+            if pred != exp:
+                raw = rt.get("label_raw") or rt.get("label")
+                errs.append({"turn": e["turn"], "kind": e.get("kind"), "expect": exp, "label": rt.get("label"),
+                             "label_raw": raw, "guard": rt.get("guard"), "p": (rt.get("probs") or {}).get(raw),
+                             "probs": rt.get("probs"), "text": e["text"]})
+        m["addr_counts"] = cnt
+        m["addr_recall"] = round(cnt["tp"] / (cnt["tp"] + cnt["fn"]), 2) if cnt["tp"] + cnt["fn"] else None
+        m["addr_precision"] = round(cnt["tp"] / (cnt["tp"] + cnt["fp"]), 2) if cnt["tp"] + cnt["fp"] else None
+        m["addr_errors"] = errs
     return m
 
 
@@ -429,7 +469,7 @@ def judge(host, judge_model, log):
     return out
 
 
-def write_summary(model, tag, summary):
+def write_summary(model, tag, summary, prefix="ctx_probe"):
     md = [f"# CTX-1 · {model} · {date.today().isoformat()}", "",
           "| num_ctx | thinking на блоках | пустых ответов | recall (все) | recall (≥30) | math верно | math с выкладкой | L1 токенов | L2 оговорка | обрезка на ходах | персона (судья, 1–5) | согласованность L1/L3 | L2 выдумал | TTFT посл.10, с | tok/s | ход с размышлением / без, с (макс) | симв. размышления (средн. по думавшим) | токенов в контексте к концу | память: recall выборки / символов справки | роутер: точность / с на ход |",
           "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
@@ -462,7 +502,7 @@ def write_summary(model, tag, summary):
     for m, j in summary:
         if j:
             md.append(f"- ctx {m['ctx']}: " + ", ".join(f"t{p['turn']}={p.get('score', '?')}" for p in j["persona"]))
-    (OUT / f"ctx_probe_{tag}_{date.today().isoformat()}.md").write_text("\n".join(md) + "\n", encoding="utf-8")
+    (OUT / f"{prefix}_{tag}_{date.today().isoformat()}.md").write_text("\n".join(md) + "\n", encoding="utf-8")
     print("\n".join(md))
 
 
@@ -476,6 +516,7 @@ def main():
     ap.add_argument("--backend", default="ollama", choices=["ollama", "llamaserver"],
                     help="llamaserver: --host points at a running llama-server (-c = num_ctx); --model is only a label")
     ap.add_argument("--seed", type=int, default=42)
+    ap.add_argument("--dialog", default=str(DIALOG), help="dialog JSONL (default ctx_probe_dialog.jsonl; T-038: ctx_probe_ambient.jsonl)")
     ap.add_argument("--persona", default=None, help="persona prompt file (default: persona/system_prompt.md)")
     ap.add_argument("--tag", default="", help="suffix for output file names, e.g. 3ex for a prompt variant")
     ap.add_argument("--think-on", default="", metavar="BLOCKS",
@@ -503,7 +544,9 @@ def main():
     persona_file = Path(args.persona) if args.persona else ROOT / "persona/system_prompt.md"
     PERSONA = persona_file.read_text(encoding="utf-8").strip()
 
-    rows = [json.loads(l) for l in DIALOG.read_text(encoding="utf-8").splitlines() if l.strip()]
+    dialog = Path(args.dialog)
+    rows = [json.loads(l) for l in dialog.read_text(encoding="utf-8").splitlines() if l.strip()]
+    prefix = "ctx_probe" if dialog.resolve() == DIALOG.resolve() else dialog.stem   # ctx_probe_ambient for T-038
     tag = args.model.replace(":", "_").replace("/", "_")
     if args.seed != 42:  # keep the default-seed file name stable; other seeds get their own files
         tag += f"_s{args.seed}"
@@ -520,7 +563,7 @@ def main():
         tag += "_trim"
     summary = []
     for ctx in args.ctx:
-        path = OUT / f"ctx_probe_{tag}_{ctx}.json"
+        path = OUT / f"{prefix}_{tag}_{ctx}.json"
         saved_judge = None
         if args.judge_only:
             saved = json.loads(path.read_text(encoding="utf-8"))
@@ -547,8 +590,10 @@ def main():
                                     "metrics": m, "judge": j, "log": log}, ensure_ascii=False, indent=1), encoding="utf-8")
         summary.append((m, j))
         print(f"== {args.model} ctx={ctx}: recall={m['recall_rate']} far={m['recall_far_rate']} math={m['math_acc']} "
-              f"trunc={m['truncation_turns']} persona={(j or {}).get('persona_mean')}", flush=True)
-    write_summary(args.model, tag, summary)
+              f"trunc={m['truncation_turns']} persona={(j or {}).get('persona_mean')}"
+              + (f" addr_recall={m['addr_recall']} addr_precision={m['addr_precision']} {m['addr_counts']}" if "addr_counts" in m else ""),
+              flush=True)
+    write_summary(args.model, tag, summary, prefix)
 
 
 if __name__ == "__main__":
