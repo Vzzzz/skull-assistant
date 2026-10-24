@@ -1,5 +1,5 @@
 [Unit]
-ConditionPathExists=!/mnt/c/Users/valer/.skull-maintenance
+ConditionPathExists=!@MAINT_FLAG@
 PartOf=skull.target
 Description=Skull: brain (llama-server)
 Wants=skull-llm.service skull-embed.service

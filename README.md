@@ -1,6 +1,6 @@
 # Skull Assistant
 
-> **Проект в работе** (октябрь 2026). Стендовая часть сделана и измерена; на устройство (Jetson Orin Nano Super 8 GB) код ещё не переносился. Что именно работает сейчас — ниже, текущее состояние по дням — `docs/JOURNAL.md`.
+> **Проект в работе** (октябрь 2026). Стендовая часть сделана и измерена; на устройство (Jetson Orin Nano Super 8 GB) код ещё не переносился. Что именно работает сейчас — ниже, текущее состояние по дням — `docs/JOURNAL.md`. English: [README.en.md](README.en.md).
 
 <p align="center">
   <img src="docs/media/skull-jetson.jpg" width="420" alt="Jetson Orin Nano в черепной коробке анатомической модели">
@@ -9,7 +9,7 @@
 
 Офлайн голосовой ассистент с характером — **Костян**, анатомический череп, который видит, слышит, помнит собеседника и отвечает в своём тоне, — и одновременно платформа для запуска нескольких компактных ML-сервисов на одном edge-устройстве с 8 ГБ общей памяти. Ничего не уходит в облако.
 
-Проект ведётся как исследовательский: каждое архитектурное решение подкреплено замером, decision-log (`docs/DECISION_LOG.md`) и таблица бюджетов памяти (`docs/MEMORY_BUDGET.md`) — часть репозитория, а не приложение к статье.
+Проект ведётся как исследовательский: каждое архитектурное решение подкреплено замером, decision-log (`docs/DECISION_LOG.md`) и таблица бюджетов памяти (`docs/MEMORY_BUDGET.md`) — часть репозитория, а не приложение к статье. Все числа на одной странице: **[docs/RESULTS.md](docs/RESULTS.md)**.
 
 ## Что уже есть (стенд: RTX 3080 Laptop 8 ГБ, WSL2)
 
@@ -58,20 +58,22 @@ models/       веса (не в git) + README с источниками
 
 ## Стенд (WSL2 / Linux)
 
+Ниже — стенд автора. Переносимая инструкция «на своём железе» — **TBD**, появится вместе с запуском на Jetson.
+
 ```bash
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 # веса: см. models/README.md; llama.cpp — две сборки (CUDA для VLM, CPU для эмбеддера), пути в services/brain/manifest.yaml
-deploy/systemd/install.sh                 # skull.target + юниты в ~/.config/systemd/user, enable
+deploy/systemd/install.sh                 # skull.target + юниты в ~/.config/systemd/user, enable (подставляет путь репо и флаг сервисного режима)
 systemctl --user start skull.target       # поднять всё: capture, wakeword, stt, llm, embed, brain, tts
 systemctl --user list-units 'skull*'      # статус
 ```
 
 Нужен `redis-server`. Оценочный прогон через шину: `research/eval/ctx_bus.py` (остановив `skull-tts`, иначе череп проговорит все 60 ответов).
 
-**Сервисный режим** — WSL без микрофона и моделей на GPU (скачать веса, прогнать замер): флаг-файл `$HOME/.skull-maintenance` на Windows-стороне, все юниты имеют `ConditionPathExists=!<флаг>`. Из Git Bash: `deploy/stand/skull-stand.sh service|normal|status|stop`.
+**Сервисный режим** — WSL без микрофона и моделей на GPU (скачать веса, прогнать замер): флаг-файл `$HOME/.skull-maintenance` на Windows-стороне (путь определяет `deploy/systemd/maint_flag.sh`, переопределение — `SKULL_MAINT_FLAG`), все юниты имеют `ConditionPathExists=!<флаг>`. Из Git Bash: `deploy/stand/skull-stand.sh service|normal|status|stop`.
 
 Две копии репозитория — рабочая в WSL (`~/skull-assistant`: .venv, модели, юниты, сырые результаты) и зеркало в Windows; синхронизация только через GitHub (`git push` / `git pull --ff-only origin main`).
 
 ## Лицензия
 
-Пока не выбрана (решение до публикации: MIT для кода; веса моделей и голосов — по их собственным лицензиям, см. `models/README.md`).
+MIT (`LICENSE`): пользуйтесь, сохраняйте уведомление, ссылка на проект приветствуется. Веса моделей и голосов — по их собственным лицензиям (`models/README.md`); датасет персоны приватный и в репозиторий не входит.

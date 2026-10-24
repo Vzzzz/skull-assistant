@@ -16,7 +16,7 @@
 ## 2. Стенд: что проверить перед запуском
 
 ```bash
-ls /mnt/c/Users/valer/.skull-maintenance 2>/dev/null && echo "СЕРВИСНЫЙ РЕЖИМ: юниты и ollama не стартуют сами" || echo "обычный режим"
+ls /mnt/c/Users/<user>/.skull-maintenance 2>/dev/null && echo "СЕРВИСНЫЙ РЕЖИМ: юниты и ollama не стартуют сами" || echo "обычный режим"
 systemctl --user list-units 'skull*' --no-pager      # какие юниты живы
 systemctl is-active ollama; ollama ps                # что держит GPU
 redis-cli ping

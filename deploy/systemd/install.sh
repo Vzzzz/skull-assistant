@@ -1,17 +1,19 @@
 #!/usr/bin/env bash
 # Устанавливает skull.target и юниты из этой папки как user-юниты systemd и включает их.
-# Идемпотентно. Плейсхолдер @REPO@ заменяется на реальный путь репозитория.
-# Сервисный режим (юниты не стартуют): флаг-файл /mnt/c/Users/valer/.skull-maintenance,
-# см. deploy/stand/skull-stand.ps1 и README «Сервисный режим».
+# Идемпотентно. Плейсхолдеры: @REPO@ — путь репозитория, @MAINT_FLAG@ — флаг сервисного режима
+# (юниты не стартуют, пока файл существует; путь — deploy/systemd/maint_flag.sh, переопределение SKULL_MAINT_FLAG).
+# См. deploy/stand/skull-stand.sh и README «Сервисный режим».
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 REPO="$(cd "$HERE/../.." && pwd)"
 DST="$HOME/.config/systemd/user"
+MAINT_FLAG="$(bash "$HERE/maint_flag.sh")"
 mkdir -p "$DST"
+echo "maintenance flag: $MAINT_FLAG"
 
 for unit in "$HERE"/skull.target "$HERE"/skull-*.service; do
   name="$(basename "$unit")"
-  sed "s|@REPO@|$REPO|g" "$unit" > "$DST/$name"
+  sed -e "s|@REPO@|$REPO|g" -e "s|@MAINT_FLAG@|$MAINT_FLAG|g" "$unit" > "$DST/$name"
   echo "installed $name"
 done
 

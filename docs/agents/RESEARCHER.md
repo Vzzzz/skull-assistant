@@ -13,7 +13,7 @@
 5. `git log --since=<дата последней записи JOURNAL> --stat` — что менялось без твоего участия. Закрытые задачи — прочитать diff, а не только строку отчёта.
 6. `docs/ROADMAP.md` §0 и §7 — текущая позиция в плане.
 7. Оценка персоны: абсолютные оценки — ядро по JSON (D-017); парные сравнения двух прогонов — `research/eval/judge_pairs.py` на 26B (D-028), 9b судьёй не использовать.
-8. Смежный проект `bitladder` (`C:/Users/valer/git/bitladder`): `git log --since=<дата последней записи JOURNAL>` и `docs/decision-log.md` — там wake word для edge (наш D-013) и voice enhancement (U-004); изменения, влияющие на нас, — в D-013/JOURNAL. (владелец, 2026-10-22: «периодически посматривать»)
+8. Смежный проект `bitladder` (`../bitladder` рядом с этим репозиторием): `git log --since=<дата последней записи JOURNAL>` и `docs/decision-log.md` — там wake word для edge (наш D-013) и voice enhancement (U-004); изменения, влияющие на нас, — в D-013/JOURNAL. (владелец, 2026-10-22: «периодически посматривать»)
 9. Дальше — по теме сессии через карту документов в `AGENTS.md`. Не читать всё подряд: `roadmap-v1.md`, `PUBLICATIONS.md` целиком, `TTS_TRACK.md` нужны только для своих тем.
 
 Если владелец начинает с вопроса или присылает статью — сначала пункты 1–4 (это 5 минут), потом вопрос.
@@ -78,7 +78,7 @@
 
 | Что | Где | Что делать |
 |---|---|---|
-| Первоисточники по SC7, J14, ReSpeaker Lite, Jetson Linux 36.4.3 | `C:/Users/valer/git/bitladder/docs/{hardware,plan,decision-log,references}.md` | выжимка в D-013; при изменениях там — обновлять D-013, не ссылаться |
+| Первоисточники по SC7, J14, ReSpeaker Lite, Jetson Linux 36.4.3 | `../bitladder/docs/{hardware,plan,decision-log,references}.md` | выжимка в D-013; при изменениях там — обновлять D-013, не ссылаться |
 | Сырые результаты замеров (CSV, JSON логи CTX-1) | WSL `~/skull-assistant/research/*/results/` | с 2026-10-14 CSV/JSON до 1 МБ коммитятся; старые — попросить исполнителя закоммитить |
 | Датасет персоны | `persona/dataset/` в WSL, не в git | бэкап — см. `persona/dataset/README.md` (Q-028) |
 | Модели | WSL `models/`, ollama, кэш HF | источники в `models/README.md`, загрузка `deploy/fetch_models.sh` |

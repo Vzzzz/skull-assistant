@@ -4,7 +4,7 @@
 
 ## Что это
 
-Главный проект портфолио Валерия: офлайн голосовой ассистент с характером (**Костян**, анатомический череп) на Jetson Orin Nano Super 8 GB — и платформа для запуска компактных ML-сервисов на одном устройстве. Три результата: R1 устройство, R2 платформа (диспетчер режимов A/B/C, манифесты сервисов), R3 публикации на Хабре. Смежный проект: `bitladder` (`C:/Users/valer/git/bitladder`) — квантование до 1 бита и wake-word триггер на MCU, который будит спящий Jetson (D-013); выжимка всего, что нужно отсюда, — в `docs/DECISION_LOG.md` D-013.
+Главный проект портфолио Валерия: офлайн голосовой ассистент с характером (**Костян**, анатомический череп) на Jetson Orin Nano Super 8 GB — и платформа для запуска компактных ML-сервисов на одном устройстве. Три результата: R1 устройство, R2 платформа (диспетчер режимов A/B/C, манифесты сервисов), R3 публикации на Хабре. Смежный проект: `bitladder` (`../bitladder` рядом с этим репозиторием) — квантование до 1 бита и wake-word триггер на MCU, который будит спящий Jetson (D-013); выжимка всего, что нужно отсюда, — в `docs/DECISION_LOG.md` D-013.
 
 Текущее состояние, следующий этап и очередь — не здесь, а в `docs/JOURNAL.md` (последняя запись) и `docs/TASKS.md`. Этот файл меняется редко.
 
@@ -27,7 +27,7 @@
 AGENTS.md          этот файл; CLAUDE.md — обёртка для Claude Code
 services/<name>/   прод: код + manifest.yaml (бюджет по пикам, резидентность A/B/C, freeze/thaw, топики)
 core/              общий код; диспетчер появится в M8
-deploy/systemd/    skull.target + юниты (@REPO@), install.sh, drop-in ollama; deploy/stand/ — запуск стенда из Git Bash; sync-win.sh — зеркало; fetch_models.sh — кандидаты
+deploy/systemd/    skull.target + юниты (@REPO@), install.sh, drop-in ollama; deploy/stand/ — запуск стенда из Git Bash; fetch_models.sh — кандидаты
 research/          bench/ (замеры), eval/ (оценочный набор, CTX-1), memory/ (прототип памяти и роутера), tts/ — ничего отсюда не запускается юнитом; results/ — CSV/JSON + сводки .md
 docs/              JOURNAL (журнал сессий), TASKS (очередь), OPEN_QUESTIONS (открытые вопросы), ROADMAP, DECISION_LOG, MEMORY_BUDGET,
                    PUBLICATIONS, ISSUES, UX_BACKLOG, TTS_TRACK, AMBIENT_MODE, COGNITION_4B, MEMORY_TRACK, JETSON_BRINGUP, roadmap-v1; agents/ — онбординг ролей
@@ -52,7 +52,7 @@ models/            веса (не в git) + README с источниками
 
 ## Две копии репозитория и стенд
 
-Рабочая копия — WSL Ubuntu-22.04 `~/skull-assistant` (здесь .venv, модели, юниты, сырые результаты). Зеркало — `C:/Users/valer/git/skull-assistant` (здесь работает исследователь). С 2026-10-16 источник правды — **приватный GitHub `Vzzzz/skull-assistant`**: у обеих копий `origin` → GitHub; в зеркале дополнительно remote `wsl` (локальный путь WSL), в WSL — `win` (зеркало). Поток: коммит в любой копии → `git push origin main` → в другой `git pull --ff-only origin main`. История переписана 2026-10-16 (авторство на личную почту); `deploy/sync-win.sh` устарел, после Q-032 копия в Windows может быть убрана.
+Рабочая копия — WSL Ubuntu-22.04 `~/skull-assistant` (здесь .venv, модели, юниты, сырые результаты). Зеркало — `C:/Users/<user>/git/skull-assistant` на Windows (здесь работает исследователь). С 2026-10-16 источник правды — **приватный GitHub `Vzzzz/skull-assistant`**: у обеих копий `origin` → GitHub; в зеркале дополнительно remote `wsl` (локальный путь WSL), в WSL — `win` (зеркало). Поток: коммит в любой копии → `git push origin main` → в другой `git pull --ff-only origin main`. История переписана 2026-10-16 (авторство на личную почту); `deploy/sync-win.sh` удалён 2026-10-24 (синхронизация только через GitHub), после Q-032 копия в Windows может быть убрана.
 
 Стенд: RTX 3080 Laptop 8 ГБ в WSL2. При старте WSL `skull.target` поднимается сам (микрофон, wake word, STT, ollama, TTS). **Сервисный режим** (без сервисов и ollama — для загрузки моделей и замеров) — флаг `$HOME/.skull-maintenance` на Windows-стороне, из Git Bash: `deploy/stand/skull-stand.sh service|normal|status|stop` (D-014). Перед действием, которое не должно слышать микрофон или занимать GPU, — `skull-stand.sh status`.
 

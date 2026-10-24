@@ -189,7 +189,7 @@ Done-критерий контракта (закрывается внутри M8
 **Стандартные команды** (WSL, `~/skull-assistant`):
 ```bash
 git pull --ff-only origin main                      # перед работой; после — git push origin main
-ls /mnt/c/Users/valer/.skull-maintenance && echo "сервисный режим"   # стенд без юнитов и ollama
+ls /mnt/c/Users/<user>/.skull-maintenance && echo "сервисный режим"   # стенд без юнитов и ollama
 systemctl --user stop skull.target; ollama ps       # перед любым GPU-замером: GPU пустой
 # CTX-1 (персона/память), два seed, судья-fallback; итоговая оценка — ядро по JSON (D-017)
 for s in 42 7; do .venv/bin/python research/eval/ctx_probe.py --model <m> --ctx 8192 --seed $s --judge qwen3.5:9b; done
