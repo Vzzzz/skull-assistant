@@ -1,5 +1,9 @@
-import redis, subprocess, wave, io
+import redis, subprocess, sys, wave, io
+from pathlib import Path
 from piper import PiperVoice
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from core.speech import for_speech
 
 r = redis.Redis(socket_timeout=None)
 VOICE = "/home/valeriy/skull-assistant/models/tts/ru_RU-dmitri-medium.onnx"
@@ -25,4 +29,4 @@ while True:
     ev_id, fields = ev[0][1][0]
     print(f"speaker: got reply: {fields[b'text'][:50]}")
     last_ev = ev_id
-    speak(fields[b'text'].decode())
+    speak(for_speech(fields[b'text'].decode()))   # markdown/LaTeX/emoji are not pronounced
