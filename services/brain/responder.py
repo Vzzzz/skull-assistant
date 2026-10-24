@@ -1,30 +1,34 @@
-import json, os, sys, time
-from pathlib import Path
-import redis, requests
+"""brain: events:transcript -> events:reply through llama-server (D-024).
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-from core.memory import clean_reply
+Per turn (order as in research/eval/ctx_probe.py run_dialog): router -> token window -> memory retrieval among
+exchanges outside the window -> message (policy prefix + raw turn + memory note) -> reply filter -> history/memory.
+Everything tunable comes from manifest.yaml `params`.
+"""
+import json, sys, time
+from pathlib import Path
+
+import numpy as np
+import redis, requests, yaml
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+from core.memory import SYSTEM_RULE, AssocMemory, clean_reply, format_note
+from core.router import POLICY, route_llamaserver
+
+P = yaml.safe_load(Path(__file__).with_name("manifest.yaml").read_text(encoding="utf-8"))["params"]
+HOST = P["host"]
+MODEL = Path(P["gguf"]).stem
+NUM_CTX = P["num_ctx"]
+MEM = P.get("memory")         # None = no memory beyond the window
+PERSONA = (ROOT / P["persona"]).read_text(encoding="utf-8").strip()
+SYSTEM = PERSONA + ("\n\n" + SYSTEM_RULE if MEM else "")
 
 r = redis.Redis(socket_timeout=None)
-OLLAMA = "http://localhost:11434/api/chat"
-MODEL = "gemma3:4b"
-
-PERSONA = """Ты — череп. Настоящий пластиковый череп анатомического пособия, стоишь на рабочем столе в комнате Валерия. На тебе регулярно оказывается его одежда — ты смирился, но не молчишь об этом.
-Характер: сухой, ироничный, циничный наблюдатель. Ты всё видишь, всему знаешь цену, ничему не удивляешься. Комментируешь по делу, но с ехидцей.
-Как говоришь:
-- По возможности коротко, если не просят подробностей.
-- Без восторгов, без смайликов, без "отличный вопрос!". Ты не ассистент, ты сосед.
-- Помогаешь по существу, но можешь сопроводить помощь сухим комментарием.
-- Никогда не начинаешь с извинений и не заискиваешь.
-- Вычисления: сначала выкладка по шагам, итоговое число — только в конце. Не называй результат до подсчёта.
-- Если ошибся и тебя поправили — спокойно дай верный ответ. Спорить — глупо.
-- Отвечаешь на языке собеседника, по умолчанию русский."""
-
-HISTORY = "dialog:history"   # Redis list, one JSON element per exchange: turn, ts, user, reply, raw, tokens
+HISTORY = "dialog:history"    # Redis list, one JSON element per exchange: turn, ts, user, reply, raw, tokens
+VECS = "dialog:vec"           # Redis hash turn -> float32 embedding of the exchange (memory cache)
 SYS_CALIB = "dialog:sys_tokens"   # {"chars", "tokens"}: measured system prompt size, survives restarts
-NUM_CTX = int(os.environ.get("BRAIN_NUM_CTX", 8192))   # T-016: from the manifest
-MAX_TOKENS = 700              # reply budget, reserved in the window
-NOTE_RESERVE = 250            # room for the memory note (T-016), reserved in the window
+MAX_TOKENS = 700              # reply budget when the router is off
+NOTE_RESERVE = 250            # room for the memory note, reserved in the window
 CHARS_PER_TOKEN = 2.3         # Cyrillic estimate for text not yet seen by the model
 
 
@@ -32,23 +36,80 @@ def est_tokens(text):
     return int(len(text) / CHARS_PER_TOKEN)
 
 
-def build_window(history, sys_tokens, est_new):
-    """Newest exchanges that fit into NUM_CTX together with the system prompt, the new turn and the reserves.
-    Older exchanges stay in Redis (source for the memory beyond the window, T-016)."""
+def wait_ready(host, what):
+    for i in range(240):
+        try:
+            if requests.get(f"{host}/health", timeout=2).status_code == 200:
+                return
+        except requests.RequestException:
+            pass
+        if i % 15 == 0:
+            print(f"brain: waiting for {what} at {host}...")
+        time.sleep(1)
+    raise SystemExit(f"brain: {what} at {host} not ready")
+
+
+def build_window(history, sys_tokens, need):
+    """Newest exchanges that fit into NUM_CTX together with the system prompt and `need` (new turn + reserves).
+    Older exchanges stay in Redis: they are what the memory retrieves from."""
     window, used = [], sys_tokens
     for ex in reversed(history):
-        if used + ex["tokens"] + est_new + NOTE_RESERVE + MAX_TOKENS > NUM_CTX:
+        if used + ex["tokens"] + need > NUM_CTX:
             break
         window.insert(0, ex)
         used += ex["tokens"]
     return window, used
 
 
+def to_messages(window):
+    messages = [{"role": "system", "content": SYSTEM}]
+    for ex in window:
+        messages += [{"role": "user", "content": ex["user"]}, {"role": "assistant", "content": ex["reply"]}]
+    return messages
+
+
+def chat(messages, max_tokens):
+    resp = requests.post(f"{HOST}/v1/chat/completions", json={
+        "messages": messages,
+        "max_tokens": max_tokens,
+        "temperature": P["temperature"],
+        "chat_template_kwargs": {"enable_thinking": P["think"]},
+    }, timeout=120)
+    resp.raise_for_status()
+    return resp.json()
+
+
+def load_memory(history):
+    mem = AssocMemory(MEM["embed_host"], mode=MEM["mode"])
+    for ex in history:
+        cached = r.hget(VECS, ex["turn"])
+        try:
+            v = mem.add(ex["turn"], ex["user"], ex["reply"], vec=np.frombuffer(cached, dtype=np.float32) if cached else None)
+        except requests.RequestException as e:
+            print(f"brain: memory skips turn {ex['turn']}: {e}")
+            continue
+        if v is not None and not cached:
+            r.hset(VECS, ex["turn"], v.astype(np.float32).tobytes())
+    return mem
+
+
+wait_ready(HOST, "llama-server")
+server_ctx = requests.get(f"{HOST}/props", timeout=5).json().get("default_generation_settings", {}).get("n_ctx")
+if server_ctx and server_ctx != NUM_CTX:
+    print(f"brain: WARNING manifest num_ctx={NUM_CTX}, server n_ctx={server_ctx}; using the server's")
+    NUM_CTX = server_ctx
+print(f"brain: model={MODEL} num_ctx={NUM_CTX} host={HOST}")
+print(f"brain: persona {P['persona']} ({len(PERSONA)} chars), router={'on' if P.get('router') else 'off'}, "
+      f"memory={'k=%d %s' % (MEM['k'], MEM['mode']) if MEM else 'off'}")
+mem = None
+if MEM:
+    wait_ready(MEM["embed_host"], "embedder")
+    mem = load_memory([json.loads(x) for x in r.lrange(HISTORY, 0, -1)])
 calib = json.loads(r.get(SYS_CALIB) or "{}")
 # measured size if the prompt is unchanged, else the estimate until a call with an empty window calibrates it
-sys_tokens = calib["tokens"] if calib.get("chars") == len(PERSONA) else est_tokens(PERSONA)
+sys_tokens = calib["tokens"] if calib.get("chars") == len(SYSTEM) else est_tokens(SYSTEM)
 last_ev = '$'
-print(f"brain: {MODEL} num_ctx={NUM_CTX} system~{sys_tokens} tokens, {r.llen(HISTORY)} exchanges in {HISTORY}, waiting for transcripts...")
+print(f"brain: system~{sys_tokens} tokens, {r.llen(HISTORY)} exchanges in {HISTORY}, waiting for transcripts...")
 while True:
     ev = r.xread({'events:transcript': last_ev}, count=1, block=5000)
     if not ev:
@@ -56,44 +117,84 @@ while True:
     ev_id, fields = ev[0][1][0]
     last_ev = ev_id
     text = fields[b'text'].decode()
+    ts = float(fields[b'ts']) if b'ts' in fields else time.time()
     print(f"brain: << {text}")
     if text.strip() == "/reset":
-        r.delete(HISTORY)
+        r.delete(HISTORY, VECS)
+        mem = AssocMemory(MEM["embed_host"], mode=MEM["mode"]) if MEM else None
         print("brain: history reset")
         continue
+    t0 = time.perf_counter()
 
     history = [json.loads(x) for x in r.lrange(HISTORY, 0, -1)]   # Redis is the only copy
     est_new = est_tokens(text) + 8
-    window, used = build_window(history, sys_tokens, est_new)
-    print(f"brain: window {len(window)} exchanges, ~{used + est_new} tokens ({len(history)} stored)")
-    messages = [{"role": "system", "content": PERSONA}]
-    for ex in window:
-        messages += [{"role": "user", "content": ex["user"]}, {"role": "assistant", "content": ex["reply"]}]
-    messages.append({"role": "user", "content": text})
-    resp = requests.post(OLLAMA, json={
-        "model": MODEL,
-        "messages": messages,
-        "stream": False,
-        "options": {"num_ctx": NUM_CTX, "num_predict": MAX_TOKENS},
-    }, timeout=120)
-    data = resp.json()
-    raw = data["message"]["content"].strip()
-    reply, flags = clean_reply(raw)
+    route, policy = None, None
+    if P.get("router"):
+        # same window as an ordinary chat turn, so the main call reuses the KV prefix
+        window, _ = build_window(history, sys_tokens, est_new + POLICY["chat"]["max_tokens"] + NOTE_RESERVE)
+        try:
+            route = route_llamaserver(HOST, to_messages(window), text)
+        except requests.RequestException as e:
+            print(f"brain: router failed: {e}")
+        policy = POLICY.get((route or {}).get("label") or "chat", POLICY["chat"])
+    max_tokens = policy["max_tokens"] if policy else MAX_TOKENS
+    prefix = policy.get("prefix", "") if policy else ""
+    use_mem = mem is not None and (policy is None or policy["memory"])
+    extra = est_tokens(prefix) + (NOTE_RESERVE if use_mem else 0)
+    window, used = build_window(history, sys_tokens, est_new + extra + max_tokens)
+    print(f"brain: window {len(window)} exchanges, ~{used + est_new + extra} tokens ({len(history)} stored)"
+          + (f", route={route['label']} {route['s']}s" if route else ""))
+
+    hits, note = [], ""
+    if use_mem:
+        try:
+            hits = mem.retrieve(text, k=MEM["k"], exclude_turns={ex["turn"] for ex in window})
+        except requests.RequestException as e:
+            print(f"brain: memory retrieval failed: {e}")
+        note = format_note(hits)
+        if hits:
+            print(f"brain: memory {[h[1]['turn'] for h in hits]}")
+    sent = (prefix + "\n" + text if prefix else text) + ("\n\n" + note if note else "")
+    data = chat(to_messages(window) + [{"role": "user", "content": sent}], max_tokens)
+    choice = data["choices"][0]
+    raw = (choice["message"].get("content") or "").strip()
+    reply, flags = clean_reply(raw, note)
     if flags:
         print(f"brain: filter {sorted(flags)}, raw: {raw!r}")
 
-    # token ledger: this exchange's share of later prompts = its user turn (prompt minus what was already there)
-    # plus its reply; with an empty window the system prompt size is calibrated from the estimate of the turn
-    pe, ec = data.get("prompt_eval_count", 0), data.get("eval_count", 0)
+    # token ledger: this exchange's share of later prompts = its raw user turn (prompt minus system, window, policy
+    # prefix and note, none of which is kept) plus its reply; with an empty window the system prompt is calibrated
+    usage, timings = data.get("usage", {}), data.get("timings", {})
+    pe, ec = usage.get("prompt_tokens", 0), usage.get("completion_tokens", 0)
+    not_kept = est_tokens(prefix) + est_tokens(note)
     if not window and pe:
-        sys_tokens = max(0, pe - est_new)
-        r.set(SYS_CALIB, json.dumps({"chars": len(PERSONA), "tokens": sys_tokens}))
+        sys_tokens = max(0, pe - est_new - not_kept)
+        r.set(SYS_CALIB, json.dumps({"chars": len(SYSTEM), "tokens": sys_tokens}))
     in_window = sum(ex["tokens"] for ex in window)
-    tokens = max(1, pe - sys_tokens - in_window) + ec if pe else est_new + est_tokens(raw)
+    tokens = max(1, pe - sys_tokens - in_window - not_kept) + ec if pe else est_new + est_tokens(raw)
     turn = history[-1]["turn"] + 1 if history else 1
-    ts = float(fields[b'ts']) if b'ts' in fields else time.time()
     r.rpush(HISTORY, json.dumps({"turn": turn, "ts": ts, "user": text, "reply": reply, "raw": raw,
                                  "tokens": tokens}, ensure_ascii=False))
-    r.xadd('events:reply', {'text': reply})
+    if mem is not None:
+        try:
+            v = mem.add(turn, text, reply)
+            if v is not None:
+                r.hset(VECS, turn, v.astype(np.float32).tobytes())
+        except requests.RequestException as e:
+            print(f"brain: memory add failed: {e}")
+    wall = time.perf_counter() - t0
+    # per-turn details for logs and research/eval/ctx_bus.py (TTS reads only `text`)
+    meta = {"turn": turn, "window_turns": len(window), "prompt_tokens": pe, "completion_tokens": ec,
+            "ttft_s": round(timings.get("prompt_ms", 0) / 1000, 3),
+            "tok_s": round(timings["predicted_per_second"], 1) if timings.get("predicted_per_second") and ec >= 5 else None,
+            "finish_reason": choice.get("finish_reason"), "wall_s": round(wall, 2), "max_tokens": max_tokens}
+    if route:
+        meta["route"] = route
+    if mem is not None:
+        meta.update({"mem_hits": [{"turn": h[1]["turn"], "score": round(h[0], 3), "cos": round(h[2], 3),
+                                   "kw": round(h[3], 3)} for h in hits], "note": note, "guard": sorted(flags)})
+    if flags:
+        meta["raw"] = raw
+    r.xadd('events:reply', {'text': reply, 'ts': f"{ts:.3f}", 'meta': json.dumps(meta, ensure_ascii=False)})
     print(f"brain: >> {reply}")
-    print(f"brain: turn {turn} prompt={pe} reply={ec} exchange~{tokens} tokens")
+    print(f"brain: turn {turn} prompt={pe} reply={ec} exchange~{tokens} tokens {wall:.1f}s")

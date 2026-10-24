@@ -29,7 +29,7 @@ Done: измеримый критерий.
 | T-013 | open | TTS/omni-кандидаты на стенде | TTS_TRACK §7 |
 | T-001 | done | STT: убрать двойной `transcribe` | I-01 |
 | T-002 | done | Brain: история диалога в Redis | I-05 |
-| T-016 | open | Brain: модель и `num_ctx` из манифеста, не хардкод | D-016 |
+| T-016 | wip | Brain: модель и `num_ctx` из манифеста, не хардкод | D-016 |
 | T-003 | open | Стрим ответа по предложениям + очередь синтеза в TTS | I-02, I-08 |
 | T-007 | open | Манифесты: бюджеты из MEMORY_BUDGET, healthcheck brain | ROADMAP §2 |
 | T-010 | open | Перенос на Orin: ALSA-захват, путь флага, пути моделей | JETSON_BRINGUP, I-12 |

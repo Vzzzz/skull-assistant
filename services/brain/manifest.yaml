@@ -1,9 +1,9 @@
 name: brain
 unit: skull-brain
-backend: ollama
+backend: llama-server      # D-024; server units: skull-llm (VLM, GPU), skull-embed (embedder, CPU build)
 cuda_context: true
 budget:
-  vram_mb: null          # ПИК, заполнить из docs/MEMORY_BUDGET.md
+  vram_mb: 3804          # ПИК: IQ4_XS @8k + mmproj + картинка (T-033, stack_2026-10-21.md)
   ram_mb: null
   measured_on: null      # stand | jetson — без этого поля admission control не пустит
 residency:
@@ -11,11 +11,29 @@ residency:
   B: evacuated
   C: evacuated
 lifecycle:
-  freeze: slot-save-kill  # цель; сейчас ollama = kill
+  freeze: slot-save-kill
   thaw: start-slot-restore
-  thaw_budget_s: null
+  thaw_budget_s: 4       # T-024: thaw ≈ 3.5 с
 bus:
   in:  [events:transcript]
   out: [events:reply]
 healthcheck: null        # TODO: http или systemd notify
 never_evict: false
+params:                  # read by services/brain/responder.py and services/brain/llm_server.py; paths from repo root
+  backend: llama-server
+  host: http://127.0.0.1:11437
+  bin: ~/llama.cpp/build-cuda/bin/llama-server
+  gguf: models/quant/kostyan-e4b-iq4xs-imx.gguf
+  mmproj: models/hf/gemma-4-E4B-it-GGUF/mmproj-gemma-4-E4B-it-Q8_0.gguf
+  slot_save_path: models/quant/slots
+  num_ctx: 8192
+  temperature: 0.3
+  think: false           # chat_template_kwargs.enable_thinking per request (T-033)
+  persona: persona/system_prompt.md   # D-021: prompt is a model parameter; e4b → system_prompt.md
+  router: true           # turn-type router + POLICY (D-026)
+  memory:                # associative memory beyond the window (D-026, note v6)
+    k: 3
+    mode: hybrid
+    embed_host: http://127.0.0.1:11438
+    embed_bin: ~/llama.cpp/build/bin/llama-server   # CPU build: the CUDA one creates a 176 MB context even at -ngl 0
+    embed_gguf: models/hf/embeddinggemma-300M-GGUF/embeddinggemma-300M-Q8_0.gguf

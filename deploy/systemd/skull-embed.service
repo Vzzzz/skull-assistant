@@ -1,0 +1,14 @@
+[Unit]
+ConditionPathExists=!/mnt/c/Users/valer/.skull-maintenance
+PartOf=skull.target
+Description=Skull: llama-server embedder for brain memory (CPU build)
+
+[Service]
+WorkingDirectory=@REPO@
+ExecStart=@REPO@/.venv/bin/python @REPO@/services/brain/llm_server.py embed
+Restart=on-failure
+RestartSec=5
+Environment="PYTHONUNBUFFERED=1"
+
+[Install]
+WantedBy=skull.target

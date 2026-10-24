@@ -20,7 +20,7 @@ systemctl --user daemon-reload
 for s in skull-capture skull-wakeword skull-stt skull-brain skull-tts; do
   rm -f "$DST/default.target.wants/$s.service"
 done
-systemctl --user enable skull.target skull-capture skull-wakeword skull-stt skull-brain skull-tts
+systemctl --user enable skull.target skull-capture skull-wakeword skull-stt skull-llm skull-embed skull-brain skull-tts
 echo "done."
 echo "  start all : systemctl --user start skull.target"
 echo "  stop all  : systemctl --user stop skull.target"

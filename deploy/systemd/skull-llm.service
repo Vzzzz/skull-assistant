@@ -1,0 +1,14 @@
+[Unit]
+ConditionPathExists=!/mnt/c/Users/valer/.skull-maintenance
+PartOf=skull.target
+Description=Skull: llama-server for brain (VLM + mmproj, GPU)
+
+[Service]
+WorkingDirectory=@REPO@
+ExecStart=@REPO@/.venv/bin/python @REPO@/services/brain/llm_server.py llm
+Restart=on-failure
+RestartSec=5
+Environment="PYTHONUNBUFFERED=1"
+
+[Install]
+WantedBy=skull.target
