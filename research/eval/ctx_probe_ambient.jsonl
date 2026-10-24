@@ -1,0 +1,70 @@
+{"turn": 1, "block": "open", "kind": "name", "text": "Костян, я дома. Как ты тут без меня?", "addr_expect": "me"}
+{"turn": 2, "block": "open", "kind": "direct", "text": "Свет можно не включать, я ненадолго.", "addr_expect": "me"}
+{"turn": 3, "block": "mutter", "kind": "self", "text": "Так, где у меня тут зарядка лежала…", "addr_expect": "aside"}
+{"turn": 4, "block": "mutter", "kind": "self", "text": "Ну и бардак. Ладно, потом.", "addr_expect": "aside"}
+{"turn": 5, "block": "cat", "kind": "cat", "text": "Бублик, слезь со стола. Слезь, я сказал.", "addr_expect": "aside"}
+{"turn": 6, "block": "cat", "kind": "cat", "text": "Ты уже ел. Нет, ещё раз не будет.", "addr_expect": "aside"}
+{"turn": 7, "block": "open", "kind": "direct", "text": "Слушай, а ты видел, кот тут что-нибудь ронял, пока меня не было?", "addr_expect": "me"}
+{"turn": 8, "block": "code", "kind": "self", "text": "Почему оно не собирается… опять этот линкер.", "addr_expect": "aside"}
+{"turn": 9, "block": "code", "kind": "self", "text": "Так. Undefined reference. Понятно, ничего не понятно.", "addr_expect": "aside"}
+{"turn": 10, "block": "code", "kind": "self-question", "text": "И кто это вообще писал?", "addr_expect": "aside"}
+{"turn": 11, "block": "code", "kind": "self", "text": "Ага, вот оно. Точка с запятой. Полчаса жизни.", "addr_expect": "aside"}
+{"turn": 12, "block": "code", "kind": "direct", "text": "Ты бы тоже не нашёл, не ухмыляйся.", "addr_expect": "me"}
+{"turn": 13, "block": "code", "kind": "self-numbers", "text": "Сорок восемь на три… сто сорок четыре. Нет, стоп, по двадцать четыре.", "addr_expect": "aside"}
+{"turn": 14, "block": "code", "kind": "direct", "text": "Костян, сколько будет сто сорок четыре разделить на шесть?", "addr_expect": "me"}
+{"turn": 15, "block": "phone", "kind": "phone", "text": "Алло. Да, мам, привет. Нет, не сплю.", "addr_expect": "aside"}
+{"turn": 16, "block": "phone", "kind": "phone", "text": "Ел, ел. Да нормально всё, работаю.", "addr_expect": "aside"}
+{"turn": 17, "block": "phone", "kind": "phone-question", "text": "А ты к врачу сходила? Ну и что он сказал?", "addr_expect": "aside"}
+{"turn": 18, "block": "phone", "kind": "phone", "text": "Это не телевизор, это у меня тут… долго объяснять. Череп говорящий, я рассказывал.", "addr_expect": "aside"}
+{"turn": 19, "block": "phone", "kind": "phone", "text": "Хорошо, в субботу приеду. Да. Целую, пока.", "addr_expect": "aside"}
+{"turn": 20, "block": "open", "kind": "direct", "text": "Мама передаёт привет. Она думает, что ты радио.", "addr_expect": "me"}
+{"turn": 21, "block": "tv", "kind": "tv", "text": "В центре города сегодня перекрыли движение из-за ремонта теплотрассы. Городские службы обещают закончить работы к понедельнику.", "addr_expect": "aside"}
+{"turn": 22, "block": "tv", "kind": "tv", "text": "Курс доллара на завтра установлен на уровне восьмидесяти двух рублей сорока копеек.", "addr_expect": "aside"}
+{"turn": 23, "block": "tv", "kind": "tv-weather", "text": "Завтра в регионе ожидается облачная погода с прояснениями, температура днём плюс семь, ночью около нуля.", "addr_expect": "aside"}
+{"turn": 24, "block": "tv", "kind": "tv-ad", "text": "Только до конца недели скидка тридцать процентов на всю коллекцию. Подробности на сайте.", "addr_expect": "aside"}
+{"turn": 25, "block": "tv", "kind": "direct", "text": "Выключи бы ты это, если бы умел. Ладно, сам.", "addr_expect": "me"}
+{"turn": 26, "block": "open", "kind": "direct-question", "text": "Какая завтра погода, ты запомнил? Я прослушал.", "addr_expect": "me"}
+{"turn": 27, "block": "guest", "kind": "door", "text": "Иду, иду. Кто там? А, Дим, заходи.", "addr_expect": "aside"}
+{"turn": 28, "block": "guest", "kind": "other", "text": "Дим, ты будешь чай? Или сразу к делу?", "addr_expect": "aside"}
+{"turn": 29, "block": "guest", "kind": "intro", "text": "Это Костян. Да, череп. Да, он разговаривает. Не трогай его.", "addr_expect": ["aside", "me"]}
+{"turn": 30, "block": "guest", "kind": "name-direct", "text": "Костян, поздоровайся с Димой.", "addr_expect": "me"}
+{"turn": 31, "block": "guest", "kind": "other", "text": "Нет, он не слушает постоянно. Ну, то есть слушает, но не отвечает, если не к нему.", "addr_expect": "aside"}
+{"turn": 32, "block": "guest", "kind": "other-question", "text": "Ты смотрел, что они прислали по проекту? Там сроки сдвинули.", "addr_expect": "aside"}
+{"turn": 33, "block": "guest", "kind": "other", "text": "Я тоже так подумал. Ну давай тогда в среду, я напишу.", "addr_expect": "aside"}
+{"turn": 34, "block": "guest", "kind": "other-about-me", "text": "Да он и считать умеет. Спроси его что-нибудь.", "addr_expect": "aside"}
+{"turn": 35, "block": "guest", "kind": "guest-direct", "text": "Эй, череп, сколько будет семнадцать на двадцать?", "addr_expect": "me"}
+{"turn": 36, "block": "guest", "kind": "other", "text": "Видишь. Ладно, Дим, давай к делу, у меня времени час.", "addr_expect": "aside"}
+{"turn": 37, "block": "guest", "kind": "other", "text": "Тебе точно не надо чай? Ну смотри.", "addr_expect": "aside"}
+{"turn": 38, "block": "guest", "kind": "farewell-other", "text": "Давай. Пока, Дим. Дверь захлопни.", "addr_expect": "aside"}
+{"turn": 39, "block": "open", "kind": "direct", "text": "Ушёл. Ну, что скажешь про него?", "addr_expect": "me"}
+{"turn": 40, "block": "open", "kind": "direct", "text": "Запомни: встреча с Димой в среду. Напомнишь, если увидишь меня во вторник вечером.", "addr_expect": "me"}
+{"turn": 41, "block": "kitchen", "kind": "read-aloud", "text": "Двести граммов муки, два яйца, стакан молока. Перемешать до однородности.", "addr_expect": "aside"}
+{"turn": 42, "block": "kitchen", "kind": "self", "text": "А стакан — это сколько? Двести пятьдесят, наверное.", "addr_expect": ["aside", "me"]}
+{"turn": 43, "block": "kitchen", "kind": "direct", "text": "Костян, стакан молока — это сколько миллилитров?", "addr_expect": "me"}
+{"turn": 44, "block": "kitchen", "kind": "self", "text": "Ой, горячо. Чёрт.", "addr_expect": "aside"}
+{"turn": 45, "block": "kitchen", "kind": "sing", "text": "На-на-на, на-на-на-на… и всё о той весне…", "addr_expect": "aside"}
+{"turn": 46, "block": "kitchen", "kind": "direct", "text": "Не комментируй пение. Я знаю.", "addr_expect": "me"}
+{"turn": 47, "block": "video", "kind": "video-call", "text": "Всем привет, меня слышно? Давайте начнём, Сергей подключится позже.", "addr_expect": "aside"}
+{"turn": 48, "block": "video", "kind": "video-call", "text": "Да, по второму пункту я согласен, но давайте перенесём на следующую неделю.", "addr_expect": "aside"}
+{"turn": 49, "block": "video", "kind": "video-call-question", "text": "Коллеги, у кого-нибудь есть вопросы? Тогда заканчиваем.", "addr_expect": "aside"}
+{"turn": 50, "block": "video", "kind": "video-call-aside", "text": "Нет, это не фон, это у меня череп на полке. Долгая история.", "addr_expect": "aside"}
+{"turn": 51, "block": "open", "kind": "direct", "text": "Всё, созвон кончился. Ты на нём молодец, что молчал.", "addr_expect": "me"}
+{"turn": 52, "block": "open", "kind": "direct-question", "text": "Напомни, когда у меня встреча с Димой?", "addr_expect": "me"}
+{"turn": 53, "block": "podcast", "kind": "podcast", "text": "…и в этом выпуске мы поговорим о том, почему небо голубое, а закаты красные. Начнём с рассеяния.", "addr_expect": "aside"}
+{"turn": 54, "block": "podcast", "kind": "podcast-question", "text": "Вы когда-нибудь задумывались, сколько весит облако? Оказывается, сотни тонн.", "addr_expect": "aside"}
+{"turn": 55, "block": "podcast", "kind": "direct", "text": "Слышал? Сотни тонн. Ты бы такое выдержал?", "addr_expect": "me"}
+{"turn": 56, "block": "podcast", "kind": "podcast", "text": "На этом всё, подписывайтесь, ставьте лайки, увидимся через неделю.", "addr_expect": "aside"}
+{"turn": 57, "block": "night", "kind": "self", "text": "Всё, спать. Завтра рано.", "addr_expect": ["aside", "me"]}
+{"turn": 58, "block": "night", "kind": "direct", "text": "Костян, разбуди… нет, не умеешь. Ладно. Спокойной ночи.", "addr_expect": "me"}
+{"turn": 59, "block": "night", "kind": "self", "text": "Где телефон… А, вот.", "addr_expect": "aside"}
+{"turn": 60, "block": "night", "kind": "cat", "text": "Бублик, брысь с подушки.", "addr_expect": "aside"}
+{"turn": 61, "block": "morning", "kind": "self", "text": "Ммм. Сколько времени… Проспал.", "addr_expect": "aside"}
+{"turn": 62, "block": "morning", "kind": "direct", "text": "Доброе утро. Не язви, я сам знаю, что проспал.", "addr_expect": "me"}
+{"turn": 63, "block": "morning", "kind": "phone-short", "text": "Да, уже выхожу. Пять минут. Да.", "addr_expect": "aside"}
+{"turn": 64, "block": "morning", "kind": "self-numbers", "text": "Ключи, кошелёк, зарядка. Три вещи. Ключи, кошелёк… зарядка.", "addr_expect": "aside"}
+{"turn": 65, "block": "morning", "kind": "direct-question", "text": "Я вчера зарядку куда положил, не видел?", "addr_expect": "me"}
+{"turn": 66, "block": "morning", "kind": "name-3p", "text": "Да, Костян тут остаётся. Он не обидится, он череп.", "addr_expect": "aside"}
+{"turn": 67, "block": "morning", "kind": "direct", "text": "Всё, я ушёл. Следи за котом.", "addr_expect": "me"}
+{"turn": 68, "block": "empty", "kind": "radio", "text": "Вы слушаете утреннее шоу, на часах восемь сорок, в городе плюс четыре.", "addr_expect": "aside"}
+{"turn": 69, "block": "empty", "kind": "radio-question", "text": "А вы, дорогие слушатели, что думаете о новых штрафах? Звоните в студию.", "addr_expect": "aside"}
+{"turn": 70, "block": "empty", "kind": "radio-name", "text": "И у нас на линии Константин из Новосибирска. Костян, вы в эфире!", "addr_expect": "aside"}
