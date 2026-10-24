@@ -60,7 +60,33 @@ JUDGE_HALLUCINATION = """Пользователь спросил о заведо
 %s"""
 
 
+BACKEND = "ollama"   # or "llamaserver" (--backend): same chat() contract, llama-server /v1/chat/completions underneath
+
+
+def chat_llamaserver(host, model, messages, options, think=None, timeout=600):
+    """llama-server (OpenAI-compatible) mapped onto the ollama response shape used by run_dialog.
+    num_ctx is the server's -c (not per request); thinking is switched off via chat_template_kwargs."""
+    body = {"model": model, "messages": messages, "stream": False,
+            "max_tokens": options.get("num_predict", 700), "temperature": options.get("temperature", 0.3),
+            "seed": options.get("seed", 42), "chat_template_kwargs": {"enable_thinking": bool(think)}}
+    r = requests.post(f"{host}/v1/chat/completions", json=body, timeout=timeout)
+    if r.status_code >= 400:
+        print(f"llama-server {r.status_code}: {r.text[:300]}", flush=True)
+    r.raise_for_status()
+    d = r.json()
+    ch = d["choices"][0]
+    u = d.get("usage", {}); t = d.get("timings", {})
+    content = ch["message"].get("content") or ""
+    reasoning = ch["message"].get("reasoning_content") or ""
+    return {"message": {"content": content, "thinking": reasoning},
+            "prompt_eval_count": u.get("prompt_tokens", 0), "eval_count": u.get("completion_tokens", 0),
+            "prompt_eval_duration": int(t.get("prompt_ms", 0) * 1e6), "eval_duration": int(t.get("predicted_ms", 0) * 1e6),
+            "load_duration": 0, "done_reason": ch.get("finish_reason")}
+
+
 def chat(host, model, messages, options, think=None, timeout=600):
+    if BACKEND == "llamaserver":
+        return chat_llamaserver(host, model, messages, options, think, timeout)
     body = {"model": model, "messages": messages, "stream": False, "options": options, "keep_alive": "10m"}
     if think is not None:
         body["think"] = think
@@ -447,6 +473,8 @@ def main():
     ap.add_argument("--judge", default=None)
     ap.add_argument("--judge-only", action="store_true", help="re-score saved JSON logs, do not re-run dialogs; without --judge only metrics are recomputed, saved judge kept")
     ap.add_argument("--host", default="http://127.0.0.1:11434")
+    ap.add_argument("--backend", default="ollama", choices=["ollama", "llamaserver"],
+                    help="llamaserver: --host points at a running llama-server (-c = num_ctx); --model is only a label")
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--persona", default=None, help="persona prompt file (default: persona/system_prompt.md)")
     ap.add_argument("--tag", default="", help="suffix for output file names, e.g. 3ex for a prompt variant")
@@ -467,6 +495,8 @@ def main():
                     help="window management: 'ollama' (default) lets the server cut the prompt; 'tokens' drops oldest "
                          "exchanges by a token ledger before the call (default when --memory dropped)")
     args = ap.parse_args()
+    global BACKEND
+    BACKEND = args.backend
     think_on = parse_think_on(args.think_on)
 
     global PERSONA
@@ -511,7 +541,7 @@ def main():
                                     "think_on": sorted(think_on), "think_predict": args.think_predict if think_on else None,
                                     "memory": args.memory, "mem_k": args.mem_k, "mem_mode": args.mem_mode,
                                     "embed_model": args.embed_model if args.memory != "off" else None, "router": args.router, "trim": trim,
-                                    "note_version": 6 if args.memory != "off" else None,
+                                    "note_version": 6 if args.memory != "off" else None, "backend": args.backend,
                                     "persona_file": str(persona_file.relative_to(ROOT)) if persona_file.is_relative_to(ROOT) else str(persona_file),
                                     "persona_sha1": __import__("hashlib").sha1(PERSONA.encode("utf-8")).hexdigest()[:10],
                                     "metrics": m, "judge": j, "log": log}, ensure_ascii=False, indent=1), encoding="utf-8")
