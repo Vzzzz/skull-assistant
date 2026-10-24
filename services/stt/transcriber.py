@@ -1,3 +1,4 @@
+import time
 import redis, numpy as np
 from faster_whisper import WhisperModel
 
@@ -45,18 +46,22 @@ while True:
         if silent >= SILENCE_FRAMES:
             break
 
+    ts = time.time()                                # end of phrase, for latency chain (T-003)
     audio = np.concatenate(chunks).astype(np.float32) / 32768.0
     audio = audio[:-SILENCE_FRAMES * 480]          # 1) срезать хвост тишины
     import soundfile as sf                          # 2) дамп для прослушки
     sf.write('/tmp/stt_last.wav', audio, RATE)
+    t0 = time.perf_counter()
     segments, info = model.transcribe(
         audio, language=None, vad_filter=True,
         condition_on_previous_text=False,           # 3) профилактика галлюцинаций
     )
-    segments, info = model.transcribe(audio, language=None, vad_filter=True)
     text = " ".join(s.text.strip() for s in segments).strip()
+    stt_s = time.perf_counter() - t0                # segments is a generator: time after join
+    print(f"stt: transcribe {stt_s:.2f}s for {len(audio)/RATE:.1f}s audio")
     if text:
-        r.xadd('events:transcript', {'text': text, 'lang': info.language})
+        r.xadd('events:transcript', {'text': text, 'lang': info.language,
+                                     'ts': f"{ts:.3f}", 'stt_s': f"{stt_s:.3f}"})
         print(f"stt: [{info.language}] {text}")
     else:
         print("stt: empty")
