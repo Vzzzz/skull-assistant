@@ -47,6 +47,9 @@ while True:
             break
 
     ts = time.time()                                # end of phrase, for latency chain (T-003)
+    if not chunks:                                  # nobody spoke after the wake word
+        print("stt: no speech after wake, skipped")
+        continue
     audio = np.concatenate(chunks).astype(np.float32) / 32768.0
     audio = audio[:-SILENCE_FRAMES * 480]          # 1) срезать хвост тишины
     import soundfile as sf                          # 2) дамп для прослушки

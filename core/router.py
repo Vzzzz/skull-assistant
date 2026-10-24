@@ -74,8 +74,40 @@ POLICY = {
     "calc":    {"max_tokens": 500, "memory": False, "prefix": "Считай по шагам, все числа пиши цифрами, итог — в конце."},
     "explain": {"max_tokens": 900, "memory": False},
     # world keeps memory on: at 2k the router labelled "как зовут моего кота?" as world when the cat had fallen out of
-    # the window (T-028: 4 probes -> "Не знаю."); with retrieval the note arrives and the hedge applies only if memory is empty
+    # the window (T-028: 4 probes -> "Не знаю."); with retrieval the note arrives and the hedge applies only if memory is empty.
+    # The hedge is narrowed to what the model cannot know (owner, 2026-10-24): the router also labels general knowledge
+    # as world ("Почему небо голубое?" 0.81), and the old wording turned it into "Извини, я не знаю."
     "world":   {"max_tokens": 300, "memory": True,
-                "prefix": "Если собеседник спрашивает о том, чего ты не видел, не знаешь и не помнишь, — скажи, что не знаешь, одной фразой в своём тоне, не выдумывай. Если он ничего не спрашивает — отвечай как обычно."},
+                "prefix": "Если это общеизвестный факт или общие знания (наука, история, как устроен мир) — ответь как обычно. "
+                          "Если собеседник спрашивает о том, чего ты не можешь знать или о чём не слышал (сегодняшние новости и погода, "
+                          "конкретный человек, прибор или событие, о котором ты не знаешь), — скажи, что не знаешь, одной фразой в своём тоне, "
+                          "не выдумывай. Если он ничего не спрашивает — отвечай как обычно."},
     "command": {"max_tokens": 200, "memory": True},
 }
+
+
+# guards on the router's answer (T-037): a label is taken only when the model is confident in it, and `calc`
+# only when the turn has a number — «Как меня зовут?» right after a multiplication came out calc 0.42 / chat 0.27,
+# and the calc prefix made the model redo the previous sum before answering
+MIN_PROB, MIN_MARGIN = 0.45, 1.3
+_NUMBER = re.compile(
+    r"\d|\b(?:ноль|нул\w*|один|одн\w*|два|две|двух|двум\w*|три|тр[её]х|четыр\w*|пят\w*|шест\w*|семь|семи|семер\w*|семьдесят\w*|восем\w*|"
+    r"восьм\w*|девят\w*|десят\w*|\w+надцат\w*|двадцат\w*|тридцат\w*|сорок\w*|девяност\w*|сто|ста|сотн\w*|\w+сот|"
+    r"тысяч\w*|миллион\w*|процент\w*|половин\w*|четверт\w*|полтор\w*|дюжин\w*)\b", re.I)
+
+
+def has_number(text: str) -> bool:
+    return bool(_NUMBER.search(text.replace("ё", "е").replace("Ё", "Е")))
+
+
+def decide(route, text):
+    """Final label after the guards: returns (label, reason) where reason is None when the router's label stands,
+    'low-confidence' (top prob < MIN_PROB or < MIN_MARGIN x second) or 'calc-no-number'; both fall back to chat."""
+    label, probs = route.get("label"), route.get("probs") or {}
+    if label and probs:
+        top = sorted(probs.values(), reverse=True) + [0.0]
+        if top[0] < MIN_PROB or top[0] < MIN_MARGIN * top[1]:
+            return "chat", "low-confidence"
+    if label == "calc" and not has_number(text):
+        return "chat", "calc-no-number"
+    return label, None

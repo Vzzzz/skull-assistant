@@ -13,7 +13,7 @@ import redis, requests, yaml
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 from core.memory import SYSTEM_RULE, AssocMemory, clean_reply, format_note
-from core.router import POLICY, route_llamaserver
+from core.router import POLICY, decide, route_llamaserver
 
 P = yaml.safe_load(Path(__file__).with_name("manifest.yaml").read_text(encoding="utf-8"))["params"]
 HOST = P["host"]
@@ -134,6 +134,9 @@ while True:
         window, _ = build_window(history, sys_tokens, est_new + POLICY["chat"]["max_tokens"] + NOTE_RESERVE)
         try:
             route = route_llamaserver(HOST, to_messages(window), text)
+            label, reason = decide(route, text)
+            if reason:
+                route.update(label_raw=route["label"], label=label, guard=reason)
         except requests.RequestException as e:
             print(f"brain: router failed: {e}")
         policy = POLICY.get((route or {}).get("label") or "chat", POLICY["chat"])
@@ -143,7 +146,8 @@ while True:
     extra = est_tokens(prefix) + (NOTE_RESERVE if use_mem else 0)
     window, used = build_window(history, sys_tokens, est_new + extra + max_tokens)
     print(f"brain: window {len(window)} exchanges, ~{used + est_new + extra} tokens ({len(history)} stored)"
-          + (f", route={route['label']} {route['s']}s" if route else ""))
+          + (f", route={route['label']} {route['s']}s" if route else "")
+          + (f" ({route['label_raw']} {route['guard']})" if route and route.get("guard") else ""))
 
     hits, note = [], ""
     if use_mem:
