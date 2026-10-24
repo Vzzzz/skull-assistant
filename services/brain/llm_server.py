@@ -23,7 +23,10 @@ def args(role):
         port = urlparse(P["host"]).port
         return [os.path.expanduser(P["bin"]), "-m", path(P["gguf"]), "--mmproj", path(P["mmproj"]),
                 "-ngl", "99", "-c", str(P["num_ctx"]), "-fa", "on", "-ctk", "q8_0", "-ctv", "q8_0",
-                "--slot-save-path", path(P["slot_save_path"]), "--host", "127.0.0.1", "--port", str(port)]
+                "--slot-save-path", path(P["slot_save_path"]), "--host", "127.0.0.1", "--port", str(port),
+                # no host-RAM prompt cache / SWA checkpoints: with the defaults (8192 MiB, 32 per slot) RSS kept growing
+                # (10.5 GB after three CTX-1 runs @2048); without them it plateaus at ~3.55 GB, prefill not slower
+                "--cache-ram", "0", "--ctx-checkpoints", "0"]
     if role == "embed":
         m = P["memory"]
         port = urlparse(m["embed_host"]).port

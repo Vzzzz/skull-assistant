@@ -53,7 +53,7 @@ while True:
     sf.write('/tmp/stt_last.wav', audio, RATE)
     t0 = time.perf_counter()
     segments, info = model.transcribe(
-        audio, language=None, vad_filter=True,
+        audio, language="ru", vad_filter=True,    # fixed: autodetect cost ~0.4 s per phrase (T-001)
         condition_on_previous_text=False,           # 3) профилактика галлюцинаций
     )
     text = " ".join(s.text.strip() for s in segments).strip()
