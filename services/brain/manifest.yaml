@@ -4,8 +4,8 @@ backend: llama-server      # D-024; server units: skull-llm (VLM, GPU), skull-em
 cuda_context: true
 budget:
   vram_mb: 3804          # ПИК: IQ4_XS @8k + mmproj + картинка (T-033, stack_2026-10-21.md)
-  ram_mb: null
-  measured_on: null      # stand | jetson — без этого поля admission control не пустит
+  ram_mb: 3001           # ПИК RSS llama-server с --lazy-mode on (загрузка; после CTX-1 @8192 RSS 2529, из них файл весов 1839 — дочитывается по мере работы, верхняя граница ~3.5 ГБ как без lazy); responder 45, эмбеддер 0.41 ГБ — отдельно (будущий манифест memory)
+  measured_on: stand
 residency:
   A: resident
   B: evacuated
@@ -13,11 +13,11 @@ residency:
 lifecycle:
   freeze: slot-save-kill
   thaw: start-slot-restore
-  thaw_budget_s: 4       # T-024: thaw ≈ 3.5 с
+  thaw_budget_s: 4       # замер T-024 (thaw ≈ 3.5 с); перезапуск skull-llm до /health 3.6–3.8 с при прогретом кэше, 13 с при холодном (2026-10-26)
 bus:
   in:  [events:transcript]
   out: [events:reply]
-healthcheck: null        # TODO: http или systemd notify
+healthcheck: http://127.0.0.1:11437/health   # llama-server (skull-llm)
 never_evict: false
 params:                  # read by services/brain/responder.py and services/brain/llm_server.py; paths from repo root
   backend: llama-server

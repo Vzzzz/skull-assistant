@@ -3,9 +3,9 @@ unit: skull-capture
 backend: cpu
 cuda_context: false
 budget:
-  vram_mb: null          # ПИК, заполнить из docs/MEMORY_BUDGET.md
-  ram_mb: null
-  measured_on: null      # stand | jetson — без этого поля admission control не пустит
+  vram_mb: 0
+  ram_mb: 43            # ПИК: stack_2026-10-21.md (VmHWM = VmRSS 43–44)
+  measured_on: stand
 residency:
   A: resident
   B: resident
@@ -13,9 +13,9 @@ residency:
 lifecycle:
   freeze: kill
   thaw: start
-  thaw_budget_s: null
+  thaw_budget_s: null    # TODO: measure (restart until ready)
 bus:
   in:  []
   out: [audio:mic]
-healthcheck: null        # TODO: http или systemd notify
+healthcheck: null        # TODO: systemd notify
 never_evict: false

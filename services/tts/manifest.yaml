@@ -3,9 +3,9 @@ unit: skull-tts
 backend: cpu
 cuda_context: false
 budget:
-  vram_mb: null          # ПИК, заполнить из docs/MEMORY_BUDGET.md
-  ram_mb: null
-  measured_on: null      # stand | jetson — без этого поля admission control не пустит
+  vram_mb: 0
+  ram_mb: 486            # ПИК синтеза: бенч 2026-10-12 (486); сервис 144 в простое, 368 на ответе 641 симв. (2026-10-26); после T-003 (синтез по предложениям) перемерить
+  measured_on: stand
 residency:
   A: resident
   B: resident
@@ -13,9 +13,9 @@ residency:
 lifecycle:
   freeze: kill
   thaw: start
-  thaw_budget_s: null
+  thaw_budget_s: null    # TODO: measure (restart until ready)
 bus:
   in:  [events:reply]
   out: [tts:speaking]
-healthcheck: null        # TODO: http или systemd notify
+healthcheck: null        # TODO: systemd notify
 never_evict: false

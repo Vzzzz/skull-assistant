@@ -13,11 +13,11 @@ residency:
 lifecycle:
   freeze: kill
   thaw: start
-  thaw_budget_s: null
+  thaw_budget_s: null    # TODO: measure (restart until ready)
 bus:
   in:  [events:wakeword, audio:mic]
   out: [events:transcript]
-healthcheck: null        # TODO: http или systemd notify
+healthcheck: null        # TODO: systemd notify
 never_evict: false
 params:
   voice_id:              # T-039, D-029: owner / other / unknown in events:transcript

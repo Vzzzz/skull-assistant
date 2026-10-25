@@ -26,7 +26,9 @@ def args(role):
                 "--slot-save-path", path(P["slot_save_path"]), "--host", "127.0.0.1", "--port", str(port),
                 # no host-RAM prompt cache / SWA checkpoints: with the defaults (8192 MiB, 32 per slot) RSS kept growing
                 # (10.5 GB after three CTX-1 runs @2048); without them it plateaus at ~3.55 GB, prefill not slower
-                "--cache-ram", "0", "--ctx-checkpoints", "0"]
+                "--cache-ram", "0", "--ctx-checkpoints", "0",
+                # per-layer embedding tables of Gemma E-models read from disk on demand, not kept resident
+                "--lazy-mode", "on"]
     if role == "embed":
         m = P["memory"]
         port = urlparse(m["embed_host"]).port
