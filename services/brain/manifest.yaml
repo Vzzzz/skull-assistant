@@ -4,7 +4,7 @@ backend: llama-server      # D-024; server units: skull-llm (VLM, GPU), skull-em
 cuda_context: true
 budget:
   vram_mb: 3804          # ПИК: IQ4_XS @8k + mmproj + картинка (T-033, stack_2026-10-21.md)
-  ram_mb: 3001           # ПИК RSS llama-server с --lazy-mode on (загрузка; после CTX-1 @8192 RSS 2529, из них файл весов 1839 — дочитывается по мере работы, верхняя граница ~3.5 ГБ как без lazy); responder 45, эмбеддер 0.41 ГБ — отдельно (будущий манифест memory)
+  ram_mb: 566            # невытесняемая часть: RssAnon skull-llm после одного CTX-1 через шину @8192 (566 / 560, два прогона 2026-10-26; ответ ядра по T-007). VmRSS там же 2427–2529 (файл весов под mmap — page cache), пик загрузки 3001 с --lazy-mode on; responder 45; эмбеддер — services/embed
   measured_on: stand
 residency:
   A: resident
@@ -14,6 +14,7 @@ lifecycle:
   freeze: slot-save-kill
   thaw: start-slot-restore
   thaw_budget_s: 4       # замер T-024 (thaw ≈ 3.5 с); перезапуск skull-llm до /health 3.6–3.8 с при прогретом кэше, 13 с при холодном (2026-10-26)
+  cold_start_s: 13       # первый старт skull-llm после перезагрузки (холодный кэш страниц) до /health, 2026-10-26
 bus:
   in:  [events:transcript]
   out: [events:reply]

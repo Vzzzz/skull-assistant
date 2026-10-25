@@ -1,0 +1,22 @@
+name: embed
+unit: skull-embed
+backend: llama-server      # CPU build (~/llama.cpp/build): the CUDA one creates a 176 MB context even at -ngl 0
+cuda_context: false
+budget:
+  vram_mb: 0
+  ram_mb: 421            # ПИК: embeddinggemma-300M Q8_0, -c/-b/-ub 2048 (T-016/T-037; VmHWM 409 на стенде 2026-10-26)
+  measured_on: stand
+residency:
+  A: resident
+  B: evacuated
+  C: evacuated
+lifecycle:
+  freeze: kill
+  thaw: start
+  thaw_budget_s: null    # TODO: measure (restart until /health)
+bus:
+  in:  []                # HTTP /v1/embeddings for brain memory (core/memory.py), not the bus
+  out: []
+healthcheck: http://127.0.0.1:11438/health
+never_evict: false
+# launched by services/brain/llm_server.py embed from services/brain/manifest.yaml params.memory
