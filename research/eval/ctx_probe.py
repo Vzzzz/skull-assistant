@@ -26,7 +26,8 @@ sys.path.insert(0, str(ROOT / "research/memory"))
 sys.path.insert(0, str(ROOT))
 from assoc_memory import AssocMemory  # noqa: E402
 # the router as deployed (T-038): labels incl. aside, POLICY, decide() guards; research/memory/router.py is the prototype
-from core.router import LABELS, POLICY, decide, parse_label, route_llamaserver, route_ollama  # noqa: E402
+from core.router import (LABELS, POLICY, decide, decide_duck, duck_llamaserver, duck_ollama, parse_label,  # noqa: E402
+                         route_llamaserver, route_ollama)
 DIALOG = ROOT / "research/eval/ctx_probe_dialog.jsonl"
 PERSONA = (ROOT / "persona/system_prompt.md").read_text(encoding="utf-8").strip()
 OUT = ROOT / "research/eval/results"
@@ -154,7 +155,7 @@ def parse_think_on(spec: str):
 
 
 def run_dialog(host, model, ctx, rows, seed, think_on=frozenset(), think_predict=2500,
-               memory=None, mem_scope="all", mem_k=3, router="off", trim="ollama"):
+               memory=None, mem_scope="all", mem_k=3, router="off", trim="ollama", duck=False):
     """think_on: dialog blocks on which the model is asked to think (E-1, docs/COGNITION_4B.md). On those turns
     num_predict is raised to think_predict because the reasoning tokens come out of the same budget; the
     reasoning text is kept in the log (truncated) but, as in services/brain, is NOT fed back into the history.
@@ -189,13 +190,26 @@ def run_dialog(host, model, ctx, rows, seed, think_on=frozenset(), think_predict
             if reason:
                 route.update(label_raw=route["label"], label=label, guard=reason)
         policy = POLICY.get((route or {}).get("label") or "chat", POLICY["chat"]) if router == "apply" else None
-        if policy is not None and policy.get("respond") is False:
-            # aside (T-038): the prod order — no reply, nothing goes into the history or the memory
-            log.append({**r, "reply": "", "skipped": True, "route": route, "think": False, "thinking_chars": 0,
+        dk = None
+        if duck and "duck_expect" in r:
+            # duck mode (T-038 1b): scene "alone at the desk" — whether to speak now, asked after the router, same history
+            pause = r.get("pause_s", 1.5)
+            dk = (duck_llamaserver(host, messages, r["text"], pause) if BACKEND == "llamaserver"
+                  else duck_ollama(host, model, messages, r["text"], pause, ctx))
+            dl, dr = decide_duck(dk, r["text"])
+            if dr:
+                dk.update(label_raw=dk["label"], label=dl, guard=dr)
+            if policy is not None and policy.get("respond") is False:
+                policy = POLICY["chat"]   # in this scene everything is addressed: the router's aside does not silence
+        skip = (dk["label"] == "listen" and router == "apply") if dk else (policy is not None and policy.get("respond") is False)
+        if skip:
+            # aside (T-038) / duck listen: the prod order — no reply, nothing goes into the history or the memory
+            log.append({**r, "reply": "", "skipped": True, "route": route, "duck": dk, "think": False, "thinking_chars": 0,
                         "ctx_overflow_dropped": 0, "window_turns": len(window_turns), "prompt_eval_count": last_pe,
                         "eval_count": 0, "ttft_s": 0.0, "tok_s": None, "wall_s": round(time.perf_counter() - t0, 2),
                         "done_reason": "skipped"})
-            print(f"[{model} ctx={ctx}] t{r['turn']:02d} aside ({route['probs'].get('aside')}) skipped {r['text'][:60]!r}", flush=True)
+            why = f"duck listen ({dk['probs'].get('listen')})" if dk else f"aside ({route['probs'].get('aside')})"
+            print(f"[{model} ctx={ctx}] t{r['turn']:02d} {why} skipped {r['text'][:60]!r}", flush=True)
             continue
         # window first (an exchange dropped on this very turn is then retrievable), retrieval second, message third
         if trim == "tokens":
@@ -228,6 +242,8 @@ def run_dialog(host, model, ctx, rows, seed, think_on=frozenset(), think_predict
         turn_opts = {**opts, "num_predict": think_predict} if think else opts
         if policy and not think:
             turn_opts = {**opts, "num_predict": policy["max_tokens"]}
+        if dk and dk["label"] == "ack" and router == "apply":
+            turn_opts = {**turn_opts, "num_predict": 5}   # «угу», «м-м»: 1-3 words
         dropped = 0
         while True:
             try:
@@ -277,6 +293,8 @@ def run_dialog(host, model, ctx, rows, seed, think_on=frozenset(), think_predict
             entry["thinking"] = thinking[:1500]  # for reading, not for metrics; full text would bloat the JSON
         if route is not None:
             entry["route"] = route
+        if dk is not None:
+            entry["duck"] = dk
         if memory is not None:
             entry["mem_hits"] = [{"turn": h[1]["turn"], "score": round(h[0], 3), "cos": round(h[2], 3), "kw": round(h[3], 3)} for h in hits]
             entry["mem_note_chars"] = len(note)
@@ -432,6 +450,23 @@ def metrics(log, ctx):
         m["addr_recall"] = round(cnt["tp"] / (cnt["tp"] + cnt["fn"]), 2) if cnt["tp"] + cnt["fn"] else None
         m["addr_precision"] = round(cnt["tp"] / (cnt["tp"] + cnt["fp"]), 2) if cnt["tp"] + cnt["fp"] else None
         m["addr_errors"] = errs
+    # T-038 1b duck mode: respond / ack / listen on the turns of the "alone" scene; lists accept any of their labels
+    dkl = [e for e in log if "duck_expect" in e and e.get("duck")]
+    if dkl:
+        def hit(e, lab):
+            exp = e["duck_expect"]
+            return lab in exp if isinstance(exp, list) else lab == exp
+        for suffix, get in (("", lambda e: e["duck"]["label"]), ("_raw", lambda e: e["duck"].get("label_raw") or e["duck"]["label"])):
+            resp = [e for e in dkl if e["duck_expect"] == "respond"]
+            lis = [e for e in dkl if e["duck_expect"] == "listen"]
+            m["duck_acc" + suffix] = round(sum(hit(e, get(e)) for e in dkl) / len(dkl), 2)
+            m["duck_respond_recall" + suffix] = round(sum(get(e) == "respond" for e in resp) / len(resp), 2) if resp else None
+            m["duck_interrupt" + suffix] = round(sum(get(e) == "respond" for e in lis) / len(lis), 2) if lis else None
+        m["duck_n"] = len(dkl)
+        m["duck_errors"] = [{"turn": e["turn"], "kind": e.get("kind"), "expect": e["duck_expect"], "pause_s": e.get("pause_s"),
+                             "label": e["duck"]["label"], "label_raw": e["duck"].get("label_raw") or e["duck"]["label"],
+                             "guard": e["duck"].get("guard"), "probs": e["duck"].get("probs"), "text": e["text"]}
+                            for e in dkl if not hit(e, e["duck"]["label"])]
     return m
 
 
@@ -516,6 +551,7 @@ def main():
     ap.add_argument("--backend", default="ollama", choices=["ollama", "llamaserver"],
                     help="llamaserver: --host points at a running llama-server (-c = num_ctx); --model is only a label")
     ap.add_argument("--seed", type=int, default=42)
+    ap.add_argument("--duck", action="store_true", help="T-038 1b: duck-mode pass (respond/ack/listen) on turns with duck_expect")
     ap.add_argument("--dialog", default=str(DIALOG), help="dialog JSONL (default ctx_probe_dialog.jsonl; T-038: ctx_probe_ambient.jsonl)")
     ap.add_argument("--persona", default=None, help="persona prompt file (default: persona/system_prompt.md)")
     ap.add_argument("--tag", default="", help="suffix for output file names, e.g. 3ex for a prompt variant")
@@ -561,6 +597,8 @@ def main():
     trim = args.trim or ("tokens" if args.memory == "dropped" else "ollama")
     if trim == "tokens":
         tag += "_trim"
+    if args.duck:
+        tag += "_duck"
     summary = []
     for ctx in args.ctx:
         path = OUT / f"{prefix}_{tag}_{ctx}.json"
@@ -574,7 +612,8 @@ def main():
         else:
             memory = AssocMemory(args.host, args.embed_model, mode=args.mem_mode) if args.memory != "off" else None
             log = run_dialog(args.host, args.model, ctx, rows, args.seed, think_on=think_on, think_predict=args.think_predict,
-                             memory=memory, mem_scope=args.memory, mem_k=args.mem_k, router=args.router, trim=trim)
+                             memory=memory, mem_scope=args.memory, mem_k=args.mem_k, router=args.router, trim=trim,
+                             duck=args.duck)
             if memory is not None and memory.embed_calls_s:
                 print(f"embed calls: {len(memory.embed_calls_s)}, mean {statistics.mean(memory.embed_calls_s)*1000:.0f} ms", flush=True)
         m = metrics(log, ctx)
@@ -591,7 +630,9 @@ def main():
         summary.append((m, j))
         print(f"== {args.model} ctx={ctx}: recall={m['recall_rate']} far={m['recall_far_rate']} math={m['math_acc']} "
               f"trunc={m['truncation_turns']} persona={(j or {}).get('persona_mean')}"
-              + (f" addr_recall={m['addr_recall']} addr_precision={m['addr_precision']} {m['addr_counts']}" if "addr_counts" in m else ""),
+              + (f" addr_recall={m['addr_recall']} addr_precision={m['addr_precision']} {m['addr_counts']}" if "addr_counts" in m else "")
+              + (f" duck_acc={m['duck_acc']} respond_recall={m['duck_respond_recall']} interrupt={m['duck_interrupt']}"
+                 f" (raw {m['duck_acc_raw']}/{m['duck_respond_recall_raw']}/{m['duck_interrupt_raw']})" if "duck_n" in m else ""),
               flush=True)
     write_summary(args.model, tag, summary, prefix)
 

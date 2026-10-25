@@ -156,3 +156,84 @@ def decide(route, text):
     if label == "calc" and not has_number(text):
         return "chat", "calc-no-number"
     return label, None
+
+
+# duck mode (T-038 stage 1b): the owner is alone at the desk thinking aloud — every turn is "to the skull", the question
+# is whether to speak now. A separate pass, not an 8th label; the pause after the turn is part of the question
+# (in the live system it comes from VAD, P-030)
+DUCK_LABELS = ("respond", "ack", "listen")
+DUCK_PROMPT = """Служебный вопрос, не отвечай собеседнику. Собеседник один, думает вслух за работой, ты рядом. Его реплика: «{text}». После неё пауза {pause_s} с. Что сделать:
+respond — ответить по существу (вопрос, просьба, обращение, законченная мысль, на которую ждут реакции);
+ack — коротко показать, что слушаешь;
+listen — молчать (середина мысли, счёт, чтение вслух, обращение к коту, междометие).
+Одно слово:"""
+_DUCK_RE = re.compile("|".join(DUCK_LABELS), re.I)
+# imperative addressed to «ты» that asks the skull for something (closed list: «слезь», «брысь» to the cat must stay listen)
+_IMPERATIVE = re.compile(r"\b(?:скажи|расскажи|подскажи|посчитай|прикинь|напомни|запомни|объясни|ответь|глянь|посмотри|"
+                         r"послушай|слушай|проверь|найди|помоги|угадай|представь|давай|включи|выключи)\b", re.I)
+
+
+def _duck_probs(top_logprobs):
+    probs = {}
+    for alt in top_logprobs:
+        m = _DUCK_RE.search(alt["token"])
+        if m:
+            lab = m.group(0).lower()
+            probs[lab] = probs.get(lab, 0.0) + math.exp(alt["logprob"])
+    return probs
+
+
+def _duck_result(raw, probs, t0):
+    if sum(probs.values()) < 0.5:
+        probs = {}
+    m = _DUCK_RE.search(raw or "")
+    label = max(probs, key=probs.get) if probs else (m.group(0).lower() if m else None)
+    return {"label": label, "raw": (raw or "")[:40], "probs": {k: round(v, 3) for k, v in probs.items()},
+            "s": round(time.perf_counter() - t0, 3)}
+
+
+def duck_llamaserver(host, messages, text, pause_s, timeout=120):
+    body = {"messages": messages + [{"role": "user", "content": DUCK_PROMPT.format(text=text, pause_s=pause_s)}],
+            "max_tokens": 1, "temperature": 0.0, "logprobs": True, "top_logprobs": 10,
+            "chat_template_kwargs": {"enable_thinking": False}}
+    t0 = time.perf_counter()
+    r = requests.post(f"{host}/v1/chat/completions", json=body, timeout=timeout)
+    r.raise_for_status()
+    ch = r.json()["choices"][0]
+    try:
+        probs = _duck_probs(ch["logprobs"]["content"][0]["top_logprobs"])
+    except (KeyError, IndexError, TypeError):
+        probs = {}
+    return _duck_result((ch["message"].get("content") or "").strip(), probs, t0)
+
+
+def duck_ollama(host, model, messages, text, pause_s, num_ctx, timeout=120):
+    body = {"model": model, "stream": False, "think": False, "keep_alive": "10m", "logprobs": True, "top_logprobs": 10,
+            "messages": messages + [{"role": "user", "content": DUCK_PROMPT.format(text=text, pause_s=pause_s)}],
+            "options": {"num_ctx": num_ctx, "temperature": 0.0, "seed": 1, "num_predict": 6}}
+    t0 = time.perf_counter()
+    r = requests.post(f"{host}/api/chat", json=body, timeout=timeout)
+    r.raise_for_status()
+    d = r.json()
+    try:
+        probs = _duck_probs(d["logprobs"][0]["top_logprobs"])
+    except (KeyError, IndexError, TypeError):
+        probs = {}
+    return _duck_result((d["message"].get("content") or "").strip(), probs, t0)
+
+
+def decide_duck(route, text):
+    """Final duck label: (label, reason). The skull's name -> respond ('name'); a question mark or an imperative to «ты»
+    -> never listen ('question': the best of respond/ack); a low-confidence label (thresholds as decide()) -> respond
+    ('low-confidence'): missing a question is worse than an extra reply."""
+    label, probs = route.get("label"), route.get("probs") or {}
+    if "костян" in text.lower():
+        return "respond", (None if label == "respond" else "name")
+    if label == "listen" and ("?" in text or _IMPERATIVE.search(text)):
+        alt = max(("respond", "ack"), key=lambda k: probs.get(k, 0.0))
+        return alt, "question"
+    if label and probs:
+        top = sorted(probs.values(), reverse=True) + [0.0]
+        if top[0] < MIN_PROB or top[0] < MIN_MARGIN * top[1]:
+            return "respond", (None if label == "respond" else "low-confidence")
+    return label or "respond", (None if label else "no-label")
