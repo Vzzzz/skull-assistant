@@ -3,9 +3,9 @@ unit: skull-stt
 backend: cpu
 cuda_context: false
 budget:
-  vram_mb: null          # ПИК, заполнить из docs/MEMORY_BUDGET.md
-  ram_mb: null
-  measured_on: null      # stand | jetson — без этого поля admission control не пустит
+  vram_mb: 0
+  ram_mb: 529            # ПИК после 20 фраз с voice id (T-039, 2026-10-26); без voice id 472
+  measured_on: stand
 residency:
   A: resident
   B: resident
@@ -19,3 +19,10 @@ bus:
   out: [events:transcript]
 healthcheck: null        # TODO: http или systemd notify
 never_evict: false
+params:
+  voice_id:              # T-039, D-029: owner / other / unknown in events:transcript
+    model: models/voice/3dspeaker_speech_campplus_sv_zh_en_16k-common_advanced.onnx   # CAM++, sherpa-onnx, CPU
+    owner: models/voice/owner.npy        # research/voice/enroll.py enroll (not in git)
+    threshold: 0.29        # cosine; FAR 5 % at 0.284 on the stand set (research/voice/results/voiceid_2026-10-25.md)
+    voiced_rms: 150        # int16 frame RMS counted as speech; same gate as the measurement
+    min_speech_s: 1.0

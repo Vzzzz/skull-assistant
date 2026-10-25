@@ -1,9 +1,14 @@
 import time
-import redis, numpy as np
+from pathlib import Path
+import redis, numpy as np, yaml
 from faster_whisper import WhisperModel
+from voiceid import VoiceID
 
 r = redis.Redis(socket_timeout=None)
 model = WhisperModel("base", device="cpu", compute_type="int8")
+P = yaml.safe_load(Path(__file__).with_name("manifest.yaml").read_text(encoding="utf-8"))["params"]
+voice_id = VoiceID(Path(__file__).resolve().parents[2], P["voice_id"])
+print(f"stt: voice id {voice_id.state}")
 
 RATE = 16000
 SILENCE_RMS = 300          # порог тишины для int16, подберём по факту
@@ -62,9 +67,10 @@ while True:
     text = " ".join(s.text.strip() for s in segments).strip()
     stt_s = time.perf_counter() - t0                # segments is a generator: time after join
     print(f"stt: transcribe {stt_s:.2f}s for {len(audio)/RATE:.1f}s audio")
+    spk = voice_id(chunks)                          # whose voice (T-039); ~40 ms on the voiced frames
     if text:
         r.xadd('events:transcript', {'text': text, 'lang': info.language,
-                                     'ts': f"{ts:.3f}", 'stt_s': f"{stt_s:.3f}"})
-        print(f"stt: [{info.language}] {text}")
+                                     'ts': f"{ts:.3f}", 'stt_s': f"{stt_s:.3f}", **spk})
+        print(f"stt: [{info.language}] [{spk['speaker']} {spk['spk_score']} {spk['spk_ms']}ms] {text}")
     else:
         print("stt: empty")
