@@ -30,9 +30,10 @@ DATA = HERE / "data"
 OUT = HERE / "results"
 STT = ROOT / "models/stt"
 CV_DIR = Path.home() / "bitladder/data/cv/cv-corpus-27.0-2026-09-11/ru"
-LISTS = {"cv": HERE / "cv_list.txt", "owner": DATA / "owner_list.txt"}   # owner list holds the owner's texts: not in git
+LISTS = {"cv": HERE / "cv_list.txt", "owner": DATA / "owner_list.txt",   # owner lists hold the owner's texts: not in git
+         "owner_num": DATA / "owner_num_list.txt"}                       # T-041: numbers; 3rd column = the same with digits
 RATE = 16000
-BACKENDS = ["fw-base", "fw-small", "gigaam-v2", "gigaam-v3", "t-one", "vosk-small"]
+BACKENDS = ["fw-base", "fw-small", "gigaam-v2", "gigaam-v3", "gigaam-v3-punct", "t-one", "vosk-small"]
 STREAMING = {"t-one", "vosk-small"}
 
 
@@ -62,8 +63,8 @@ def load_list(name):
     rows = []
     for line in LISTS[name].read_text(encoding="utf-8").splitlines():
         if line.strip():
-            wav, text = line.split("\t", 1)
-            rows.append((DATA / name / wav, text))
+            wav, text, *digits = line.split("\t")
+            rows.append((DATA / name / wav, text, digits[0] if digits else None))
     return rows
 
 
@@ -103,7 +104,8 @@ def make(backend, threads):
         return tr
     if backend.startswith("gigaam"):
         d = {"gigaam-v2": STT / "sherpa-onnx-nemo-ctc-giga-am-v2-russian-2025-04-19",
-             "gigaam-v3": STT / "sherpa-onnx-nemo-ctc-giga-am-v3-russian-2025-12-16"}[backend]
+             "gigaam-v3": STT / "sherpa-onnx-nemo-ctc-giga-am-v3-russian-2025-12-16",
+             "gigaam-v3-punct": STT / "sherpa-onnx-nemo-ctc-punct-giga-am-v3-russian-2025-12-16"}[backend]
         rec = sherpa_onnx.OfflineRecognizer.from_nemo_ctc(model=str(d / "model.int8.onnx"), tokens=str(d / "tokens.txt"),
                                                          num_threads=threads)
 
@@ -149,9 +151,11 @@ def one(backend, threads, name):
     m1 = mem()
     rows = load_list(name)
     hyps, w_e = [], [0, 0, 0, 0]   # word edits, ref words, char edits, ref chars
+    wd = [0, 0]                    # word edits / ref words against the digits reference (owner_num)
+    with_digits = 0
     audio_s = proc_s = 0.0
     firsts, finals = [], []
-    for wav, ref in rows:
+    for wav, ref, ref_digits in rows:
         a, sr = sf.read(wav, dtype="float32")
         assert sr == RATE, wav
         t0 = time.perf_counter()
@@ -161,6 +165,10 @@ def one(backend, threads, name):
         r, h = norm(ref), norm(hyp)
         w_e[0] += edits(r.split(), h.split()); w_e[1] += len(r.split())
         w_e[2] += edits(r.replace(" ", ""), h.replace(" ", "")); w_e[3] += len(r.replace(" ", ""))
+        if ref_digits:
+            rd = norm(ref_digits)
+            wd[0] += edits(rd.split(), h.split()); wd[1] += len(rd.split())
+        with_digits += bool(re.search(r"\d", hyp))
         if extra.get("first_word_s") is not None:
             firsts.append(extra["first_word_s"])
         if "final_s" in extra:
@@ -169,13 +177,14 @@ def one(backend, threads, name):
     m2 = mem()
     print(json.dumps({"backend": backend, "threads": threads, "set": name, "clips": len(rows), "audio_s": round(audio_s, 1),
                       "wer": round(w_e[0] / w_e[1], 4), "cer": round(w_e[2] / w_e[3], 4), "rtf": round(proc_s / audio_s, 4),
+                      "wer_digits": round(wd[0] / wd[1], 4) if wd[1] else None, "hyps_with_digits": with_digits,
                       "rss_before": m0["VmRSS"], "rss_loaded": m1["VmRSS"], "rss_after": m2["VmRSS"], "hwm": m2["VmHWM"],
                       "first_word_s": round(float(np.mean(firsts)), 2) if firsts else None,
                       "final_s": round(float(np.mean(finals)), 3) if finals else None,
                       "hyps": hyps if threads == 1 else None}, ensure_ascii=False), flush=True)
 
 
-def run(sets, backends):
+def run(sets, backends, out_tag=""):
     OUT.mkdir(parents=True, exist_ok=True)
     today = date.today().isoformat()
     res = []
@@ -192,18 +201,21 @@ def run(sets, backends):
                 res.append(r)
                 print(f"{name:<5} {b:<11} t{t}  WER {r['wer']:.3f}  CER {r['cer']:.3f}  RTF {r['rtf']:.3f}  "
                       f"RSS {r['rss_before']}/{r['rss_loaded']}/{r['rss_after']} (HWM {r['hwm']})"
-                      + (f"  first {r['first_word_s']} s, final {r['final_s']} s" if r["first_word_s"] is not None else ""), flush=True)
+                      + (f"  first {r['first_word_s']} s, final {r['final_s']} s" if r["first_word_s"] is not None else "")
+                      + (f"  WER(digits ref) {r['wer_digits']:.3f}" if r.get("wer_digits") is not None else "")
+                      + f"  hyps with digits {r['hyps_with_digits']}/{r['clips']}", flush=True)
     keys = ["set", "backend", "threads", "clips", "audio_s", "wer", "cer", "rtf", "rss_before", "rss_loaded", "rss_after",
-            "hwm", "first_word_s", "final_s"]
-    with open(OUT / f"stt_{today}.csv", "w", newline="") as f:
+            "hwm", "first_word_s", "final_s", "wer_digits", "hyps_with_digits"]
+    tag = f"_{out_tag}" if out_tag else ""
+    with open(OUT / f"stt{tag}_{today}.csv", "w", newline="") as f:
         w = csv.writer(f); w.writerow(keys); w.writerows([[r[k] for k in keys] for r in res])
-    with open(OUT / f"stt_hyps_{today}.csv", "w", newline="") as f:
+    with open(OUT / f"stt{tag}_hyps_{today}.csv", "w", newline="") as f:
         w = csv.writer(f); w.writerow(["set", "backend", "wav", "ref", "hyp"])
         for r in res:
             for h in r["hyps"] or []:
                 # owner clips: the owner's own phrases are kept; only research data, no audio
                 w.writerow([r["set"], r["backend"], *h])
-    print(f"-> {(OUT / f'stt_{today}.csv').relative_to(ROOT)}")
+    print(f"-> {(OUT / f'stt{tag}_{today}.csv').relative_to(ROOT)}")
 
 
 def main():
@@ -217,13 +229,14 @@ def main():
     rr = sub.add_parser("run")
     rr.add_argument("--sets", nargs="+", default=["cv", "owner"])
     rr.add_argument("--backends", nargs="+", default=BACKENDS)
+    rr.add_argument("--tag", default="", help="suffix of the output files, e.g. punct (T-041)")
     a = ap.parse_args()
     if a.cmd == "prep-cv":
         prep_cv()
     elif a.cmd == "one":
         one(a.backend, a.threads, a.set)
     else:
-        run(a.sets, a.backends)
+        run(a.sets, a.backends, a.tag)
 
 
 if __name__ == "__main__":

@@ -19,7 +19,13 @@ import numpy as np
 import soundfile as sf
 
 HERE = Path(__file__).resolve().parent
-PIECES, OWNER = HERE / "data/owner_pieces", HERE / "data/owner"
+PIECES, OWNER, LIST = HERE / "data/owner_pieces", HERE / "data/owner", HERE / "data/owner_list.txt"
+
+
+def use_set(name):
+    """--set owner_num (T-041): data/owner_num_list.txt -> data/owner_num/, pieces in data/owner_num_pieces/."""
+    global PIECES, OWNER, LIST
+    PIECES, OWNER, LIST = HERE / f"data/{name}_pieces", HERE / f"data/{name}", HERE / f"data/{name}_list.txt"
 
 
 def record(seconds, start_rms, silence_s):
@@ -88,8 +94,8 @@ def align():
     for f in OWNER.glob("*.wav"):
         f.unlink()
     used = set()
-    for line in (HERE / "data/owner_list.txt").read_text(encoding="utf-8").splitlines():
-        name, text = line.split("\t", 1)
+    for line in LIST.read_text(encoding="utf-8").splitlines():
+        name, text = line.split("\t")[:2]
         ref = norm(text).replace(" ", "")
         best = min(((edits(ref, h.replace(" ", "")) / len(ref), f) for f, h in hyp.items() if f not in used), default=None)
         if best and best[0] <= 0.5:
@@ -102,6 +108,7 @@ def align():
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
+    ap.add_argument("--set", default="owner", help="owner | owner_num (T-041)")
     sub = ap.add_subparsers(dest="cmd", required=True)
     rr = sub.add_parser("record")
     rr.add_argument("--seconds", type=float, default=150)
@@ -109,4 +116,5 @@ if __name__ == "__main__":
     rr.add_argument("--silence-s", type=float, default=0.9)
     sub.add_parser("align")
     a = ap.parse_args()
+    use_set(a.set)
     record(a.seconds, a.start_rms, a.silence_s) if a.cmd == "record" else align()

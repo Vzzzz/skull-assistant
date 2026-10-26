@@ -1,13 +1,18 @@
 import time
 from pathlib import Path
 import redis, numpy as np, yaml
-from faster_whisper import WhisperModel
+import sherpa_onnx
 from voiceid import VoiceID
 
+ROOT = Path(__file__).resolve().parents[2]
 r = redis.Redis(socket_timeout=None)
-model = WhisperModel("base", device="cpu", compute_type="int8")
 P = yaml.safe_load(Path(__file__).with_name("manifest.yaml").read_text(encoding="utf-8"))["params"]
-voice_id = VoiceID(Path(__file__).resolve().parents[2], P["voice_id"])
+# GigaAM v3 CTC with punctuation and digits (D-004, T-040/T-041); same ORT runtime as voice id
+STT_DIR = ROOT / P["stt"]["model"]
+model = sherpa_onnx.OfflineRecognizer.from_nemo_ctc(model=str(STT_DIR / "model.int8.onnx"), tokens=str(STT_DIR / "tokens.txt"),
+                                                   num_threads=P["stt"]["num_threads"])
+print(f"stt: {STT_DIR.name}, {P['stt']['num_threads']} threads")
+voice_id = VoiceID(ROOT, P["voice_id"])
 print(f"stt: voice id {voice_id.state}")
 
 RATE = 16000
@@ -60,17 +65,16 @@ while True:
     import soundfile as sf                          # 2) дамп для прослушки
     sf.write('/tmp/stt_last.wav', audio, RATE)
     t0 = time.perf_counter()
-    segments, info = model.transcribe(
-        audio, language="ru", vad_filter=True,    # fixed: autodetect cost ~0.4 s per phrase (T-001)
-        condition_on_previous_text=False,           # 3) профилактика галлюцинаций
-    )
-    text = " ".join(s.text.strip() for s in segments).strip()
-    stt_s = time.perf_counter() - t0                # segments is a generator: time after join
+    st = model.create_stream()                      # offline CTC: the whole segment at once
+    st.accept_waveform(RATE, audio)
+    model.decode_stream(st)
+    text = st.result.text.strip()
+    stt_s = time.perf_counter() - t0
     print(f"stt: transcribe {stt_s:.2f}s for {len(audio)/RATE:.1f}s audio")
     spk = voice_id(chunks)                          # whose voice (T-039); ~40 ms on the voiced frames
     if text:
-        r.xadd('events:transcript', {'text': text, 'lang': info.language,
+        r.xadd('events:transcript', {'text': text, 'lang': 'ru',     # GigaAM is Russian-only
                                      'ts': f"{ts:.3f}", 'stt_s': f"{stt_s:.3f}", **spk})
-        print(f"stt: [{info.language}] [{spk['speaker']} {spk['spk_score']} {spk['spk_ms']}ms] {text}")
+        print(f"stt: [{spk['speaker']} {spk['spk_score']} {spk['spk_ms']}ms] {text}")
     else:
         print("stt: empty")

@@ -8,6 +8,7 @@ click==8.4.2
 coloredlogs==15.0.1
 ctranslate2==4.8.1
 exceptiongroup==1.3.1
+# faster-whisper: not used by skull-stt since T-041 (GigaAM v3 via sherpa-onnx); kept until T-010 as a fallback on Jetson
 faster-whisper==1.2.1
 filelock==3.32.2
 flatbuffers==25.12.19

@@ -8,9 +8,10 @@
 | `wakeword/melspectrogram.onnx`, `wakeword/embedding_model.onnx` | openWakeWord feature-модели | там же | Apache-2.0 |
 | `tts/ru_RU-dmitri-medium.onnx(.json)` | Piper, русский голос | huggingface.co/rhasspy/piper-voices | см. MODEL_CARD голоса |
 | `tts/ru_RU-ruslan-medium.onnx(.json)` | Piper, русский голос | там же | см. MODEL_CARD голоса |
-| faster-whisper `base` int8 | STT | скачивается библиотекой в кэш HF при первом запуске | MIT |
+| faster-whisper `base` int8 | STT до T-041 (снят из прода, пакет оставлен до T-010 как fallback для Jetson) | скачивается библиотекой в кэш HF при первом запуске | MIT |
 | faster-whisper `small` int8 | STT, кандидат T-040 | кэш HF, как `base` | MIT |
 | `stt/sherpa-onnx-nemo-ctc-giga-am-v2-russian-2025-04-19/` | STT, кандидат T-040: GigaAM v2 CTC int8 | github.com/k2-fsa/sherpa-onnx/releases, тег `asr-models` | MIT (GigaAM; LICENSE в архиве пустой) |
+| `stt/sherpa-onnx-nemo-ctc-punct-giga-am-v3-russian-2025-12-16/` | **STT прод (T-041, D-004)**: GigaAM v3 CTC int8 с пунктуацией и числами цифрами | github.com/k2-fsa/sherpa-onnx/releases, тег `asr-models` | MIT (GigaAM) |
 | `stt/sherpa-onnx-nemo-ctc-giga-am-v3-russian-2025-12-16/` | STT, кандидат T-040: GigaAM v3 CTC int8 (официальная сборка sherpa-onnx) | там же | MIT (GigaAM) |
 | `stt/sherpa-onnx-streaming-t-one-russian-2025-09-08/` | STT потоковый, кандидат T-040: T-one CTC | там же (из github.com/voicekit-team/T-one) | Apache-2.0 |
 | `stt/sherpa-onnx-streaming-zipformer-small-ru-vosk-2025-08-16/` | STT потоковый, только нижняя граница T-040: Vosk small ru zipformer | там же (из huggingface.co/alphacep/vosk-model-small-streaming-ru) | не объявлена — не в прод |
