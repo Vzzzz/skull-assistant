@@ -26,7 +26,8 @@ sys.path.insert(0, str(ROOT / "research/memory"))
 sys.path.insert(0, str(ROOT))
 from assoc_memory import AssocMemory  # noqa: E402
 # the router as deployed (T-038): labels incl. aside, POLICY, decide() guards; research/memory/router.py is the prototype
-from core.router import (LABELS, POLICY, decide, decide_duck, duck_llamaserver, duck_ollama, parse_label,  # noqa: E402
+from core.router import (LABELS, POLICY, decide, decide_duck, decide_duck_bin, duck_bin_llamaserver,  # noqa: E402
+                         duck_bin_ollama, duck_from_no, duck_llamaserver, duck_ollama, parse_label,
                          route_llamaserver, route_ollama)
 DIALOG = ROOT / "research/eval/ctx_probe_dialog.jsonl"
 PERSONA = (ROOT / "persona/system_prompt.md").read_text(encoding="utf-8").strip()
@@ -194,11 +195,20 @@ def run_dialog(host, model, ctx, rows, seed, think_on=frozenset(), think_predict
         if duck and "duck_expect" in r:
             # duck mode (T-038 1b): scene "alone at the desk" — whether to speak now, asked after the router, same history
             pause = r.get("pause_s", 1.5)
-            dk = (duck_llamaserver(host, messages, r["text"], pause) if BACKEND == "llamaserver"
-                  else duck_ollama(host, model, messages, r["text"], pause, ctx))
-            dl, dr = decide_duck(dk, r["text"])
-            if dr:
-                dk.update(label_raw=dk["label"], label=dl, guard=dr)
+            if duck == "bin":
+                # 1b.4: да/нет by the first token (decision) and by the generated word (recorded alongside)
+                dk = (duck_bin_llamaserver(host, messages, r["text"], pause) if BACKEND == "llamaserver"
+                      else duck_bin_ollama(host, model, messages, r["text"], pause, ctx))
+                dl, dr = decide_duck_bin(dk["ans_tok"], dk["probs"], r["text"], pause)
+                lw, rw = decide_duck_bin(dk["ans_word"], {}, r["text"], pause)
+                raw = {"да": "respond", "нет": duck_from_no(r["text"], pause)}.get(dk["ans_tok"])
+                dk.update(label=dl, guard=dr, label_raw=raw, label_word=lw, guard_word=rw)
+            else:
+                dk = (duck_llamaserver(host, messages, r["text"], pause) if BACKEND == "llamaserver"
+                      else duck_ollama(host, model, messages, r["text"], pause, ctx))
+                dl, dr = decide_duck(dk, r["text"])
+                if dr:
+                    dk.update(label_raw=dk["label"], label=dl, guard=dr)
             if policy is not None and policy.get("respond") is False:
                 policy = POLICY["chat"]   # in this scene everything is addressed: the router's aside does not silence
         skip = (dk["label"] == "listen" and router == "apply") if dk else (policy is not None and policy.get("respond") is False)
@@ -456,7 +466,10 @@ def metrics(log, ctx):
         def hit(e, lab):
             exp = e["duck_expect"]
             return lab in exp if isinstance(exp, list) else lab == exp
-        for suffix, get in (("", lambda e: e["duck"]["label"]), ("_raw", lambda e: e["duck"].get("label_raw") or e["duck"]["label"])):
+        getters = [("", lambda e: e["duck"]["label"]), ("_raw", lambda e: e["duck"].get("label_raw") or e["duck"]["label"])]
+        if any("label_word" in e["duck"] for e in dkl):   # 1b.4: the same decision from the generated word
+            getters.append(("_word", lambda e: e["duck"].get("label_word")))
+        for suffix, get in getters:
             resp = [e for e in dkl if e["duck_expect"] == "respond"]
             lis = [e for e in dkl if e["duck_expect"] == "listen"]
             m["duck_acc" + suffix] = round(sum(hit(e, get(e)) for e in dkl) / len(dkl), 2)
@@ -551,7 +564,9 @@ def main():
     ap.add_argument("--backend", default="ollama", choices=["ollama", "llamaserver"],
                     help="llamaserver: --host points at a running llama-server (-c = num_ctx); --model is only a label")
     ap.add_argument("--seed", type=int, default=42)
-    ap.add_argument("--duck", action="store_true", help="T-038 1b: duck-mode pass (respond/ack/listen) on turns with duck_expect")
+    ap.add_argument("--duck", nargs="?", const="tri", default=None, choices=["tri", "bin"],
+                    help="T-038 1b: duck-mode pass on turns with duck_expect; tri = respond/ack/listen asked of the model, "
+                         "bin = да/нет asked (1b.4), ack by the pause rule")
     ap.add_argument("--dialog", default=str(DIALOG), help="dialog JSONL (default ctx_probe_dialog.jsonl; T-038: ctx_probe_ambient.jsonl)")
     ap.add_argument("--persona", default=None, help="persona prompt file (default: persona/system_prompt.md)")
     ap.add_argument("--tag", default="", help="suffix for output file names, e.g. 3ex for a prompt variant")
@@ -598,7 +613,7 @@ def main():
     if trim == "tokens":
         tag += "_trim"
     if args.duck:
-        tag += "_duck"
+        tag += "_duck" + ("-bin" if args.duck == "bin" else "")
     summary = []
     for ctx in args.ctx:
         path = OUT / f"{prefix}_{tag}_{ctx}.json"
@@ -632,7 +647,9 @@ def main():
               f"trunc={m['truncation_turns']} persona={(j or {}).get('persona_mean')}"
               + (f" addr_recall={m['addr_recall']} addr_precision={m['addr_precision']} {m['addr_counts']}" if "addr_counts" in m else "")
               + (f" duck_acc={m['duck_acc']} respond_recall={m['duck_respond_recall']} interrupt={m['duck_interrupt']}"
-                 f" (raw {m['duck_acc_raw']}/{m['duck_respond_recall_raw']}/{m['duck_interrupt_raw']})" if "duck_n" in m else ""),
+                 f" (raw {m['duck_acc_raw']}/{m['duck_respond_recall_raw']}/{m['duck_interrupt_raw']})"
+                 + (f" (word {m['duck_acc_word']}/{m['duck_respond_recall_word']}/{m['duck_interrupt_word']})" if "duck_acc_word" in m else "")
+                 if "duck_n" in m else ""),
               flush=True)
     write_summary(args.model, tag, summary, prefix)
 

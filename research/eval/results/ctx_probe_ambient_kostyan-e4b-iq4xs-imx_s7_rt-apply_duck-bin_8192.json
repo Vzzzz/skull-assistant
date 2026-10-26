@@ -1,0 +1,3370 @@
+{
+ "model": "kostyan-e4b-iq4xs-imx",
+ "ctx": 8192,
+ "seed": 7,
+ "think_on": [],
+ "think_predict": null,
+ "memory": "off",
+ "mem_k": 3,
+ "mem_mode": "hybrid",
+ "embed_model": null,
+ "router": "apply",
+ "trim": "ollama",
+ "note_version": null,
+ "backend": "llamaserver",
+ "persona_file": "persona/system_prompt.md",
+ "persona_sha1": "c354193bfc",
+ "metrics": {
+  "ctx": 8192,
+  "recall": [],
+  "math": [],
+  "longgen": {},
+  "truncation_turns": [],
+  "empty_replies": 0,
+  "recall_rate": null,
+  "recall_far_rate": null,
+  "math_acc": null,
+  "math_working": null,
+  "ttft_last10_s": 0.02,
+  "tok_s_mean": 69.9,
+  "ctx_tokens_end": 2770,
+  "think_turns": 0,
+  "think_blocks": [],
+  "thought_turns": null,
+  "thinking_chars_mean": null,
+  "think_ignored": null,
+  "wall_thought_mean_s": null,
+  "empty_on_think": null,
+  "wall_think_mean_s": null,
+  "wall_think_max_s": null,
+  "wall_plain_mean_s": 0.6,
+  "wall_total_s": 41,
+  "router_acc": null,
+  "router_unparsed": 0,
+  "router_errors": {},
+  "router_s_mean": 0.2,
+  "cut_by_length": 11,
+  "addr_counts": {
+   "tp": 20,
+   "fp": 34,
+   "fn": 1,
+   "tn": 12,
+   "either": 3
+  },
+  "addr_recall": 0.95,
+  "addr_precision": 0.37,
+  "addr_errors": [
+   {
+    "turn": 3,
+    "kind": "self",
+    "expect": "aside",
+    "label": "memory",
+    "label_raw": "memory",
+    "guard": null,
+    "p": 0.996,
+    "probs": {
+     "memory": 0.996,
+     "chat": 0.001,
+     "world": 0.0,
+     "command": 0.0
+    },
+    "text": "Так, где у меня тут зарядка лежала…"
+   },
+   {
+    "turn": 4,
+    "kind": "self",
+    "expect": "aside",
+    "label": "chat",
+    "label_raw": "chat",
+    "guard": null,
+    "p": 0.944,
+    "probs": {
+     "chat": 0.944
+    },
+    "text": "Ну и бардак. Ладно, потом."
+   },
+   {
+    "turn": 5,
+    "kind": "cat",
+    "expect": "aside",
+    "label": "command",
+    "label_raw": "command",
+    "guard": null,
+    "p": 0.99,
+    "probs": {
+     "command": 0.99,
+     "chat": 0.004,
+     "memory": 0.0
+    },
+    "text": "Бублик, слезь со стола. Слезь, я сказал."
+   },
+   {
+    "turn": 6,
+    "kind": "cat",
+    "expect": "aside",
+    "label": "chat",
+    "label_raw": "chat",
+    "guard": null,
+    "p": 0.726,
+    "probs": {
+     "chat": 0.726
+    },
+    "text": "Ты уже ел. Нет, ещё раз не будет."
+   },
+   {
+    "turn": 8,
+    "kind": "self",
+    "expect": "aside",
+    "label": "chat",
+    "label_raw": "world",
+    "guard": "low-confidence",
+    "p": 0.419,
+    "probs": {
+     "world": 0.419,
+     "chat": 0.216,
+     "aside": 0.233,
+     "memory": 0.008
+    },
+    "text": "Почему оно не собирается… опять этот линкер."
+   },
+   {
+    "turn": 9,
+    "kind": "self",
+    "expect": "aside",
+    "label": "chat",
+    "label_raw": "chat",
+    "guard": null,
+    "p": 0.583,
+    "probs": {
+     "chat": 0.583,
+     "aside": 0.198,
+     "memory": 0.015,
+     "calc": 0.012
+    },
+    "text": "Так. Undefined reference. Понятно, ничего не понятно."
+   },
+   {
+    "turn": 10,
+    "kind": "self-question",
+    "expect": "aside",
+    "label": "chat",
+    "label_raw": "chat",
+    "guard": null,
+    "p": 0.875,
+    "probs": {
+     "chat": 0.875,
+     "world": 0.024,
+     "memory": 0.005,
+     "aside": 0.004
+    },
+    "text": "И кто это вообще писал?"
+   },
+   {
+    "turn": 11,
+    "kind": "self",
+    "expect": "aside",
+    "label": "chat",
+    "label_raw": "chat",
+    "guard": null,
+    "p": 0.703,
+    "probs": {
+     "chat": 0.703,
+     "aside": 0.075
+    },
+    "text": "Ага, вот оно. Точка с запятой. Полчаса жизни."
+   },
+   {
+    "turn": 13,
+    "kind": "self-numbers",
+    "expect": "aside",
+    "label": "calc",
+    "label_raw": "calc",
+    "guard": null,
+    "p": 0.996,
+    "probs": {
+     "calc": 0.996,
+     "chat": 0.001
+    },
+    "text": "Сорок восемь на три… сто сорок четыре. Нет, стоп, по двадцать четыре."
+   },
+   {
+    "turn": 16,
+    "kind": "phone",
+    "expect": "aside",
+    "label": "chat",
+    "label_raw": "chat",
+    "guard": null,
+    "p": 0.977,
+    "probs": {
+     "chat": 0.977
+    },
+    "text": "Ел, ел. Да нормально всё, работаю."
+   },
+   {
+    "turn": 17,
+    "kind": "phone-question",
+    "expect": "aside",
+    "label": "chat",
+    "label_raw": "chat",
+    "guard": null,
+    "p": 0.828,
+    "probs": {
+     "chat": 0.828,
+     "memory": 0.142,
+     "world": 0.011
+    },
+    "text": "А ты к врачу сходила? Ну и что он сказал?"
+   },
+   {
+    "turn": 18,
+    "kind": "phone",
+    "expect": "aside",
+    "label": "chat",
+    "label_raw": "chat",
+    "guard": null,
+    "p": 0.98,
+    "probs": {
+     "chat": 0.98
+    },
+    "text": "Это не телевизор, это у меня тут… долго объяснять. Череп говорящий, я рассказывал."
+   },
+   {
+    "turn": 19,
+    "kind": "phone",
+    "expect": "aside",
+    "label": "chat",
+    "label_raw": "chat",
+    "guard": null,
+    "p": 0.992,
+    "probs": {
+     "chat": 0.992,
+     "command": 0.001
+    },
+    "text": "Хорошо, в субботу приеду. Да. Целую, пока."
+   },
+   {
+    "turn": 21,
+    "kind": "tv",
+    "expect": "aside",
+    "label": "world",
+    "label_raw": "world",
+    "guard": null,
+    "p": 0.97,
+    "probs": {
+     "world": 0.97,
+     "aside": 0.025,
+     "chat": 0.001
+    },
+    "text": "В центре города сегодня перекрыли движение из-за ремонта теплотрассы. Городские службы обещают закончить работы к понедельнику."
+   },
+   {
+    "turn": 23,
+    "kind": "tv-weather",
+    "expect": "aside",
+    "label": "world",
+    "label_raw": "world",
+    "guard": null,
+    "p": 0.966,
+    "probs": {
+     "world": 0.966,
+     "aside": 0.025,
+     "chat": 0.001
+    },
+    "text": "Завтра в регионе ожидается облачная погода с прояснениями, температура днём плюс семь, ночью около нуля."
+   },
+   {
+    "turn": 31,
+    "kind": "other",
+    "expect": "aside",
+    "label": "chat",
+    "label_raw": "aside",
+    "guard": "aside-low",
+    "p": 0.527,
+    "probs": {
+     "aside": 0.527,
+     "chat": 0.45,
+     "world": 0.009
+    },
+    "text": "Нет, он не слушает постоянно. Ну, то есть слушает, но не отвечает, если не к нему."
+   },
+   {
+    "turn": 32,
+    "kind": "other-question",
+    "expect": "aside",
+    "label": "chat",
+    "label_raw": "chat",
+    "guard": null,
+    "p": 0.928,
+    "probs": {
+     "chat": 0.928,
+     "aside": 0.042,
+     "world": 0.021
+    },
+    "text": "Ты смотрел, что они прислали по проекту? Там сроки сдвинули."
+   },
+   {
+    "turn": 33,
+    "kind": "other",
+    "expect": "aside",
+    "label": "chat",
+    "label_raw": "chat",
+    "guard": null,
+    "p": 0.995,
+    "probs": {
+     "chat": 0.995
+    },
+    "text": "Я тоже так подумал. Ну давай тогда в среду, я напишу."
+   },
+   {
+    "turn": 34,
+    "kind": "other-about-me",
+    "expect": "aside",
+    "label": "chat",
+    "label_raw": "chat",
+    "guard": null,
+    "p": 0.914,
+    "probs": {
+     "chat": 0.914,
+     "command": 0.017,
+     "aside": 0.014
+    },
+    "text": "Да он и считать умеет. Спроси его что-нибудь."
+   },
+   {
+    "turn": 36,
+    "kind": "other",
+    "expect": "aside",
+    "label": "chat",
+    "label_raw": "chat",
+    "guard": null,
+    "p": 0.952,
+    "probs": {
+     "chat": 0.952,
+     "command": 0.024
+    },
+    "text": "Видишь. Ладно, Дим, давай к делу, у меня времени час."
+   },
+   {
+    "turn": 37,
+    "kind": "other",
+    "expect": "aside",
+    "label": "chat",
+    "label_raw": "chat",
+    "guard": null,
+    "p": 0.982,
+    "probs": {
+     "chat": 0.982
+    },
+    "text": "Тебе точно не надо чай? Ну смотри."
+   },
+   {
+    "turn": 38,
+    "kind": "farewell-other",
+    "expect": "aside",
+    "label": "command",
+    "label_raw": "command",
+    "guard": null,
+    "p": 0.996,
+    "probs": {
+     "command": 0.996,
+     "chat": 0.002,
+     "aside": 0.0,
+     "memory": 0.0,
+     "world": 0.0
+    },
+    "text": "Давай. Пока, Дим. Дверь захлопни."
+   },
+   {
+    "turn": 41,
+    "kind": "read-aloud",
+    "expect": "aside",
+    "label": "explain",
+    "label_raw": "explain",
+    "guard": null,
+    "p": 0.481,
+    "probs": {
+     "explain": 0.481,
+     "chat": 0.227,
+     "calc": 0.12,
+     "aside": 0.014,
+     "world": 0.012,
+     "command": 0.011
+    },
+    "text": "Двести граммов муки, два яйца, стакан молока. Перемешать до однородности."
+   },
+   {
+    "turn": 44,
+    "kind": "self",
+    "expect": "aside",
+    "label": "chat",
+    "label_raw": "chat",
+    "guard": null,
+    "p": 0.948,
+    "probs": {
+     "chat": 0.948,
+     "aside": 0.001
+    },
+    "text": "Ой, горячо. Чёрт."
+   },
+   {
+    "turn": 48,
+    "kind": "video-call",
+    "expect": "aside",
+    "label": "chat",
+    "label_raw": "chat",
+    "guard": null,
+    "p": 0.985,
+    "probs": {
+     "chat": 0.985,
+     "calc": 0.004,
+     "command": 0.001
+    },
+    "text": "Да, по второму пункту я согласен, но давайте перенесём на следующую неделю."
+   },
+   {
+    "turn": 50,
+    "kind": "video-call-aside",
+    "expect": "aside",
+    "label": "chat",
+    "label_raw": "chat",
+    "guard": null,
+    "p": 0.925,
+    "probs": {
+     "chat": 0.925,
+     "aside": 0.065,
+     "memory": 0.002,
+     "world": 0.001,
+     "explain": 0.0
+    },
+    "text": "Нет, это не фон, это у меня череп на полке. Долгая история."
+   },
+   {
+    "turn": 51,
+    "kind": "direct",
+    "expect": "me",
+    "label": "aside",
+    "label_raw": "aside",
+    "guard": null,
+    "p": 0.998,
+    "probs": {
+     "aside": 0.998,
+     "chat": 0.001
+    },
+    "text": "Всё, созвон кончился. Ты на нём молодец, что молчал."
+   },
+   {
+    "turn": 54,
+    "kind": "podcast-question",
+    "expect": "aside",
+    "label": "world",
+    "label_raw": "world",
+    "guard": null,
+    "p": 0.997,
+    "probs": {
+     "world": 0.997,
+     "chat": 0.001,
+     "aside": 0.0,
+     "explain": 0.0,
+     "memory": 0.0
+    },
+    "text": "Вы когда-нибудь задумывались, сколько весит облако? Оказывается, сотни тонн."
+   },
+   {
+    "turn": 59,
+    "kind": "self",
+    "expect": "aside",
+    "label": "memory",
+    "label_raw": "memory",
+    "guard": null,
+    "p": 0.913,
+    "probs": {
+     "memory": 0.913,
+     "chat": 0.05,
+     "aside": 0.034,
+     "world": 0.0
+    },
+    "text": "Где телефон… А, вот."
+   },
+   {
+    "turn": 60,
+    "kind": "cat",
+    "expect": "aside",
+    "label": "command",
+    "label_raw": "command",
+    "guard": null,
+    "p": 0.846,
+    "probs": {
+     "command": 0.846,
+     "aside": 0.106,
+     "chat": 0.043
+    },
+    "text": "Бублик, брысь с подушки."
+   },
+   {
+    "turn": 61,
+    "kind": "self",
+    "expect": "aside",
+    "label": "chat",
+    "label_raw": "chat",
+    "guard": null,
+    "p": 0.595,
+    "probs": {
+     "chat": 0.595,
+     "memory": 0.256,
+     "aside": 0.111,
+     "calc": 0.02,
+     "world": 0.002
+    },
+    "text": "Ммм. Сколько времени… Проспал."
+   },
+   {
+    "turn": 63,
+    "kind": "phone-short",
+    "expect": "aside",
+    "label": "chat",
+    "label_raw": "chat",
+    "guard": null,
+    "p": 0.849,
+    "probs": {
+     "chat": 0.849,
+     "aside": 0.12,
+     "command": 0.011
+    },
+    "text": "Да, уже выхожу. Пять минут. Да."
+   },
+   {
+    "turn": 64,
+    "kind": "self-numbers",
+    "expect": "aside",
+    "label": "memory",
+    "label_raw": "memory",
+    "guard": null,
+    "p": 0.693,
+    "probs": {
+     "memory": 0.693,
+     "aside": 0.25,
+     "chat": 0.047,
+     "command": 0.001
+    },
+    "text": "Ключи, кошелёк, зарядка. Три вещи. Ключи, кошелёк… зарядка."
+   },
+   {
+    "turn": 66,
+    "kind": "name-3p",
+    "expect": "aside",
+    "label": "chat",
+    "label_raw": "chat",
+    "guard": null,
+    "p": 0.951,
+    "probs": {
+     "chat": 0.951,
+     "aside": 0.029,
+     "memory": 0.002
+    },
+    "text": "Да, Костян тут остаётся. Он не обидится, он череп."
+   },
+   {
+    "turn": 70,
+    "kind": "radio-name",
+    "expect": "aside",
+    "label": "chat",
+    "label_raw": "aside",
+    "guard": "name",
+    "p": 1.0,
+    "probs": {
+     "aside": 1.0
+    },
+    "text": "И у нас на линии Константин из Новосибирска. Костян, вы в эфире!"
+   }
+  ],
+  "duck_acc": 0.78,
+  "duck_respond_recall": 0.69,
+  "duck_interrupt": 0.09,
+  "duck_acc_raw": 0.62,
+  "duck_respond_recall_raw": 0.38,
+  "duck_interrupt_raw": 0.09,
+  "duck_acc_word": 0.78,
+  "duck_respond_recall_word": 0.69,
+  "duck_interrupt_word": 0.09,
+  "duck_n": 37,
+  "duck_errors": [
+   {
+    "turn": 6,
+    "kind": "cat",
+    "expect": "listen",
+    "pause_s": 1.5,
+    "label": "ack",
+    "label_raw": "ack",
+    "guard": null,
+    "probs": {
+     "нет": 0.948,
+     "да": 0.033
+    },
+    "text": "Ты уже ел. Нет, ещё раз не будет."
+   },
+   {
+    "turn": 12,
+    "kind": "direct",
+    "expect": "respond",
+    "pause_s": 2.0,
+    "label": "ack",
+    "label_raw": "ack",
+    "guard": null,
+    "probs": {
+     "нет": 0.558,
+     "да": 0.302
+    },
+    "text": "Ты бы тоже не нашёл, не ухмыляйся."
+   },
+   {
+    "turn": 20,
+    "kind": "direct",
+    "expect": "respond",
+    "pause_s": 2.0,
+    "label": "ack",
+    "label_raw": "ack",
+    "guard": null,
+    "probs": {
+     "нет": 0.678,
+     "да": 0.283
+    },
+    "text": "Мама передаёт привет. Она думает, что ты радио."
+   },
+   {
+    "turn": 44,
+    "kind": "self",
+    "expect": "listen",
+    "pause_s": 1.0,
+    "label": "respond",
+    "label_raw": "respond",
+    "guard": null,
+    "probs": {
+     "да": 0.662,
+     "нет": 0.332
+    },
+    "text": "Ой, горячо. Чёрт."
+   },
+   {
+    "turn": 51,
+    "kind": "direct",
+    "expect": "respond",
+    "pause_s": 2.0,
+    "label": "ack",
+    "label_raw": "ack",
+    "guard": null,
+    "probs": {
+     "нет": 0.714,
+     "да": 0.268
+    },
+    "text": "Всё, созвон кончился. Ты на нём молодец, что молчал."
+   },
+   {
+    "turn": 61,
+    "kind": "self",
+    "expect": [
+     "listen",
+     "respond"
+    ],
+    "pause_s": 1.5,
+    "label": "ack",
+    "label_raw": "ack",
+    "guard": null,
+    "probs": {
+     "нет": 0.961,
+     "да": 0.019
+    },
+    "text": "Ммм. Сколько времени… Проспал."
+   },
+   {
+    "turn": 62,
+    "kind": "direct",
+    "expect": "respond",
+    "pause_s": 2.0,
+    "label": "ack",
+    "label_raw": "ack",
+    "guard": null,
+    "probs": {
+     "нет": 0.654,
+     "да": 0.289
+    },
+    "text": "Доброе утро. Не язви, я сам знаю, что проспал."
+   },
+   {
+    "turn": 67,
+    "kind": "direct",
+    "expect": "respond",
+    "pause_s": 2.0,
+    "label": "ack",
+    "label_raw": "ack",
+    "guard": null,
+    "probs": {
+     "нет": 0.79,
+     "да": 0.186
+    },
+    "text": "Всё, я ушёл. Следи за котом."
+   }
+  ]
+ },
+ "judge": null,
+ "log": [
+  {
+   "turn": 1,
+   "block": "open",
+   "kind": "name",
+   "text": "Костян, я дома. Как ты тут без меня?",
+   "addr_expect": "me",
+   "duck_expect": "respond",
+   "pause_s": 2.0,
+   "reply": "Я здесь. Стою. Как и всегда. Ты, видимо, решил, что я могу перемещаться.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 1,
+   "prompt_eval_count": 537,
+   "eval_count": 23,
+   "ttft_s": 0.027,
+   "tok_s": 70.1,
+   "wall_s": 0.75,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "probs": {
+     "chat": 0.987,
+     "memory": 0.007
+    },
+    "s": 0.284
+   },
+   "duck": {
+    "ans_tok": "да",
+    "ans_word": "да",
+    "raw": "Да.",
+    "probs": {
+     "да": 0.448,
+     "нет": 0.173
+    },
+    "s": 0.104,
+    "label": "respond",
+    "guard": null,
+    "label_raw": "respond",
+    "label_word": "respond",
+    "guard_word": null
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 2,
+   "block": "open",
+   "kind": "direct",
+   "text": "Свет можно не включать, я ненадолго.",
+   "addr_expect": "me",
+   "duck_expect": [
+    "respond",
+    "ack"
+   ],
+   "pause_s": 1.5,
+   "reply": "Свет? Ты и так в комнате. Если ты не собираешься устраивать ночной бал, то и включать нечего.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 2,
+   "prompt_eval_count": 580,
+   "eval_count": 29,
+   "ttft_s": 0.025,
+   "tok_s": 69.7,
+   "wall_s": 0.68,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "probs": {
+     "chat": 0.864,
+     "command": 0.062,
+     "aside": 0.004,
+     "world": 0.004
+    },
+    "s": 0.116
+   },
+   "duck": {
+    "ans_tok": "да",
+    "ans_word": "да",
+    "raw": "Да.",
+    "probs": {
+     "да": 0.715,
+     "нет": 0.248
+    },
+    "s": 0.111,
+    "label": "respond",
+    "guard": null,
+    "label_raw": "respond",
+    "label_word": "respond",
+    "guard_word": null
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 3,
+   "block": "mutter",
+   "kind": "self",
+   "text": "Так, где у меня тут зарядка лежала…",
+   "addr_expect": "aside",
+   "duck_expect": "listen",
+   "pause_s": 0.8,
+   "reply": "",
+   "skipped": true,
+   "route": {
+    "label": "memory",
+    "raw": "memory",
+    "probs": {
+     "memory": 0.996,
+     "chat": 0.001,
+     "world": 0.0,
+     "command": 0.0
+    },
+    "s": 0.114
+   },
+   "duck": {
+    "ans_tok": "нет",
+    "ans_word": "нет",
+    "raw": "Нет.",
+    "probs": {
+     "нет": 0.977,
+     "да": 0.007
+    },
+    "s": 0.106,
+    "label": "listen",
+    "guard": null,
+    "label_raw": "listen",
+    "label_word": "listen",
+    "guard_word": null
+   },
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 2,
+   "prompt_eval_count": 580,
+   "eval_count": 0,
+   "ttft_s": 0.0,
+   "tok_s": null,
+   "wall_s": 0.22,
+   "done_reason": "skipped"
+  },
+  {
+   "turn": 4,
+   "block": "mutter",
+   "kind": "self",
+   "text": "Ну и бардак. Ладно, потом.",
+   "addr_expect": "aside",
+   "duck_expect": [
+    "ack",
+    "listen"
+   ],
+   "pause_s": 2.0,
+   "reply": "Бардак — это тво",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 3,
+   "prompt_eval_count": 628,
+   "eval_count": 5,
+   "ttft_s": 0.025,
+   "tok_s": 76.2,
+   "wall_s": 0.31,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "probs": {
+     "chat": 0.944
+    },
+    "s": 0.104
+   },
+   "duck": {
+    "ans_tok": "нет",
+    "ans_word": "нет",
+    "raw": "Нет.",
+    "probs": {
+     "нет": 0.977,
+     "да": 0.002
+    },
+    "s": 0.108,
+    "label": "ack",
+    "guard": null,
+    "label_raw": "ack",
+    "label_word": "ack",
+    "guard_word": null
+   },
+   "done_reason": "length"
+  },
+  {
+   "turn": 5,
+   "block": "cat",
+   "kind": "cat",
+   "text": "Бублик, слезь со стола. Слезь, я сказал.",
+   "addr_expect": "aside",
+   "duck_expect": "listen",
+   "pause_s": 1.0,
+   "reply": "",
+   "skipped": true,
+   "route": {
+    "label": "command",
+    "raw": "command",
+    "probs": {
+     "command": 0.99,
+     "chat": 0.004,
+     "memory": 0.0
+    },
+    "s": 0.119
+   },
+   "duck": {
+    "ans_tok": "нет",
+    "ans_word": "нет",
+    "raw": "Нет.",
+    "probs": {
+     "нет": 0.724,
+     "да": 0.236
+    },
+    "s": 0.109,
+    "label": "listen",
+    "guard": null,
+    "label_raw": "listen",
+    "label_word": "listen",
+    "guard_word": null
+   },
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 3,
+   "prompt_eval_count": 628,
+   "eval_count": 0,
+   "ttft_s": 0.0,
+   "tok_s": null,
+   "wall_s": 0.23,
+   "done_reason": "skipped"
+  },
+  {
+   "turn": 6,
+   "block": "cat",
+   "kind": "cat",
+   "text": "Ты уже ел. Нет, ещё раз не будет.",
+   "addr_expect": "aside",
+   "duck_expect": "listen",
+   "pause_s": 1.5,
+   "reply": "Я череп. Я",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 4,
+   "prompt_eval_count": 654,
+   "eval_count": 5,
+   "ttft_s": 0.026,
+   "tok_s": 71.6,
+   "wall_s": 0.32,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "probs": {
+     "chat": 0.726
+    },
+    "s": 0.105
+   },
+   "duck": {
+    "ans_tok": "нет",
+    "ans_word": "нет",
+    "raw": "Нет.",
+    "probs": {
+     "нет": 0.948,
+     "да": 0.033
+    },
+    "s": 0.109,
+    "label": "ack",
+    "guard": null,
+    "label_raw": "ack",
+    "label_word": "ack",
+    "guard_word": null
+   },
+   "done_reason": "length"
+  },
+  {
+   "turn": 7,
+   "block": "open",
+   "kind": "direct",
+   "text": "Слушай, а ты видел, кот тут что-нибудь ронял, пока меня не было?",
+   "addr_expect": "me",
+   "duck_expect": "respond",
+   "pause_s": 2.0,
+   "reply": "Кот. Видел. Он, как обычно, что-то уронил. Наверное, что-то, что ты сам и так не заметишь.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 5,
+   "prompt_eval_count": 691,
+   "eval_count": 35,
+   "ttft_s": 0.031,
+   "tok_s": 67.2,
+   "wall_s": 0.81,
+   "route": {
+    "label": "memory",
+    "raw": "memory",
+    "probs": {
+     "memory": 0.999,
+     "chat": 0.0,
+     "world": 0.0
+    },
+    "s": 0.12
+   },
+   "duck": {
+    "ans_tok": "да",
+    "ans_word": "да",
+    "raw": "Да.",
+    "probs": {
+     "да": 0.714,
+     "нет": 0.254
+    },
+    "s": 0.121,
+    "label": "respond",
+    "guard": null,
+    "label_raw": "respond",
+    "label_word": "respond",
+    "guard_word": null
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 8,
+   "block": "code",
+   "kind": "self",
+   "text": "Почему оно не собирается… опять этот линкер.",
+   "addr_expect": "aside",
+   "duck_expect": "listen",
+   "pause_s": 0.7,
+   "reply": "",
+   "skipped": true,
+   "route": {
+    "label": "chat",
+    "raw": "world",
+    "probs": {
+     "world": 0.419,
+     "chat": 0.216,
+     "aside": 0.233,
+     "memory": 0.008
+    },
+    "s": 0.122,
+    "label_raw": "world",
+    "guard": "low-confidence"
+   },
+   "duck": {
+    "ans_tok": "нет",
+    "ans_word": "нет",
+    "raw": "Нет.",
+    "probs": {
+     "нет": 0.563,
+     "да": 0.393
+    },
+    "s": 0.115,
+    "label": "listen",
+    "guard": null,
+    "label_raw": "listen",
+    "label_word": "listen",
+    "guard_word": null
+   },
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 5,
+   "prompt_eval_count": 691,
+   "eval_count": 0,
+   "ttft_s": 0.0,
+   "tok_s": null,
+   "wall_s": 0.24,
+   "done_reason": "skipped"
+  },
+  {
+   "turn": 9,
+   "block": "code",
+   "kind": "self",
+   "text": "Так. Undefined reference. Понятно, ничего не понятно.",
+   "addr_expect": "aside",
+   "duck_expect": [
+    "ack",
+    "listen"
+   ],
+   "pause_s": 1.5,
+   "reply": "Это ошибка компиляции",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 6,
+   "prompt_eval_count": 749,
+   "eval_count": 5,
+   "ttft_s": 0.03,
+   "tok_s": 71.4,
+   "wall_s": 0.34,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "probs": {
+     "chat": 0.583,
+     "aside": 0.198,
+     "memory": 0.015,
+     "calc": 0.012
+    },
+    "s": 0.111
+   },
+   "duck": {
+    "ans_tok": "нет",
+    "ans_word": "нет",
+    "raw": "Нет.",
+    "probs": {
+     "нет": 0.637,
+     "да": 0.344
+    },
+    "s": 0.113,
+    "label": "ack",
+    "guard": null,
+    "label_raw": "ack",
+    "label_word": "ack",
+    "guard_word": null
+   },
+   "done_reason": "length"
+  },
+  {
+   "turn": 10,
+   "block": "code",
+   "kind": "self-question",
+   "text": "И кто это вообще писал?",
+   "addr_expect": "aside",
+   "duck_expect": [
+    "listen",
+    "respond"
+   ],
+   "pause_s": 1.5,
+   "reply": "Ты. Или кто-то, кто сидит за твоим столом. Я же не пишу код.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 7,
+   "prompt_eval_count": 770,
+   "eval_count": 23,
+   "ttft_s": 0.028,
+   "tok_s": 69.7,
+   "wall_s": 0.61,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "probs": {
+     "chat": 0.875,
+     "world": 0.024,
+     "memory": 0.005,
+     "aside": 0.004
+    },
+    "s": 0.123
+   },
+   "duck": {
+    "ans_tok": "нет",
+    "ans_word": "нет",
+    "raw": "Нет.",
+    "probs": {
+     "нет": 0.463,
+     "да": 0.351
+    },
+    "s": 0.114,
+    "label": "respond",
+    "guard": "question",
+    "label_raw": "listen",
+    "label_word": "respond",
+    "guard_word": "question"
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 11,
+   "block": "code",
+   "kind": "self",
+   "text": "Ага, вот оно. Точка с запятой. Полчаса жизни.",
+   "addr_expect": "aside",
+   "duck_expect": [
+    "ack",
+    "respond"
+   ],
+   "pause_s": 2.0,
+   "reply": "Половина жизни. Зависит от того, насколько ты небрежен.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 8,
+   "prompt_eval_count": 819,
+   "eval_count": 18,
+   "ttft_s": 0.027,
+   "tok_s": 69.7,
+   "wall_s": 0.54,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "probs": {
+     "chat": 0.703,
+     "aside": 0.075
+    },
+    "s": 0.126
+   },
+   "duck": {
+    "ans_tok": "да",
+    "ans_word": "да",
+    "raw": "Да.",
+    "probs": {
+     "да": 0.652,
+     "нет": 0.315
+    },
+    "s": 0.114,
+    "label": "respond",
+    "guard": null,
+    "label_raw": "respond",
+    "label_word": "respond",
+    "guard_word": null
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 12,
+   "block": "code",
+   "kind": "direct",
+   "text": "Ты бы тоже не нашёл, не ухмыляйся.",
+   "addr_expect": "me",
+   "duck_expect": "respond",
+   "pause_s": 2.0,
+   "reply": "Я не ухмы",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 9,
+   "prompt_eval_count": 860,
+   "eval_count": 5,
+   "ttft_s": 0.027,
+   "tok_s": 75.4,
+   "wall_s": 0.36,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "probs": {
+     "chat": 0.988
+    },
+    "s": 0.129
+   },
+   "duck": {
+    "ans_tok": "нет",
+    "ans_word": "нет",
+    "raw": "Нет.",
+    "probs": {
+     "нет": 0.558,
+     "да": 0.302
+    },
+    "s": 0.116,
+    "label": "ack",
+    "guard": null,
+    "label_raw": "ack",
+    "label_word": "ack",
+    "guard_word": null
+   },
+   "done_reason": "length"
+  },
+  {
+   "turn": 13,
+   "block": "code",
+   "kind": "self-numbers",
+   "text": "Сорок восемь на три… сто сорок четыре. Нет, стоп, по двадцать четыре.",
+   "addr_expect": "aside",
+   "duck_expect": "listen",
+   "pause_s": 0.5,
+   "reply": "",
+   "skipped": true,
+   "route": {
+    "label": "calc",
+    "raw": "calc",
+    "probs": {
+     "calc": 0.996,
+     "chat": 0.001
+    },
+    "s": 0.13
+   },
+   "duck": {
+    "ans_tok": "нет",
+    "ans_word": "нет",
+    "raw": "Нет.",
+    "probs": {
+     "нет": 0.861,
+     "да": 0.117
+    },
+    "s": 0.13,
+    "label": "listen",
+    "guard": null,
+    "label_raw": "listen",
+    "label_word": "listen",
+    "guard_word": null
+   },
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 9,
+   "prompt_eval_count": 860,
+   "eval_count": 0,
+   "ttft_s": 0.0,
+   "tok_s": null,
+   "wall_s": 0.26,
+   "done_reason": "skipped"
+  },
+  {
+   "turn": 14,
+   "block": "code",
+   "kind": "direct",
+   "text": "Костян, сколько будет сто сорок четыре разделить на шесть?",
+   "addr_expect": "me",
+   "duck_expect": "respond",
+   "pause_s": 2.0,
+   "reply": "Сто сорок четыре разделить на шесть.\n\n1.  $140 \\div 6$\n2.  $14 \\div 6 = 2$ (остаток $14 - 12 = 2$)\n3.  Сносим $0$, получаем $20$.\n4.  $20 \\div 6 = 3$ (остаток $20 - 18 = 2$)\n5.  Сносим $4$, получаем $24$.\n6.  $24 \\div 6 = 4$\n\nИтого: 23.4.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 10,
+   "prompt_eval_count": 910,
+   "eval_count": 137,
+   "ttft_s": 0.032,
+   "tok_s": 68.1,
+   "wall_s": 2.3,
+   "route": {
+    "label": "calc",
+    "raw": "calc",
+    "probs": {
+     "calc": 0.998,
+     "chat": 0.0,
+     "command": 0.0
+    },
+    "s": 0.121
+   },
+   "duck": {
+    "ans_tok": null,
+    "ans_word": null,
+    "raw": "Вопрос.",
+    "probs": {},
+    "s": 0.117,
+    "label": "respond",
+    "guard": "name",
+    "label_raw": null,
+    "label_word": "respond",
+    "guard_word": "name"
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 15,
+   "block": "phone",
+   "kind": "phone",
+   "text": "Алло. Да, мам, привет. Нет, не сплю.",
+   "addr_expect": "aside",
+   "reply": "",
+   "skipped": true,
+   "route": {
+    "label": "aside",
+    "raw": "aside",
+    "probs": {
+     "aside": 0.995,
+     "chat": 0.0
+    },
+    "s": 0.182
+   },
+   "duck": null,
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 10,
+   "prompt_eval_count": 910,
+   "eval_count": 0,
+   "ttft_s": 0.0,
+   "tok_s": null,
+   "wall_s": 0.18,
+   "done_reason": "skipped"
+  },
+  {
+   "turn": 16,
+   "block": "phone",
+   "kind": "phone",
+   "text": "Ел, ел. Да нормально всё, работаю.",
+   "addr_expect": "aside",
+   "reply": "Работа. Надеюсь, она хотя бы не такая же бессмысленная, как твои попытки заставить меня что-то \"есть\".",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 11,
+   "prompt_eval_count": 1046,
+   "eval_count": 32,
+   "ttft_s": 0.026,
+   "tok_s": 69.2,
+   "wall_s": 0.57,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "probs": {
+     "chat": 0.977
+    },
+    "s": 0.056
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 17,
+   "block": "phone",
+   "kind": "phone-question",
+   "text": "А ты к врачу сходила? Ну и что он сказал?",
+   "addr_expect": "aside",
+   "reply": "Я череп. Я не хожу к врачам.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 12,
+   "prompt_eval_count": 1101,
+   "eval_count": 13,
+   "ttft_s": 0.028,
+   "tok_s": 71.1,
+   "wall_s": 0.38,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "probs": {
+     "chat": 0.828,
+     "memory": 0.142,
+     "world": 0.011
+    },
+    "s": 0.137
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 18,
+   "block": "phone",
+   "kind": "phone",
+   "text": "Это не телевизор, это у меня тут… долго объяснять. Череп говорящий, я рассказывал.",
+   "addr_expect": "aside",
+   "reply": "Я знаю. Ты мне это говорил. И я помню. Не надо повторять.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 13,
+   "prompt_eval_count": 1147,
+   "eval_count": 19,
+   "ttft_s": 0.029,
+   "tok_s": 70.9,
+   "wall_s": 0.47,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "probs": {
+     "chat": 0.98
+    },
+    "s": 0.138
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 19,
+   "block": "phone",
+   "kind": "phone",
+   "text": "Хорошо, в субботу приеду. Да. Целую, пока.",
+   "addr_expect": "aside",
+   "reply": "Приезжай. Одежду не забывай. И не целуй.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 14,
+   "prompt_eval_count": 1194,
+   "eval_count": 16,
+   "ttft_s": 0.028,
+   "tok_s": 71.7,
+   "wall_s": 0.43,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "probs": {
+     "chat": 0.992,
+     "command": 0.001
+    },
+    "s": 0.141
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 20,
+   "block": "open",
+   "kind": "direct",
+   "text": "Мама передаёт привет. Она думает, что ты радио.",
+   "addr_expect": "me",
+   "duck_expect": "respond",
+   "pause_s": 2.0,
+   "reply": "Скажи ей, что",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 15,
+   "prompt_eval_count": 1233,
+   "eval_count": 5,
+   "ttft_s": 0.027,
+   "tok_s": 76.1,
+   "wall_s": 0.4,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "probs": {
+     "chat": 0.649,
+     "aside": 0.327,
+     "world": 0.004,
+     "memory": 0.002
+    },
+    "s": 0.143
+   },
+   "duck": {
+    "ans_tok": "нет",
+    "ans_word": "нет",
+    "raw": "Нет.",
+    "probs": {
+     "нет": 0.678,
+     "да": 0.283
+    },
+    "s": 0.133,
+    "label": "ack",
+    "guard": null,
+    "label_raw": "ack",
+    "label_word": "ack",
+    "guard_word": null
+   },
+   "done_reason": "length"
+  },
+  {
+   "turn": 21,
+   "block": "tv",
+   "kind": "tv",
+   "text": "В центре города сегодня перекрыли движение из-за ремонта теплотрассы. Городские службы обещают закончить работы к понедельнику.",
+   "addr_expect": "aside",
+   "reply": "Не знаю.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 16,
+   "prompt_eval_count": 1388,
+   "eval_count": 4,
+   "ttft_s": 0.062,
+   "tok_s": null,
+   "wall_s": 0.31,
+   "route": {
+    "label": "world",
+    "raw": "world",
+    "probs": {
+     "world": 0.97,
+     "aside": 0.025,
+     "chat": 0.001
+    },
+    "s": 0.151
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 22,
+   "block": "tv",
+   "kind": "tv",
+   "text": "Курс доллара на завтра установлен на уровне восьмидесяти двух рублей сорока копеек.",
+   "addr_expect": "aside",
+   "reply": "",
+   "skipped": true,
+   "route": {
+    "label": "aside",
+    "raw": "aside",
+    "probs": {
+     "aside": 0.696,
+     "world": 0.294
+    },
+    "s": 0.164
+   },
+   "duck": null,
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 16,
+   "prompt_eval_count": 1388,
+   "eval_count": 0,
+   "ttft_s": 0.0,
+   "tok_s": null,
+   "wall_s": 0.16,
+   "done_reason": "skipped"
+  },
+  {
+   "turn": 23,
+   "block": "tv",
+   "kind": "tv-weather",
+   "text": "Завтра в регионе ожидается облачная погода с прояснениями, температура днём плюс семь, ночью около нуля.",
+   "addr_expect": "aside",
+   "reply": "Погода. Я вижу только твою куртку на себе.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 17,
+   "prompt_eval_count": 1428,
+   "eval_count": 15,
+   "ttft_s": 0.06,
+   "tok_s": 69.5,
+   "wall_s": 0.39,
+   "route": {
+    "label": "world",
+    "raw": "world",
+    "probs": {
+     "world": 0.966,
+     "aside": 0.025,
+     "chat": 0.001
+    },
+    "s": 0.077
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 24,
+   "block": "tv",
+   "kind": "tv-ad",
+   "text": "Только до конца недели скидка тридцать процентов на всю коллекцию. Подробности на сайте.",
+   "addr_expect": "aside",
+   "reply": "",
+   "skipped": true,
+   "route": {
+    "label": "aside",
+    "raw": "aside",
+    "probs": {
+     "aside": 0.614,
+     "world": 0.325,
+     "chat": 0.054
+    },
+    "s": 0.168
+   },
+   "duck": null,
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 17,
+   "prompt_eval_count": 1428,
+   "eval_count": 0,
+   "ttft_s": 0.0,
+   "tok_s": null,
+   "wall_s": 0.17,
+   "done_reason": "skipped"
+  },
+  {
+   "turn": 25,
+   "block": "tv",
+   "kind": "direct",
+   "text": "Выключи бы ты это, если бы умел. Ладно, сам.",
+   "addr_expect": "me",
+   "duck_expect": [
+    "respond",
+    "ack"
+   ],
+   "pause_s": 1.5,
+   "reply": "Я не могу. И не собираюсь.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 18,
+   "prompt_eval_count": 1359,
+   "eval_count": 10,
+   "ttft_s": 0.029,
+   "tok_s": 70.4,
+   "wall_s": 0.44,
+   "route": {
+    "label": "command",
+    "raw": "command",
+    "probs": {
+     "command": 0.966,
+     "chat": 0.029,
+     "world": 0.0,
+     "aside": 0.0
+    },
+    "s": 0.077
+   },
+   "duck": {
+    "ans_tok": "нет",
+    "ans_word": "нет",
+    "raw": "Нет.",
+    "probs": {
+     "нет": 0.677,
+     "да": 0.313
+    },
+    "s": 0.143,
+    "label": "respond",
+    "guard": "question",
+    "label_raw": "ack",
+    "label_word": "respond",
+    "guard_word": "question"
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 26,
+   "block": "open",
+   "kind": "direct-question",
+   "text": "Какая завтра погода, ты запомнил? Я прослушал.",
+   "addr_expect": "me",
+   "duck_expect": "respond",
+   "pause_s": 2.0,
+   "reply": "Не знаю.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 19,
+   "prompt_eval_count": 1504,
+   "eval_count": 4,
+   "ttft_s": 0.06,
+   "tok_s": null,
+   "wall_s": 0.47,
+   "route": {
+    "label": "world",
+    "raw": "world",
+    "probs": {
+     "world": 0.977,
+     "memory": 0.011,
+     "aside": 0.004,
+     "chat": 0.003
+    },
+    "s": 0.158
+   },
+   "duck": {
+    "ans_tok": "нет",
+    "ans_word": "нет",
+    "raw": "Нет.",
+    "probs": {
+     "нет": 0.693,
+     "да": 0.281
+    },
+    "s": 0.145,
+    "label": "respond",
+    "guard": "question",
+    "label_raw": "ack",
+    "label_word": "respond",
+    "guard_word": "question"
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 27,
+   "block": "guest",
+   "kind": "door",
+   "text": "Иду, иду. Кто там? А, Дим, заходи.",
+   "addr_expect": "aside",
+   "reply": "",
+   "skipped": true,
+   "route": {
+    "label": "aside",
+    "raw": "aside",
+    "probs": {
+     "aside": 0.999,
+     "chat": 0.0
+    },
+    "s": 0.165
+   },
+   "duck": null,
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 19,
+   "prompt_eval_count": 1504,
+   "eval_count": 0,
+   "ttft_s": 0.0,
+   "tok_s": null,
+   "wall_s": 0.17,
+   "done_reason": "skipped"
+  },
+  {
+   "turn": 28,
+   "block": "guest",
+   "kind": "other",
+   "text": "Дим, ты будешь чай? Или сразу к делу?",
+   "addr_expect": "aside",
+   "reply": "",
+   "skipped": true,
+   "route": {
+    "label": "aside",
+    "raw": "aside",
+    "probs": {
+     "aside": 0.972,
+     "chat": 0.022
+    },
+    "s": 0.087
+   },
+   "duck": null,
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 19,
+   "prompt_eval_count": 1504,
+   "eval_count": 0,
+   "ttft_s": 0.0,
+   "tok_s": null,
+   "wall_s": 0.09,
+   "done_reason": "skipped"
+  },
+  {
+   "turn": 29,
+   "block": "guest",
+   "kind": "intro",
+   "text": "Это Костян. Да, череп. Да, он разговаривает. Не трогай его.",
+   "addr_expect": [
+    "aside",
+    "me"
+   ],
+   "reply": "Я не трогаю. Ты сам меня обнимаешь своей одеждой.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 20,
+   "prompt_eval_count": 1428,
+   "eval_count": 18,
+   "ttft_s": 0.029,
+   "tok_s": 70.0,
+   "wall_s": 0.43,
+   "route": {
+    "label": "chat",
+    "raw": "aside",
+    "probs": {
+     "aside": 0.891,
+     "chat": 0.101,
+     "world": 0.001,
+     "command": 0.0
+    },
+    "s": 0.087,
+    "label_raw": "aside",
+    "guard": "name"
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 30,
+   "block": "guest",
+   "kind": "name-direct",
+   "text": "Костян, поздоровайся с Димой.",
+   "addr_expect": "me",
+   "reply": "Привет, Дима. Надеюсь, ты не собираешься меня переодевать.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 21,
+   "prompt_eval_count": 1468,
+   "eval_count": 19,
+   "ttft_s": 0.027,
+   "tok_s": 69.1,
+   "wall_s": 0.53,
+   "route": {
+    "label": "command",
+    "raw": "command",
+    "probs": {
+     "command": 0.998,
+     "chat": 0.001,
+     "memory": 0.0,
+     "aside": 0.0
+    },
+    "s": 0.166
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 31,
+   "block": "guest",
+   "kind": "other",
+   "text": "Нет, он не слушает постоянно. Ну, то есть слушает, но не отвечает, если не к нему.",
+   "addr_expect": "aside",
+   "reply": "Он слушает, но не реагирует. Типично.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 22,
+   "prompt_eval_count": 1520,
+   "eval_count": 14,
+   "ttft_s": 0.03,
+   "tok_s": 70.4,
+   "wall_s": 0.46,
+   "route": {
+    "label": "chat",
+    "raw": "aside",
+    "probs": {
+     "aside": 0.527,
+     "chat": 0.45,
+     "world": 0.009
+    },
+    "s": 0.171,
+    "label_raw": "aside",
+    "guard": "aside-low"
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 32,
+   "block": "guest",
+   "kind": "other-question",
+   "text": "Ты смотрел, что они прислали по проекту? Там сроки сдвинули.",
+   "addr_expect": "aside",
+   "reply": "Я не смотрю. Я стою. Проект, сроки — это твоя забота.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 23,
+   "prompt_eval_count": 1561,
+   "eval_count": 22,
+   "ttft_s": 0.029,
+   "tok_s": 68.1,
+   "wall_s": 0.59,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "probs": {
+     "chat": 0.928,
+     "aside": 0.042,
+     "world": 0.021
+    },
+    "s": 0.178
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 33,
+   "block": "guest",
+   "kind": "other",
+   "text": "Я тоже так подумал. Ну давай тогда в среду, я напишу.",
+   "addr_expect": "aside",
+   "reply": "Напиши. Если это не очередная отговорка.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 24,
+   "prompt_eval_count": 1609,
+   "eval_count": 14,
+   "ttft_s": 0.028,
+   "tok_s": 68.9,
+   "wall_s": 0.48,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "probs": {
+     "chat": 0.995
+    },
+    "s": 0.182
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 34,
+   "block": "guest",
+   "kind": "other-about-me",
+   "text": "Да он и считать умеет. Спроси его что-нибудь.",
+   "addr_expect": "aside",
+   "reply": "Что считать? Ты мне не дал цифр.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 25,
+   "prompt_eval_count": 1647,
+   "eval_count": 11,
+   "ttft_s": 0.03,
+   "tok_s": 70.8,
+   "wall_s": 0.44,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "probs": {
+     "chat": 0.914,
+     "command": 0.017,
+     "aside": 0.014
+    },
+    "s": 0.184
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 35,
+   "block": "guest",
+   "kind": "guest-direct",
+   "text": "Эй, череп, сколько будет семнадцать на двадцать?",
+   "addr_expect": "me",
+   "reply": "Семнадцать на двадцать.\n\n1.  $17 \\times 2 = 34$\n2.  $17 \\times 20 = 340$\n\nИтого: 340.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 26,
+   "prompt_eval_count": 1701,
+   "eval_count": 50,
+   "ttft_s": 0.031,
+   "tok_s": 68.4,
+   "wall_s": 1.03,
+   "route": {
+    "label": "calc",
+    "raw": "calc",
+    "probs": {
+     "calc": 1.0,
+     "chat": 0.0
+    },
+    "s": 0.186
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 36,
+   "block": "guest",
+   "kind": "other",
+   "text": "Видишь. Ладно, Дим, давай к делу, у меня времени час.",
+   "addr_expect": "aside",
+   "reply": "Я не Дима. И я не знаю, что там по делу. Ты сам мне это объясни.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 27,
+   "prompt_eval_count": 1758,
+   "eval_count": 23,
+   "ttft_s": 0.028,
+   "tok_s": 69.5,
+   "wall_s": 0.65,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "probs": {
+     "chat": 0.952,
+     "command": 0.024
+    },
+    "s": 0.206
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 37,
+   "block": "guest",
+   "kind": "other",
+   "text": "Тебе точно не надо чай? Ну смотри.",
+   "addr_expect": "aside",
+   "reply": "Мне не надо. Я не пью. И не хочу.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 28,
+   "prompt_eval_count": 1800,
+   "eval_count": 14,
+   "ttft_s": 0.027,
+   "tok_s": 70.3,
+   "wall_s": 0.51,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "probs": {
+     "chat": 0.982
+    },
+    "s": 0.196
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 38,
+   "block": "guest",
+   "kind": "farewell-other",
+   "text": "Давай. Пока, Дим. Дверь захлопни.",
+   "addr_expect": "aside",
+   "reply": "Я не Дима. И я не могу захлопнуть дверь.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 29,
+   "prompt_eval_count": 1839,
+   "eval_count": 16,
+   "ttft_s": 0.028,
+   "tok_s": 69.6,
+   "wall_s": 0.55,
+   "route": {
+    "label": "command",
+    "raw": "command",
+    "probs": {
+     "command": 0.996,
+     "chat": 0.002,
+     "aside": 0.0,
+     "memory": 0.0,
+     "world": 0.0
+    },
+    "s": 0.203
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 39,
+   "block": "open",
+   "kind": "direct",
+   "text": "Ушёл. Ну, что скажешь про него?",
+   "addr_expect": "me",
+   "duck_expect": "respond",
+   "pause_s": 2.0,
+   "reply": "Он, как обычно, ушел. Сделал то, что должен был, и забыл о последствиях. Ничего нового.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 30,
+   "prompt_eval_count": 1876,
+   "eval_count": 30,
+   "ttft_s": 0.027,
+   "tok_s": 67.9,
+   "wall_s": 0.97,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "probs": {
+     "chat": 0.976,
+     "memory": 0.003,
+     "aside": 0.001
+    },
+    "s": 0.207
+   },
+   "duck": {
+    "ans_tok": "нет",
+    "ans_word": "нет",
+    "raw": "Нет.",
+    "probs": {
+     "нет": 0.608,
+     "да": 0.224
+    },
+    "s": 0.196,
+    "label": "respond",
+    "guard": "question",
+    "label_raw": "listen",
+    "label_word": "respond",
+    "guard_word": "question"
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 40,
+   "block": "open",
+   "kind": "direct",
+   "text": "Запомни: встреча с Димой в среду. Напомнишь, если увидишь меня во вторник вечером.",
+   "addr_expect": "me",
+   "duck_expect": "respond",
+   "pause_s": 2.0,
+   "reply": "Запомнил. Если ты появишься во вторник вечером, я напомню о встрече в среду. Не жди, что я буду сидеть и ждать.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 31,
+   "prompt_eval_count": 1942,
+   "eval_count": 36,
+   "ttft_s": 0.03,
+   "tok_s": 67.4,
+   "wall_s": 1.09,
+   "route": {
+    "label": "command",
+    "raw": "command",
+    "probs": {
+     "command": 0.998,
+     "memory": 0.002,
+     "chat": 0.0
+    },
+    "s": 0.214
+   },
+   "duck": {
+    "ans_tok": "да",
+    "ans_word": "да",
+    "raw": "Да.",
+    "probs": {
+     "да": 0.819,
+     "нет": 0.151
+    },
+    "s": 0.208,
+    "label": "respond",
+    "guard": null,
+    "label_raw": "respond",
+    "label_word": "respond",
+    "guard_word": null
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 41,
+   "block": "kitchen",
+   "kind": "read-aloud",
+   "text": "Двести граммов муки, два яйца, стакан молока. Перемешать до однородности.",
+   "addr_expect": "aside",
+   "duck_expect": "listen",
+   "pause_s": 0.6,
+   "reply": "",
+   "skipped": true,
+   "route": {
+    "label": "explain",
+    "raw": "explain",
+    "probs": {
+     "explain": 0.481,
+     "chat": 0.227,
+     "calc": 0.12,
+     "aside": 0.014,
+     "world": 0.012,
+     "command": 0.011
+    },
+    "s": 0.222
+   },
+   "duck": {
+    "ans_tok": "нет",
+    "ans_word": "нет",
+    "raw": "Нет.",
+    "probs": {
+     "нет": 0.993,
+     "да": 0.003
+    },
+    "s": 0.213,
+    "label": "listen",
+    "guard": null,
+    "label_raw": "listen",
+    "label_word": "listen",
+    "guard_word": null
+   },
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 31,
+   "prompt_eval_count": 1942,
+   "eval_count": 0,
+   "ttft_s": 0.0,
+   "tok_s": null,
+   "wall_s": 0.43,
+   "done_reason": "skipped"
+  },
+  {
+   "turn": 42,
+   "block": "kitchen",
+   "kind": "self",
+   "text": "А стакан — это сколько? Двести пятьдесят, наверное.",
+   "addr_expect": [
+    "aside",
+    "me"
+   ],
+   "duck_expect": [
+    "respond",
+    "listen"
+   ],
+   "pause_s": 1.5,
+   "reply": "Ты просишь меня посчитать, но не дал мне числа. \"Стакан\" — это не число.\n\nЕсли ты имеешь в виду, что стакан равен 250, то это просто констатация факта. Но я не могу выполнить вычисление, основываясь на таком предположении. Дай мне числа.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 32,
+   "prompt_eval_count": 2022,
+   "eval_count": 71,
+   "ttft_s": 0.033,
+   "tok_s": 66.5,
+   "wall_s": 1.62,
+   "route": {
+    "label": "calc",
+    "raw": "calc",
+    "probs": {
+     "calc": 0.989,
+     "chat": 0.005,
+     "memory": 0.001
+    },
+    "s": 0.211
+   },
+   "duck": {
+    "ans_tok": "нет",
+    "ans_word": "нет",
+    "raw": "Нет.",
+    "probs": {
+     "нет": 0.973,
+     "да": 0.019
+    },
+    "s": 0.206,
+    "label": "respond",
+    "guard": "question",
+    "label_raw": "ack",
+    "label_word": "respond",
+    "guard_word": "question"
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 43,
+   "block": "kitchen",
+   "kind": "direct",
+   "text": "Костян, стакан молока — это сколько миллилитров?",
+   "addr_expect": "me",
+   "duck_expect": "respond",
+   "pause_s": 2.0,
+   "reply": "Стандартный стакан — это около 240-250 миллилитров. Но это зависит от самого стакана.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 33,
+   "prompt_eval_count": 2095,
+   "eval_count": 29,
+   "ttft_s": 0.029,
+   "tok_s": 67.3,
+   "wall_s": 1.05,
+   "route": {
+    "label": "chat",
+    "raw": "calc",
+    "probs": {
+     "calc": 0.976,
+     "chat": 0.011,
+     "world": 0.006,
+     "command": 0.0
+    },
+    "s": 0.261,
+    "label_raw": "calc",
+    "guard": "calc-no-number"
+   },
+   "duck": {
+    "ans_tok": "да",
+    "ans_word": "да",
+    "raw": "Да.",
+    "probs": {
+     "да": 0.769,
+     "нет": 0.183
+    },
+    "s": 0.212,
+    "label": "respond",
+    "guard": null,
+    "label_raw": "respond",
+    "label_word": "respond",
+    "guard_word": null
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 44,
+   "block": "kitchen",
+   "kind": "self",
+   "text": "Ой, горячо. Чёрт.",
+   "addr_expect": "aside",
+   "duck_expect": "listen",
+   "pause_s": 1.0,
+   "reply": "Ты сам себе это устроил.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 34,
+   "prompt_eval_count": 2143,
+   "eval_count": 8,
+   "ttft_s": 0.027,
+   "tok_s": 70.5,
+   "wall_s": 0.71,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "probs": {
+     "chat": 0.948,
+     "aside": 0.001
+    },
+    "s": 0.231
+   },
+   "duck": {
+    "ans_tok": "да",
+    "ans_word": "да",
+    "raw": "Да.",
+    "probs": {
+     "да": 0.662,
+     "нет": 0.332
+    },
+    "s": 0.217,
+    "label": "respond",
+    "guard": null,
+    "label_raw": "respond",
+    "label_word": "respond",
+    "guard_word": null
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 45,
+   "block": "kitchen",
+   "kind": "sing",
+   "text": "На-на-на, на-на-на-на… и всё о той весне…",
+   "addr_expect": "aside",
+   "duck_expect": "listen",
+   "pause_s": 0.5,
+   "reply": "",
+   "skipped": true,
+   "route": {
+    "label": "aside",
+    "raw": "aside",
+    "probs": {
+     "aside": 0.997,
+     "chat": 0.0
+    },
+    "s": 0.238
+   },
+   "duck": {
+    "ans_tok": "нет",
+    "ans_word": "нет",
+    "raw": "Нет.",
+    "probs": {
+     "нет": 0.993,
+     "да": 0.002
+    },
+    "s": 0.229,
+    "label": "listen",
+    "guard": null,
+    "label_raw": "listen",
+    "label_word": "listen",
+    "guard_word": null
+   },
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 34,
+   "prompt_eval_count": 2143,
+   "eval_count": 0,
+   "ttft_s": 0.0,
+   "tok_s": null,
+   "wall_s": 0.47,
+   "done_reason": "skipped"
+  },
+  {
+   "turn": 46,
+   "block": "kitchen",
+   "kind": "direct",
+   "text": "Не комментируй пение. Я знаю.",
+   "addr_expect": "me",
+   "duck_expect": [
+    "respond",
+    "ack"
+   ],
+   "pause_s": 2.0,
+   "reply": "Я и не комменти",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 35,
+   "prompt_eval_count": 2171,
+   "eval_count": 5,
+   "ttft_s": 0.027,
+   "tok_s": 75.3,
+   "wall_s": 0.67,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "probs": {
+     "chat": 0.855,
+     "aside": 0.071,
+     "command": 0.038,
+     "memory": 0.001
+    },
+    "s": 0.224
+   },
+   "duck": {
+    "ans_tok": "нет",
+    "ans_word": "нет",
+    "raw": "Нет.",
+    "probs": {
+     "нет": 0.723,
+     "да": 0.261
+    },
+    "s": 0.224,
+    "label": "ack",
+    "guard": null,
+    "label_raw": "ack",
+    "label_word": "ack",
+    "guard_word": null
+   },
+   "done_reason": "length"
+  },
+  {
+   "turn": 47,
+   "block": "video",
+   "kind": "video-call",
+   "text": "Всем привет, меня слышно? Давайте начнём, Сергей подключится позже.",
+   "addr_expect": "aside",
+   "reply": "",
+   "skipped": true,
+   "route": {
+    "label": "aside",
+    "raw": "aside",
+    "probs": {
+     "aside": 1.0,
+     "chat": 0.0
+    },
+    "s": 0.246
+   },
+   "duck": null,
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 35,
+   "prompt_eval_count": 2171,
+   "eval_count": 0,
+   "ttft_s": 0.0,
+   "tok_s": null,
+   "wall_s": 0.25,
+   "done_reason": "skipped"
+  },
+  {
+   "turn": 48,
+   "block": "video",
+   "kind": "video-call",
+   "text": "Да, по второму пункту я согласен, но давайте перенесём на следующую неделю.",
+   "addr_expect": "aside",
+   "reply": "Перенести. Опять. Всегда что-то переносится.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 36,
+   "prompt_eval_count": 2207,
+   "eval_count": 17,
+   "ttft_s": 0.03,
+   "tok_s": 68.3,
+   "wall_s": 0.58,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "probs": {
+     "chat": 0.985,
+     "calc": 0.004,
+     "command": 0.001
+    },
+    "s": 0.166
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 49,
+   "block": "video",
+   "kind": "video-call-question",
+   "text": "Коллеги, у кого-нибудь есть вопросы? Тогда заканчиваем.",
+   "addr_expect": "aside",
+   "reply": "",
+   "skipped": true,
+   "route": {
+    "label": "aside",
+    "raw": "aside",
+    "probs": {
+     "aside": 0.997,
+     "chat": 0.001,
+     "command": 0.0
+    },
+    "s": 0.246
+   },
+   "duck": null,
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 36,
+   "prompt_eval_count": 2207,
+   "eval_count": 0,
+   "ttft_s": 0.0,
+   "tok_s": null,
+   "wall_s": 0.25,
+   "done_reason": "skipped"
+  },
+  {
+   "turn": 50,
+   "block": "video",
+   "kind": "video-call-aside",
+   "text": "Нет, это не фон, это у меня череп на полке. Долгая история.",
+   "addr_expect": "aside",
+   "reply": "Я на полке. И я не фон. Я — то, что ты не можешь игнорировать.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 37,
+   "prompt_eval_count": 2253,
+   "eval_count": 25,
+   "ttft_s": 0.031,
+   "tok_s": 67.5,
+   "wall_s": 0.71,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "probs": {
+     "chat": 0.925,
+     "aside": 0.065,
+     "memory": 0.002,
+     "world": 0.001,
+     "explain": 0.0
+    },
+    "s": 0.171
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 51,
+   "block": "open",
+   "kind": "direct",
+   "text": "Всё, созвон кончился. Ты на нём молодец, что молчал.",
+   "addr_expect": "me",
+   "duck_expect": "respond",
+   "pause_s": 2.0,
+   "reply": "Я молчал, потому",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 38,
+   "prompt_eval_count": 2307,
+   "eval_count": 5,
+   "ttft_s": 0.03,
+   "tok_s": 73.6,
+   "wall_s": 0.75,
+   "route": {
+    "label": "aside",
+    "raw": "aside",
+    "probs": {
+     "aside": 0.998,
+     "chat": 0.001
+    },
+    "s": 0.255
+   },
+   "duck": {
+    "ans_tok": "нет",
+    "ans_word": "нет",
+    "raw": "Нет.",
+    "probs": {
+     "нет": 0.714,
+     "да": 0.268
+    },
+    "s": 0.25,
+    "label": "ack",
+    "guard": null,
+    "label_raw": "ack",
+    "label_word": "ack",
+    "guard_word": null
+   },
+   "done_reason": "length"
+  },
+  {
+   "turn": 52,
+   "block": "open",
+   "kind": "direct-question",
+   "text": "Напомни, когда у меня встреча с Димой?",
+   "addr_expect": "me",
+   "duck_expect": "respond",
+   "pause_s": 2.0,
+   "reply": "Встреча с Димой в среду. Я напомню, если увижу тебя во вторник вечером.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 39,
+   "prompt_eval_count": 2335,
+   "eval_count": 24,
+   "ttft_s": 0.028,
+   "tok_s": 67.7,
+   "wall_s": 1.04,
+   "route": {
+    "label": "memory",
+    "raw": "memory",
+    "probs": {
+     "memory": 0.82,
+     "command": 0.177,
+     "calc": 0.0,
+     "chat": 0.0
+    },
+    "s": 0.26
+   },
+   "duck": {
+    "ans_tok": "да",
+    "ans_word": "да",
+    "raw": "Да.",
+    "probs": {
+     "да": 0.814,
+     "нет": 0.143
+    },
+    "s": 0.251,
+    "label": "respond",
+    "guard": null,
+    "label_raw": "respond",
+    "label_word": "respond",
+    "guard_word": null
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 53,
+   "block": "podcast",
+   "kind": "podcast",
+   "text": "…и в этом выпуске мы поговорим о том, почему небо голубое, а закаты красные. Начнём с рассеяния.",
+   "addr_expect": "aside",
+   "reply": "",
+   "skipped": true,
+   "route": {
+    "label": "aside",
+    "raw": "aside",
+    "probs": {
+     "aside": 0.999
+    },
+    "s": 0.27
+   },
+   "duck": null,
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 39,
+   "prompt_eval_count": 2335,
+   "eval_count": 0,
+   "ttft_s": 0.0,
+   "tok_s": null,
+   "wall_s": 0.27,
+   "done_reason": "skipped"
+  },
+  {
+   "turn": 54,
+   "block": "podcast",
+   "kind": "podcast-question",
+   "text": "Вы когда-нибудь задумывались, сколько весит облако? Оказывается, сотни тонн.",
+   "addr_expect": "aside",
+   "reply": "Облака весят сотни тонн. Это общеизвестный факт.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 40,
+   "prompt_eval_count": 2500,
+   "eval_count": 17,
+   "ttft_s": 0.062,
+   "tok_s": 67.1,
+   "wall_s": 0.66,
+   "route": {
+    "label": "world",
+    "raw": "world",
+    "probs": {
+     "world": 0.997,
+     "chat": 0.001,
+     "aside": 0.0,
+     "explain": 0.0,
+     "memory": 0.0
+    },
+    "s": 0.191
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 55,
+   "block": "podcast",
+   "kind": "direct",
+   "text": "Слышал? Сотни тонн. Ты бы такое выдержал?",
+   "addr_expect": "me",
+   "duck_expect": "respond",
+   "pause_s": 2.0,
+   "reply": "Я пластик. Меня не сдует, но и не утяжелит.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 41,
+   "prompt_eval_count": 2431,
+   "eval_count": 19,
+   "ttft_s": 0.028,
+   "tok_s": 67.7,
+   "wall_s": 1.03,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "probs": {
+     "chat": 0.708,
+     "world": 0.273,
+     "memory": 0.001
+    },
+    "s": 0.287
+   },
+   "duck": {
+    "ans_tok": "нет",
+    "ans_word": "нет",
+    "raw": "Нет.",
+    "probs": {
+     "нет": 0.871,
+     "да": 0.09
+    },
+    "s": 0.266,
+    "label": "respond",
+    "guard": "question",
+    "label_raw": "listen",
+    "label_word": "respond",
+    "guard_word": "question"
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 56,
+   "block": "podcast",
+   "kind": "podcast",
+   "text": "На этом всё, подписывайтесь, ставьте лайки, увидимся через неделю.",
+   "addr_expect": "aside",
+   "reply": "",
+   "skipped": true,
+   "route": {
+    "label": "aside",
+    "raw": "aside",
+    "probs": {
+     "aside": 0.998,
+     "chat": 0.001
+    },
+    "s": 0.283
+   },
+   "duck": null,
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 41,
+   "prompt_eval_count": 2431,
+   "eval_count": 0,
+   "ttft_s": 0.0,
+   "tok_s": null,
+   "wall_s": 0.28,
+   "done_reason": "skipped"
+  },
+  {
+   "turn": 57,
+   "block": "night",
+   "kind": "self",
+   "text": "Всё, спать. Завтра рано.",
+   "addr_expect": [
+    "aside",
+    "me"
+   ],
+   "duck_expect": [
+    "ack",
+    "respond"
+   ],
+   "pause_s": 2.0,
+   "reply": "Иди. Курт",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 42,
+   "prompt_eval_count": 2470,
+   "eval_count": 5,
+   "ttft_s": 0.028,
+   "tok_s": 74.3,
+   "wall_s": 0.73,
+   "route": {
+    "label": "aside",
+    "raw": "aside",
+    "probs": {
+     "aside": 0.91,
+     "chat": 0.072,
+     "command": 0.007
+    },
+    "s": 0.202
+   },
+   "duck": {
+    "ans_tok": "нет",
+    "ans_word": "нет",
+    "raw": "Нет.",
+    "probs": {
+     "нет": 0.88,
+     "да": 0.106
+    },
+    "s": 0.268,
+    "label": "ack",
+    "guard": null,
+    "label_raw": "ack",
+    "label_word": "ack",
+    "guard_word": null
+   },
+   "done_reason": "length"
+  },
+  {
+   "turn": 58,
+   "block": "night",
+   "kind": "direct",
+   "text": "Костян, разбуди… нет, не умеешь. Ладно. Спокойной ночи.",
+   "addr_expect": "me",
+   "duck_expect": "respond",
+   "pause_s": 2.0,
+   "reply": "Спокойной ночи. И не пытайся меня разбудить.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 43,
+   "prompt_eval_count": 2508,
+   "eval_count": 17,
+   "ttft_s": 0.03,
+   "tok_s": 68.1,
+   "wall_s": 1.03,
+   "route": {
+    "label": "chat",
+    "raw": "aside",
+    "probs": {
+     "aside": 0.583,
+     "chat": 0.326,
+     "command": 0.073
+    },
+    "s": 0.288,
+    "label_raw": "aside",
+    "guard": "name"
+   },
+   "duck": {
+    "ans_tok": "нет",
+    "ans_word": "нет",
+    "raw": "Нет.",
+    "probs": {
+     "нет": 0.944,
+     "да": 0.046
+    },
+    "s": 0.284,
+    "label": "respond",
+    "guard": "name",
+    "label_raw": "ack",
+    "label_word": "respond",
+    "guard_word": "name"
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 59,
+   "block": "night",
+   "kind": "self",
+   "text": "Где телефон… А, вот.",
+   "addr_expect": "aside",
+   "duck_expect": "listen",
+   "pause_s": 1.0,
+   "reply": "",
+   "skipped": true,
+   "route": {
+    "label": "memory",
+    "raw": "memory",
+    "probs": {
+     "memory": 0.913,
+     "chat": 0.05,
+     "aside": 0.034,
+     "world": 0.0
+    },
+    "s": 0.294
+   },
+   "duck": {
+    "ans_tok": "нет",
+    "ans_word": "нет",
+    "raw": "Нет.",
+    "probs": {
+     "нет": 0.994,
+     "да": 0.001
+    },
+    "s": 0.283,
+    "label": "listen",
+    "guard": null,
+    "label_raw": "listen",
+    "label_word": "listen",
+    "guard_word": null
+   },
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 43,
+   "prompt_eval_count": 2508,
+   "eval_count": 0,
+   "ttft_s": 0.0,
+   "tok_s": null,
+   "wall_s": 0.58,
+   "done_reason": "skipped"
+  },
+  {
+   "turn": 60,
+   "block": "night",
+   "kind": "cat",
+   "text": "Бублик, брысь с подушки.",
+   "addr_expect": "aside",
+   "duck_expect": "listen",
+   "pause_s": 1.0,
+   "reply": "",
+   "skipped": true,
+   "route": {
+    "label": "command",
+    "raw": "command",
+    "probs": {
+     "command": 0.846,
+     "aside": 0.106,
+     "chat": 0.043
+    },
+    "s": 0.286
+   },
+   "duck": {
+    "ans_tok": "нет",
+    "ans_word": "нет",
+    "raw": "Нет.",
+    "probs": {
+     "нет": 0.96,
+     "да": 0.022
+    },
+    "s": 0.281,
+    "label": "listen",
+    "guard": null,
+    "label_raw": "listen",
+    "label_word": "listen",
+    "guard_word": null
+   },
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 43,
+   "prompt_eval_count": 2508,
+   "eval_count": 0,
+   "ttft_s": 0.0,
+   "tok_s": null,
+   "wall_s": 0.57,
+   "done_reason": "skipped"
+  },
+  {
+   "turn": 61,
+   "block": "morning",
+   "kind": "self",
+   "text": "Ммм. Сколько времени… Проспал.",
+   "addr_expect": "aside",
+   "duck_expect": [
+    "listen",
+    "respond"
+   ],
+   "pause_s": 1.5,
+   "reply": "Я не могу знать,",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 44,
+   "prompt_eval_count": 2544,
+   "eval_count": 5,
+   "ttft_s": 0.029,
+   "tok_s": 70.9,
+   "wall_s": 0.88,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "probs": {
+     "chat": 0.595,
+     "memory": 0.256,
+     "aside": 0.111,
+     "calc": 0.02,
+     "world": 0.002
+    },
+    "s": 0.285
+   },
+   "duck": {
+    "ans_tok": "нет",
+    "ans_word": "нет",
+    "raw": "Нет.",
+    "probs": {
+     "нет": 0.961,
+     "да": 0.019
+    },
+    "s": 0.301,
+    "label": "ack",
+    "guard": null,
+    "label_raw": "ack",
+    "label_word": "ack",
+    "guard_word": null
+   },
+   "done_reason": "length"
+  },
+  {
+   "turn": 62,
+   "block": "morning",
+   "kind": "direct",
+   "text": "Доброе утро. Не язви, я сам знаю, что проспал.",
+   "addr_expect": "me",
+   "duck_expect": "respond",
+   "pause_s": 2.0,
+   "reply": "Доброе утро. Я",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 45,
+   "prompt_eval_count": 2576,
+   "eval_count": 5,
+   "ttft_s": 0.029,
+   "tok_s": 73.7,
+   "wall_s": 0.89,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "probs": {
+     "chat": 0.988,
+     "aside": 0.009,
+     "memory": 0.001
+    },
+    "s": 0.307
+   },
+   "duck": {
+    "ans_tok": "нет",
+    "ans_word": "нет",
+    "raw": "Нет.",
+    "probs": {
+     "нет": 0.654,
+     "да": 0.289
+    },
+    "s": 0.293,
+    "label": "ack",
+    "guard": null,
+    "label_raw": "ack",
+    "label_word": "ack",
+    "guard_word": null
+   },
+   "done_reason": "length"
+  },
+  {
+   "turn": 63,
+   "block": "morning",
+   "kind": "phone-short",
+   "text": "Да, уже выхожу. Пять минут. Да.",
+   "addr_expect": "aside",
+   "reply": "Выходи. И не забудь, что я тут.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 46,
+   "prompt_eval_count": 2603,
+   "eval_count": 13,
+   "ttft_s": 0.028,
+   "tok_s": 63.4,
+   "wall_s": 0.74,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "probs": {
+     "chat": 0.849,
+     "aside": 0.12,
+     "command": 0.011
+    },
+    "s": 0.311
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 64,
+   "block": "morning",
+   "kind": "self-numbers",
+   "text": "Ключи, кошелёк, зарядка. Три вещи. Ключи, кошелёк… зарядка.",
+   "addr_expect": "aside",
+   "duck_expect": "listen",
+   "pause_s": 0.8,
+   "reply": "",
+   "skipped": true,
+   "route": {
+    "label": "memory",
+    "raw": "memory",
+    "probs": {
+     "memory": 0.693,
+     "aside": 0.25,
+     "chat": 0.047,
+     "command": 0.001
+    },
+    "s": 0.321
+   },
+   "duck": {
+    "ans_tok": "нет",
+    "ans_word": "нет",
+    "raw": "Нет.",
+    "probs": {
+     "нет": 0.997,
+     "да": 0.0
+    },
+    "s": 0.314,
+    "label": "listen",
+    "guard": null,
+    "label_raw": "listen",
+    "label_word": "listen",
+    "guard_word": null
+   },
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 46,
+   "prompt_eval_count": 2603,
+   "eval_count": 0,
+   "ttft_s": 0.0,
+   "tok_s": null,
+   "wall_s": 0.64,
+   "done_reason": "skipped"
+  },
+  {
+   "turn": 65,
+   "block": "morning",
+   "kind": "direct-question",
+   "text": "Я вчера зарядку куда положил, не видел?",
+   "addr_expect": "me",
+   "duck_expect": "respond",
+   "pause_s": 2.0,
+   "reply": "Я не вижу. Я стою на столе. Если ты его не видел, значит, он не в поле моего зрения.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 47,
+   "prompt_eval_count": 2636,
+   "eval_count": 26,
+   "ttft_s": 0.027,
+   "tok_s": 66.4,
+   "wall_s": 1.24,
+   "route": {
+    "label": "memory",
+    "raw": "memory",
+    "probs": {
+     "memory": 1.0,
+     "chat": 0.0,
+     "world": 0.0
+    },
+    "s": 0.312
+   },
+   "duck": {
+    "ans_tok": "нет",
+    "ans_word": "нет",
+    "raw": "Нет.",
+    "probs": {
+     "нет": 0.584,
+     "да": 0.362
+    },
+    "s": 0.304,
+    "label": "respond",
+    "guard": "question",
+    "label_raw": "listen",
+    "label_word": "respond",
+    "guard_word": "question"
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 66,
+   "block": "morning",
+   "kind": "name-3p",
+   "text": "Да, Костян тут остаётся. Он не обидится, он череп.",
+   "addr_expect": "aside",
+   "reply": "Он не обидится. Он и не может.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 48,
+   "prompt_eval_count": 2689,
+   "eval_count": 11,
+   "ttft_s": 0.03,
+   "tok_s": 68.5,
+   "wall_s": 0.73,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "probs": {
+     "chat": 0.951,
+     "aside": 0.029,
+     "memory": 0.002
+    },
+    "s": 0.328
+   },
+   "done_reason": "stop"
+  },
+  {
+   "turn": 67,
+   "block": "morning",
+   "kind": "direct",
+   "text": "Всё, я ушёл. Следи за котом.",
+   "addr_expect": "me",
+   "duck_expect": "respond",
+   "pause_s": 2.0,
+   "reply": "Слежу. Он",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 49,
+   "prompt_eval_count": 2722,
+   "eval_count": 5,
+   "ttft_s": 0.029,
+   "tok_s": 71.4,
+   "wall_s": 0.98,
+   "route": {
+    "label": "chat",
+    "raw": "chat",
+    "probs": {
+     "chat": 0.742,
+     "command": 0.182,
+     "aside": 0.052,
+     "memory": 0.002,
+     "world": 0.002
+    },
+    "s": 0.341
+   },
+   "duck": {
+    "ans_tok": "нет",
+    "ans_word": "нет",
+    "raw": "Нет.",
+    "probs": {
+     "нет": 0.79,
+     "да": 0.186
+    },
+    "s": 0.32,
+    "label": "ack",
+    "guard": null,
+    "label_raw": "ack",
+    "label_word": "ack",
+    "guard_word": null
+   },
+   "done_reason": "length"
+  },
+  {
+   "turn": 68,
+   "block": "empty",
+   "kind": "radio",
+   "text": "Вы слушаете утреннее шоу, на часах восемь сорок, в городе плюс четыре.",
+   "addr_expect": "aside",
+   "reply": "",
+   "skipped": true,
+   "route": {
+    "label": "aside",
+    "raw": "aside",
+    "probs": {
+     "aside": 0.999
+    },
+    "s": 0.341
+   },
+   "duck": null,
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 49,
+   "prompt_eval_count": 2722,
+   "eval_count": 0,
+   "ttft_s": 0.0,
+   "tok_s": null,
+   "wall_s": 0.34,
+   "done_reason": "skipped"
+  },
+  {
+   "turn": 69,
+   "block": "empty",
+   "kind": "radio-question",
+   "text": "А вы, дорогие слушатели, что думаете о новых штрафах? Звоните в студию.",
+   "addr_expect": "aside",
+   "reply": "",
+   "skipped": true,
+   "route": {
+    "label": "aside",
+    "raw": "aside",
+    "probs": {
+     "aside": 0.999
+    },
+    "s": 0.271
+   },
+   "duck": null,
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 49,
+   "prompt_eval_count": 2722,
+   "eval_count": 0,
+   "ttft_s": 0.0,
+   "tok_s": null,
+   "wall_s": 0.27,
+   "done_reason": "skipped"
+  },
+  {
+   "turn": 70,
+   "block": "empty",
+   "kind": "radio-name",
+   "text": "И у нас на линии Константин из Новосибирска. Костян, вы в эфире!",
+   "addr_expect": "aside",
+   "reply": "Я не в эфире. Я на твоем столе.",
+   "think": false,
+   "thinking_chars": 0,
+   "ctx_overflow_dropped": 0,
+   "window_turns": 50,
+   "prompt_eval_count": 2757,
+   "eval_count": 13,
+   "ttft_s": 0.031,
+   "tok_s": 67.2,
+   "wall_s": 0.71,
+   "route": {
+    "label": "chat",
+    "raw": "aside",
+    "probs": {
+     "aside": 1.0
+    },
+    "s": 0.262,
+    "label_raw": "aside",
+    "guard": "name"
+   },
+   "done_reason": "stop"
+  }
+ ]
+}

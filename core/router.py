@@ -237,3 +237,92 @@ def decide_duck(route, text):
         if top[0] < MIN_PROB or top[0] < MIN_MARGIN * top[1]:
             return "respond", (None if label == "respond" else "low-confidence")
     return label or "respond", (None if label else "no-label")
+
+
+# duck mode, binary question (T-038 1b.4): the 3-way question collapsed into `ack` (e4b 34/37); the model now only
+# says whether an answer is expected right now, in Russian one-token words; «угу» (ack) is a rule over the pause
+DUCK_PROMPT_BIN = """Служебный вопрос, не отвечай собеседнику. Собеседник один за компьютером и говорит при тебе. Ждёт ли он от тебя ответа прямо сейчас?
+да — вопрос, просьба, обращение к тебе, законченная мысль, на которую естественно отреагировать;
+нет — бормочет под нос, считает, читает вслух, говорит коту, мысль не закончена.
+Его реплика: «{text}». После реплики пауза {pause_s} с. Ответ одним словом:"""
+_YESNO = {"да": "да", "нет": "нет"}
+ACK_MIN_PAUSE_S, ACK_MIN_WORDS = 1.5, 3
+
+
+def _yesno_probs(top_logprobs):
+    probs = {}
+    for alt in top_logprobs:
+        w = _YESNO.get(alt["token"].strip().lower())
+        if w:
+            probs[w] = probs.get(w, 0.0) + math.exp(alt["logprob"])
+    return probs
+
+
+def _yesno_word(raw):
+    m = re.match(r"\W*(да|нет)\b", (raw or "").lower())
+    return m.group(1) if m else None
+
+
+def _bin_result(raw, probs, t0):
+    if sum(probs.values()) < 0.5:
+        probs = {}
+    return {"ans_tok": max(probs, key=probs.get) if probs else None, "ans_word": _yesno_word(raw), "raw": (raw or "")[:40],
+            "probs": {k: round(v, 3) for k, v in probs.items()}, "s": round(time.perf_counter() - t0, 3)}
+
+
+def duck_bin_llamaserver(host, messages, text, pause_s, timeout=120):
+    """Answer by the first token's top_logprobs (ans_tok) and by the generated word, 3 tokens (ans_word)."""
+    body = {"messages": messages + [{"role": "user", "content": DUCK_PROMPT_BIN.format(text=text, pause_s=pause_s)}],
+            "max_tokens": 3, "temperature": 0.0, "logprobs": True, "top_logprobs": 10,
+            "chat_template_kwargs": {"enable_thinking": False}}
+    t0 = time.perf_counter()
+    r = requests.post(f"{host}/v1/chat/completions", json=body, timeout=timeout)
+    r.raise_for_status()
+    ch = r.json()["choices"][0]
+    try:
+        probs = _yesno_probs(ch["logprobs"]["content"][0]["top_logprobs"])
+    except (KeyError, IndexError, TypeError):
+        probs = {}
+    return _bin_result((ch["message"].get("content") or "").strip(), probs, t0)
+
+
+def duck_bin_ollama(host, model, messages, text, pause_s, num_ctx, timeout=120):
+    body = {"model": model, "stream": False, "think": False, "keep_alive": "10m", "logprobs": True, "top_logprobs": 10,
+            "messages": messages + [{"role": "user", "content": DUCK_PROMPT_BIN.format(text=text, pause_s=pause_s)}],
+            "options": {"num_ctx": num_ctx, "temperature": 0.0, "seed": 1, "num_predict": 3}}
+    t0 = time.perf_counter()
+    r = requests.post(f"{host}/api/chat", json=body, timeout=timeout)
+    r.raise_for_status()
+    d = r.json()
+    try:
+        probs = _yesno_probs(d["logprobs"][0]["top_logprobs"])
+    except (KeyError, IndexError, TypeError):
+        probs = {}
+    return _bin_result((d["message"].get("content") or "").strip(), probs, t0)
+
+
+def finished(text):
+    """A completed remark: ends with a full stop or an ellipsis and has at least ACK_MIN_WORDS words."""
+    t = text.strip()
+    return t.endswith((".", "…")) and len(re.findall(r"\w+", t)) >= ACK_MIN_WORDS
+
+
+def duck_from_no(text, pause_s):
+    return "ack" if pause_s >= ACK_MIN_PAUSE_S and finished(text) else "listen"
+
+
+def decide_duck_bin(ans, probs, text, pause_s):
+    """(label, reason) from a да/нет answer: да -> respond; нет -> ack by the pause rule, else listen. Guards: the name,
+    a question mark or an imperative to «ты» -> respond; low confidence (thresholds as decide()) -> ack ('low-confidence');
+    no answer at all -> ack ('no-label'). probs may be empty (answer by the generated word: no confidence check)."""
+    if "костян" in text.lower():
+        return "respond", (None if ans == "да" else "name")
+    if ans == "нет" and ("?" in text or _IMPERATIVE.search(text)):
+        return "respond", "question"
+    if ans and probs:
+        top = sorted(probs.values(), reverse=True) + [0.0]
+        if top[0] < MIN_PROB or top[0] < MIN_MARGIN * top[1]:
+            return "ack", "low-confidence"
+    if ans is None:
+        return "ack", "no-label"
+    return ("respond" if ans == "да" else duck_from_no(text, pause_s)), None
