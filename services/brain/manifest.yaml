@@ -32,6 +32,10 @@ params:                  # read by services/brain/responder.py and services/brai
   think: false           # chat_template_kwargs.enable_thinking per request (T-033)
   persona: persona/system_prompt.md   # D-021: prompt is a model parameter; e4b → system_prompt.md
   router: true           # turn-type router + POLICY (D-026)
+  ambient:               # T-038 stage 2 (D-029): turns with trigger=speech (services/wakeword params.trigger)
+    engaged_s: 30        # after an answer: answer what follows unless vetoed
+    busy_pause_s: 20     # after an aside veto: silent until this pause or the name
+    veto_aside_p: 0.9    # router aside probability that vetoes (radio / podcast / call / «Алло»)
   memory:                # associative memory beyond the window (D-026, note v6)
     k: 3
     mode: hybrid

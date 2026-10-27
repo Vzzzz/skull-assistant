@@ -229,7 +229,7 @@ def decide_duck(route, text):
     label, probs = route.get("label"), route.get("probs") or {}
     if "костян" in text.lower():
         return "respond", (None if label == "respond" else "name")
-    if label == "listen" and ("?" in text or _IMPERATIVE.search(text)):
+    if label == "listen" and is_question(text):
         alt = max(("respond", "ack"), key=lambda k: probs.get(k, 0.0))
         return alt, "question"
     if label and probs:
@@ -311,13 +311,28 @@ def duck_from_no(text, pause_s):
     return "ack" if pause_s >= ACK_MIN_PAUSE_S and finished(text) else "listen"
 
 
+# a question by its words, not by «?» (T-038 stage 2, step 7a): punct-STT puts «?» on 1 of 6 owner questions (T-041).
+# The word must open the phrase (after a name, «а», «ну», «слушай», «кстати») — «я думаю, что…» is not a question
+QUESTION_WORDS = ("сколько", "где", "как", "какой", "какая", "какое", "какие", "что", "чем", "когда", "почему",
+                  "зачем", "кто", "куда", "откуда", "напомни", "скажи", "подскажи", "можешь", "помнишь", "видел", "знаешь")
+_LEAD = {"а", "и", "ну", "слушай", "кстати", "так", "эй", "ты"}
+
+
+def is_question(text):
+    words = re.findall(r"[а-яё-]+", text.lower())
+    while words and (words[0] in _LEAD or words[0].startswith("костян")):
+        words = words[1:]
+    return "?" in text or bool(words and words[0] in QUESTION_WORDS) or bool(_IMPERATIVE.search(text))
+
+
 def decide_duck_bin(ans, probs, text, pause_s):
     """(label, reason) from a да/нет answer: да -> respond; нет -> ack by the pause rule, else listen. Guards: the name,
-    a question mark or an imperative to «ты» -> respond; low confidence (thresholds as decide()) -> ack ('low-confidence');
+    a question (is_question: words, «?», an imperative to «ты») -> respond; low confidence (thresholds as decide()) -> ack ('low-confidence');
     no answer at all -> ack ('no-label'). probs may be empty (answer by the generated word: no confidence check)."""
     if "костян" in text.lower():
         return "respond", (None if ans == "да" else "name")
-    if ans == "нет" and ("?" in text or _IMPERATIVE.search(text)):
+    if ans != "да" and pause_s >= ACK_MIN_PAUSE_S and is_question(text):
+        # a question that waits for an answer: the asker keeps the pause; muttered self-questions run on (P-030)
         return "respond", "question"
     if ans and probs:
         top = sorted(probs.values(), reverse=True) + [0.0]

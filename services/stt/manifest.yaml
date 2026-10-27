@@ -4,7 +4,7 @@ backend: sherpa-onnx (CPU)
 cuda_context: false
 budget:
   vram_mb: 0
-  ram_mb: 396            # ПИК после 20 фраз: GigaAM v3 punct + voice id (T-041, 2026-10-27); было 529 с faster-whisper base
+  ram_mb: 432            # ПИК: ambient, ~500 фраз до 11 с (T-038 эт. 2, 2026-10-27); после 20 фраз 396 (T-041); было 529 с faster-whisper base
   measured_on: stand
 residency:
   A: resident
@@ -27,5 +27,6 @@ params:
     model: models/voice/3dspeaker_speech_campplus_sv_zh_en_16k-common_advanced.onnx   # CAM++, sherpa-onnx, CPU
     owner: models/voice/owner.npy        # research/voice/enroll.py enroll (not in git)
     threshold: 0.29        # cosine; FAR 5 % at 0.284 on the stand set (research/voice/results/voiceid_2026-10-25.md)
+    threshold_high: 0.45   # owner >= 0.45; uncertain 0.29..0.45 (owner_far from 0.42, false podcast 0.433) — T-039 answer 1
     voiced_rms: 150        # int16 frame RMS counted as speech; same gate as the measurement
     min_speech_s: 1.0

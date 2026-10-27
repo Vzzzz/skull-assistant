@@ -19,3 +19,14 @@ bus:
   out: [events:wakeword]
 healthcheck: null        # TODO: systemd notify
 never_evict: true
+params:
+  trigger: kws        # kws (openWakeWord "hey jarvis") | speech (T-038 stage 2: ambient, start of speech, no openWakeWord)
+  speech:                # adaptive start-of-speech trigger (T-039 answer 2)
+    window_s: 10         # background median over this window
+    factor: 2.0          # threshold = max(floor_rms, factor x median); stand background RMS 55-86
+    floor_rms: 100
+    start_frames: 3      # 3 x 30 ms above the threshold
+    end_silence_s: 0.9   # below end_ratio x threshold this long = end of speech (re-arms the trigger)
+    end_ratio: 0.8
+    min_interval_s: 2.0
+    preroll_frames: 5    # STT starts 150 ms before the first loud frame

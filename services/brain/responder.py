@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 from core.memory import SYSTEM_RULE, AssocMemory, clean_reply, format_note
 from core.speech import for_speech
-from core.router import POLICY, decide, route_llamaserver
+from core.router import POLICY, decide, decide_duck_bin, duck_bin_llamaserver, route_llamaserver
 
 P = yaml.safe_load(Path(__file__).with_name("manifest.yaml").read_text(encoding="utf-8"))["params"]
 HOST = P["host"]
@@ -31,6 +31,11 @@ SYS_CALIB = "dialog:sys_tokens"   # {"chars", "tokens"}: measured system prompt 
 MAX_TOKENS = 700              # reply budget when the router is off
 NOTE_RESERVE = 250            # room for the memory note, reserved in the window
 CHARS_PER_TOKEN = 2.3         # Cyrillic estimate for text not yet seen by the model
+AMB = P.get("ambient", {})    # T-038 stage 2: listening without a wake word (trigger: speech in services/wakeword)
+ENGAGED_S, BUSY_PAUSE_S, VETO_P = AMB.get("engaged_s", 30), AMB.get("busy_pause_s", 20), AMB.get("veto_aside_p", 0.9)
+ACKS = ("Угу.", "М-м.", "Ага.")
+PHONE = re.compile(r"\bалл[оё]\b", re.I)
+state = {"engaged_until": 0.0, "busy": False, "last_utt": 0.0, "acks": 0}
 
 
 def est_tokens(text):
@@ -118,6 +123,45 @@ def say(reply_id, seq, sentence, note, ts, final=False, meta=None):
     return True
 
 
+def ambient_gate(text, fields, route, window):
+    """Answer or not, for a turn heard without a wake word (D-029, T-038 stage 2). Returns (decision, why, extra):
+    decision respond | ack | silent. other voice -> silent; aside veto (p >= VETO_P, no name) -> silent and BUSY until
+    a pause >= BUSY_PAUSE_S or the name; uncertain / unknown voice without the name -> silent; the name -> respond;
+    ENGAGED (ENGAGED_S after the last answer) -> respond; otherwise the duck pass (scene «alone at the desk»: no camera
+    yet, so always) with the pause measured by STT -> respond / ack / listen (listen = silent)."""
+    now = time.time()
+    speaker = fields.get(b'speaker', b'unknown').decode()
+    pause = float(fields.get(b'pause_s', b'2.0'))
+    name = "костян" in text.lower()
+    gap, state["last_utt"] = now - state["last_utt"], now
+    if state["busy"] and (name or gap >= BUSY_PAUSE_S):
+        state["busy"] = False
+    if speaker == "other":
+        return "silent", "other voice", {}
+    p_aside = ((route or {}).get("probs") or {}).get("aside", 0.0)
+    if p_aside >= VETO_P and not name:
+        state["busy"] = True
+        return "silent", f"veto aside {p_aside:.2f}", {}
+    if PHONE.search(text) and not name:  # a call starts: the router does not see it in the text (T-038 stage 1)
+        state["busy"] = True
+        return "silent", "veto phone", {}
+    if state["busy"]:
+        return "silent", "busy", {}
+    if speaker in ("uncertain", "unknown") and not name:
+        return "silent", f"{speaker} voice", {}
+    if name:
+        return "respond", "name", {}
+    if now < state["engaged_until"]:
+        return "respond", "engaged", {}
+    try:
+        dk = duck_bin_llamaserver(HOST, to_messages(window), text, pause)
+    except requests.RequestException as e:
+        print(f"brain: duck pass failed: {e}")
+        return "respond", "duck failed", {}
+    label, why = decide_duck_bin(dk["ans_tok"], dk["probs"], text, pause)
+    return ("silent" if label == "listen" else label), f"duck {dk['ans_tok']} {dk['probs']}" + (f" {why}" if why else ""), {"duck": dk}
+
+
 def load_memory(history):
     mem = AssocMemory(MEM["embed_host"], mode=MEM["mode"])
     for ex in history:
@@ -161,6 +205,7 @@ while True:
     if text.strip() == "/reset":
         r.delete(HISTORY, VECS)
         mem = AssocMemory(MEM["embed_host"], mode=MEM["mode"]) if MEM else None
+        state.update(engaged_until=0.0, busy=False)    # a new conversation starts idle
         print("brain: history reset")
         continue
     t0 = time.perf_counter()
@@ -179,6 +224,28 @@ while True:
         except requests.RequestException as e:
             print(f"brain: router failed: {e}")
         policy = POLICY.get((route or {}).get("label") or "chat", POLICY["chat"])
+    if fields.get(b'trigger') == b'speech':
+        # ambient: who speaks, conversation state and the duck pass decide; the router label only shapes the answer
+        decision, why, extra = ambient_gate(text, fields, route, window if P.get("router") else [])
+        st = "busy" if state["busy"] else "engaged" if time.time() < state["engaged_until"] else "idle"
+        print(f"brain: ambient {decision} ({why}) state={st} speaker={fields.get(b'speaker', b'-').decode()} "
+              f"pause={fields.get(b'pause_s', b'-').decode()}")
+        r.xadd("events:ambient", {"text": text, "decision": decision, "why": why, "state": st, "ts": f"{ts:.3f}",
+                                  "speaker": fields.get(b'speaker', b'').decode(), "spk_score": fields.get(b'spk_score', b'').decode()},
+               maxlen=5000, approximate=True)
+        if decision == "silent":       # not answered: nothing in the history or the memory
+            continue
+        if decision == "ack":          # «угу»: a reaction without content; kept in the history as an exchange
+            ack = ACKS[state["acks"] % len(ACKS)]
+            state["acks"] += 1
+            say(uuid.uuid4().hex[:12], 0, ack, "", ts, final=True, meta={"reply": ack, "ambient": "ack"})
+            turn = history[-1]["turn"] + 1 if history else 1
+            r.rpush(HISTORY, json.dumps({"turn": turn, "ts": ts, "user": text, "reply": ack, "raw": ack,
+                                         "tokens": est_new + 4}, ensure_ascii=False))
+            print(f"brain: >> {ack}")
+            continue
+        if policy is not None and policy.get("respond") is False:
+            policy = POLICY["chat"]    # an aside label below the veto threshold does not silence
     max_tokens = policy["max_tokens"] if policy else MAX_TOKENS
     prefix = policy.get("prefix", "") if policy else ""
     use_mem = mem is not None and (policy is None or policy["memory"])
@@ -255,3 +322,5 @@ while True:
     say(reply_id, seq, buf, note, ts, final=True, meta=meta)   # the rest of the text (may be empty) closes the reply
     print(f"brain: >> {reply}")
     print(f"brain: turn {turn} prompt={pe} reply={ec} exchange~{tokens} tokens {wall:.1f}s")
+    if fields.get(b'trigger') == b'speech':
+        state["engaged_until"] = time.time() + ENGAGED_S   # the conversation is on: answer what follows

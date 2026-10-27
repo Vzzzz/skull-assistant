@@ -5,6 +5,7 @@ For each WAV: a fake events:wakeword pointing at the current end of audio:mic, t
 Stop skull-capture and skull-wakeword first: live mic frames would interleave with the injected ones.
 
   .venv/bin/python research/voice/stt_inject.py models/voice/data/owner_normal/00[0-9].wav models/voice/data/broadcast/00[0-9].wav
+  .venv/bin/python research/voice/stt_inject.py --word=speech research/stt/data/owner/*.wav    # ambient trigger (T-038)
 """
 import sys
 import time
@@ -14,12 +15,16 @@ import redis
 import soundfile as sf
 
 r = redis.Redis(socket_timeout=None)
-for path in sys.argv[1:]:
+args = sys.argv[1:]
+word = "inject"
+if args and args[0].startswith("--word="):   # --word=speech: the ambient trigger (T-038), STT measures the pause
+    word, args = args[0].split("=", 1)[1], args[1:]
+for path in args:
     a = (sf.read(path, dtype="float32")[0] * 32768).astype(np.int16)
     last = r.xrevrange("audio:mic", count=1)
     audio_id = last[0][0] if last else b"0-0"
     tr_last = (r.xrevrange("events:transcript", count=1) or [[b"0-0"]])[0][0]
-    r.xadd("events:wakeword", {"word": "inject", "score": "1.0", "audio_id": audio_id})
+    r.xadd("events:wakeword", {"word": word, "score": "1.0", "audio_id": audio_id, **({"rms_thr": "150"} if word == "speech" else {})})
     time.sleep(0.2)
     for i in range(0, len(a) // 480 * 480, 480):
         r.xadd("audio:mic", {"pcm": a[i:i + 480].tobytes()})
@@ -32,4 +37,4 @@ for path in sys.argv[1:]:
         print(f"{path}: no transcript (empty text?)", flush=True)
         continue
     f = {k.decode(): v.decode() for k, v in resp[0][1][0][1].items()}
-    print(f"{path}: {f.get('speaker')} {f.get('spk_score')} {f.get('spk_ms')}ms | {f.get('text', '')[:60]}", flush=True)
+    print(f"{path}: {f.get('speaker')} {f.get('spk_score')} {f.get('spk_ms')}ms pause {f.get('pause_s', '-')} | {f.get('text', '')[:60]}", flush=True)

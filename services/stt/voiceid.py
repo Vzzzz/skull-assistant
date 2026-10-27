@@ -2,7 +2,8 @@
 
 Same preprocessing as research/voice (the threshold was measured on it): only voiced 30-ms frames
 (RMS >= voiced_rms, +3 hangover frames), CAM++ embedding (sherpa-onnx, CPU, 1 thread), cosine to the owner's
-enrollment vector. Too little speech (or mostly noise), no model or no enrollment -> 'unknown', never 'other'.
+enrollment vector: owner >= threshold_high > uncertain >= threshold > other (T-039 answer 1). Too little speech
+(or mostly noise), no model or no enrollment -> 'unknown', never 'other'.
 """
 import time
 
@@ -14,6 +15,7 @@ HANGOVER = 3
 class VoiceID:
     def __init__(self, root, params):
         self.threshold = params["threshold"]
+        self.threshold_high = params.get("threshold_high", self.threshold)   # owner >= high > uncertain >= threshold
         self.voiced_rms = params["voiced_rms"]
         self.min_speech_s = params["min_speech_s"]
         model, owner = root / params["model"], root / params["owner"]
@@ -49,5 +51,6 @@ class VoiceID:
         st.input_finished()
         e = np.asarray(self.ex.compute(st), dtype=np.float32)
         score = float(e @ self.owner / max(np.linalg.norm(e), 1e-8))
-        return {"speaker": "owner" if score >= self.threshold else "other", "spk_score": f"{score:.3f}",
+        speaker = "owner" if score >= self.threshold_high else "uncertain" if score >= self.threshold else "other"
+        return {"speaker": speaker, "spk_score": f"{score:.3f}",
                 "spk_ms": f"{(time.perf_counter() - t0) * 1000:.0f}"}
