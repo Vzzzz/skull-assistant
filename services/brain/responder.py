@@ -4,7 +4,7 @@ Per turn (order as in research/eval/ctx_probe.py run_dialog): router -> token wi
 exchanges outside the window -> message (policy prefix + raw turn + memory note) -> reply filter -> history/memory.
 Everything tunable comes from manifest.yaml `params`.
 """
-import json, sys, time
+import json, re, sys, time, uuid
 from pathlib import Path
 
 import numpy as np
@@ -13,6 +13,7 @@ import redis, requests, yaml
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 from core.memory import SYSTEM_RULE, AssocMemory, clean_reply, format_note
+from core.speech import for_speech
 from core.router import POLICY, decide, route_llamaserver
 
 P = yaml.safe_load(Path(__file__).with_name("manifest.yaml").read_text(encoding="utf-8"))["params"]
@@ -68,15 +69,53 @@ def to_messages(window):
     return messages
 
 
-def chat(messages, max_tokens):
+def chat_stream(messages, max_tokens, tail):
+    """Streams the reply from llama-server (SSE): yields text deltas; `tail` gets finish_reason, usage, timings
+    (they come in the last chunks: usage/timings in a chunk with empty choices)."""
     resp = requests.post(f"{HOST}/v1/chat/completions", json={
         "messages": messages,
         "max_tokens": max_tokens,
         "temperature": P["temperature"],
-        "chat_template_kwargs": {"enable_thinking": P["think"]},
-    }, timeout=120)
+        "chat_template_kwargs": {"enable_thinking": P["think"]},   # else "Thinking Process:" arrives in the stream
+        "stream": True,
+        "stream_options": {"include_usage": True},
+    }, timeout=120, stream=True)
     resp.raise_for_status()
-    return resp.json()
+    resp.encoding = "utf-8"     # text/event-stream comes without a charset: requests would decode it as latin-1
+    for line in resp.iter_lines(decode_unicode=True):
+        if not line or not line.startswith("data: "):
+            continue
+        if line == "data: [DONE]":
+            break
+        d = json.loads(line[6:])
+        tail.update({k: d[k] for k in ("usage", "timings") if k in d})
+        for ch in d.get("choices", []):
+            if ch.get("finish_reason"):
+                tail["finish_reason"] = ch["finish_reason"]
+            delta = (ch.get("delta") or {}).get("content")
+            if delta:
+                yield delta
+
+
+# sentence end: punctuation (+ closing quote/bracket) followed by whitespace, or a line break (calc steps come as lines)
+SENTENCE_END = re.compile(r'[.!?…]+["»)]?\s+|\n+')
+LIST_MARK = re.compile(r"(?:\d+|[a-zа-я])[.)]")
+
+
+def say(reply_id, seq, sentence, note, ts, final=False, meta=None):
+    """Publishes one sentence for TTS: memory guard and speech form applied here, per sentence.
+    Returns True if something was published."""
+    text = sentence.strip()
+    if text:
+        clean, flags = clean_reply(text, note)
+        text = "" if flags and clean == text else for_speech(clean)   # guard removed everything -> nothing to say
+    if not text and not final:
+        return False
+    fields = {"text": text, "reply_id": reply_id, "seq": seq, "final": int(final), "ts": f"{ts:.3f}"}
+    if meta is not None:
+        fields["meta"] = json.dumps(meta, ensure_ascii=False)
+    r.xadd("events:reply", fields)
+    return True
 
 
 def load_memory(history):
@@ -159,16 +198,29 @@ while True:
         if hits:
             print(f"brain: memory {[h[1]['turn'] for h in hits]}")
     sent = (prefix + "\n" + text if prefix else text) + ("\n\n" + note if note else "")
-    data = chat(to_messages(window) + [{"role": "user", "content": sent}], max_tokens)
-    choice = data["choices"][0]
-    raw = (choice["message"].get("content") or "").strip()
+    # stream: sentences go to TTS as soon as they are complete (T-003); the whole reply is stored once at the end
+    reply_id, seq, buf, parts, tail = uuid.uuid4().hex[:12], 0, "", [], {}
+    for delta in chat_stream(to_messages(window) + [{"role": "user", "content": sent}], max_tokens, tail):
+        buf += delta
+        parts.append(delta)
+        pos = 0
+        while (m := SENTENCE_END.search(buf, pos)):
+            if LIST_MARK.fullmatch(buf[:m.end()].strip()):   # «1. » is a list number, not a sentence: keep it with the next one
+                pos = m.end()
+                continue
+            sentence, buf, pos = buf[:m.end()], buf[m.end():], 0
+            if say(reply_id, seq, sentence, note, ts):
+                if seq == 0:
+                    print(f"brain: first sentence +{time.perf_counter() - t0:.2f}s")
+                seq += 1
+    raw = "".join(parts).strip()
     reply, flags = clean_reply(raw, note)
     if flags:
         print(f"brain: filter {sorted(flags)}, raw: {raw!r}")
 
     # token ledger: this exchange's share of later prompts = its raw user turn (prompt minus system, window, policy
     # prefix and note, none of which is kept) plus its reply; with an empty window the system prompt is calibrated
-    usage, timings = data.get("usage", {}), data.get("timings", {})
+    usage, timings = tail.get("usage", {}), tail.get("timings", {})
     pe, ec = usage.get("prompt_tokens", 0), usage.get("completion_tokens", 0)
     not_kept = est_tokens(prefix) + est_tokens(note)
     if not window and pe:
@@ -187,11 +239,12 @@ while True:
         except requests.RequestException as e:
             print(f"brain: memory add failed: {e}")
     wall = time.perf_counter() - t0
-    # per-turn details for logs and research/eval/ctx_bus.py (TTS reads only `text`)
+    # per-turn details for logs and research/eval/ctx_bus.py, on the final message of the reply (TTS reads `text`)
     meta = {"turn": turn, "window_turns": len(window), "prompt_tokens": pe, "completion_tokens": ec,
             "ttft_s": round(timings.get("prompt_ms", 0) / 1000, 3),
             "tok_s": round(timings["predicted_per_second"], 1) if timings.get("predicted_per_second") and ec >= 5 else None,
-            "finish_reason": choice.get("finish_reason"), "wall_s": round(wall, 2), "max_tokens": max_tokens}
+            "finish_reason": tail.get("finish_reason"), "wall_s": round(wall, 2), "max_tokens": max_tokens,
+            "reply": reply, "sentences": seq + 1}
     if route:
         meta["route"] = route
     if mem is not None:
@@ -199,6 +252,6 @@ while True:
                                    "kw": round(h[3], 3)} for h in hits], "note": note, "guard": sorted(flags)})
     if flags:
         meta["raw"] = raw
-    r.xadd('events:reply', {'text': reply, 'ts': f"{ts:.3f}", 'meta': json.dumps(meta, ensure_ascii=False)})
+    say(reply_id, seq, buf, note, ts, final=True, meta=meta)   # the rest of the text (may be empty) closes the reply
     print(f"brain: >> {reply}")
     print(f"brain: turn {turn} prompt={pe} reply={ec} exchange~{tokens} tokens {wall:.1f}s")

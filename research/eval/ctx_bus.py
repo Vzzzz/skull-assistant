@@ -29,11 +29,16 @@ def say(r, text, timeout=300):
     last = r.xrevrange("events:reply", count=1)
     last_id = last[0][0] if last else "0"
     r.xadd("events:transcript", {"text": text, "ts": f"{time.time():.3f}"})
-    resp = r.xread({"events:reply": last_id}, count=1, block=timeout * 1000)
-    if not resp:
-        raise SystemExit(f"no reply in {timeout}s to {text!r}")
-    f = resp[0][1][0][1]
-    return f[b"text"].decode(), json.loads(f.get(b"meta", b"{}"))
+    # T-003: a reply comes as several messages (one per sentence); wait for final=1, the full text is in meta.reply
+    t_end = time.time() + timeout
+    while time.time() < t_end:
+        resp = r.xread({"events:reply": last_id}, count=50, block=1000)
+        for msg_id, f in (resp[0][1] if resp else []):
+            last_id = msg_id
+            if f.get(b"final", b"1") == b"1":
+                meta = json.loads(f.get(b"meta", b"{}"))
+                return meta.get("reply", f[b"text"].decode()), meta
+    raise SystemExit(f"no reply in {timeout}s to {text!r}")
 
 
 def main():

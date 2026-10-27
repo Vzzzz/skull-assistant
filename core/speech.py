@@ -41,10 +41,38 @@ def _markdown(s: str) -> str:
     return s.replace("|", ", ")
 
 
+# units after a number (T-003 step 6): Piper swallows «₽», reads «3 л» as «три эль» and «15%» as «пятнадцать процент»
+_UNITS = {"₽": ("рубль", "рубля", "рублей"), "руб": ("рубль", "рубля", "рублей"), "л": ("литр", "литра", "литров"),
+          "кг": ("килограмм", "килограмма", "килограммов"), "км": ("километр", "километра", "километров"),
+          "°C": ("градус", "градуса", "градусов"), "%": ("процент", "процента", "процентов")}
+_UNIT_RE = re.compile(r"(\d+(?:[.,]\d+)?)\s*(₽|руб\.?|кг|км|л|°\s*[CС]|°|%)(?![A-Za-zА-Яа-яЁё])")
+
+
+def _plural(number: str, forms):
+    """Russian agreement: 1 рубль, 2 рубля, 5 рублей; a fraction takes the genitive singular (2,5 литра)."""
+    if "." in number or "," in number:
+        return forms[1]
+    n = int(number)
+    if n % 10 == 1 and n % 100 != 11:
+        return forms[0]
+    if 2 <= n % 10 <= 4 and not 12 <= n % 100 <= 14:
+        return forms[1]
+    return forms[2]
+
+
+def _units(s: str) -> str:
+    def repl(m):
+        unit = m.group(2).rstrip(".").replace(" ", "").replace("С", "C")
+        forms = _UNITS.get(unit) or _UNITS["°C"]          # a bare «°» after a number is a temperature
+        return f"{m.group(1)} {_plural(m.group(1), forms)}"
+    return _UNIT_RE.sub(repl, s)
+
+
 def for_speech(text: str) -> str:
     s = _MATH_SPANS.sub(lambda m: _latex(next(g for g in m.groups() if g is not None)), text)
     s = _latex(s) if "\\" in s else s
     s = _markdown(s)
+    s = _units(s)
     s = re.sub(r"(\d)\s*[*×xх]\s*(?=\d)", r"\1 умножить на ", s)    # 17 * 3, 17 × 3, 17x3
     s = re.sub(r"(\d)\s*[÷:]\s*(?=\d+\s*=)", r"\1 разделить на ", s)  # 12 : 4 = 3 (not 08:40)
     s = s.replace("×", " умножить на ").replace("÷", " разделить на ").replace("≈", " примерно ")
