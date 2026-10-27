@@ -97,25 +97,27 @@ def run_speech():
             pcm = np.frombuffer(fields[b'pcm'], dtype=np.int16)
             frames.append((n, msg_id))
             n += len(pcm)
-            muted = muted or bool(r.exists('tts:speaking'))
+            tts = bool(r.exists('tts:speaking'))
             vad.accept_waveform(pcm.astype(np.float32) / 32768.0)
             if vad.is_speech_detected() and not speaking:
                 r.set('vad:onset', f"{time.time():.3f}")
+                muted = tts             # only the skull speaking *during* the segment mutes it (not before: live 2b)
             speaking = vad.is_speech_detected()
-            if speaking:
-                cur = vad.current_segment
+            muted = muted or (speaking and tts)
+            if speaking and (n // len(pcm)) % 16 == 0:   # current_segment copies the whole segment: every 0.5 s, not
+                cur = vad.current_segment                 # every frame (8.6 % of a core on a podcast vs 1.0 %)
                 start = max(cur.start, cut)
                 if cur.start + len(cur.samples) - start >= max_len:
                     cut = cur.start + len(cur.samples)
                     emit(start, cut, " (cut)")
-                    muted = bool(r.exists('tts:speaking'))
+                    muted = tts
             while not vad.empty():
                 seg = vad.front
                 start, end = max(seg.start, cut), seg.start + len(seg.samples)
                 vad.pop()
                 if end - start >= 0.3 * RATE:       # what is left after a cut may be a tail
                     emit(start, end)
-                muted = bool(r.exists('tts:speaking'))
+                muted = speaking and tts
 
 
 if __name__ == "__main__":

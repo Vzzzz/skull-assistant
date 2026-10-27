@@ -4,7 +4,7 @@ backend: sherpa-onnx (CPU)
 cuda_context: false
 budget:
   vram_mb: 0
-  ram_mb: 432            # ПИК: ambient, ~500 фраз до 11 с (T-038 эт. 2, 2026-10-27); после 20 фраз 396 (T-041); было 529 с faster-whisper base
+  ram_mb: 448            # ПИК: ambient на VAD-сегментах по 12 с (T-038 эт. 2б, 2026-10-28); 432 на RMS-триггере (эт. 2); после 20 фраз 396 (T-041); было 529 с faster-whisper base
   measured_on: stand
 residency:
   A: resident
