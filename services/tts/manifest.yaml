@@ -4,7 +4,7 @@ backend: cpu
 cuda_context: false
 budget:
   vram_mb: 0
-  ram_mb: 374            # ПИК после 10 ответов, синтез по предложениям (T-003, 2026-10-27); было 486 — синтез целого ответа
+  ram_mb: 423            # ПИК с sox pitch/reverb по предложению через pipe (хвост T-003, 2026-10-27); без sox 374, синтез целого ответа 486
   measured_on: stand
 residency:
   A: resident
