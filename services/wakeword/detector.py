@@ -1,11 +1,11 @@
 """Listening trigger -> events:wakeword (manifest params.trigger).
 
   kws     openWakeWord "hey jarvis" (score > 0.5)
-  speech  T-038 stage 2 (ambient): start of speech by an adaptive RMS threshold — max(floor, factor x median RMS
-          of the background over the last window_s), start_frames loud frames in a row, end after end_silence_s
-          below end_ratio x threshold (hysteresis), not more often than min_interval_s; tts:speaking mutes it.
-          audio_id points preroll_frames before the first loud frame, so STT records the phrase from its start
-          (the KWS trigger loses ~0.3 s, kws_monitor_2026-10-24.md). openWakeWord is not loaded.
+  speech  T-038 stage 2b (ambient): speech segments by Silero VAD (sherpa-onnx, CPU) — split at pauses inside
+          continuous speech, at most max_segment_s; one event per segment with its first and last frame (audio_id,
+          end_id), so STT gets the phrase from its start (the KWS trigger loses ~0.3 s, I-14) and the end by VAD (I-03).
+          Replaces the adaptive RMS threshold of stage 2: a podcast held it «in speech» for 10–18 min.
+          tts:speaking mutes it. openWakeWord is not loaded.
 """
 import collections
 import time
@@ -16,12 +16,10 @@ import redis
 import yaml
 
 r = redis.Redis()
+ROOT = Path(__file__).resolve().parents[2]
+RATE = 16000
 P = yaml.safe_load(Path(__file__).with_name("manifest.yaml").read_text(encoding="utf-8")).get("params", {})
 TRIGGER = P.get("trigger", "kws")
-
-
-def rms(pcm):
-    return float(np.sqrt(np.mean(pcm.astype(np.float32) ** 2)))
 
 
 def run_kws():
@@ -58,42 +56,66 @@ def run_kws():
 
 
 def run_speech():
+    """Segments by Silero VAD (sherpa-onnx): the event goes out at the end of a segment, with its first and last frame,
+    so STT reads exactly that stretch from audio:mic. vad:onset = wall time of the latest start of speech (STT measures
+    the pause after a phrase by it). A segment that overlapped tts:speaking is dropped (the skull's own voice).
+    Silero's max_speech_duration is not a hard limit (podcast: segments of 16–19 s), so speech running longer than
+    max_segment_s is cut here: the piece goes out and the rest of the VAD segment starts at the cut."""
+    import sherpa_onnx
     S = P.get("speech", {})
-    frame_s = 0.03
-    bg = collections.deque(maxlen=int(S.get("window_s", 10) / frame_s))      # background RMS, outside speech only
-    floor, factor = S.get("floor_rms", 100), S.get("factor", 2.0)
-    start_frames, preroll = S.get("start_frames", 3), S.get("preroll_frames", 5)
-    end_frames = int(S.get("end_silence_s", 0.9) / frame_s)
-    end_ratio, min_interval = S.get("end_ratio", 0.8), S.get("min_interval_s", 2.0)
-    ids = collections.deque(maxlen=start_frames + preroll + 1)
-    in_speech, loud, quiet, last_fire, last_id = False, 0, 0, 0.0, '$'
-    print(f"listening for speech: threshold max({floor}, {factor} x median of {S.get('window_s', 10)} s)", flush=True)
+    cfg = sherpa_onnx.VadModelConfig()
+    cfg.silero_vad.model = str(ROOT / S.get("vad_model", "models/vad/silero_vad.onnx"))
+    cfg.silero_vad.threshold = S.get("threshold", 0.5)
+    cfg.silero_vad.min_silence_duration = S.get("min_silence_s", 0.5)
+    cfg.silero_vad.min_speech_duration = S.get("min_speech_s", 0.25)
+    cfg.silero_vad.max_speech_duration = S.get("max_segment_s", 12)
+    cfg.sample_rate, cfg.num_threads = RATE, 1
+    vad = sherpa_onnx.VoiceActivityDetector(cfg, buffer_size_in_seconds=30)
+    frames = collections.deque(maxlen=2000)    # (first sample, msg_id) of recent frames, ~60 s like audio:mic
+    max_len = int(S.get("max_segment_s", 12) * RATE)
+    n, cut, speaking, muted, last_id = 0, 0, False, False, '$'
+    print(f"listening for speech: Silero VAD threshold {cfg.silero_vad.threshold}, silence {cfg.silero_vad.min_silence_duration} s, "
+          f"segment <= {cfg.silero_vad.max_speech_duration} s", flush=True)
+
+    def frame_at(sample):
+        return next((mid for off, mid in reversed(frames) if off <= sample), frames[0][1])
+
+    def emit(start, end, why=""):
+        if muted:
+            print(f"SPEECH {(end - start) / RATE:.1f}s dropped (tts:speaking)", flush=True)
+            return
+        r.xadd('events:wakeword', {'word': 'speech', 'score': f"{(end - start) / RATE:.1f}", 'audio_id': frame_at(start),
+                                   'end_id': frame_at(end - 1), 'end_ts': f"{time.time() - (n - end) / RATE:.3f}"})
+        print(f"SPEECH {(end - start) / RATE:.1f}s{why}", flush=True)
+
     while True:
         resp = r.xread({'audio:mic': last_id}, count=10, block=1000)
         if not resp:
             continue
         for msg_id, fields in resp[0][1]:
             last_id = msg_id
-            ids.append(msg_id)
-            level = rms(np.frombuffer(fields[b'pcm'], dtype=np.int16))
-            thr = max(floor, factor * float(np.median(bg))) if len(bg) >= 30 else floor * factor
-            if in_speech:
-                quiet = quiet + 1 if level < end_ratio * thr else 0
-                if quiet >= end_frames:
-                    in_speech, loud = False, 0
-                continue
-            bg.append(level)
-            loud = loud + 1 if level >= thr else 0
-            if loud < start_frames:
-                continue
-            in_speech, quiet = True, 0          # speech from here on, whether or not it fires
-            now = time.time()
-            if r.exists('tts:speaking') or now - last_fire < min_interval:
-                continue
-            last_fire = now
-            r.xadd('events:wakeword', {'word': 'speech', 'score': f"{level:.0f}", 'audio_id': ids[0],
-                                       'rms_thr': f"{thr:.0f}"})
-            print(f"SPEECH rms={level:.0f} thr={thr:.0f}", flush=True)
+            pcm = np.frombuffer(fields[b'pcm'], dtype=np.int16)
+            frames.append((n, msg_id))
+            n += len(pcm)
+            muted = muted or bool(r.exists('tts:speaking'))
+            vad.accept_waveform(pcm.astype(np.float32) / 32768.0)
+            if vad.is_speech_detected() and not speaking:
+                r.set('vad:onset', f"{time.time():.3f}")
+            speaking = vad.is_speech_detected()
+            if speaking:
+                cur = vad.current_segment
+                start = max(cur.start, cut)
+                if cur.start + len(cur.samples) - start >= max_len:
+                    cut = cur.start + len(cur.samples)
+                    emit(start, cut, " (cut)")
+                    muted = bool(r.exists('tts:speaking'))
+            while not vad.empty():
+                seg = vad.front
+                start, end = max(seg.start, cut), seg.start + len(seg.samples)
+                vad.pop()
+                if end - start >= 0.3 * RATE:       # what is left after a cut may be a tail
+                    emit(start, end)
+                muted = bool(r.exists('tts:speaking'))
 
 
 if __name__ == "__main__":

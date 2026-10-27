@@ -6,6 +6,8 @@ the previous one plays. tts:speaking is set on the first chunk in the player and
 nothing is being synthesized and the audio handed to the card has had time to play. Text arrives already in speech form
 (brain applies core/speech.for_speech per sentence). The skull's timbre (sox pitch/reverb, as before T-003) is applied
 per sentence through a pipe on raw PCM, no files; FX = [] turns it off (preset from research/tts/fx.py — later).
+Ambient (T-038 stage 2b): tts:speaking stays up TAIL_S after the sound (room echo of the last word), and the expected
+end of each reply's playback goes to the hash tts:end (core/ambient.py counts the ENGAGED window from it).
 """
 import queue
 import subprocess
@@ -23,6 +25,7 @@ voice = PiperVoice.load(VOICE)
 RATE = voice.config.sample_rate
 FX = ["pitch", "-300", "reverb", "30", "50", "100"]   # the voice before T-003 (sox on files)
 BLOCK = RATE // 5                                    # 0.2-s pieces for the player
+TAIL_S = 0.5                                         # tts:speaking after the sound: the echo is not a new phrase
 
 texts = queue.Queue()        # (reply_id, seq, text, ts)
 pcm = queue.Queue()          # (reply_id, seq, float32 mono chunk, ts)
@@ -43,8 +46,13 @@ def synth():
     global pending
     while True:
         reply_id, seq, text, ts = texts.get()
+        if text is None:            # end of a reply: passes the player in order, after its last chunk
+            pcm.put((reply_id, seq, None, ts))
+            continue
         try:
+            t0 = time.perf_counter()
             audio = np.concatenate([c.audio_int16_array for c in voice.synthesize(text)])
+            print(f"tts: synth {(time.perf_counter() - t0) * 1000:.0f} ms for {len(audio) / RATE:.1f} s (#{seq})", flush=True)
             if FX:
                 audio, fx_s = fx(audio)
                 print(f"tts: sox {fx_s * 1000:.0f} ms for {len(audio) / RATE:.1f} s (#{seq})", flush=True)
@@ -67,10 +75,14 @@ def play():
             except queue.Empty:
                 with lock:
                     idle = pending == 0 and pcm.empty()
-                if speaking and idle and time.time() >= until:   # play() returns once the data is buffered
+                if speaking and idle and time.time() >= until + TAIL_S:   # play() returns once the data is buffered
                     r.delete('tts:speaking')
                     speaking = False
                     print(f"tts: quiet after {last}", flush=True)   # inside a reply this is an audible gap
+                continue
+            if audio is None:       # the reply's last chunk has been handed to the card: it ends at `until`
+                r.hset('tts:end', reply_id, f"{max(until, time.time()):.3f}")
+                r.expire('tts:end', 3600)
                 continue
             if not speaking:
                 r.set('tts:speaking', 1)
@@ -80,7 +92,8 @@ def play():
                 if ts:
                     print(f"tts: first audio +{time.time() - ts:.2f}s", flush=True)
             elif speaking and time.time() - until > 0.03:   # the card ran dry inside a reply: audible gap
-                print(f"tts: gap {(time.time() - until) * 1000:.0f} ms before {reply_id} #{seq}", flush=True)
+                print(f"tts: gap {(time.time() - until) * 1000:.0f} ms before {reply_id} #{seq} "
+                      f"(chunk {len(audio) / RATE:.2f} s, queued {pcm.qsize()})", flush=True)
             until = max(until, time.time()) + len(audio) / RATE
             player.play(audio)      # returns when PulseAudio has buffered the chunk, not when it has been heard
             last = f"{reply_id} #{seq}"
@@ -98,12 +111,13 @@ while True:
     for ev_id, fields in ev[0][1]:
         last_ev = ev_id
         text = fields[b'text'].decode().strip()
-        if not text:                 # e.g. the empty final message that only closes a reply
-            continue
         reply_id = fields.get(b'reply_id', ev_id).decode()   # a message without reply_id is a reply of its own
         seq = int(fields.get(b'seq', b'0'))
         ts = float(fields[b'ts']) if b'ts' in fields else None
-        print(f"speaker: [{reply_id} #{seq}] {text[:60]}", flush=True)
-        with lock:
-            pending += 1
-        texts.put((reply_id, seq, text, ts))
+        if text:                     # the final message may be empty: it only closes the reply
+            print(f"speaker: [{reply_id} #{seq}] {text[:60]}", flush=True)
+            with lock:
+                pending += 1
+            texts.put((reply_id, seq, text, ts))
+        if fields.get(b'final') == b'1' or b'reply_id' not in fields:
+            texts.put((reply_id, seq, None, ts))

@@ -1,0 +1,22 @@
+{
+ "source": "research/eval/data/ambient_2026-10-27.jsonl",
+ "engaged_s": 20,
+ "engaged_yes_p": 0.3,
+ "summary": {
+  "household": {
+   "n": 86,
+   "bad": 0,
+   "was_bad": 0,
+   "respond": 0,
+   "ack": 0
+  },
+  "podcast": {
+   "n": 5,
+   "bad": 0,
+   "was_bad": 0,
+   "respond": 0,
+   "ack": 0
+  }
+ },
+ "turns": []
+}

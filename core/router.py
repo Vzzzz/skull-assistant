@@ -170,7 +170,8 @@ listen — молчать (середина мысли, счёт, чтение �
 _DUCK_RE = re.compile("|".join(DUCK_LABELS), re.I)
 # imperative addressed to «ты» that asks the skull for something (closed list: «слезь», «брысь» to the cat must stay listen)
 _IMPERATIVE = re.compile(r"\b(?:скажи|расскажи|подскажи|посчитай|прикинь|напомни|запомни|объясни|ответь|глянь|посмотри|"
-                         r"послушай|слушай|проверь|найди|помоги|угадай|представь|давай|включи|выключи)\b", re.I)
+                         r"послушай|слушай|проверь|найди|помоги|угадай|представь|давай|включи|выключи|"
+                         r"умножь|раздели|сложи|вычти|переведи|сравни)\b", re.I)
 
 
 def _duck_probs(top_logprobs):
@@ -302,9 +303,9 @@ def duck_bin_ollama(host, model, messages, text, pause_s, num_ctx, timeout=120):
 
 
 def finished(text):
-    """A completed remark: ends with a full stop or an ellipsis and has at least ACK_MIN_WORDS words."""
-    t = text.strip()
-    return t.endswith((".", "…")) and len(re.findall(r"\w+", t)) >= ACK_MIN_WORDS
+    """A completed remark: at least ACK_MIN_WORDS words (the pause is checked by the caller). Not by the final full stop:
+    punct-STT often leaves it out, and `ack` never fired on the live test (T-038 stage 2b, answer 4)."""
+    return len(re.findall(r"\w+", text)) >= ACK_MIN_WORDS
 
 
 def duck_from_no(text, pause_s):
@@ -314,15 +315,17 @@ def duck_from_no(text, pause_s):
 # a question by its words, not by «?» (T-038 stage 2, step 7a): punct-STT puts «?» on 1 of 6 owner questions (T-041).
 # The word must open the phrase (after a name, «а», «ну», «слушай», «кстати») — «я думаю, что…» is not a question
 QUESTION_WORDS = ("сколько", "где", "как", "какой", "какая", "какое", "какие", "что", "чем", "когда", "почему",
-                  "зачем", "кто", "куда", "откуда", "напомни", "скажи", "подскажи", "можешь", "помнишь", "видел", "знаешь")
-_LEAD = {"а", "и", "ну", "слушай", "кстати", "так", "эй", "ты"}
+                  "зачем", "кто", "куда", "откуда", "напомни", "скажи", "подскажи", "можешь", "помнишь", "видел", "знаешь",
+                  "который", "которая", "которое", "чей", "чья", "чьё")
+_LEAD = {"а", "и", "ну", "слушай", "кстати", "так", "эй", "ты", "не"}   # «не помнишь, …», «не знаешь, …»
 
 
 def is_question(text):
     words = re.findall(r"[а-яё-]+", text.lower())
     while words and (words[0] in _LEAD or words[0].startswith("костян")):
         words = words[1:]
-    return "?" in text or bool(words and words[0] in QUESTION_WORDS) or bool(_IMPERATIVE.search(text))
+    return ("?" in text or bool(words and words[0] in QUESTION_WORDS) or words[1:2] == ["ли"]   # «есть ли …», «знаешь ли»
+            or bool(_IMPERATIVE.search(text)))
 
 
 def decide_duck_bin(ans, probs, text, pause_s):
