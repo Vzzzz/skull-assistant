@@ -34,7 +34,8 @@ NOTE_RESERVE = 250            # room for the memory note, reserved in the window
 CHARS_PER_TOKEN = 2.3         # Cyrillic estimate for text not yet seen by the model
 AMB = P.get("ambient", {})    # T-038 stage 2b: listening without a wake word (trigger: speech in services/wakeword)
 amb = Ambient(engaged_s=AMB.get("engaged_s", 20), busy_pause_s=AMB.get("busy_pause_s", 20),
-              veto_p=AMB.get("veto_aside_p", 0.9), engaged_yes_p=AMB.get("engaged_yes_p", 0.3))
+              veto_p=AMB.get("veto_aside_p", 0.9), engaged_yes_p=AMB.get("engaged_yes_p", 0.3),
+              ack_gap_s=AMB.get("ack_gap_s", 20))
 ACKS = ("Угу.", "М-м.", "Ага.")
 acks = 0
 
@@ -138,7 +139,9 @@ def ambient_gate(text, fields, route, window):
         except requests.RequestException as e:
             print(f"brain: duck pass failed: {e}")
             return {"ans_tok": None, "probs": {}}
-    return (*amb.decide(text, speaker, pause, p_aside, time.time(), engaged, duck), engaged)
+    lifted = bool(fields.get(b'spk_region'))      # the voice was found by a window inside a broadcast segment (2в)
+    bcast = fields.get(b'bcast') == b'1'          # STT heard a foreign voice in the last 30 s
+    return (*amb.decide(text, speaker, pause, p_aside, time.time(), engaged, duck, lifted, bcast), engaged)
 
 
 def load_memory(history):
@@ -213,6 +216,8 @@ while True:
         r.xadd("events:ambient", {"text": text, "decision": decision, "why": why, "state": st, "ts": f"{ts:.3f}",
                                   "speaker": fields.get(b'speaker', b'').decode(), "spk_score": fields.get(b'spk_score', b'').decode(),
                                   "pause_s": fields.get(b'pause_s', b'').decode(), "pause_wait": fields.get(b'pause_wait', b'').decode(),
+                                  "spk_win": fields.get(b'spk_win', b'').decode(), "spk_region": fields.get(b'spk_region', b'').decode(),
+                                  "text_full": fields.get(b'text_full', b'').decode(), "bcast": fields.get(b'bcast', b'').decode(),
                                   "p_aside": f"{((route or {}).get('probs') or {}).get('aside', 0.0):.3f}"},
                maxlen=5000, approximate=True)
         if decision == "silent":       # not answered: nothing in the history or the memory

@@ -73,7 +73,7 @@ def run_speech():
     vad = sherpa_onnx.VoiceActivityDetector(cfg, buffer_size_in_seconds=30)
     frames = collections.deque(maxlen=2000)    # (first sample, msg_id) of recent frames, ~60 s like audio:mic
     max_len = int(S.get("max_segment_s", 12) * RATE)
-    n, cut, speaking, muted, last_id = 0, 0, False, False, '$'
+    n, cut, speaking, muted, tts, last_id = 0, 0, False, False, False, '$'
     print(f"listening for speech: Silero VAD threshold {cfg.silero_vad.threshold}, silence {cfg.silero_vad.min_silence_duration} s, "
           f"segment <= {cfg.silero_vad.max_speech_duration} s", flush=True)
 
@@ -97,13 +97,19 @@ def run_speech():
             pcm = np.frombuffer(fields[b'pcm'], dtype=np.int16)
             frames.append((n, msg_id))
             n += len(pcm)
-            tts = bool(r.exists('tts:speaking'))
+            tts_was, tts = tts, bool(r.exists('tts:speaking'))
             vad.accept_waveform(pcm.astype(np.float32) / 32768.0)
             if vad.is_speech_detected() and not speaking:
                 r.set('vad:onset', f"{time.time():.3f}")
                 muted = tts             # only the skull speaking *during* the segment mutes it (not before: live 2b)
             speaking = vad.is_speech_detected()
             muted = muted or (speaking and tts)
+            if speaking and tts_was and not tts and muted:
+                # the skull stopped inside a segment (continuous broadcast): drop what overlapped its voice and go on
+                # from here — not the whole 12 s with the owner's reply after it (2в live: «А давай!» was lost)
+                cur = vad.current_segment
+                print(f"SPEECH {(n - max(cur.start, cut)) / RATE:.1f}s dropped (tts:speaking), rest kept", flush=True)
+                cut, muted = n, False
             if speaking and (n // len(pcm)) % 16 == 0:   # current_segment copies the whole segment: every 0.5 s, not
                 cur = vad.current_segment                 # every frame (8.6 % of a core on a podcast vs 1.0 %)
                 start = max(cur.start, cut)

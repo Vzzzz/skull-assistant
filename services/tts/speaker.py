@@ -25,7 +25,8 @@ voice = PiperVoice.load(VOICE)
 RATE = voice.config.sample_rate
 FX = ["pitch", "-300", "reverb", "30", "50", "100"]   # the voice before T-003 (sox on files)
 BLOCK = RATE // 5                                    # 0.2-s pieces for the player
-TAIL_S = 0.5                                         # tts:speaking after the sound: the echo is not a new phrase
+TAIL_S = 1.0                                         # tts:speaking after the sound: the echo is not a new phrase
+                                                     # (0.5 let «…что хочешь» through as a new segment, 2в music)
 
 texts = queue.Queue()        # (reply_id, seq, text, ts)
 pcm = queue.Queue()          # (reply_id, seq, float32 mono chunk, ts)

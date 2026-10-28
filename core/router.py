@@ -320,9 +320,12 @@ QUESTION_WORDS = ("сколько", "где", "как", "какой", "кака�
 _LEAD = {"а", "и", "ну", "слушай", "кстати", "так", "эй", "ты", "не"}   # «не помнишь, …», «не знаешь, …»
 
 
+_FILLER = re.compile(r"([аэмоуы])(?:-?\1)*")   # «а-а», «э-э», «м-м-м» before the question word (2в: «А-а, что посоветуешь…»)
+
+
 def is_question(text):
     words = re.findall(r"[а-яё-]+", text.lower())
-    while words and (words[0] in _LEAD or words[0].startswith("костян")):
+    while words and (words[0] in _LEAD or words[0].startswith("костян") or _FILLER.fullmatch(words[0])):
         words = words[1:]
     return ("?" in text or bool(words and words[0] in QUESTION_WORDS) or words[1:2] == ["ли"]   # «есть ли …», «знаешь ли»
             or bool(_IMPERATIVE.search(text)))
