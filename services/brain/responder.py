@@ -15,7 +15,7 @@ sys.path.insert(0, str(ROOT))
 from core.ambient import OPEN_KEY, Ambient, engaged_until
 from core.memory import SYSTEM_RULE, AssocMemory, clean_reply, format_note
 from core.speech import for_speech
-from core.router import POLICY, decide, duck_bin_llamaserver, route_llamaserver
+from core.router import POLICY, decide, duck_bin_llamaserver, policy_prefix, route_llamaserver
 
 P = yaml.safe_load(Path(__file__).with_name("manifest.yaml").read_text(encoding="utf-8"))["params"]
 HOST = P["host"]
@@ -34,8 +34,8 @@ NOTE_RESERVE = 250            # room for the memory note, reserved in the window
 CHARS_PER_TOKEN = 2.3         # Cyrillic estimate for text not yet seen by the model
 AMB = P.get("ambient", {})    # T-038 stage 2b: listening without a wake word (trigger: speech in services/wakeword)
 amb = Ambient(engaged_s=AMB.get("engaged_s", 20), busy_pause_s=AMB.get("busy_pause_s", 20),
-              veto_p=AMB.get("veto_aside_p", 0.9), engaged_yes_p=AMB.get("engaged_yes_p", 0.3),
-              ack_gap_s=AMB.get("ack_gap_s", 20))
+              veto_p=AMB.get("veto_aside_p", 0.9), engaged_yes_p=AMB.get("engaged_yes_p", 0.7),
+              ack_gap_s=AMB.get("ack_gap_s", 20), engaged_ack_p=AMB.get("engaged_ack_p", 0.3))
 ACKS = ("Угу.", "М-м.", "Ага.")
 acks = 0
 
@@ -195,7 +195,7 @@ while True:
 
     history = [json.loads(x) for x in r.lrange(HISTORY, 0, -1)]   # Redis is the only copy
     est_new = est_tokens(text) + 8
-    route, policy = None, None
+    route, policy, label = None, None, None
     if P.get("router"):
         # same window as an ordinary chat turn, so the main call reuses the KV prefix
         window, _ = build_window(history, sys_tokens, est_new + POLICY["chat"]["max_tokens"] + NOTE_RESERVE)
@@ -206,7 +206,8 @@ while True:
                 route.update(label_raw=route["label"], label=label, guard=reason)
         except requests.RequestException as e:
             print(f"brain: router failed: {e}")
-        policy = POLICY.get((route or {}).get("label") or "chat", POLICY["chat"])
+        label = (route or {}).get("label") or "chat"
+        policy = POLICY.get(label, POLICY["chat"])
     if fields.get(b'trigger') == b'speech':
         # ambient: who speaks, conversation state and the duck pass decide; the router label only shapes the answer
         decision, why, opens, engaged = ambient_gate(text, fields, route, window if P.get("router") else [])
@@ -232,9 +233,9 @@ while True:
             print(f"brain: >> {ack}")
             continue
         if policy is not None and policy.get("respond") is False:
-            policy = POLICY["chat"]    # an aside label below the veto threshold does not silence
+            label, policy = "chat", POLICY["chat"]    # an aside label below the veto threshold does not silence
     max_tokens = policy["max_tokens"] if policy else MAX_TOKENS
-    prefix = policy.get("prefix", "") if policy else ""
+    prefix = policy_prefix(label, text) if policy else ""   # world: hedge only for perception words (T-042)
     use_mem = mem is not None and (policy is None or policy["memory"])
     extra = est_tokens(prefix) + (NOTE_RESERVE if use_mem else 0)
     window, used = build_window(history, sys_tokens, est_new + extra + max_tokens)
