@@ -9,6 +9,9 @@ replay in research/eval/ambient_bus.py run the same rules. Changes after the liv
     an `uncertain` voice counts as the owner's inside the window, outside it stays silent;
   - in IDLE the duck's «да» on a statement is `ack`, not an answer.
 The window counts from the end of playback of the answer that opened it (engaged_until), not from the end of generation.
+2в (core's answers 2026-10-28): any answer with content inside the window extends it; `unknown` is silent in the window
+too; «угу» not more often than once in ack_gap_s; a voice found only by a window inside a segment of broadcast
+(`lifted`, services/stt/voiceid.py) counts as `uncertain` only together with the name.
 """
 import json
 import re
@@ -43,16 +46,26 @@ def needs_pause(text, speaker, engaged):
 
 
 class Ambient:
-    def __init__(self, engaged_s=20, busy_pause_s=20, veto_p=0.9, engaged_yes_p=0.3):
+    def __init__(self, engaged_s=20, busy_pause_s=20, veto_p=0.9, engaged_yes_p=0.3, ack_gap_s=20):
         self.engaged_s, self.busy_pause_s, self.veto_p, self.engaged_yes_p = engaged_s, busy_pause_s, veto_p, engaged_yes_p
-        self.busy, self.last_utt = False, 0.0
+        self.ack_gap_s = ack_gap_s
+        self.busy, self.last_utt, self.last_ack = False, 0.0, -1e9
 
     def reset(self):
-        self.busy, self.last_utt = False, 0.0
+        self.busy, self.last_utt, self.last_ack = False, 0.0, -1e9
 
-    def decide(self, text, speaker, pause_s, p_aside, now, engaged, duck):
+    def decide(self, text, speaker, pause_s, p_aside, now, engaged, duck, lifted=False):
         """Returns (decision, why, opens): decision respond | ack | silent; opens — the answer opens or extends ENGAGED.
-        duck(text, pause_s) -> {"ans_tok", "probs"} (core.router.duck_bin_llamaserver), called only when needed."""
+        duck(text, pause_s) -> {"ans_tok", "probs"} (core.router.duck_bin_llamaserver), called only when needed.
+        lifted — the voice class came from a window inside the segment, not from the whole segment."""
+        decision, why, opens = self._decide(text, speaker, pause_s, p_aside, now, engaged, duck, lifted)
+        if decision == "ack":
+            if now - self.last_ack < self.ack_gap_s:
+                return "silent", f"{why} (ack {now - self.last_ack:.0f} s ago)", False
+            self.last_ack = now
+        return decision, why, opens
+
+    def _decide(self, text, speaker, pause_s, p_aside, now, engaged, duck, lifted):
         name = has_name(text)
         gap, self.last_utt = now - self.last_utt, now
         if self.busy and (name or gap >= self.busy_pause_s):
@@ -69,10 +82,10 @@ class Ambient:
             return "silent", "busy", False
         if name:
             return "respond", "name", True
-        if speaker in ("uncertain", "unknown") and not engaged:
-            return "silent", f"{speaker} voice", False
-        if speaker == "unknown" and len(re.findall(r"\w+", text)) < 2:
-            return "silent", "unknown fragment", False   # no embedding = too little voice: «Д», «С.» from the room
+        if speaker == "unknown":                 # no embedding: too little voice, or mostly noise / broadcast
+            return "silent", "unknown voice", False
+        if speaker == "uncertain" and (lifted or not engaged):
+            return "silent", "uncertain voice" + (" (window)" if lifted else ""), False
         if is_question(text):   # by words (step 7a); the duck often says «нет» to a bare question in a fresh conversation
             return "respond", "question", True
         dk = duck(text, pause_s)
@@ -80,7 +93,7 @@ class Ambient:
         tag = f"duck {ans} {probs}"
         if engaged:
             if probs.get("да", 0.0) >= self.engaged_yes_p:
-                return "respond", f"engaged {tag}", False
+                return "respond", f"engaged {tag}", True
             return self._quiet(text, pause_s, f"engaged {tag}")
         if ans is None:
             return "ack", f"{tag} no-label", False

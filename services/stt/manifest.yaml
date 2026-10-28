@@ -30,3 +30,6 @@ params:
     threshold_high: 0.45   # owner >= 0.45; uncertain 0.29..0.45 (owner_far from 0.42, false podcast 0.433) — T-039 answer 1
     voiced_rms: 150        # int16 frame RMS counted as speech; same gate as the measurement
     min_speech_s: 1.0
+    win_s: 1.5             # T-038 2в: segments of win_min_s+ not `owner` as a whole are also scored in sliding windows
+    win_hop_s: 0.5         # (research/voice/bench_windows.py: owner over a podcast 8/10 owner, podcast 0/13; 2.0/1.0 — 8/10, more uncertain podcast)
+    win_min_s: 3.0
