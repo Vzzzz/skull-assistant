@@ -24,6 +24,6 @@ params:
   speech:                # Silero VAD trigger (T-038 stage 2b, core's answer 3); the RMS trigger of stage 2 is gone
     vad_model: models/vad/silero_vad.onnx
     threshold: 0.5       # speech probability per 32-ms window
-    min_silence_s: 0.5   # a pause this long ends a segment
+    min_silence_s: 0.8   # a pause this long ends a segment (0.5 cut «Я имею в виду… | …Каспаров или Крамник?», 2в live)
     min_speech_s: 0.25   # shorter bursts are not speech
     max_segment_s: 12    # continuous speech (podcast) is cut into segments of at most this

@@ -80,8 +80,8 @@ class Ambient:
             return "silent", "other voice", False
         own_question = speaker == "owner" and not lifted and is_question(text)   # not vetoed by the text (2в)
         if p_aside >= self.veto_p and not name and not own_question:
-            self.busy = True
-            return "silent", f"veto aside {p_aside:.2f}", False
+            self.busy = self.busy or speaker == "owner"   # only the owner's own call / aside means «busy»: a podcast
+            return "silent", f"veto aside {p_aside:.2f}", False   # line in an uncertain voice is just silent (2в live)
         if PHONE.search(text) and not name:      # a call starts: the router does not see it in the text (T-038 stage 1)
             self.busy = True
             return "silent", "veto phone", False
