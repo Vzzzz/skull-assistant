@@ -121,6 +121,25 @@ POLICY = {
     "aside":   {"max_tokens": 300, "memory": False, "respond": False},
 }
 
+# the world hedge only where the question is about perception or events outside the room (T-042): with it every
+# knowledge question labelled world (0.97: «родина кантри», «нота ля», «что на ужин») came out «Не знаю.» (T-038 2в)
+PERCEPTION_WORDS = re.compile(r"\b(?:видел\w*|слышал\w*|заметил\w*|был|была|было|были|происход\w*|сейчас|сегодня\w*|"
+                              r"вчера\w*|погод\w*|новост\w*|на улице|за окн\w*)\b", re.I)
+
+
+# without a perception word the hedge is soft: answer from general knowledge, «не знаю» only about a specific thing the
+# model knows nothing of. No prefix at all invented the CTX-1 L2 device (hedged 1/5 against 5/5 with the full one); the
+# soft one: fictional device / book 3/5 and 4/5, real knowledge questions 0 hedges of 30 (T-042, direct runs)
+WORLD_SOFT = ("Отвечай по существу из общих знаний. Только если спрашивают о конкретном предмете, человеке или событии, "
+              "о котором ты ничего не знаешь, — так и скажи одной фразой, не выдумывай.")
+
+
+def policy_prefix(label, text):
+    """The policy prefix for the turn: `world` gets the full hedge only with a perception / event word, else the soft
+    one (WORLD_SOFT); other labels — as in POLICY."""
+    prefix = POLICY.get(label, POLICY["chat"]).get("prefix", "")
+    return prefix if label != "world" or PERCEPTION_WORDS.search(text) else WORLD_SOFT
+
 
 # guards on the router's answer (T-037): a label is taken only when the model is confident in it, and `calc`
 # only when the turn has a number — «Как меня зовут?» right after a multiplication came out calc 0.42 / chat 0.27,
@@ -327,7 +346,10 @@ def is_question(text):
     words = re.findall(r"[а-яё-]+", text.lower())
     while words and (words[0] in _LEAD or words[0].startswith("костян") or _FILLER.fullmatch(words[0])):
         words = words[1:]
-    return ("?" in text or bool(words and words[0] in QUESTION_WORDS) or words[1:2] == ["ли"]   # «есть ли …», «знаешь ли»
+    # «?» alone is not enough: «Да ё-моё, какого ж чёрта?» was answered (T-038 2в, core's answer 3) — it needs a question
+    # word anywhere or «ты / тебе / тебя»
+    marked = "?" in text and any(w in QUESTION_WORDS or w in ("ты", "тебе", "тебя") for w in re.findall(r"[а-яё-]+", text.lower()))
+    return (marked or bool(words and words[0] in QUESTION_WORDS) or words[1:2] == ["ли"]   # «есть ли …», «знаешь ли»
             or bool(_IMPERATIVE.search(text)))
 
 

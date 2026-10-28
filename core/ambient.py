@@ -15,7 +15,9 @@ too; «угу» not more often than once in ack_gap_s; a voice found only by a w
 2в, answers to the live report (2026-10-29): BUSY ends after busy_pause_s without the *owner's* voice (a podcast never
 leaves a 20-s gap between segments); the text veto `aside` does not apply to a question in the owner's voice (a
 question «about the podcast» was vetoed at 0.90); while a broadcast plays (`bcast`, STT: an `other` segment in the last
-30 s) an `uncertain` voice counts only with the name, also inside the window.
+30 s) an `uncertain` voice counts only with the name, also inside the window. A statement inside the window (no name,
+no question) is answered only at p(«да») >= engaged_yes_p (0.7), 0.3..0.7 is «угу» («Так, это надо переделать» at 0.827
+was answered as the window used to let 0.3 through, music 2в).
 """
 import json
 import re
@@ -50,9 +52,9 @@ def needs_pause(text, speaker, engaged):
 
 
 class Ambient:
-    def __init__(self, engaged_s=20, busy_pause_s=20, veto_p=0.9, engaged_yes_p=0.3, ack_gap_s=20):
+    def __init__(self, engaged_s=20, busy_pause_s=20, veto_p=0.9, engaged_yes_p=0.7, ack_gap_s=20, engaged_ack_p=0.3):
         self.engaged_s, self.busy_pause_s, self.veto_p, self.engaged_yes_p = engaged_s, busy_pause_s, veto_p, engaged_yes_p
-        self.ack_gap_s = ack_gap_s
+        self.ack_gap_s, self.engaged_ack_p = ack_gap_s, engaged_ack_p
         self.busy, self.last_own, self.last_ack = False, 0.0, -1e9
 
     def reset(self):
@@ -101,6 +103,8 @@ class Ambient:
         if engaged:
             if probs.get("да", 0.0) >= self.engaged_yes_p:
                 return "respond", f"engaged {tag}", True
+            if probs.get("да", 0.0) >= self.engaged_ack_p:
+                return "ack", f"engaged {tag}", False
             return self._quiet(text, pause_s, f"engaged {tag}")
         if ans is None:
             return "ack", f"{tag} no-label", False
