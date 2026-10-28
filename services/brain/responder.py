@@ -140,7 +140,8 @@ def ambient_gate(text, fields, route, window):
             print(f"brain: duck pass failed: {e}")
             return {"ans_tok": None, "probs": {}}
     lifted = bool(fields.get(b'spk_region'))      # the voice was found by a window inside a broadcast segment (2в)
-    return (*amb.decide(text, speaker, pause, p_aside, time.time(), engaged, duck, lifted), engaged)
+    bcast = fields.get(b'bcast') == b'1'          # STT heard a foreign voice in the last 30 s
+    return (*amb.decide(text, speaker, pause, p_aside, time.time(), engaged, duck, lifted, bcast), engaged)
 
 
 def load_memory(history):
@@ -216,7 +217,7 @@ while True:
                                   "speaker": fields.get(b'speaker', b'').decode(), "spk_score": fields.get(b'spk_score', b'').decode(),
                                   "pause_s": fields.get(b'pause_s', b'').decode(), "pause_wait": fields.get(b'pause_wait', b'').decode(),
                                   "spk_win": fields.get(b'spk_win', b'').decode(), "spk_region": fields.get(b'spk_region', b'').decode(),
-                                  "text_full": fields.get(b'text_full', b'').decode(),
+                                  "text_full": fields.get(b'text_full', b'').decode(), "bcast": fields.get(b'bcast', b'').decode(),
                                   "p_aside": f"{((route or {}).get('probs') or {}).get('aside', 0.0):.3f}"},
                maxlen=5000, approximate=True)
         if decision == "silent":       # not answered: nothing in the history or the memory

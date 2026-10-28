@@ -11,6 +11,10 @@ from win_min_s on that are not `owner` as a whole are also scored in sliding win
 is taken from the best of segment and windows, and when a window lifts it, `region` = the run of windows at or above
 `threshold` around the best one (STT cuts the text to it). Offline (research/voice/bench_windows.py): owner phrases over
 a podcast at the real level — owner 0/10 by the segment, 8/10 by 1.5-s windows with a 0.5-s step; podcast chunks 0/13.
+Broadcast (experiment, core's answer 3 to the 2в report): after a segment that is `other` as a whole, for bcast_s the
+owner threshold of window scores and of short phrases without windows is threshold_high_bcast (live: owner over the
+podcast 0.42–0.51, podcast windows <= 0.36; family voices reach 0.418 — to be re-measured before it stays); `bcast`
+goes into the event either way.
 """
 import time
 
@@ -27,6 +31,8 @@ class VoiceID:
         self.min_speech_s = params["min_speech_s"]
         self.win_s, self.win_min_s = params.get("win_s", 1.5), params.get("win_min_s", 3.0)   # 0 = no windows
         self.win_hop_s = params.get("win_hop_s", self.win_s / 2)
+        self.high_bcast, self.bcast_s = params.get("threshold_high_bcast"), params.get("bcast_s", 30)   # None = off
+        self.last_other = -1e9
         model, owner = root / params["model"], root / params["owner"]
         self.ex = self.owner = None
         if model.exists() and owner.exists():
@@ -58,8 +64,8 @@ class VoiceID:
         e = np.asarray(self.ex.compute(st), dtype=np.float32)
         return float(e @ self.owner / max(np.linalg.norm(e), 1e-8))
 
-    def label(self, score):
-        return "owner" if score >= self.threshold_high else "uncertain" if score >= self.threshold else "other"
+    def label(self, score, high=None):
+        return "owner" if score >= (high or self.threshold_high) else "uncertain" if score >= self.threshold else "other"
 
     def windows(self, frames):
         """[(start_s, end_s, score)] of sliding windows; a window needs half of its length voiced."""
@@ -72,26 +78,34 @@ class VoiceID:
                 out.append((i * fs, (i + n) * fs, s))
         return out
 
-    def __call__(self, frames):
+    def __call__(self, frames, now=None):
         """frames: int16 30-ms chunks of the phrase. Returns event fields speaker / spk_score / spk_ms, and with windows
         spk_win (best window score) and spk_region ("start-end" seconds, only when the best window is above the segment
         and not `other`: the class then comes from the window)."""
         if self.ex is None:
             return {"speaker": "unknown", "spk_score": "", "spk_ms": ""}
-        t0 = time.perf_counter()
+        t0, now = time.perf_counter(), time.time() if now is None else now
+        bcast = self.high_bcast is not None and now - self.last_other <= self.bcast_s
+        high = self.high_bcast if bcast else None
+        windowed = self.win_s and len(frames) * len(frames[0]) / 16000 >= self.win_min_s
         score = self.score(frames, self.min_speech_s)
-        out = {"speaker": "unknown" if score is None else self.label(score), "spk_score": "" if score is None else f"{score:.3f}"}
-        if self.win_s and len(frames) * len(frames[0]) / 16000 >= self.win_min_s and out["speaker"] != "owner":
+        out = {"speaker": "unknown" if score is None else self.label(score, None if windowed else high),
+               "spk_score": "" if score is None else f"{score:.3f}"}
+        if score is not None and self.label(score) == "other":
+            self.last_other = now                   # a foreign voice as a whole: broadcast / guests (2в)
+        if bcast:
+            out["bcast"] = "1"
+        if windowed and out["speaker"] != "owner":
             w = self.windows(frames)
             if w:
                 k = max(range(len(w)), key=lambda j: w[j][2])
                 out["spk_win"] = f"{w[k][2]:.3f}"
-                if self.label(w[k][2]) != "other" and (score is None or w[k][2] > score):
+                if self.label(w[k][2], high) != "other" and (score is None or w[k][2] > score):
                     a = b = k                       # the run of windows at or above `threshold` around the best one
                     while a > 0 and w[a - 1][2] >= self.threshold and w[a - 1][1] >= w[a][0]:
                         a -= 1
                     while b < len(w) - 1 and w[b + 1][2] >= self.threshold and w[b + 1][0] <= w[b][1]:
                         b += 1
-                    out.update(speaker=self.label(w[k][2]), spk_region=f"{w[a][0]:.2f}-{w[b][1]:.2f}")
+                    out.update(speaker=self.label(w[k][2], high), spk_region=f"{w[a][0]:.2f}-{w[b][1]:.2f}")
         out["spk_ms"] = f"{(time.perf_counter() - t0) * 1000:.0f}"
         return out

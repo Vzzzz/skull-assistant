@@ -12,6 +12,10 @@ The window counts from the end of playback of the answer that opened it (engaged
 2в (core's answers 2026-10-28): any answer with content inside the window extends it; `unknown` is silent in the window
 too; «угу» not more often than once in ack_gap_s; a voice found only by a window inside a segment of broadcast
 (`lifted`, services/stt/voiceid.py) counts as `uncertain` only together with the name.
+2в, answers to the live report (2026-10-29): BUSY ends after busy_pause_s without the *owner's* voice (a podcast never
+leaves a 20-s gap between segments); the text veto `aside` does not apply to a question in the owner's voice (a
+question «about the podcast» was vetoed at 0.90); while a broadcast plays (`bcast`, STT: an `other` segment in the last
+30 s) an `uncertain` voice counts only with the name, also inside the window.
 """
 import json
 import re
@@ -49,30 +53,33 @@ class Ambient:
     def __init__(self, engaged_s=20, busy_pause_s=20, veto_p=0.9, engaged_yes_p=0.3, ack_gap_s=20):
         self.engaged_s, self.busy_pause_s, self.veto_p, self.engaged_yes_p = engaged_s, busy_pause_s, veto_p, engaged_yes_p
         self.ack_gap_s = ack_gap_s
-        self.busy, self.last_utt, self.last_ack = False, 0.0, -1e9
+        self.busy, self.last_own, self.last_ack = False, 0.0, -1e9
 
     def reset(self):
-        self.busy, self.last_utt, self.last_ack = False, 0.0, -1e9
+        self.busy, self.last_own, self.last_ack = False, 0.0, -1e9
 
-    def decide(self, text, speaker, pause_s, p_aside, now, engaged, duck, lifted=False):
+    def decide(self, text, speaker, pause_s, p_aside, now, engaged, duck, lifted=False, bcast=False):
         """Returns (decision, why, opens): decision respond | ack | silent; opens — the answer opens or extends ENGAGED.
         duck(text, pause_s) -> {"ans_tok", "probs"} (core.router.duck_bin_llamaserver), called only when needed.
         lifted — the voice class came from a window inside the segment, not from the whole segment."""
-        decision, why, opens = self._decide(text, speaker, pause_s, p_aside, now, engaged, duck, lifted)
+        decision, why, opens = self._decide(text, speaker, pause_s, p_aside, now, engaged, duck, lifted, bcast)
         if decision == "ack":
             if now - self.last_ack < self.ack_gap_s:
                 return "silent", f"{why} (ack {now - self.last_ack:.0f} s ago)", False
             self.last_ack = now
         return decision, why, opens
 
-    def _decide(self, text, speaker, pause_s, p_aside, now, engaged, duck, lifted):
+    def _decide(self, text, speaker, pause_s, p_aside, now, engaged, duck, lifted, bcast):
         name = has_name(text)
-        gap, self.last_utt = now - self.last_utt, now
+        gap = now - self.last_own                # the owner's silence: other voices do not count (2в)
+        if speaker in ("owner", "uncertain"):
+            self.last_own = now
         if self.busy and (name or gap >= self.busy_pause_s):
             self.busy = False
         if speaker == "other":
             return "silent", "other voice", False
-        if p_aside >= self.veto_p and not name:
+        own_question = speaker == "owner" and not lifted and is_question(text)   # not vetoed by the text (2в)
+        if p_aside >= self.veto_p and not name and not own_question:
             self.busy = True
             return "silent", f"veto aside {p_aside:.2f}", False
         if PHONE.search(text) and not name:      # a call starts: the router does not see it in the text (T-038 stage 1)
@@ -84,8 +91,8 @@ class Ambient:
             return "respond", "name", True
         if speaker == "unknown":                 # no embedding: too little voice, or mostly noise / broadcast
             return "silent", "unknown voice", False
-        if speaker == "uncertain" and (lifted or not engaged):
-            return "silent", "uncertain voice" + (" (window)" if lifted else ""), False
+        if speaker == "uncertain" and (lifted or bcast or not engaged):
+            return "silent", "uncertain voice" + (" (window)" if lifted else " (broadcast)" if bcast else ""), False
         if is_question(text):   # by words (step 7a); the duck often says «нет» to a bare question in a fresh conversation
             return "respond", "question", True
         dk = duck(text, pause_s)

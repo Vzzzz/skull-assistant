@@ -32,4 +32,6 @@ params:
     min_speech_s: 1.0
     win_s: 1.5             # T-038 2в: segments of win_min_s+ not `owner` as a whole are also scored in sliding windows
     win_hop_s: 0.5         # (research/voice/bench_windows.py: owner over a podcast 8/10 owner, podcast 0/13; 2.0/1.0 — 8/10, more uncertain podcast)
-    win_min_s: 3.0
+    win_min_s: 2.0         # 2в answer 5: short phrases over a broadcast came as 2–3-s segments without windows
+    threshold_high_bcast: 0.40   # experiment (2в answer 3): owner threshold for windows / short phrases while a broadcast plays; null = off
+    bcast_s: 30            # broadcast = a segment `other` as a whole within this many seconds
