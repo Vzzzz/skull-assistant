@@ -23,6 +23,9 @@ for s in skull-capture skull-wakeword skull-stt skull-brain skull-tts; do
   rm -f "$DST/default.target.wants/$s.service"
 done
 systemctl --user enable skull.target skull-capture skull-wakeword skull-stt skull-llm skull-embed skull-brain skull-tts
+# skull-vision (T-031 gaze trigger) is installed but not enabled: by head pose alone the working posture falls into
+# the «looking at the skull» band (31 false triggers in 10 min, 2026-10-29) — enable after step 1б (irises):
+#   systemctl --user enable --now skull-vision
 echo "done."
 echo "  start all : systemctl --user start skull.target"
 echo "  stop all  : systemctl --user stop skull.target"

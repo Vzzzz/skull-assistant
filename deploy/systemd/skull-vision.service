@@ -1,0 +1,13 @@
+[Unit]
+ConditionPathExists=!@MAINT_FLAG@
+PartOf=skull.target
+Description=Skull: vision (gaze trigger, camera)
+After=skull-brain.service
+
+[Service]
+ExecStart=@REPO@/.venv/bin/python @REPO@/services/vision/gaze.py
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=skull.target
