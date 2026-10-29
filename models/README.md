@@ -17,6 +17,7 @@
 | `stt/sherpa-onnx-streaming-zipformer-small-ru-vosk-2025-08-16/` | STT потоковый, только нижняя граница T-040: Vosk small ru zipformer | там же (из huggingface.co/alphacep/vosk-model-small-streaming-ru) | не объявлена — не в прод |
 | `voice/3dspeaker_speech_campplus_sv_zh_en_16k-common_advanced.onnx` | voice id (T-039, прод): 3D-Speaker CAM++, эмбеддинг говорящего 192 | github.com/k2-fsa/sherpa-onnx/releases, тег `speaker-recongition-models` (опечатка в теге — так у них) | Apache-2.0 (3D-Speaker) |
 | `vad/silero_vad.onnx` | VAD, триггер `speech` фонового режима (T-038 эт. 2б): Silero VAD v5 через `sherpa_onnx.VoiceActivityDetector`, 629 КБ, sha256 `9e2449e1…` | github.com/k2-fsa/sherpa-onnx/releases, тег `asr-models` (из github.com/snakers4/silero-vad) | MIT |
+| `vision/face_detection_yunet_2023mar.onnx` | детектор лица + 5 точек для взгляда-триггера (T-031): YuNet через OpenCV `FaceDetectorYN`, 227 КБ, sha256 `8f2383e4…` | github.com/opencv/opencv_zoo, `models/face_detection_yunet` | MIT |
 | `voice/wespeaker_en_voxceleb_resnet34.onnx` | voice id, кандидат (не выбран: EER 0.18) | там же | см. репозиторий WeSpeaker |
 | `voice/owner.npy`, `voice/data/` | вектор владельца и записи для замера — **приватно**, голос владельца | `research/voice/enroll.py` | — |
 | `quant/kostyan-e4b-iq4xs-imx.gguf` | VLM прод (режим A): Gemma 4 E4B, своя квантизация IQ4_XS + imatrix | `research/quant/quant_e4b.sh` из `hf/gemma-4-E4B-it` (D-023) | Gemma Terms of Use |
