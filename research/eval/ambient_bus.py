@@ -9,7 +9,8 @@ Replay of a live evening (T-038 stage 2b) — new rules on the same turns, witho
   ambient_bus.py --dump --since "2026-10-27 18:52" --until "2026-10-27 23:03" --out research/eval/data/ambient_2026-10-27.jsonl
       transcripts from the skull-stt journal (text, speaker, score, pause) + the decisions of that evening (events:ambient)
       + replies and their playback end (events:reply, dialog:history, «tts: quiet after» in the skull-tts journal);
-      private (family voices, owner's speech): research/eval/data/ is not in git
+      private (family voices, owner's speech): research/eval/data/ is not in git; --block requests tags every turn
+      (T-042: 13 knowledge questions of 2026-10-28 17:33–17:38)
   ambient_bus.py --replay research/eval/data/ambient_2026-10-27.jsonl [--blocks requests,mutter,phone,podcast]
       core/ambient.py on every turn in order, the router and the duck pass on llama-server (skull-llm, :11437) with the
       history the new rules would have built (replies of that evening where they exist); time from the journal.
@@ -87,7 +88,7 @@ def reset():
 # blocks of the live test on 2026-10-27 (research/bench/results/ambient_2026-10-27.md) by wall clock; what is a mistake
 BLOCKS_1027 = [("household", "18:52:00", "22:17:53"), ("requests", "22:17:53", "22:21:30"), ("mutter", "22:21:30", "22:28:15"),
                ("phone", "22:28:15", "22:29:12"), ("podcast", "22:29:12", "23:03:00")]
-STT_LINE = re.compile(r"stt: \[speech (\S+) (\S*) ?\S*ms pause ([\d.]+)s\] (.*)")
+STT_LINE = re.compile(r"stt: \[speech (\S+) (\S*)(?: win \S+(?: @\S+)?)? ?\S*ms pause ([\d.]+)s[^\]]*\] (.*?)(?:  \(full: .*\))?$")
 
 
 def journal(unit, since, until):
@@ -100,8 +101,10 @@ def journal(unit, since, until):
             yield int(d["__REALTIME_TIMESTAMP"]) / 1e6, msg
 
 
-def dump(since, until, out):
+def dump(since, until, out, block=None):
     stt = [(t, m) for t, m in journal("skull-stt", since, until) if STT_LINE.match(m)]
+    speech = [(t, float(mm.group(1))) for t, m in journal("skull-wakeword", since, until)
+              if (mm := re.match(r"SPEECH ([\d.]+)s(?!.*dropped)", m))]   # VAD segment lengths (trigger speech)
     quiet = {}                                     # reply_id -> when the player went quiet after it
     for t, m in journal("skull-tts", since, until):
         mm = re.match(r"tts: quiet after (\w+) #", m)
@@ -121,14 +124,15 @@ def dump(since, until, out):
             continue
         used.add(amb.index(a))
         clock = time.strftime("%H:%M:%S", time.localtime(t))
-        block = next(b for b, s, e in BLOCKS_1027 if s <= clock < e)
+        blk = block or next(b for b, s, e in BLOCKS_1027 if s <= clock < e)
+        seg = next((d for ts, d in reversed(speech) if t - 5 <= ts <= t + 0.5), None)
         rid = replies.get(a["ts"])
-        rows.append({"clock": clock, "t": float(a["ts"]), "block": block, "text": text.strip(), "speaker": spk,
+        rows.append({"clock": clock, "t": float(a["ts"]), "block": blk, "seg_s": seg, "text": text.strip(), "speaker": spk,
                      "spk_score": score, "pause_s": float(pause), "was": a["decision"], "was_why": a["why"],
                      "was_state": a["state"], "reply": hist.get(a["ts"]), "reply_end": quiet.get(rid) if rid else None})
     Path(out).parent.mkdir(parents=True, exist_ok=True)
     Path(out).write_text("".join(json.dumps(x, ensure_ascii=False) + "\n" for x in rows), encoding="utf-8")
-    print(f"{len(rows)} turns -> {out}; by block:", {b: sum(x["block"] == b for x in rows) for b, *_ in BLOCKS_1027})
+    print(f"{len(rows)} turns -> {out}; by block:", {b: sum(x["block"] == b for x in rows) for b in {x["block"] for x in rows}})
 
 
 def expected(row):
@@ -138,11 +142,29 @@ def expected(row):
     return {"silent", "ack"}
 
 
-def replay(path, blocks, engaged_s, yes_p, host, tag=""):
+def answer(host, messages, text, route, temperature):
+    """The reply brain would give (T-042): router guards, policy prefix and max_tokens as in services/brain."""
+    from core.router import POLICY, decide, policy_prefix
+    label, _ = decide(route, text) if route else ("chat", None)
+    prefix = policy_prefix(label, text)
+    body = {"messages": messages + [{"role": "user", "content": (prefix + "\n" + text) if prefix else text}],
+            "max_tokens": POLICY.get(label, POLICY["chat"])["max_tokens"], "temperature": temperature,
+            "chat_template_kwargs": {"enable_thinking": False}}
     import requests
+    out = requests.post(f"{host}/v1/chat/completions", json=body, timeout=120).json()["choices"][0]["message"]["content"]
+    return label, "full" if prefix and prefix == POLICY.get("world", {}).get("prefix") else "soft" if prefix else "-", out.strip()
+
+
+def replay(path, blocks, engaged_s, yes_p, host, tag="", gen=False):
+    import requests
+    import yaml
     from core.ambient import Ambient
+    from core.memory import SYSTEM_RULE
     from core.router import duck_bin_llamaserver, route_llamaserver
     persona = (ROOT / "persona/system_prompt.md").read_text(encoding="utf-8").strip()
+    bp = yaml.safe_load((ROOT / "services/brain/manifest.yaml").read_text(encoding="utf-8"))["params"]
+    if bp.get("memory"):
+        persona += "\n\n" + SYSTEM_RULE           # brain's SYSTEM (memory on)
     rows = [json.loads(x) for x in Path(path).read_text(encoding="utf-8").splitlines()]
     rows = [x for x in rows if x["block"] in blocks]
     amb, hist, opened, out = Ambient(engaged_s=engaged_s, engaged_yes_p=yes_p), [], None, []
@@ -163,9 +185,13 @@ def replay(path, blocks, engaged_s, yes_p, host, tag=""):
             dk = duck_bin_llamaserver(host, messages, text, pause)
             duck_calls.append(dk)
             return dk
-        decision, why, opens = amb.decide(x["text"], x["speaker"], x["pause_s"], p_aside, now, engaged, duck)
+        decision, why, opens = amb.decide(x["text"], x["speaker"], x["pause_s"], p_aside, now, engaged, duck, seg_s=x.get("seg_s"))
+        reply = None
+        if decision == "respond" and gen:
+            x["gen_label"], x["gen_prefix"], reply = answer(host, messages, x["text"], route, bp.get("temperature", 0.7))
+            x["gen_reply"] = reply
         if decision == "respond":
-            hist.append((x["text"], x["reply"] or "…"))
+            hist.append((x["text"], reply or x["reply"] or "…"))
             if opens:   # the window counts from the end of playback (the evening's, or a typical length)
                 opened = x["reply_end"] if x["reply_end"] else now + med_reply
         elif decision == "ack":
@@ -175,6 +201,8 @@ def replay(path, blocks, engaged_s, yes_p, host, tag=""):
         if x["block"] not in ("household", "podcast") or not ok:
             print(f"{x['clock']} {x['block']:<9} {'OK ' if ok else 'BAD'} {x['was']:<7}-> {decision:<7} "
                   f"{'E' if engaged else ' '} {why[:58]:<58} | {x['speaker']} {x['spk_score']} | {x['text'][:60]}", flush=True)
+            if reply is not None:
+                print(f"{'':>20}[{x['gen_label']} prefix {x['gen_prefix']}] {reply[:150]!r}", flush=True)
     summary = {}
     for b in blocks:
         bb = [x for x in out if x["block"] == b]
@@ -194,17 +222,19 @@ def main():
     ap.add_argument("--set", choices=["types", "sequence"], default="types")
     ap.add_argument("--dump", action="store_true")
     ap.add_argument("--since"), ap.add_argument("--until"), ap.add_argument("--out")
+    ap.add_argument("--block", help="--dump: one block name for every turn (otherwise by the clock of 2026-10-27)")
     ap.add_argument("--replay")
     ap.add_argument("--blocks", default="household,requests,mutter,phone,podcast")
     ap.add_argument("--engaged-s", type=float, default=20)
     ap.add_argument("--yes-p", type=float, default=0.3)
     ap.add_argument("--host", default="http://127.0.0.1:11437")
     ap.add_argument("--tag", default="", help="suffix of the result file")
+    ap.add_argument("--answer", action="store_true", help="--replay: generate the reply for every respond, as brain would")
     a = ap.parse_args()
     if a.dump:
-        return dump(a.since, a.until, a.out)
+        return dump(a.since, a.until, a.out, a.block)
     if a.replay:
-        return replay(a.replay, a.blocks.split(","), a.engaged_s, a.yes_p, a.host, a.tag)
+        return replay(a.replay, a.blocks.split(","), a.engaged_s, a.yes_p, a.host, a.tag, a.answer)
     rows = []
     if a.set == "types":
         for kind, (turns, spk, pause, ok) in TYPES.items():

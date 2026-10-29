@@ -90,7 +90,7 @@ def process(chunks, trigger, ts, end_ts):
             pause_s = min(time.time() - end_ts, PAUSE_MAX_S)
     r.xadd('events:transcript', {'text': text, 'lang': 'ru',     # GigaAM is Russian-only
                                  'ts': f"{ts:.3f}", 'stt_s': f"{stt_s:.3f}", 'trigger': trigger,
-                                 'pause_s': f"{pause_s:.2f}", 'pause_wait': wait, **spk,
+                                 'pause_s': f"{pause_s:.2f}", 'pause_wait': wait, 'seg_s': f"{len(audio) / RATE:.2f}", **spk,
                                  **({'text_full': full} if text != full else {})})
     print(f"stt: [{trigger} {spk['speaker']} {spk['spk_score']}"
           f"{' win ' + spk['spk_win'] + (' @' + spk['spk_region'] if spk.get('spk_region') else '') if spk.get('spk_win') else ''}"

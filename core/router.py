@@ -135,10 +135,12 @@ WORLD_SOFT = ("Отвечай по существу из общих знаний
 
 
 def policy_prefix(label, text):
-    """The policy prefix for the turn: `world` gets the full hedge only with a perception / event word, else the soft
-    one (WORLD_SOFT); other labels — as in POLICY."""
+    """The policy prefix for the turn: `world` gets the full hedge only with a perception / event word and no question
+    word («Ты слышал, из чего готовят…» is a question, not perception: it got «Не слышал.», T-042 step 4a), else the
+    soft one (WORLD_SOFT); other labels — as in POLICY."""
     prefix = POLICY.get(label, POLICY["chat"]).get("prefix", "")
-    return prefix if label != "world" or PERCEPTION_WORDS.search(text) else WORLD_SOFT
+    full = PERCEPTION_WORDS.search(text) and not has_question_word(text)
+    return prefix if label != "world" or full else WORLD_SOFT
 
 
 # guards on the router's answer (T-037): a label is taken only when the model is confident in it, and `calc`
@@ -190,7 +192,7 @@ _DUCK_RE = re.compile("|".join(DUCK_LABELS), re.I)
 # imperative addressed to «ты» that asks the skull for something (closed list: «слезь», «брысь» to the cat must stay listen)
 _IMPERATIVE = re.compile(r"\b(?:скажи|расскажи|подскажи|посчитай|прикинь|напомни|запомни|объясни|ответь|глянь|посмотри|"
                          r"послушай|слушай|проверь|найди|помоги|угадай|представь|давай|включи|выключи|"
-                         r"умножь|раздели|сложи|вычти|переведи|сравни)\b", re.I)
+                         r"умножь|раздели|сложи|вычти|переведи|сравни|повтори|продолжай)\b|\bещё раз\b", re.I)   # + T-042 4a
 
 
 def _duck_probs(top_logprobs):
@@ -342,14 +344,25 @@ _LEAD = {"а", "и", "ну", "слушай", "кстати", "так", "эй", "
 _FILLER = re.compile(r"([аэмоуы])(?:-?\1)*")   # «а-а», «э-э», «м-м-м» before the question word (2в: «А-а, что посоветуешь…»)
 
 
+# a question word anywhere in the phrase and in any of its forms (T-042 step 4a): live, «В каком году…», «Из чего
+# готовят…», «Если ля 440, то сколько…» were taken for statements. «-то / -нибудь» forms («какая-то хрень») are not
+# question words; «что» as a conjunction and «чем» in a comparison are — the cost the core accepted
+_QWORD = re.compile(r"как|каков\w*|как(?:ой|ая|ое|ие|ого|ому|ом|ую|им|их|ими)|что|чего|чем|чём|чему|кто|кого|кому|кем|ком|"
+                    r"где|куда|откуда|когда|почему|зачем|сколько|котор(?:ый|ая|ое|ые|ого|ому|ом|ую|ым|ых)|ли")
+
+
+def has_question_word(text):
+    return any(_QWORD.fullmatch(w) for w in re.findall(r"[а-яё-]+", text.lower()))
+
+
 def is_question(text):
     words = re.findall(r"[а-яё-]+", text.lower())
     while words and (words[0] in _LEAD or words[0].startswith("костян") or _FILLER.fullmatch(words[0])):
         words = words[1:]
-    # «?» alone is not enough: «Да ё-моё, какого ж чёрта?» was answered (T-038 2в, core's answer 3) — it needs a question
-    # word anywhere or «ты / тебе / тебя»
-    marked = "?" in text and any(w in QUESTION_WORDS or w in ("ты", "тебе", "тебя") for w in re.findall(r"[а-яё-]+", text.lower()))
-    return (marked or bool(words and words[0] in QUESTION_WORDS) or words[1:2] == ["ли"]   # «есть ли …», «знаешь ли»
+    # «?» alone is not enough: «Да ё-моё, …?» (T-038 2в, core's answer 3) — it needs a question word or «ты / тебе / тебя»;
+    # a verb opening the phrase («помнишь», «знаешь», «можешь», «напомни») is a question / request as before
+    marked = "?" in text and any(w in ("ты", "тебе", "тебя") for w in words)
+    return (has_question_word(text) or marked or bool(words and words[0] in QUESTION_WORDS)
             or bool(_IMPERATIVE.search(text)))
 
 

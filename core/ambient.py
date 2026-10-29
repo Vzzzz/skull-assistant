@@ -18,11 +18,15 @@ question «about the podcast» was vetoed at 0.90); while a broadcast plays (`bc
 30 s) an `uncertain` voice counts only with the name, also inside the window. A statement inside the window (no name,
 no question) is answered only at p(«да») >= engaged_yes_p (0.7), 0.3..0.7 is «угу» («Так, это надо переделать» at 0.827
 was answered as the window used to let 0.3 through, music 2в).
+T-042 step 4a: outside the window a phrase without a question word is decided by the duck, not by the rule «statement
+-> угу»: p(«да») >= idle_yes_p with the owner's voice and a pause >= 1.5 s -> answer (live, «Бостонское чаепитие» at
+0.93 and «нота фа» at 0.87 got «М-м.»), 0.3..0.7 -> «угу»; `unknown` on a short phrase (< short_s of audio) within
+after_owner_s of the owner's phrase counts as `uncertain` («Ты меня слышишь», 1 s, right after the owner).
 """
 import json
 import re
 
-from core.router import MIN_MARGIN, MIN_PROB, duck_from_no, is_question
+from core.router import ACK_MIN_PAUSE_S, duck_from_no, is_question
 
 PHONE = re.compile(r"\bалл[оё]\b", re.I)
 OPEN_KEY = "ambient:open"      # Redis: {"reply_id", "t", "s"} of the answer that opened / extended ENGAGED
@@ -52,18 +56,25 @@ def needs_pause(text, speaker, engaged):
 
 
 class Ambient:
-    def __init__(self, engaged_s=20, busy_pause_s=20, veto_p=0.9, engaged_yes_p=0.7, ack_gap_s=20, engaged_ack_p=0.3):
+    def __init__(self, engaged_s=20, busy_pause_s=20, veto_p=0.9, engaged_yes_p=0.7, ack_gap_s=20, engaged_ack_p=0.3,
+                 idle_yes_p=0.7, idle_ack_p=0.3, short_s=1.5, after_owner_s=10):
         self.engaged_s, self.busy_pause_s, self.veto_p, self.engaged_yes_p = engaged_s, busy_pause_s, veto_p, engaged_yes_p
         self.ack_gap_s, self.engaged_ack_p = ack_gap_s, engaged_ack_p
-        self.busy, self.last_own, self.last_ack = False, 0.0, -1e9
+        self.idle_yes_p, self.idle_ack_p, self.short_s, self.after_owner_s = idle_yes_p, idle_ack_p, short_s, after_owner_s
+        self.reset()
 
     def reset(self):
-        self.busy, self.last_own, self.last_ack = False, 0.0, -1e9
+        self.busy, self.last_own, self.last_owner, self.last_ack = False, 0.0, -1e9, -1e9
 
-    def decide(self, text, speaker, pause_s, p_aside, now, engaged, duck, lifted=False, bcast=False):
+    def decide(self, text, speaker, pause_s, p_aside, now, engaged, duck, lifted=False, bcast=False, seg_s=None):
         """Returns (decision, why, opens): decision respond | ack | silent; opens — the answer opens or extends ENGAGED.
         duck(text, pause_s) -> {"ans_tok", "probs"} (core.router.duck_bin_llamaserver), called only when needed.
-        lifted — the voice class came from a window inside the segment, not from the whole segment."""
+        lifted — the voice class came from a window inside the segment, not from the whole segment; seg_s — length of the
+        phrase audio (STT), for `unknown` right after the owner."""
+        if speaker == "unknown" and seg_s is not None and seg_s < self.short_s and now - self.last_owner <= self.after_owner_s:
+            speaker = "uncertain"                # too short for an embedding, said right after the owner's phrase
+        if speaker == "owner":
+            self.last_owner = now
         decision, why, opens = self._decide(text, speaker, pause_s, p_aside, now, engaged, duck, lifted, bcast)
         if decision == "ack":
             if now - self.last_ack < self.ack_gap_s:
@@ -108,10 +119,10 @@ class Ambient:
             return self._quiet(text, pause_s, f"engaged {tag}")
         if ans is None:
             return "ack", f"{tag} no-label", False
-        top = sorted(probs.values(), reverse=True) + [0.0]
-        if top[0] < MIN_PROB or top[0] < MIN_MARGIN * top[1]:
-            return "ack", f"{tag} low-confidence", False
-        if ans == "да":
+        p_yes = probs.get("да", 0.0)
+        if p_yes >= self.idle_yes_p and speaker == "owner" and pause_s >= ACK_MIN_PAUSE_S:
+            return "respond", f"duck {tag}", True
+        if p_yes >= self.idle_ack_p:
             return "ack", f"statement {tag}", False
         return self._quiet(text, pause_s, tag)
 
