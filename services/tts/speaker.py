@@ -25,6 +25,8 @@ voice = PiperVoice.load(VOICE)
 RATE = voice.config.sample_rate
 FX = ["pitch", "-300", "reverb", "30", "50", "100"]   # the voice before T-003 (sox on files)
 BLOCK = RATE // 5                                    # 0.2-s pieces for the player
+SPEAKING_TTL_S = 3       # tts:speaking expires unless the player renews it: a stopped / crashed TTS must not leave the
+                         # whole stand deaf (2026-10-29: the flag stayed set after `systemctl stop`, every phrase dropped)
 TAIL_S = 1.0                                         # tts:speaking after the sound: the echo is not a new phrase
                                                      # (0.5 let «…что хочешь» through as a new segment, 2в music)
 
@@ -80,14 +82,15 @@ def play():
                     r.delete('tts:speaking')
                     speaking = False
                     print(f"tts: quiet after {last}", flush=True)   # inside a reply this is an audible gap
+                elif speaking:
+                    r.expire('tts:speaking', SPEAKING_TTL_S)
                 continue
             if audio is None:       # the reply's last chunk has been handed to the card: it ends at `until`
                 r.hset('tts:end', reply_id, f"{max(until, time.time()):.3f}")
                 r.expire('tts:end', 3600)
                 continue
-            if not speaking:
-                r.set('tts:speaking', 1)
-                speaking = True
+            r.set('tts:speaking', 1, ex=SPEAKING_TTL_S)
+            speaking = True
             if reply_id not in first:
                 first.add(reply_id)
                 if ts:
