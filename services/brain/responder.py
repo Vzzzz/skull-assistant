@@ -39,6 +39,11 @@ amb = Ambient(engaged_s=AMB.get("engaged_s", 20), busy_pause_s=AMB.get("busy_pau
               idle_yes_p=AMB.get("idle_yes_p", 0.7), idle_ack_p=AMB.get("idle_ack_p", 0.3))
 ACKS = ("Угу.", "М-м.", "Ага.")
 acks = 0
+# T-031 step 2: a silent look at the skull (services/vision, events:vision {kind: gaze})
+GAZE_PROMPT = ("Служебно, не отвечай на это как на реплику: собеседник молча смотрит на тебя уже две секунды. "
+               "Скажи одно короткое, в своём тоне.")
+GAZE_COOLDOWN_S = AMB.get("gaze_cooldown_s", 30)
+last_gaze = 0.0
 
 
 def est_tokens(text):
@@ -146,6 +151,39 @@ def ambient_gate(text, fields, route, window):
     return (*amb.decide(text, speaker, pause, p_aside, time.time(), engaged, duck, lifted, bcast, seg_s), engaged)
 
 
+def on_gaze(fields):
+    """A silent look (T-031 step 2): in the window it only extends the window; in IDLE, outside the skull's speech and
+    not during a call (BUSY), one short line in character, not more often than GAZE_COOLDOWN_S, kept out of the history
+    and the memory (like «угу»). The line opens the window: a look plus «Что?» invites an answer."""
+    global last_gaze
+    now = time.time()
+    why = None
+    if r.exists('tts:speaking'):
+        why = "speaking"
+    elif amb.busy:
+        why = "busy"
+    elif now < engaged_until(r):
+        r.set(OPEN_KEY, json.dumps({"reply_id": "gaze", "t": now, "s": amb.engaged_s}))   # no tts:end -> t + s
+        why = "engaged: window extended"
+    elif now - last_gaze < GAZE_COOLDOWN_S:
+        why = f"cooldown ({now - last_gaze:.0f} s ago)"
+    if why:
+        print(f"brain: gaze {fields.get(b'dur_s', b'?').decode()} s -> no line ({why})")
+        return
+    last_gaze = now
+    history = [json.loads(x) for x in r.lrange(HISTORY, 0, -1)]
+    window, _ = build_window(history, sys_tokens, 200)
+    tail = {}
+    raw = "".join(chat_stream(to_messages(window) + [{"role": "user", "content": GAZE_PROMPT}], 40, tail)).strip()
+    line, _ = clean_reply(raw, "")
+    reply_id = uuid.uuid4().hex[:12]
+    say(reply_id, 0, line, "", now, final=True, meta={"reply": line, "ambient": "gaze"})
+    r.set(OPEN_KEY, json.dumps({"reply_id": reply_id, "t": time.time(), "s": amb.engaged_s}))
+    r.xadd("events:ambient", {"text": "", "decision": "gaze", "why": f"look {fields.get(b'dur_s', b'?').decode()} s",
+                              "state": "idle", "ts": f"{now:.3f}", "reply": line}, maxlen=5000, approximate=True)
+    print(f"brain: gaze -> {line!r} ({time.time() - now:.2f} s)")
+
+
 def load_memory(history):
     mem = AssocMemory(MEM["embed_host"], mode=MEM["mode"])
     for ex in history:
@@ -175,13 +213,21 @@ if MEM:
 calib = json.loads(r.get(SYS_CALIB) or "{}")
 # measured size if the prompt is unchanged, else the estimate until a call with an empty window calibrates it
 sys_tokens = calib["tokens"] if calib.get("chars") == len(SYSTEM) else est_tokens(SYSTEM)
-last_ev = '$'
+last_ev, last_vis = '$', '$'
 print(f"brain: system~{sys_tokens} tokens, {r.llen(HISTORY)} exchanges in {HISTORY}, waiting for transcripts...")
 while True:
-    ev = r.xread({'events:transcript': last_ev}, count=1, block=5000)
+    ev = r.xread({'events:transcript': last_ev, 'events:vision': last_vis}, count=1, block=5000)
     if not ev:
         continue
-    ev_id, fields = ev[0][1][0]
+    stream, ((ev_id, fields),) = ev[0]
+    if stream == b'events:vision':
+        last_vis = ev_id
+        if fields.get(b'kind') == b'gaze':
+            try:
+                on_gaze(fields)
+            except requests.RequestException as e:
+                print(f"brain: gaze line failed: {e}")
+        continue
     last_ev = ev_id
     text = fields[b'text'].decode()
     ts = float(fields[b'ts']) if b'ts' in fields else time.time()

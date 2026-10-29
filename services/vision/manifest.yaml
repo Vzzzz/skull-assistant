@@ -1,14 +1,25 @@
 name: vision
-description: Camera at the skull's eyes; gaze trigger «looking at the skull >= 2 s» (T-031, D-029). Scene / objects — later.
-backend: cpu (OpenCV FaceDetectorYN, YuNet ONNX)
-residency: A                # mode A only, for now
-cuda_ctx: false
-vram_mb: 0
-ram_mb: 93                  # peak RSS of services/vision/gaze.py on the stand (2026-10-29); CPU ~20 % of a core at 5 fps
-topics:
-  in: [camera]
+unit: skull-vision
+backend: cpu                 # OpenCV FaceDetectorYN (YuNet ONNX), cv2.setNumThreads(1)
+cuda_context: false
+trigger: gaze                # what it publishes for now: events:vision {kind: gaze}; scene / objects — later (T-031)
+budget:
+  vram_mb: 0
+  ram_mb: 94             # ПИК: services/vision/gaze.py, 640x480 MJPG, 5 fps (VmHWM 94, стенд 2026-10-29); CPU ~21 % ядра
+  measured_on: stand
+residency:
+  A: resident
+  B: evacuated
+  C: evacuated
+lifecycle:
+  freeze: kill
+  thaw: start
+  thaw_budget_s: null    # TODO: measure (open the camera + first frame: 0.3–0.5 s on the stand)
+bus:
+  in:  [camera]          # /dev/video0 (stand: usbipd from the Windows host, I-16)
   out: [events:vision]
 healthcheck: null
+never_evict: false
 params:
   device: 0                 # /dev/video0 (stand: usbipd from the Windows host)
   width: 640
@@ -23,6 +34,6 @@ params:
     # stand 2026-10-29, camera 10 cm left of the monitor, ~30° up — skull -0.30 [p10 -0.38, p90 -0.21], monitor -1.02 [p90 -0.61]
     nose_min: -0.50
     nose_max: -0.10
-    dwell_s: 2.0            # in the band (dropouts <= gap_s allowed) this long -> events:vision {kind: gaze}
+    dwell_s: 1.5            # in the band (dropouts <= gap_s allowed) this long -> events:vision {kind: gaze}
     gap_s: 0.4              # live: 4 looks -> 1 trigger without it, 2 with it (3 with dwell 1.5 s)
     min_interval_s: 10      # not more often; and the face has to turn away first
