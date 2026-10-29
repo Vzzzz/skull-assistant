@@ -17,16 +17,19 @@ The full voice loop runs as a set of systemd units on a Redis Streams bus:
 
 | Stage | What | Numbers (bench) |
 |---|---|---|
-| Wake word | openWakeWord, stock word (own word "Kostyan" planned) | CPU, 175 MB |
-| STT | faster-whisper `base` int8, CPU, Russian | 0.6 s per 3 s phrase |
+| Listening | **ambient mode**: speech-onset trigger (Silero VAD), no wake word; openWakeWord kept as fallback | CPU, 41–87 MB |
+| STT | **GigaAM v3 CTC** (sherpa-onnx, CPU) with punctuation and digits; Whisper `base` dropped after a bake-off (WER 25.8 % → 1.6 % on Common Voice ru) | 0.1–0.2 s per phrase, 396 MB |
+| Whose voice | owner verification (CAM++, CPU, same process) with sliding windows inside a segment — answers the owner even over a podcast | EER 0.018, +57 MB, 23–66 ms |
 | Brain | **Gemma 4 E4B**, own IQ4_XS + imatrix quantization, `llama-server`, 8k context, vision projector attached | 3.8 GB VRAM, 0.3–1.8 s per turn |
 | Out-of-window memory | EmbeddingGemma on CPU + keyword match; exchanges that fell out of the context window come back as a note in the request | facts beyond the window: 0.07 → 0.8–1.0 |
 | Turn router | turn type (chat / about the speaker / arithmetic / explain / outside world / command) in one model call, policy per type | accuracy 0.88–0.93 |
-| TTS | Piper (CPU); Qwen3-TTS 0.6B measured as a GPU candidate | Piper RT 0.06; Qwen3-TTS RT 0.13, 1.9 GB VRAM |
+| "Should I speak now" | rubber-duck mode: addresses, muttering, phone calls, broadcast, music — conversation state + a binary model question | live: 0 replies over 3.5 h of household background, 1 false of 16 mutterings, 6/6 addresses over a podcast |
+| TTS | Piper (CPU), sentence streaming, sox timbre; Qwen3-TTS 0.6B measured as a GPU candidate | first audio 0.5–1.3 s; Piper RT 0.06; Qwen3-TTS RT 0.13, 1.9 GB VRAM |
+| Vision | camera in the loop on the bench: gaze at the skull as a trigger (YuNet + head pose), scene context next | working posture still confused with gaze — being tuned |
 
-The evaluation set **CTX-1** (60 turns with anchors for memory, arithmetic and "don't make things up") was run on 14 models from 1.7B to 9B; it picked the brain and measured what memory and the router add (`research/eval/`). The memory budget of the whole mode A — voice stack, VLM with projector, embedder, YOLO detector — was measured all at once: **6.1–6.3 GB of the 7.6 GB available on Orin** (bench-based estimate, `docs/MEMORY_BUDGET.md` §2).
+The evaluation set **CTX-1** (60 turns with anchors for memory, arithmetic and "don't make things up") was run on 14 models from 1.7B to 9B; it picked the brain and measured what memory and the router add (`research/eval/`). The memory budget of the whole mode A — voice stack, VLM with projector, embedder, YOLO detector — was measured all at once: **6.3–6.5 GB of the 7.6 GB available on Orin** (bench-based estimate, `docs/MEMORY_BUDGET.md` §2).
 
-Not there yet: running on the Jetson (next milestone), the "saw it — reacted" visual trigger, model swapping between modes A/B, an own wake word, interrupting the skull while it speaks (barge-in), streaming TTS. Queue: `docs/TASKS.md`; milestone plan: `docs/ROADMAP.md` §7a.
+Not there yet: running on the Jetson (next milestone), model swapping between modes A/B, an own wake word on an MCU (sibling project), interrupting the skull while it speaks (barge-in), fact checking via the network. Queue: `docs/TASKS.md`; milestone plan: `docs/ROADMAP.md` §7a.
 
 ## How it is made
 

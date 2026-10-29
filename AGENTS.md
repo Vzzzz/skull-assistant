@@ -37,7 +37,7 @@ models/            веса (не в git) + README с источниками
 
 ## Архитектура в три строки
 
-Шина: Redis Streams `audio:mic` → `events:wakeword` → `events:transcript` → `events:reply`; флаг `tts:speaking`. Каждый сервис — отдельный systemd user-юнит (`skull-capture/wakeword/stt/brain/tts`, всё — `skull.target`); изоляция процессов = механизм свопа моделей (память GPU возвращается только со смертью процесса). Голосовой тракт CPU-only (openWakeWord, faster-whisper, Piper); VLM через ollama (`gemma3:4b`, num_ctx 8192 по D-016).
+Шина: Redis Streams `audio:mic` → `events:wakeword` → `events:transcript` → `events:reply`; флаг `tts:speaking`. Каждый сервис — отдельный systemd user-юнит (`skull-capture/wakeword/stt/brain/tts`, всё — `skull.target`); изоляция процессов = механизм свопа моделей (память GPU возвращается только со смертью процесса). Голосовой тракт CPU-only (триггер по речи Silero VAD, GigaAM v3 STT + voice id CAM++ через sherpa-onnx, Piper со стримом по предложениям; openWakeWord — fallback); VLM — Gemma 4 E4B (своя квантизация IQ4_XS) на llama-server, num_ctx 8192 (D-016, D-023, D-024); фоновый режим и камера — `skull-wakeword` (`trigger: speech`), `skull-vision` (D-029, T-031).
 
 ## Правила (общие для ролей)
 
