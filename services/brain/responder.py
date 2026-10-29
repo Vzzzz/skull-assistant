@@ -35,7 +35,8 @@ CHARS_PER_TOKEN = 2.3         # Cyrillic estimate for text not yet seen by the m
 AMB = P.get("ambient", {})    # T-038 stage 2b: listening without a wake word (trigger: speech in services/wakeword)
 amb = Ambient(engaged_s=AMB.get("engaged_s", 20), busy_pause_s=AMB.get("busy_pause_s", 20),
               veto_p=AMB.get("veto_aside_p", 0.9), engaged_yes_p=AMB.get("engaged_yes_p", 0.7),
-              ack_gap_s=AMB.get("ack_gap_s", 20), engaged_ack_p=AMB.get("engaged_ack_p", 0.3))
+              ack_gap_s=AMB.get("ack_gap_s", 20), engaged_ack_p=AMB.get("engaged_ack_p", 0.3),
+              idle_yes_p=AMB.get("idle_yes_p", 0.7), idle_ack_p=AMB.get("idle_ack_p", 0.3))
 ACKS = ("Угу.", "М-м.", "Ага.")
 acks = 0
 
@@ -141,7 +142,8 @@ def ambient_gate(text, fields, route, window):
             return {"ans_tok": None, "probs": {}}
     lifted = bool(fields.get(b'spk_region'))      # the voice was found by a window inside a broadcast segment (2в)
     bcast = fields.get(b'bcast') == b'1'          # STT heard a foreign voice in the last 30 s
-    return (*amb.decide(text, speaker, pause, p_aside, time.time(), engaged, duck, lifted, bcast), engaged)
+    seg_s = float(fields[b'seg_s']) if fields.get(b'seg_s') else None
+    return (*amb.decide(text, speaker, pause, p_aside, time.time(), engaged, duck, lifted, bcast, seg_s), engaged)
 
 
 def load_memory(history):

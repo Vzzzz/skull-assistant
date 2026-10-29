@@ -36,6 +36,8 @@ params:                  # read by services/brain/responder.py and services/brai
     engaged_s: 30        # window after an answer to the name / a question has been played; any answer with content inside extends it (2в) (replay of 2026-10-27: 20 s -> 3 misses of 12, 30 s -> 1; mutters 0 either way)
     engaged_yes_p: 0.7   # in the window, a statement (no name / question): p(«да») for an answer (T-038 2в answer 2; was 0.3)
     engaged_ack_p: 0.3   # in the window: 0.3..0.7 -> «угу»; below -> silent / ack by the pause rule
+    idle_yes_p: 0.7      # outside the window, no question word: p(«да») (owner, pause >= 1.5 s) for an answer (T-042 4a)
+    idle_ack_p: 0.3      # outside the window: 0.3..0.7 -> «угу»
     ack_gap_s: 20        # «угу» not more often (T-038 2в, core's answer 4)
     busy_pause_s: 20     # after an aside veto: silent until this pause or the name
     veto_aside_p: 0.9    # router aside probability that vetoes (radio / podcast / call / «Алло»)
