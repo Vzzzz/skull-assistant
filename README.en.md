@@ -1,5 +1,7 @@
 # Skull Assistant
 
+[![tests](https://github.com/Vzzzz/skull-assistant/actions/workflows/tests.yml/badge.svg)](https://github.com/Vzzzz/skull-assistant/actions/workflows/tests.yml)
+
 > **Work in progress** (October 2026). The bench part is built and measured; nothing has been deployed to the device (Jetson Orin Nano Super 8 GB) yet. What works today is listed below; day-by-day state is in `docs/JOURNAL.md` (Russian).
 
 <p align="center">

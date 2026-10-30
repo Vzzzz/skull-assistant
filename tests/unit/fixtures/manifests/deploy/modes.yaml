@@ -1,0 +1,9 @@
+# fixture for tests/unit/test_manifests.py: two targets, three modes (numbers small and round on purpose)
+target: stand
+targets:
+  stand: {unified: false, vram_mb: 8000, ram_mb: 4000}
+  orin: {unified: true, unified_mb: 6000}
+modes:
+  A: {kv_reserve_mb: 500}
+  B: {kv_reserve_mb: 0}
+  C: {kv_reserve_mb: 0}

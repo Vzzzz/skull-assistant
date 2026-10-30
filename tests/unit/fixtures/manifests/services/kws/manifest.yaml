@@ -1,0 +1,8 @@
+name: kws
+unit: skull-kws
+cuda_context: false
+budget: {vram_mb: 0, ram_mb: 200, measured_on: stand}
+residency: {A: resident, B: resident, C: resident}
+lifecycle: {freeze: kill, thaw: start, thaw_budget_s: null}
+healthcheck: null
+never_evict: true

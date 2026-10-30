@@ -12,7 +12,7 @@ import redis, requests, yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
-from core.ambient import OPEN_KEY, Ambient, engaged_until, has_name
+from core.ambient import OPEN_KEY, Ambient, engaged_until, gaze_skip, has_name, open_window
 from core.memory import SYSTEM_RULE, AssocMemory, clean_reply, format_note
 from core.speech import for_speech
 from core.router import POLICY, decide, duck_bin_llamaserver, policy_prefix, route_llamaserver
@@ -132,6 +132,7 @@ def say(reply_id, seq, sentence, note, ts, final=False, meta=None):
     text = sentence.strip()
     if text:
         clean, flags = clean_reply(text, note)
+        flags.discard("dunno")                          # «Не знаю.» is said; only the history skips it
         text = "" if flags and clean == text else for_speech(clean)   # guard removed everything -> nothing to say
     if not text and not final:
         return False
@@ -176,17 +177,7 @@ def on_gaze(fields):
     beats the fourth «Смотри.» (core's answers 4 of 2026-10-29 and 3 of 2026-10-30)."""
     global last_gaze
     now = time.time()
-    why = None
-    if r.exists('tts:speaking'):
-        why = "speaking"
-    elif r.exists(TRANSITION):
-        why = "mode transition"
-    elif amb.busy:
-        why = "busy"
-    elif now < engaged_until(r):
-        why = "engaged"
-    elif now - last_gaze < GAZE_COOLDOWN_S:
-        why = f"cooldown ({now - last_gaze:.0f} s ago)"
+    why = gaze_skip(r, now, amb.busy, last_gaze, GAZE_COOLDOWN_S, TRANSITION)
     if why:
         print(f"brain: gaze {fields.get(b'dur_s', b'?').decode()} s -> no line ({why})")
         return
@@ -213,7 +204,7 @@ def on_gaze(fields):
     r.lpush(GAZE_LINES, line); r.ltrim(GAZE_LINES, 0, 2)
     reply_id = uuid.uuid4().hex[:12]
     say(reply_id, 0, line, "", now, final=True, meta={"reply": line, "ambient": "gaze"})
-    r.set(OPEN_KEY, json.dumps({"reply_id": reply_id, "t": time.time(), "s": GAZE_WINDOW_S}))
+    open_window(r, reply_id, GAZE_WINDOW_S, time.time())
     r.xadd("events:ambient", {"text": "", "decision": "gaze", "why": f"look {fields.get(b'dur_s', b'?').decode()} s",
                               "state": "idle", "ts": f"{now:.3f}", "reply": line}, maxlen=5000, approximate=True)
     print(f"brain: gaze -> {line!r} ({turn.strip()}; {time.time() - now:.2f} s)")
@@ -372,9 +363,10 @@ while True:
     in_window = sum(ex["tokens"] for ex in window)
     tokens = max(1, pe - sys_tokens - in_window - not_kept) + ec if pe else est_new + est_tokens(raw)
     turn = history[-1]["turn"] + 1 if history else 1
-    r.rpush(HISTORY, json.dumps({"turn": turn, "ts": ts, "user": text, "reply": reply, "raw": raw,
-                                 "tokens": tokens}, ensure_ascii=False))
-    if mem is not None:
+    if "dunno" not in flags:      # a bare «Не знаю.» is said, not kept (T-042): nothing in the history or the memory
+        r.rpush(HISTORY, json.dumps({"turn": turn, "ts": ts, "user": text, "reply": reply, "raw": raw,
+                                     "tokens": tokens}, ensure_ascii=False))
+    if mem is not None and "dunno" not in flags:
         try:
             v = mem.add(turn, text, reply)
             if v is not None:
@@ -400,4 +392,4 @@ while True:
     print(f"brain: turn {turn} prompt={pe} reply={ec} exchange~{tokens} tokens {wall:.1f}s")
     if fields.get(b'trigger') == b'speech' and opens:
         # the conversation is on: the window runs engaged_s after this answer has been played (tts:end)
-        r.set(OPEN_KEY, json.dumps({"reply_id": reply_id, "t": time.time(), "s": amb.engaged_s}))
+        open_window(r, reply_id, amb.engaged_s, time.time())

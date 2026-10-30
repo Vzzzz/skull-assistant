@@ -351,18 +351,29 @@ _QWORD = re.compile(r"как|каков\w*|как(?:ой|ая|ое|ие|ого|�
                     r"где|куда|откуда|когда|почему|зачем|сколько|котор(?:ый|ая|ое|ые|ого|ому|ом|ую|ым|ых)|ли")
 
 
+# the particle «ж / же» right after the question word makes it rhetorical: «что ж за хрень-то такая?», «как же надоело»,
+# «какого ж чёрта» (T-042, core's answer 1 of 2026-10-29; «как я устал» stays a question — accepted)
+_RHETORIC = ("ж", "же")
+
+
+def _asks(words, i):
+    return not (i + 1 < len(words) and words[i + 1] in _RHETORIC)
+
+
 def has_question_word(text):
-    return any(_QWORD.fullmatch(w) for w in re.findall(r"[а-яё-]+", text.lower()))
+    words = re.findall(r"[а-яё-]+", text.lower())
+    return any(_QWORD.fullmatch(w) and _asks(words, i) for i, w in enumerate(words))
 
 
 def is_question(text):
     words = re.findall(r"[а-яё-]+", text.lower())
+    # «ты» is checked before the lead words are cut: it is one of them («Ты меня слышишь?» was missed, T-045)
+    marked = "?" in text and any(w in ("ты", "тебе", "тебя") for w in words)
     while words and (words[0] in _LEAD or words[0].startswith("костян") or _FILLER.fullmatch(words[0])):
         words = words[1:]
     # «?» alone is not enough: «Да ё-моё, …?» (T-038 2в, core's answer 3) — it needs a question word or «ты / тебе / тебя»;
     # a verb opening the phrase («помнишь», «знаешь», «можешь», «напомни») is a question / request as before
-    marked = "?" in text and any(w in ("ты", "тебе", "тебя") for w in words)
-    return (has_question_word(text) or marked or bool(words and words[0] in QUESTION_WORDS)
+    return (has_question_word(text) or marked or bool(words and words[0] in QUESTION_WORDS and _asks(words, 0))
             or bool(_IMPERATIVE.search(text)))
 
 

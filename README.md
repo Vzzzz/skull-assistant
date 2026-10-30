@@ -1,5 +1,7 @@
 # Skull Assistant
 
+[![tests](https://github.com/Vzzzz/skull-assistant/actions/workflows/tests.yml/badge.svg)](https://github.com/Vzzzz/skull-assistant/actions/workflows/tests.yml)
+
 > **Проект в работе** (октябрь 2026). Стендовая часть сделана и измерена; на устройство (Jetson Orin Nano Super 8 GB) код ещё не переносился. Что именно работает сейчас — ниже, текущее состояние по дням — `docs/JOURNAL.md`. English: [README.en.md](README.en.md).
 
 <p align="center">

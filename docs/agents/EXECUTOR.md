@@ -88,6 +88,10 @@ bash research/bench/bench_vlm_mem.sh out.csv   # память VLM; подним�
 curl -s localhost:11437/health                 # {"status":"ok"}
 .venv/bin/python research/eval/ctx_probe.py --backend llamaserver --host http://127.0.0.1:11437 --model kostyan --ctx 8192   # CTX-1 против llama-server
 bash research/bench/bench_llamaserver.sh bench|slots|probs   # память/скорость, slot save/restore, logprobs
+# тесты core/ (T-045): секунды, без моделей, Redis и GPU; перед каждым merge (§5) и в CI (.github/workflows/tests.yml)
+.venv/bin/pip install -r requirements-dev.txt     # один раз: pytest, fakeredis
+.venv/bin/pytest                               # pytest.ini: tests/unit, -q
+.venv/bin/pytest tests/unit/test_router.py -k question   # один файл / одна тема
 # синхронизация: источник правды — GitHub
 git pull --ff-only origin main                 # перед началом работы (правки docs исследователя)
 git push origin main                           # после мержа; при отказе — git pull --rebase origin main и снова push

@@ -1,0 +1,8 @@
+name: voice
+unit: skull-voice
+cuda_context: false
+budget: {vram_mb: 0, ram_mb: 1000, measured_on: stand}
+residency: {A: resident, B: resident, C: evacuated}
+lifecycle: {freeze: kill, thaw: start, thaw_budget_s: 2}
+healthcheck: null
+never_evict: false
