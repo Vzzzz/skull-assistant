@@ -37,6 +37,42 @@ sudo tegrastats --interval 1000 | head -5                         # пустой
 | Динамик | любой USB-динамик или звук через HDMI/DP монитора — **у Orin Nano devkit нет аудиоразъёма 3.5 мм** | плеер `soundcard` → устройство по умолчанию (`pactl set-default-sink`); без Pulse — `aplay -D plughw:...` через pipe (T-010); до ReSpeaker Lite динамик и микрофон — разные устройства, часы не синхронизированы → AEC программный невозможен, только `tts:speaking` |
 | Камера (в глазницах) и место черепа | `skull-vision`, `services/vision/gaze.py`, калибровка `gaze_calib.py --natural` по месту | **требование к месту (T-031 1б, 2026-10-30):** направление «владелец → череп» должно отстоять **≥ 35°** от края рабочей зоны (монитор, окно мессенджера) — естественный взгляд на череп это поворот головы, и рабочая поза, повёрнутая в ту же сторону, от него неотличима ни по радужкам, ни по позе; на стенде череп в 10 см от монитора — триггер не проходит гейт |
 
+## 1a. Что везти на Jetson: тяжёлые файлы (владелец, 2026-10-31: «скачивать или копировать со стенда?»)
+
+**Копировать со стенда, не скачивать.** Все веса прода — GGUF и ONNX, форматы не зависят от архитектуры CPU; на стенде лежат ровно те файлы, что проверены замерами (своя квантизация с imatrix на стенде и делалась — повторять её на Orin негде: BF16 15 ГБ + CUDA). Канал — RJ-45 (§0a): гигабит ≈ 100 МБ/с, режим A целиком ≈ 1.5 мин, модель режима B ≈ 3 мин; с HF те же файлы качаются часами (EXECUTOR.md: Xet падает до сотен КБ/с). Из WSL одной командой (пути — как в манифестах, папка `models/` на Jetson создаётся той же раскладки):
+```bash
+# из WSL стенда; jetson = alias в ~/.ssh/config; --relative сохраняет пути models/...
+cd ~/skull-assistant && rsync -avR --progress \
+  models/quant/kostyan-e4b-iq4xs-imx.gguf \
+  models/hf/gemma-4-E4B-it-GGUF/mmproj-gemma-4-E4B-it-Q8_0.gguf \
+  models/hf/embeddinggemma-300M-GGUF/embeddinggemma-300M-Q8_0.gguf \
+  models/stt/sherpa-onnx-nemo-ctc-punct-giga-am-v3-russian-2025-12-16 \
+  models/voice/3dspeaker_speech_campplus_sv_zh_en_16k-common_advanced.onnx models/voice/owner.npy \
+  models/vad models/vision models/tts models/wakeword models/README.md \
+  jetson:~/skull-assistant/
+sha256sum models/quant/kostyan-e4b-iq4xs-imx.gguf   # сверить с тем же на Jetson после копии
+```
+
+| Что | Размер на стенде | Везти | Как |
+|---|---|---|---|
+| `models/quant/kostyan-e4b-iq4xs-imx.gguf` — VLM режима A (D-023) | 5.1 ГБ | **да** | rsync; на Jetson — на NVMe, `models/` симлинком или mount |
+| `models/hf/gemma-4-E4B-it-GGUF/mmproj-…-Q8_0.gguf` — проектор зрения | 0.9 ГБ (папка 1.3) | **да** | rsync только mmproj |
+| `models/hf/embeddinggemma-300M-GGUF/…Q8_0.gguf` — эмбеддер памяти | 0.3 ГБ | **да** | rsync |
+| `models/stt/…punct-giga-am-v3…` — STT прод (D-004) | 215 МБ | **да** | rsync; v2, v3 без punct, T-one, Vosk — не везти (кандидаты T-040) |
+| `models/voice/…campplus….onnx` + `owner.npy` — voice id | ~30 МБ | **да** | rsync; `owner.npy` приватный, не в git — только копией; `voice/data/` (записи) — не нужны; wespeaker — не везти |
+| `models/vad/silero_vad.onnx`, `models/vision/*.onnx` (YuNet, Face Mesh 478), `models/tts/*` (Piper dmitri/ruslan), `models/wakeword/*` | < 150 МБ вместе | **да** | rsync папками |
+| **режим B**: `gemma4:26b-a4b-it-q4_K_M` (+ `-mtp-` вариант) — ollama-блобы на стенде | 17 ГБ (+0.5 драфт; проектор 1.2 не нужен) | **да, на NVMe** | скопировать `~/.ollama/models` целиком (`rsync -a ~/.ollama/models/ jetson:/nvme/ollama/`, `OLLAMA_MODELS=/nvme/ollama`) — ollama на Orin увидит их без pull; llama-server (T-044) читает тот же блоб по пути из `ollama show --modelfile` |
+| `models/quant/gemma-4-E4B-it-BF16.gguf`, `imatrix-e4b-ru.gguf`, `.cache` | 15 ГБ | нет | квантизация сделана; при перевыпуске (T-021 после LoRA) — делать на стенде и везти результат |
+| `models/hf/Qwen3-TTS-*`, `MiniCPM-o`, `Spark-X2.6`, `chatterbox`, `emotion2vec*`, `openaudio` | ~26 ГБ | нет | кандидаты и снятые варианты; Qwen3-TTS — только если TTS_TRACK решит ставить его на GPU (отдельно) |
+| ollama-модели стенда (`gemma4:e4b-it-qat`, `e2b-it-qat`, кандидаты CTX-1) | десятки ГБ | только `e2b-it-qat` (запасной мозг по памяти, D-021) | в той же копии `~/.ollama/models` — или `ollama pull` на Orin через ICS, если место на NVMe жалко |
+| `models/quant/slots/` | — | нет | слоты llama-server создаются заново |
+| `.venv` | — | **нет, не копируется** | колёса x86_64; на Orin `pip install -r requirements.txt` заново: aarch64-колёса есть у onnxruntime, sherpa-onnx, opencv-python-headless, piper-tts, redis, numpy; torch в прод-venv не ставить (как на стенде) |
+| `~/llama.cpp` (две сборки: CUDA для VLM, CPU для эмбеддера) | — | **нет, собирать** | `git clone` на Orin, тот же commit, что на стенде (`git -C ~/llama.cpp rev-parse HEAD` записать в JOURNAL); CUDA-сборка под sm_87 (`-DGGML_CUDA=ON -DCMAKE_CUDA_ARCHITECTURES=87`), ~30–60 мин на Orin; CPU-сборка отдельно (D-024: CUDA-сборка создаёт контекст 176 МБ даже при `-ngl 0`); проверить IQ4_XS-ядра на sm_87 (Q-004) первым запуском |
+| ollama, redis, JetPack-компоненты (CUDA, cuDNN) | — | нет | скрипт ollama (arm64 + CUDA JetPack 6), `apt install redis-server`; CUDA в JetPack |
+| `persona/system_prompt.md`, манифесты, юниты, код | — | git | `git clone` с GitHub; `persona/dataset/` приватный — везти только если T-020/T-021 пойдут на устройстве (не планируется) |
+
+Итого на NVMe: режим A ≈ 7 ГБ, режим B +17–18 ГБ, запас под слоты и page cache. Порядок §2 п. 3 дополняется: до запуска юнитов — `sha256sum` на четырёх крупных файлах против стенда.
+
 ## 2. Порядок дня
 
 1. §0: версия, nvpmodel, jetson_clocks, пустой след (tegrastats 60 с) → MEMORY_BUDGET §1 «Пустой след системы».
