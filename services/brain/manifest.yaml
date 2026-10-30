@@ -39,6 +39,7 @@ params:                  # read by services/brain/responder.py and services/brai
     idle_yes_p: 0.7      # outside the window, no question word: p(«да») (owner, pause >= 1.5 s) for an answer (T-042 4a)
     idle_ack_p: 0.3      # outside the window: 0.3..0.7 -> «угу»
     gaze_cooldown_s: 30  # a silent look (events:vision gaze) in IDLE: one line in character, not more often (T-031)
+    gaze_window_s: 15    # the window a gaze line opens; a look does not extend an open window (T-031, core 2026-10-29)
     ack_gap_s: 20        # «угу» not more often (T-038 2в, core's answer 4)
     busy_pause_s: 20     # after an aside veto: silent until this pause or the name
     veto_aside_p: 0.9    # router aside probability that vetoes (radio / podcast / call / «Алло»)

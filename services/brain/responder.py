@@ -42,7 +42,10 @@ acks = 0
 # T-031 step 2: a silent look at the skull (services/vision, events:vision {kind: gaze})
 GAZE_PROMPT = ("Служебно, не отвечай на это как на реплику: собеседник молча смотрит на тебя уже две секунды. "
                "Скажи одно короткое, в своём тоне.")
+GAZE_RECENT = " Твои последние реплики на такой взгляд: {}. Не повторяй их начало и форму."
 GAZE_COOLDOWN_S = AMB.get("gaze_cooldown_s", 30)
+GAZE_WINDOW_S = AMB.get("gaze_window_s", 15)
+GAZE_LINES = "gaze:lines"       # Redis list, newest first: the last gaze lines (the prompt and the repeat check)
 last_gaze = 0.0
 
 
@@ -151,10 +154,16 @@ def ambient_gate(text, fields, route, window):
     return (*amb.decide(text, speaker, pause, p_aside, time.time(), engaged, duck, lifted, bcast, seg_s), engaged)
 
 
+def first_word(line):
+    return re.sub(r"[^\w-]", "", (line.split() or [""])[0].lower())
+
+
 def on_gaze(fields):
-    """A silent look (T-031 step 2): in the window it only extends the window; in IDLE, outside the skull's speech and
-    not during a call (BUSY), one short line in character, not more often than GAZE_COOLDOWN_S, kept out of the history
-    and the memory (like «угу»). The line opens the window: a look plus «Что?» invites an answer."""
+    """A silent look (T-031 steps 2-3): in IDLE, outside the skull's speech and not during a call (BUSY), one short line
+    in character, not more often than GAZE_COOLDOWN_S, kept out of the history and the memory (like «угу»). The line
+    opens the window for GAZE_WINDOW_S: a look plus «Что?» invites an answer. A look does not extend an open window
+    (core's answer 2: false looks kept it open). The last 3 gaze lines go into the prompt; a line starting like one of
+    them is dropped — silence beats the fourth «Смотри.» (core's answer 4)."""
     global last_gaze
     now = time.time()
     why = None
@@ -163,8 +172,7 @@ def on_gaze(fields):
     elif amb.busy:
         why = "busy"
     elif now < engaged_until(r):
-        r.set(OPEN_KEY, json.dumps({"reply_id": "gaze", "t": now, "s": amb.engaged_s}))   # no tts:end -> t + s
-        why = "engaged: window extended"
+        why = "engaged"
     elif now - last_gaze < GAZE_COOLDOWN_S:
         why = f"cooldown ({now - last_gaze:.0f} s ago)"
     if why:
@@ -174,11 +182,19 @@ def on_gaze(fields):
     history = [json.loads(x) for x in r.lrange(HISTORY, 0, -1)]
     window, _ = build_window(history, sys_tokens, 200)
     tail = {}
-    raw = "".join(chat_stream(to_messages(window) + [{"role": "user", "content": GAZE_PROMPT}], 40, tail)).strip()
+    recent = [x.decode() for x in r.lrange(GAZE_LINES, 0, 2)]
+    prompt = GAZE_PROMPT + (GAZE_RECENT.format(", ".join(f"«{x}»" for x in recent)) if recent else "")
+    raw = "".join(chat_stream(to_messages(window) + [{"role": "user", "content": prompt}], 40, tail)).strip()
     line, _ = clean_reply(raw, "")
+    if not line or first_word(line) in {first_word(x) for x in recent}:
+        print(f"brain: gaze -> {line!r} dropped (repeats {recent})")
+        r.xadd("events:ambient", {"text": "", "decision": "gaze_drop", "why": "repeat", "state": "idle",
+                                  "ts": f"{now:.3f}", "reply": line}, maxlen=5000, approximate=True)
+        return
+    r.lpush(GAZE_LINES, line); r.ltrim(GAZE_LINES, 0, 2)
     reply_id = uuid.uuid4().hex[:12]
     say(reply_id, 0, line, "", now, final=True, meta={"reply": line, "ambient": "gaze"})
-    r.set(OPEN_KEY, json.dumps({"reply_id": reply_id, "t": time.time(), "s": amb.engaged_s}))
+    r.set(OPEN_KEY, json.dumps({"reply_id": reply_id, "t": time.time(), "s": GAZE_WINDOW_S}))
     r.xadd("events:ambient", {"text": "", "decision": "gaze", "why": f"look {fields.get(b'dur_s', b'?').decode()} s",
                               "state": "idle", "ts": f"{now:.3f}", "reply": line}, maxlen=5000, approximate=True)
     print(f"brain: gaze -> {line!r} ({time.time() - now:.2f} s)")
