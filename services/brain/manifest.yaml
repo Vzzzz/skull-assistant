@@ -14,7 +14,7 @@ residency:
 lifecycle:
   freeze: slot-save-kill
   thaw: start-slot-restore
-  thaw_budget_s: 4       # замер T-024 (thaw ≈ 3.5 с); перезапуск skull-llm до /health 3.6–3.8 с при прогретом кэше, 13 с при холодном (2026-10-26)
+  thaw_budget_s: 7       # A after B (the 26B displaced the e4b file from the page cache): /health 4.9-6.4 s (T-044, 2026-10-31); T-024 warm 3.5 s, cold 13 s (2026-10-26)
   cold_start_s: 13       # первый старт skull-llm после перезагрузки (холодный кэш страниц) до /health, 2026-10-26
 bus:
   in:  [events:transcript]
@@ -31,9 +31,10 @@ modes:                   # per-mode model of skull-llm (services/brain/llm_serve
     # -ncmoe: --cpu-moe 3806 MB VRAM, 15.4 tok/s, prefill 205 tok/s; 24 -> 6606 MB, 18.6 tok/s, 249 tok/s;
     # 23 -> 7060 MB (too close to the B budget 7592), 19.4 tok/s (stand 2026-10-30)
     extra_args: ["-ncmoe", "24"]
+    thaw_budget_s: 10      # start -> /health 7.0-9.2 s warm, 32.8 s with the 17 GB file out of the page cache (T-044, 2026-10-31)
     budget:
-      vram_mb: 6606        # ПИК: -ncmoe 24 @8192, KV q8_0 (stand 2026-10-30, T-044 step 2)
-      ram_mb: 512          # RssAnon (VmRSS ~17 GB is the mmapped GGUF: page cache)
+      vram_mb: 6624        # ПИК: -ncmoe 24 @8192, KV q8_0, CTX-1 at ~5k tokens (stand 2026-10-31, T-044; probe 6606)
+      ram_mb: 506          # RssAnon peak over 15 switches (VmHWM 15.3-16.6 GB is the mmapped GGUF: page cache)
       measured_on: stand
 params:                  # read by services/brain/responder.py and services/brain/llm_server.py; paths from repo root
   backend: llama-server

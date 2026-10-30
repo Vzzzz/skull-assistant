@@ -14,7 +14,7 @@ residency:
 lifecycle:
   freeze: kill
   thaw: start
-  thaw_budget_s: null    # TODO: measure (open the camera + first frame: 0.3–0.5 s on the stand)
+  thaw_budget_s: 1       # open the camera + first frame 0.3-0.5 s (T-031 step 0); not re-measured 2026-10-31: camera not attached
 bus:
   in:  [camera]          # /dev/video0 (stand: usbipd from the Windows host, I-16)
   out: [events:vision]

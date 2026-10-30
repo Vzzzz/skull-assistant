@@ -1,0 +1,1333 @@
+{
+ "switches": [
+  {
+   "to": "B",
+   "t0": 1793379573.5982647,
+   "t1": 1793379606.9322178,
+   "total_s": 33.33,
+   "failed": false,
+   "phases": [
+    {
+     "id": "ms79573598",
+     "from": "A",
+     "to": "B",
+     "phase": "begin",
+     "service": "",
+     "t_ms": "0",
+     "ts": "1793379573.599",
+     "reason": "bench 1/10",
+     "rollback": "0"
+    },
+    {
+     "id": "ms79573598",
+     "from": "A",
+     "to": "B",
+     "phase": "save",
+     "service": "brain",
+     "t_ms": "29",
+     "ts": "1793379573.627",
+     "dt_ms": "3",
+     "file": "A-da39a3ee5e6b.bin"
+    },
+    {
+     "id": "ms79573598",
+     "from": "A",
+     "to": "B",
+     "phase": "stop",
+     "service": "brain",
+     "t_ms": "444",
+     "ts": "1793379574.043",
+     "dt_ms": "415",
+     "unit": "skull-llm"
+    },
+    {
+     "id": "ms79573598",
+     "from": "A",
+     "to": "B",
+     "phase": "stop",
+     "service": "embed",
+     "t_ms": "497",
+     "ts": "1793379574.095",
+     "dt_ms": "52",
+     "unit": "skull-embed"
+    },
+    {
+     "id": "ms79573598",
+     "from": "A",
+     "to": "B",
+     "phase": "switch",
+     "service": "",
+     "t_ms": "497",
+     "ts": "1793379574.096"
+    },
+    {
+     "id": "ms79573598",
+     "from": "A",
+     "to": "B",
+     "phase": "start",
+     "service": "brain",
+     "t_ms": "546",
+     "ts": "1793379574.145",
+     "dt_ms": "45"
+    },
+    {
+     "id": "ms79573598",
+     "from": "A",
+     "to": "B",
+     "phase": "health",
+     "service": "brain",
+     "t_ms": "33315",
+     "ts": "1793379606.914",
+     "dt_ms": "32813",
+     "budget_s": "4",
+     "over": "1"
+    },
+    {
+     "id": "ms79573598",
+     "from": "A",
+     "to": "B",
+     "phase": "restore",
+     "service": "brain",
+     "t_ms": "33325",
+     "ts": "1793379606.924",
+     "dt_ms": "4",
+     "file": "B-da39a3ee5e6b.bin"
+    },
+    {
+     "id": "ms79573598",
+     "from": "A",
+     "to": "B",
+     "phase": "done",
+     "service": "",
+     "t_ms": "33333",
+     "ts": "1793379606.932"
+    }
+   ],
+   "llm_mem_before_stop": {
+    "VmHWM": 2998,
+    "VmRSS": 1002,
+    "RssAnon": 327
+   },
+   "vram_before": 3812,
+   "vram_peak": 6578,
+   "vram_after": 6578,
+   "turn": {
+    "text": "Сколько будет семь умножить на восемь?",
+    "reply": "7 на 7 — 49, еще 7 — 56.\n\nИтого 56.",
+    "first_chunk_s": 11.15,
+    "final_s": 11.5,
+    "ttft_s": 3.926,
+    "prompt_tokens": 639,
+    "vram_peak": 6622
+   },
+   "vram_peak_mode": 6622,
+   "llm_mem_after_turn": {
+    "VmHWM": 15283,
+    "VmRSS": 12456,
+    "RssAnon": 392
+   },
+   "mic_max_gap_s": 0.05
+  },
+  {
+   "to": "A",
+   "t0": 1793379618.447298,
+   "t1": 1793379625.865862,
+   "total_s": 7.42,
+   "failed": false,
+   "phases": [
+    {
+     "id": "ms79618447",
+     "from": "B",
+     "to": "A",
+     "phase": "begin",
+     "service": "",
+     "t_ms": "1",
+     "ts": "1793379618.449",
+     "reason": "bench 2/10",
+     "rollback": "0"
+    },
+    {
+     "id": "ms79618447",
+     "from": "B",
+     "to": "A",
+     "phase": "save",
+     "service": "brain",
+     "t_ms": "82",
+     "ts": "1793379618.531",
+     "dt_ms": "56",
+     "file": "B-11e259004c2a.bin"
+    },
+    {
+     "id": "ms79618447",
+     "from": "B",
+     "to": "A",
+     "phase": "stop",
+     "service": "brain",
+     "t_ms": "1335",
+     "ts": "1793379619.784",
+     "dt_ms": "1253",
+     "unit": "skull-llm"
+    },
+    {
+     "id": "ms79618447",
+     "from": "B",
+     "to": "A",
+     "phase": "switch",
+     "service": "",
+     "t_ms": "1336",
+     "ts": "1793379619.784"
+    },
+    {
+     "id": "ms79618447",
+     "from": "B",
+     "to": "A",
+     "phase": "start",
+     "service": "brain",
+     "t_ms": "1388",
+     "ts": "1793379619.837",
+     "dt_ms": "49"
+    },
+    {
+     "id": "ms79618447",
+     "from": "B",
+     "to": "A",
+     "phase": "health",
+     "service": "brain",
+     "t_ms": "6219",
+     "ts": "1793379624.668",
+     "dt_ms": "4880",
+     "budget_s": "4",
+     "over": "1"
+    },
+    {
+     "id": "ms79618447",
+     "from": "B",
+     "to": "A",
+     "phase": "restore_skipped",
+     "service": "brain",
+     "t_ms": "6220",
+     "ts": "1793379624.669",
+     "reason": "history changed"
+    },
+    {
+     "id": "ms79618447",
+     "from": "B",
+     "to": "A",
+     "phase": "start",
+     "service": "embed",
+     "t_ms": "6248",
+     "ts": "1793379624.697",
+     "dt_ms": "21"
+    },
+    {
+     "id": "ms79618447",
+     "from": "B",
+     "to": "A",
+     "phase": "health",
+     "service": "embed",
+     "t_ms": "7414",
+     "ts": "1793379625.862",
+     "dt_ms": "1187",
+     "budget_s": "30",
+     "over": "0"
+    },
+    {
+     "id": "ms79618447",
+     "from": "B",
+     "to": "A",
+     "phase": "done",
+     "service": "",
+     "t_ms": "7417",
+     "ts": "1793379625.866"
+    }
+   ],
+   "llm_mem_before_stop": {
+    "VmHWM": 15283,
+    "VmRSS": 12456,
+    "RssAnon": 392
+   },
+   "vram_before": 6622,
+   "vram_peak": 6622,
+   "vram_after": 3812,
+   "turn": {
+    "text": "Сколько будет семь умножить на восемь?",
+    "reply": "7 умножить на 8.\n\nШаг 1: 7 * 8.\nШаг 2: 56.\n\nИтого 56.",
+    "first_chunk_s": 0.95,
+    "final_s": 1.41,
+    "ttft_s": 0.031,
+    "prompt_tokens": 679,
+    "vram_peak": 3838
+   },
+   "vram_peak_mode": 3838,
+   "llm_mem_after_turn": {
+    "VmHWM": 2725,
+    "VmRSS": 756,
+    "RssAnon": 496
+   },
+   "mic_max_gap_s": 0.03
+  },
+  {
+   "to": "B",
+   "t0": 1793379627.2806413,
+   "t1": 1793379635.802658,
+   "total_s": 8.52,
+   "failed": false,
+   "phases": [
+    {
+     "id": "ms79627280",
+     "from": "A",
+     "to": "B",
+     "phase": "begin",
+     "service": "",
+     "t_ms": "0",
+     "ts": "1793379627.281",
+     "reason": "bench 3/10",
+     "rollback": "0"
+    },
+    {
+     "id": "ms79627280",
+     "from": "A",
+     "to": "B",
+     "phase": "save",
+     "service": "brain",
+     "t_ms": "47",
+     "ts": "1793379627.329",
+     "dt_ms": "16",
+     "file": "A-94cae93e993c.bin"
+    },
+    {
+     "id": "ms79627280",
+     "from": "A",
+     "to": "B",
+     "phase": "stop",
+     "service": "brain",
+     "t_ms": "443",
+     "ts": "1793379627.725",
+     "dt_ms": "396",
+     "unit": "skull-llm"
+    },
+    {
+     "id": "ms79627280",
+     "from": "A",
+     "to": "B",
+     "phase": "stop",
+     "service": "embed",
+     "t_ms": "502",
+     "ts": "1793379627.783",
+     "dt_ms": "58",
+     "unit": "skull-embed"
+    },
+    {
+     "id": "ms79627280",
+     "from": "A",
+     "to": "B",
+     "phase": "switch",
+     "service": "",
+     "t_ms": "502",
+     "ts": "1793379627.784"
+    },
+    {
+     "id": "ms79627280",
+     "from": "A",
+     "to": "B",
+     "phase": "start",
+     "service": "brain",
+     "t_ms": "535",
+     "ts": "1793379627.817",
+     "dt_ms": "30"
+    },
+    {
+     "id": "ms79627280",
+     "from": "A",
+     "to": "B",
+     "phase": "health",
+     "service": "brain",
+     "t_ms": "8513",
+     "ts": "1793379635.794",
+     "dt_ms": "8008",
+     "budget_s": "4",
+     "over": "1"
+    },
+    {
+     "id": "ms79627280",
+     "from": "A",
+     "to": "B",
+     "phase": "restore_skipped",
+     "service": "brain",
+     "t_ms": "8514",
+     "ts": "1793379635.796",
+     "reason": "history changed"
+    },
+    {
+     "id": "ms79627280",
+     "from": "A",
+     "to": "B",
+     "phase": "done",
+     "service": "",
+     "t_ms": "8521",
+     "ts": "1793379635.802"
+    }
+   ],
+   "llm_mem_before_stop": {
+    "VmHWM": 2725,
+    "VmRSS": 756,
+    "RssAnon": 496
+   },
+   "vram_before": 3838,
+   "vram_peak": 6578,
+   "vram_after": 6578,
+   "turn": {
+    "text": "Сколько будет семь умножить на восемь?",
+    "reply": "7 * 1 = 7\n7 * 2 = 14\n7 * 3 = 21\n7 * 4 = 28\n7 * 5 = 35\n7 * 6 = 42\n7 * 7 = 49\n7 * 8 = 56\n\nИтого 56.",
+    "first_chunk_s": 9.53,
+    "final_s": 13.19,
+    "ttft_s": 3.994,
+    "prompt_tokens": 739,
+    "vram_peak": 6622
+   },
+   "vram_peak_mode": 6622,
+   "llm_mem_after_turn": {
+    "VmHWM": 16311,
+    "VmRSS": 13552,
+    "RssAnon": 506
+   },
+   "mic_max_gap_s": 0.03
+  },
+  {
+   "to": "A",
+   "t0": 1793379649.00555,
+   "t1": 1793379657.139429,
+   "total_s": 8.13,
+   "failed": false,
+   "phases": [
+    {
+     "id": "ms79649005",
+     "from": "B",
+     "to": "A",
+     "phase": "begin",
+     "service": "",
+     "t_ms": "0",
+     "ts": "1793379649.006",
+     "reason": "bench 4/10",
+     "rollback": "0"
+    },
+    {
+     "id": "ms79649005",
+     "from": "B",
+     "to": "A",
+     "phase": "save",
+     "service": "brain",
+     "t_ms": "87",
+     "ts": "1793379649.093",
+     "dt_ms": "61",
+     "file": "B-7171f877d587.bin"
+    },
+    {
+     "id": "ms79649005",
+     "from": "B",
+     "to": "A",
+     "phase": "stop",
+     "service": "brain",
+     "t_ms": "1098",
+     "ts": "1793379650.104",
+     "dt_ms": "1010",
+     "unit": "skull-llm"
+    },
+    {
+     "id": "ms79649005",
+     "from": "B",
+     "to": "A",
+     "phase": "switch",
+     "service": "",
+     "t_ms": "1098",
+     "ts": "1793379650.104"
+    },
+    {
+     "id": "ms79649005",
+     "from": "B",
+     "to": "A",
+     "phase": "start",
+     "service": "brain",
+     "t_ms": "1130",
+     "ts": "1793379650.136",
+     "dt_ms": "29"
+    },
+    {
+     "id": "ms79649005",
+     "from": "B",
+     "to": "A",
+     "phase": "health",
+     "service": "brain",
+     "t_ms": "6919",
+     "ts": "1793379655.925",
+     "dt_ms": "5818",
+     "budget_s": "4",
+     "over": "1"
+    },
+    {
+     "id": "ms79649005",
+     "from": "B",
+     "to": "A",
+     "phase": "restore_skipped",
+     "service": "brain",
+     "t_ms": "6920",
+     "ts": "1793379655.926",
+     "reason": "history changed"
+    },
+    {
+     "id": "ms79649005",
+     "from": "B",
+     "to": "A",
+     "phase": "start",
+     "service": "embed",
+     "t_ms": "6966",
+     "ts": "1793379655.973",
+     "dt_ms": "41"
+    },
+    {
+     "id": "ms79649005",
+     "from": "B",
+     "to": "A",
+     "phase": "health",
+     "service": "embed",
+     "t_ms": "8130",
+     "ts": "1793379657.136",
+     "dt_ms": "1204",
+     "budget_s": "30",
+     "over": "0"
+    },
+    {
+     "id": "ms79649005",
+     "from": "B",
+     "to": "A",
+     "phase": "done",
+     "service": "",
+     "t_ms": "8133",
+     "ts": "1793379657.139"
+    }
+   ],
+   "llm_mem_before_stop": {
+    "VmHWM": 16311,
+    "VmRSS": 13552,
+    "RssAnon": 506
+   },
+   "vram_before": 6622,
+   "vram_peak": 6622,
+   "vram_after": 3812,
+   "turn": {
+    "text": "Сколько будет семь умножить на восемь?",
+    "reply": "7 * 8.\n\nШаг 1: 7 * 8 = 56.\n\nИтого 56.",
+    "first_chunk_s": 0.63,
+    "final_s": 0.99,
+    "ttft_s": 0.029,
+    "prompt_tokens": 832,
+    "vram_peak": 3838
+   },
+   "vram_peak_mode": 3838,
+   "llm_mem_after_turn": {
+    "VmHWM": 2996,
+    "VmRSS": 1244,
+    "RssAnon": 496
+   },
+   "mic_max_gap_s": 0.03
+  },
+  {
+   "to": "B",
+   "t0": 1793379658.1420152,
+   "t1": 1793379665.6735084,
+   "total_s": 7.53,
+   "failed": false,
+   "phases": [
+    {
+     "id": "ms79658142",
+     "from": "A",
+     "to": "B",
+     "phase": "begin",
+     "service": "",
+     "t_ms": "0",
+     "ts": "1793379658.143",
+     "reason": "bench 5/10",
+     "rollback": "0"
+    },
+    {
+     "id": "ms79658142",
+     "from": "A",
+     "to": "B",
+     "phase": "save",
+     "service": "brain",
+     "t_ms": "42",
+     "ts": "1793379658.185",
+     "dt_ms": "17",
+     "file": "A-06b6e3b3ce2d.bin"
+    },
+    {
+     "id": "ms79658142",
+     "from": "A",
+     "to": "B",
+     "phase": "stop",
+     "service": "brain",
+     "t_ms": "446",
+     "ts": "1793379658.589",
+     "dt_ms": "404",
+     "unit": "skull-llm"
+    },
+    {
+     "id": "ms79658142",
+     "from": "A",
+     "to": "B",
+     "phase": "stop",
+     "service": "embed",
+     "t_ms": "505",
+     "ts": "1793379658.648",
+     "dt_ms": "59",
+     "unit": "skull-embed"
+    },
+    {
+     "id": "ms79658142",
+     "from": "A",
+     "to": "B",
+     "phase": "switch",
+     "service": "",
+     "t_ms": "506",
+     "ts": "1793379658.649"
+    },
+    {
+     "id": "ms79658142",
+     "from": "A",
+     "to": "B",
+     "phase": "start",
+     "service": "brain",
+     "t_ms": "534",
+     "ts": "1793379658.677",
+     "dt_ms": "24"
+    },
+    {
+     "id": "ms79658142",
+     "from": "A",
+     "to": "B",
+     "phase": "health",
+     "service": "brain",
+     "t_ms": "7523",
+     "ts": "1793379665.666",
+     "dt_ms": "7014",
+     "budget_s": "4",
+     "over": "1"
+    },
+    {
+     "id": "ms79658142",
+     "from": "A",
+     "to": "B",
+     "phase": "restore_skipped",
+     "service": "brain",
+     "t_ms": "7524",
+     "ts": "1793379665.667",
+     "reason": "history changed"
+    },
+    {
+     "id": "ms79658142",
+     "from": "A",
+     "to": "B",
+     "phase": "done",
+     "service": "",
+     "t_ms": "7530",
+     "ts": "1793379665.673"
+    }
+   ],
+   "llm_mem_before_stop": {
+    "VmHWM": 2996,
+    "VmRSS": 1244,
+    "RssAnon": 496
+   },
+   "vram_before": 3838,
+   "vram_peak": 6566,
+   "vram_after": 6566,
+   "turn": {
+    "text": "Сколько будет семь умножить на восемь?",
+    "reply": "7 * 8.\n\n1) 7 * 1 = 7\n2) 7 * 2 = 14\n3) 7 * 3 = 21\n4) 7 * 4 = 28\n5) 7 * 5 = 35\n6) 7 * 6 = 42\n7) 7 * 7 = 49\n8) 7 * 8 = 56\n\nИтого 56.",
+    "first_chunk_s": 11.09,
+    "final_s": 16.53,
+    "ttft_s": 4.125,
+    "prompt_tokens": 884,
+    "vram_peak": 6606
+   },
+   "vram_peak_mode": 6606,
+   "llm_mem_after_turn": {
+    "VmHWM": 16501,
+    "VmRSS": 13453,
+    "RssAnon": 492
+   },
+   "mic_max_gap_s": 0.03
+  },
+  {
+   "to": "A",
+   "t0": 1793379682.2136548,
+   "t1": 1793379689.2473376,
+   "total_s": 7.03,
+   "failed": false,
+   "phases": [
+    {
+     "id": "ms79682213",
+     "from": "B",
+     "to": "A",
+     "phase": "begin",
+     "service": "",
+     "t_ms": "0",
+     "ts": "1793379682.214",
+     "reason": "bench 6/10",
+     "rollback": "0"
+    },
+    {
+     "id": "ms79682213",
+     "from": "B",
+     "to": "A",
+     "phase": "save",
+     "service": "brain",
+     "t_ms": "111",
+     "ts": "1793379682.325",
+     "dt_ms": "83",
+     "file": "B-6bc4b554e11e.bin"
+    },
+    {
+     "id": "ms79682213",
+     "from": "B",
+     "to": "A",
+     "phase": "stop",
+     "service": "brain",
+     "t_ms": "969",
+     "ts": "1793379683.183",
+     "dt_ms": "857",
+     "unit": "skull-llm"
+    },
+    {
+     "id": "ms79682213",
+     "from": "B",
+     "to": "A",
+     "phase": "switch",
+     "service": "",
+     "t_ms": "969",
+     "ts": "1793379683.184"
+    },
+    {
+     "id": "ms79682213",
+     "from": "B",
+     "to": "A",
+     "phase": "start",
+     "service": "brain",
+     "t_ms": "1027",
+     "ts": "1793379683.241",
+     "dt_ms": "54"
+    },
+    {
+     "id": "ms79682213",
+     "from": "B",
+     "to": "A",
+     "phase": "health",
+     "service": "brain",
+     "t_ms": "5833",
+     "ts": "1793379688.047",
+     "dt_ms": "4860",
+     "budget_s": "4",
+     "over": "1"
+    },
+    {
+     "id": "ms79682213",
+     "from": "B",
+     "to": "A",
+     "phase": "restore_skipped",
+     "service": "brain",
+     "t_ms": "5833",
+     "ts": "1793379688.048",
+     "reason": "history changed"
+    },
+    {
+     "id": "ms79682213",
+     "from": "B",
+     "to": "A",
+     "phase": "start",
+     "service": "embed",
+     "t_ms": "5866",
+     "ts": "1793379688.081",
+     "dt_ms": "27"
+    },
+    {
+     "id": "ms79682213",
+     "from": "B",
+     "to": "A",
+     "phase": "health",
+     "service": "embed",
+     "t_ms": "7030",
+     "ts": "1793379689.244",
+     "dt_ms": "1190",
+     "budget_s": "30",
+     "over": "0"
+    },
+    {
+     "id": "ms79682213",
+     "from": "B",
+     "to": "A",
+     "phase": "done",
+     "service": "",
+     "t_ms": "7033",
+     "ts": "1793379689.247"
+    }
+   ],
+   "llm_mem_before_stop": {
+    "VmHWM": 16501,
+    "VmRSS": 13453,
+    "RssAnon": 492
+   },
+   "vram_before": 6606,
+   "vram_peak": 6606,
+   "vram_after": 3812,
+   "turn": {
+    "text": "Сколько будет семь умножить на восемь?",
+    "reply": "7 * 8.\n\nШаг 1: 7 * 8.\nШаг 2: 56.\n\nИтого 56.",
+    "first_chunk_s": 0.67,
+    "final_s": 1.12,
+    "ttft_s": 0.032,
+    "prompt_tokens": 1007,
+    "vram_peak": 3838
+   },
+   "vram_peak_mode": 3838,
+   "llm_mem_after_turn": {
+    "VmHWM": 2609,
+    "VmRSS": 1100,
+    "RssAnon": 496
+   },
+   "mic_max_gap_s": 0.03
+  },
+  {
+   "to": "B",
+   "t0": 1793379690.3763769,
+   "t1": 1793379699.1150744,
+   "total_s": 8.74,
+   "failed": false,
+   "phases": [
+    {
+     "id": "ms79690376",
+     "from": "A",
+     "to": "B",
+     "phase": "begin",
+     "service": "",
+     "t_ms": "0",
+     "ts": "1793379690.377",
+     "reason": "bench 7/10",
+     "rollback": "0"
+    },
+    {
+     "id": "ms79690376",
+     "from": "A",
+     "to": "B",
+     "phase": "save",
+     "service": "brain",
+     "t_ms": "43",
+     "ts": "1793379690.420",
+     "dt_ms": "18",
+     "file": "A-7360a56c6da6.bin"
+    },
+    {
+     "id": "ms79690376",
+     "from": "A",
+     "to": "B",
+     "phase": "stop",
+     "service": "brain",
+     "t_ms": "446",
+     "ts": "1793379690.823",
+     "dt_ms": "403",
+     "unit": "skull-llm"
+    },
+    {
+     "id": "ms79690376",
+     "from": "A",
+     "to": "B",
+     "phase": "stop",
+     "service": "embed",
+     "t_ms": "502",
+     "ts": "1793379690.879",
+     "dt_ms": "56",
+     "unit": "skull-embed"
+    },
+    {
+     "id": "ms79690376",
+     "from": "A",
+     "to": "B",
+     "phase": "switch",
+     "service": "",
+     "t_ms": "503",
+     "ts": "1793379690.880"
+    },
+    {
+     "id": "ms79690376",
+     "from": "A",
+     "to": "B",
+     "phase": "start",
+     "service": "brain",
+     "t_ms": "544",
+     "ts": "1793379690.921",
+     "dt_ms": "37"
+    },
+    {
+     "id": "ms79690376",
+     "from": "A",
+     "to": "B",
+     "phase": "health",
+     "service": "brain",
+     "t_ms": "8731",
+     "ts": "1793379699.108",
+     "dt_ms": "8225",
+     "budget_s": "4",
+     "over": "1"
+    },
+    {
+     "id": "ms79690376",
+     "from": "A",
+     "to": "B",
+     "phase": "restore_skipped",
+     "service": "brain",
+     "t_ms": "8731",
+     "ts": "1793379699.109",
+     "reason": "history changed"
+    },
+    {
+     "id": "ms79690376",
+     "from": "A",
+     "to": "B",
+     "phase": "done",
+     "service": "",
+     "t_ms": "8738",
+     "ts": "1793379699.115"
+    }
+   ],
+   "llm_mem_before_stop": {
+    "VmHWM": 2609,
+    "VmRSS": 1100,
+    "RssAnon": 496
+   },
+   "vram_before": 3838,
+   "vram_peak": 6568,
+   "vram_after": 6568,
+   "turn": {
+    "text": "Сколько будет семь умножить на восемь?",
+    "reply": "7 * 8.\n\n1) 7 * 1 = 7\n2) 7 * 2 = 14\n3) 7 * 3 = 21\n4) 7 * 4 = 28\n5) 7 * 5 = 35\n6) 7 * 6 = 42\n7) 7 * 7 = 49\n8) 7 * 8 = 56\n\nИтого 56.",
+    "first_chunk_s": 8.55,
+    "final_s": 14.64,
+    "ttft_s": 1.142,
+    "prompt_tokens": 1065,
+    "vram_peak": 6606
+   },
+   "vram_peak_mode": 6606,
+   "llm_mem_after_turn": {
+    "VmHWM": 16399,
+    "VmRSS": 13646,
+    "RssAnon": 493
+   },
+   "mic_max_gap_s": 0.03
+  },
+  {
+   "to": "A",
+   "t0": 1793379713.7670279,
+   "t1": 1793379722.0564966,
+   "total_s": 8.29,
+   "failed": false,
+   "phases": [
+    {
+     "id": "ms79713767",
+     "from": "B",
+     "to": "A",
+     "phase": "begin",
+     "service": "",
+     "t_ms": "0",
+     "ts": "1793379713.768",
+     "reason": "bench 8/10",
+     "rollback": "0"
+    },
+    {
+     "id": "ms79713767",
+     "from": "B",
+     "to": "A",
+     "phase": "save",
+     "service": "brain",
+     "t_ms": "109",
+     "ts": "1793379713.876",
+     "dt_ms": "82",
+     "file": "B-1390a4489cd8.bin"
+    },
+    {
+     "id": "ms79713767",
+     "from": "B",
+     "to": "A",
+     "phase": "stop",
+     "service": "brain",
+     "t_ms": "918",
+     "ts": "1793379714.685",
+     "dt_ms": "809",
+     "unit": "skull-llm"
+    },
+    {
+     "id": "ms79713767",
+     "from": "B",
+     "to": "A",
+     "phase": "switch",
+     "service": "",
+     "t_ms": "918",
+     "ts": "1793379714.686"
+    },
+    {
+     "id": "ms79713767",
+     "from": "B",
+     "to": "A",
+     "phase": "start",
+     "service": "brain",
+     "t_ms": "957",
+     "ts": "1793379714.725",
+     "dt_ms": "35"
+    },
+    {
+     "id": "ms79713767",
+     "from": "B",
+     "to": "A",
+     "phase": "health",
+     "service": "brain",
+     "t_ms": "7079",
+     "ts": "1793379720.847",
+     "dt_ms": "6157",
+     "budget_s": "4",
+     "over": "1"
+    },
+    {
+     "id": "ms79713767",
+     "from": "B",
+     "to": "A",
+     "phase": "restore_skipped",
+     "service": "brain",
+     "t_ms": "7080",
+     "ts": "1793379720.848",
+     "reason": "history changed"
+    },
+    {
+     "id": "ms79713767",
+     "from": "B",
+     "to": "A",
+     "phase": "start",
+     "service": "embed",
+     "t_ms": "7121",
+     "ts": "1793379720.889",
+     "dt_ms": "34"
+    },
+    {
+     "id": "ms79713767",
+     "from": "B",
+     "to": "A",
+     "phase": "health",
+     "service": "embed",
+     "t_ms": "8285",
+     "ts": "1793379722.052",
+     "dt_ms": "1198",
+     "budget_s": "30",
+     "over": "0"
+    },
+    {
+     "id": "ms79713767",
+     "from": "B",
+     "to": "A",
+     "phase": "done",
+     "service": "",
+     "t_ms": "8288",
+     "ts": "1793379722.056"
+    }
+   ],
+   "llm_mem_before_stop": {
+    "VmHWM": 16399,
+    "VmRSS": 13646,
+    "RssAnon": 493
+   },
+   "vram_before": 6606,
+   "vram_peak": 6606,
+   "vram_after": 3812,
+   "turn": {
+    "text": "Сколько будет семь умножить на восемь?",
+    "reply": "7 * 8.\n\nШаг 1: 7 * 8 = 56.\n\nИтого 56.",
+    "first_chunk_s": 0.76,
+    "final_s": 1.13,
+    "ttft_s": 0.03,
+    "prompt_tokens": 1188,
+    "vram_peak": 3838
+   },
+   "vram_peak_mode": 3838,
+   "llm_mem_after_turn": {
+    "VmHWM": 2913,
+    "VmRSS": 1076,
+    "RssAnon": 497
+   },
+   "mic_max_gap_s": 0.03
+  },
+  {
+   "to": "B",
+   "t0": 1793379723.1947517,
+   "t1": 1793379732.126925,
+   "total_s": 8.93,
+   "failed": false,
+   "phases": [
+    {
+     "id": "ms79723194",
+     "from": "A",
+     "to": "B",
+     "phase": "begin",
+     "service": "",
+     "t_ms": "0",
+     "ts": "1793379723.196",
+     "reason": "bench 9/10",
+     "rollback": "0"
+    },
+    {
+     "id": "ms79723194",
+     "from": "A",
+     "to": "B",
+     "phase": "save",
+     "service": "brain",
+     "t_ms": "48",
+     "ts": "1793379723.243",
+     "dt_ms": "21",
+     "file": "A-095b17a8d2a5.bin"
+    },
+    {
+     "id": "ms79723194",
+     "from": "A",
+     "to": "B",
+     "phase": "stop",
+     "service": "brain",
+     "t_ms": "475",
+     "ts": "1793379723.670",
+     "dt_ms": "427",
+     "unit": "skull-llm"
+    },
+    {
+     "id": "ms79723194",
+     "from": "A",
+     "to": "B",
+     "phase": "stop",
+     "service": "embed",
+     "t_ms": "537",
+     "ts": "1793379723.732",
+     "dt_ms": "62",
+     "unit": "skull-embed"
+    },
+    {
+     "id": "ms79723194",
+     "from": "A",
+     "to": "B",
+     "phase": "switch",
+     "service": "",
+     "t_ms": "538",
+     "ts": "1793379723.733"
+    },
+    {
+     "id": "ms79723194",
+     "from": "A",
+     "to": "B",
+     "phase": "start",
+     "service": "brain",
+     "t_ms": "589",
+     "ts": "1793379723.785",
+     "dt_ms": "48"
+    },
+    {
+     "id": "ms79723194",
+     "from": "A",
+     "to": "B",
+     "phase": "health",
+     "service": "brain",
+     "t_ms": "8925",
+     "ts": "1793379732.120",
+     "dt_ms": "8384",
+     "budget_s": "4",
+     "over": "1"
+    },
+    {
+     "id": "ms79723194",
+     "from": "A",
+     "to": "B",
+     "phase": "restore_skipped",
+     "service": "brain",
+     "t_ms": "8925",
+     "ts": "1793379732.121",
+     "reason": "history changed"
+    },
+    {
+     "id": "ms79723194",
+     "from": "A",
+     "to": "B",
+     "phase": "done",
+     "service": "",
+     "t_ms": "8931",
+     "ts": "1793379732.127"
+    }
+   ],
+   "llm_mem_before_stop": {
+    "VmHWM": 2913,
+    "VmRSS": 1076,
+    "RssAnon": 497
+   },
+   "vram_before": 3838,
+   "vram_peak": 6568,
+   "vram_after": 6568,
+   "turn": {
+    "text": "Сколько будет семь умножить на восемь?",
+    "reply": "7 * 8.\n\n1) 7 * 1 = 7\n2) 7 * 2 = 14\n3) 7 * 3 = 21\n4) 7 * 4 = 28\n5) 7 * 5 = 35\n6) 7 * 6 = 42\n7) 7 * 7 = 49\n8) 7 * 8 = 56\n\nИтого 56.",
+    "first_chunk_s": 8.33,
+    "final_s": 14.2,
+    "ttft_s": 1.158,
+    "prompt_tokens": 1240,
+    "vram_peak": 6606
+   },
+   "vram_peak_mode": 6606,
+   "llm_mem_after_turn": {
+    "VmHWM": 16601,
+    "VmRSS": 13565,
+    "RssAnon": 494
+   },
+   "mic_max_gap_s": 0.03
+  },
+  {
+   "to": "A",
+   "t0": 1793379746.3339899,
+   "t1": 1793379753.7917707,
+   "total_s": 7.46,
+   "failed": false,
+   "phases": [
+    {
+     "id": "ms79746333",
+     "from": "B",
+     "to": "A",
+     "phase": "begin",
+     "service": "",
+     "t_ms": "0",
+     "ts": "1793379746.335",
+     "reason": "bench 10/10",
+     "rollback": "0"
+    },
+    {
+     "id": "ms79746333",
+     "from": "B",
+     "to": "A",
+     "phase": "save",
+     "service": "brain",
+     "t_ms": "101",
+     "ts": "1793379746.436",
+     "dt_ms": "77",
+     "file": "B-ea0c1cd0f4a5.bin"
+    },
+    {
+     "id": "ms79746333",
+     "from": "B",
+     "to": "A",
+     "phase": "stop",
+     "service": "brain",
+     "t_ms": "947",
+     "ts": "1793379747.282",
+     "dt_ms": "846",
+     "unit": "skull-llm"
+    },
+    {
+     "id": "ms79746333",
+     "from": "B",
+     "to": "A",
+     "phase": "switch",
+     "service": "",
+     "t_ms": "948",
+     "ts": "1793379747.283"
+    },
+    {
+     "id": "ms79746333",
+     "from": "B",
+     "to": "A",
+     "phase": "start",
+     "service": "brain",
+     "t_ms": "978",
+     "ts": "1793379747.313",
+     "dt_ms": "27"
+    },
+    {
+     "id": "ms79746333",
+     "from": "B",
+     "to": "A",
+     "phase": "health",
+     "service": "brain",
+     "t_ms": "6258",
+     "ts": "1793379752.592",
+     "dt_ms": "5306",
+     "budget_s": "4",
+     "over": "1"
+    },
+    {
+     "id": "ms79746333",
+     "from": "B",
+     "to": "A",
+     "phase": "restore_skipped",
+     "service": "brain",
+     "t_ms": "6258",
+     "ts": "1793379752.593",
+     "reason": "history changed"
+    },
+    {
+     "id": "ms79746333",
+     "from": "B",
+     "to": "A",
+     "phase": "start",
+     "service": "embed",
+     "t_ms": "6290",
+     "ts": "1793379752.625",
+     "dt_ms": "25"
+    },
+    {
+     "id": "ms79746333",
+     "from": "B",
+     "to": "A",
+     "phase": "health",
+     "service": "embed",
+     "t_ms": "7453",
+     "ts": "1793379753.788",
+     "dt_ms": "1189",
+     "budget_s": "30",
+     "over": "0"
+    },
+    {
+     "id": "ms79746333",
+     "from": "B",
+     "to": "A",
+     "phase": "done",
+     "service": "",
+     "t_ms": "7457",
+     "ts": "1793379753.791"
+    }
+   ],
+   "llm_mem_before_stop": {
+    "VmHWM": 16601,
+    "VmRSS": 13565,
+    "RssAnon": 494
+   },
+   "vram_before": 6606,
+   "vram_peak": 6606,
+   "vram_after": 3812,
+   "turn": {
+    "text": "Сколько будет семь умножить на восемь?",
+    "reply": "7 * 8.\n\nШаг 1: 7 * 8.\nШаг 2: 56.\n\nИтого 56.",
+    "first_chunk_s": 0.77,
+    "final_s": 1.21,
+    "ttft_s": 0.029,
+    "prompt_tokens": 1363,
+    "vram_peak": 3838
+   },
+   "vram_peak_mode": 3838,
+   "llm_mem_after_turn": {
+    "VmHWM": 2847,
+    "VmRSS": 1112,
+    "RssAnon": 497
+   },
+   "mic_max_gap_s": 0.03
+  }
+ ],
+ "wakeword_restarts": 0,
+ "mic_max_gap_s": 0.05,
+ "units_after": "skull-brain.service      loaded active running Skull: brain (llama-server)\nskull-capture.service    loaded active running Skull: audio capture to Redis\nskull-dispatcher.service loaded active running Skull: mode dispatcher (D-030): residents of mode:current by the manifests, cmd:mode -> switch A/B\nskull-embed.service      loaded active running Skull: llama-server embedder for brain memory (CPU build)\nskull-llm.service        loaded active running Skull: llama-server for brain (VLM + mmproj, GPU)\nskull-stt.service        loaded active running Skull: speech-to-text (GigaAM v3 CTC, sherpa-onnx) + voice id\nskull-wakeword.service   loaded active running Skull: wake word detector\nskull.target             loaded active active  Skull: all stand services (capture, wakeword, stt, brain, tts, vision) + the mode dispatcher\n"
+}

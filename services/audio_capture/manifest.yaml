@@ -13,7 +13,7 @@ residency:
 lifecycle:
   freeze: kill
   thaw: start
-  thaw_budget_s: null    # TODO: measure (restart until ready)
+  thaw_budget_s: 0.5     # start -> first new audio:mic entry 0.27-0.34 s (stand 2026-10-31, research/bench/mode_switch.py thaw)
 bus:
   in:  []
   out: [audio:mic]
