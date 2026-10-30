@@ -73,6 +73,51 @@ sha256sum models/quant/kostyan-e4b-iq4xs-imx.gguf   # сверить с тем �
 
 Итого на NVMe: режим A ≈ 7 ГБ, режим B +17–18 ГБ, запас под слоты и page cache. Порядок §2 п. 3 дополняется: до запуска юнитов — `sha256sum` на четырёх крупных файлах против стенда.
 
+## 1b. Что собирается на устройстве заново: пошагово (2026-10-31)
+
+Порядок: сначала это, потом копия моделей (§1a), потом §2. Всё — по SSH с стенда (§0a), в сервисном режиме не нужно: юниты ещё не установлены. JetPack 6.x = Ubuntu 22.04, Python 3.10 — **та же версия, что в `.venv` стенда**, поэтому `requirements.txt` используется как есть.
+
+**0. Система и место.**
+```bash
+sudo apt update && sudo apt install -y git cmake build-essential python3-venv python3-dev redis-server \
+     libasound2-dev portaudio19-dev pulseaudio v4l-utils sox aria2
+lsblk; df -h /mnt/nvme 2>/dev/null || true       # NVMe смонтирован? модели режима B и ollama — только туда
+mkdir -p ~/nvme && sudo mount /dev/nvme0n1p1 ~/nvme || true   # если не примонтирован — fstab по UUID
+```
+
+**1. Репозиторий.**
+```bash
+git clone git@github.com:Vzzzz/skull-assistant.git ~/skull-assistant   # или https + токен; ключ SSH — заранее
+cd ~/skull-assistant && ln -s ~/nvme/skull-models models                 # models/ → NVMe; раскладка как на стенде (§1a)
+```
+
+**2. Python-окружение** (колёса x86_64 со стенда не годятся; все наши пакеты имеют aarch64-колёса для cp310: onnxruntime, sherpa-onnx, opencv-python-headless, piper-tts, ctranslate2, tflite-runtime, SoundCard).
+```bash
+python3 -m venv .venv && .venv/bin/pip install -U pip wheel
+.venv/bin/pip install -r requirements.txt 2>&1 | tee ~/pip-orin.log       # если какое-то колесо не найдётся — ISSUES, не компилировать из исходников вслепую
+.venv/bin/python -c "import sherpa_onnx, onnxruntime, cv2, piper, soundcard, redis; print('ok')"
+```
+Что не ставить: torch (как на стенде — только отдельный venv для research), mediapipe (не нужен: Face Mesh в ONNX), faster-whisper можно оставить как fallback (в requirements есть).
+
+**3. llama.cpp — две сборки, тот же commit, что на стенде** (`git -C ~/llama.cpp rev-parse HEAD` в WSL → записать в JOURNAL дня). Пути бинарников в манифестах уже такие: `~/llama.cpp/build-cuda/bin/llama-server` (VLM, GPU) и `~/llama.cpp/build/bin/llama-server` (эмбеддер, CPU-сборка — D-024: CUDA-сборка создаёт контекст 176 МБ даже при `-ngl 0`).
+```bash
+git clone https://github.com/ggml-org/llama.cpp ~/llama.cpp && cd ~/llama.cpp && git checkout <commit со стенда>
+# CPU-сборка (эмбеддер) — быстрая
+cmake -S . -B build -DGGML_CUDA=OFF -DLLAMA_CURL=OFF && cmake --build build -j4 --target llama-server
+# CUDA-сборка под Orin (Ampere sm_87); nvcc тяжёлый — -j2, иначе OOM на 8 ГБ; 30–60 мин
+cmake -S . -B build-cuda -DGGML_CUDA=ON -DCMAKE_CUDA_ARCHITECTURES=87 -DLLAMA_CURL=OFF
+cmake --build build-cuda -j2 --target llama-server llama-cli llama-bench
+```
+Первая проверка после копии моделей (§1a): `build-cuda/bin/llama-bench -m models/quant/kostyan-e4b-iq4xs-imx.gguf -ngl 99 -fa 1` — tok/s и то, что IQ4_XS-ядра на sm_87 живые (Q-004); если IQ4_XS медленнее Q4_K_M на Orin ощутимо — это и есть ответ на Q-004, формат меняется по замеру, не заранее.
+
+**4. ollama** (только стенд-инструменты и режим B до T-044 на устройстве): официальный скрипт (`curl -fsSL https://ollama.com/install.sh | sh`, arm64 + CUDA JetPack 6), override как на стенде (§1: `OLLAMA_FLASH_ATTENTION=1`, `OLLAMA_KV_CACHE_TYPE=q8_0`, `OLLAMA_KEEP_ALIVE=-1`, **`OLLAMA_MODELS=~/nvme/ollama`**), drop-in сервисного режима `deploy/systemd/install-ollama-dropin.sh`. Модели — копией `~/.ollama/models` со стенда (§1a), не pull.
+
+**5. Юниты и флаг сервисного режима.** `deploy/systemd/install.sh` — подставит путь репо; флаг на Orin — `/var/lib/skull/maintenance` (`maint_flag.sh` выбирает его, когда нет `/mnt/c`); `loginctl enable-linger $USER`, чтобы user-юниты жили без сессии. Юниты сначала **не** стартовать: §2 п. 1–2 (пустой след и CUDA-контекст) снимаются до них.
+
+**6. Звук и камера** — §1 строки «C270» и «Динамик»: `arecord -l`, `pactl list sources short`, источник по умолчанию C270; `v4l2-ctl --list-devices`.
+
+После §1b и §1a — чеклист: `python -m core.manifests` (с T-044 — таблица бюджетов режима A по манифестам с `measured_on: stand`; после замеров дня — `jetson`), `sha256sum` четырёх крупных файлов, `redis-cli ping`.
+
 ## 2. Порядок дня
 
 1. §0: версия, nvpmodel, jetson_clocks, пустой след (tegrastats 60 с) → MEMORY_BUDGET §1 «Пустой след системы».
