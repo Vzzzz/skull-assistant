@@ -24,6 +24,7 @@
 | `quant/kostyan-e4b-iq4xs-imx.gguf` | VLM прод (режим A): Gemma 4 E4B, своя квантизация IQ4_XS + imatrix | `research/quant/quant_e4b.sh` из `hf/gemma-4-E4B-it` (D-023) | Gemma Terms of Use |
 | `hf/gemma-4-E4B-it-GGUF/mmproj-gemma-4-E4B-it-Q8_0.gguf` | проектор зрения для VLM | huggingface.co/ggml-org (см. `deploy/fetch_models.sh`) | Gemma Terms of Use |
 | `hf/embeddinggemma-300M-GGUF/embeddinggemma-300M-Q8_0.gguf` | эмбеддер памяти (CPU) | huggingface.co/ggml-org/embeddinggemma-300M-GGUF | Gemma Terms of Use |
+| `hf/gemma-4-26B-A4B-it-GGUF/gemma-4-26B-A4B-it-mtp-Q4_K_M.gguf` | **brain, режим B** (T-044): Gemma 4 26B-A4B Q4_K_M, основная модель mtp-варианта ollama (без драфта), 17.1 ГБ, sha256 `a8bdd07a49b895083bb1420bb895ad9ab3e3b8f7d5cc42c7582ca0fa765eede2` | копия блоба `gemma4:26b-a4b-it-mtp-q4_K_M` (`ollama show --modelfile`, первый `FROM`); жёсткая ссылка запрещена `fs.protected_hardlinks` (блоб принадлежит `ollama`) — копия; обычный блоб `gemma4:26b-a4b-it-q4_K_M` в llama-server не грузится (I-18) | Gemma Terms of Use |
 | ollama: `gemma4:e4b-it-qat`, `gemma4:e2b-it-qat`, `gemma4:26b-a4b-it-mtp`, кандидаты CTX-1 | замеры и запасные варианты (не прод) | `ollama pull <model>` | по модели |
 | Qwen3-TTS 0.6B (qwentts.cpp) | кандидат TTS на GPU (T-013) | см. `research/tts/bench_qwentts.sh` | Apache-2.0 |
 
