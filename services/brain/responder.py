@@ -42,7 +42,11 @@ acks = 0
 # T-031 step 2: a silent look at the skull (services/vision, events:vision {kind: gaze})
 GAZE_PROMPT = ("Служебно, не отвечай на это как на реплику: собеседник молча смотрит на тебя уже две секунды. "
                "Скажи одно короткое, в своём тоне.")
+GAZE_BAN = (" Не говори, что на тебя смотрят; не используй слова с корнями «смотр», «гляд», «наблюда».")
+GAZE_TURNS = (" Спроси у него что-нибудь.", " Пожалуйся на что-нибудь.", " Заметь что-нибудь вокруг.")   # one per look, in turn
 GAZE_RECENT = " Твои последние реплики на такой взгляд: {}. Не повторяй их начало и форму."
+GAZE_ROOTS = re.compile(r"смотр|гляд|наблюда", re.IGNORECASE)   # the ban, checked: the 4B copies the situation into the line
+GAZE_TURN = "gaze:turn"         # Redis counter: which of GAZE_TURNS comes next
 GAZE_COOLDOWN_S = AMB.get("gaze_cooldown_s", 30)
 GAZE_WINDOW_S = AMB.get("gaze_window_s", 15)
 GAZE_LINES = "gaze:lines"       # Redis list, newest first: the last gaze lines (the prompt and the repeat check)
@@ -162,8 +166,10 @@ def on_gaze(fields):
     """A silent look (T-031 steps 2-3): in IDLE, outside the skull's speech and not during a call (BUSY), one short line
     in character, not more often than GAZE_COOLDOWN_S, kept out of the history and the memory (like «угу»). The line
     opens the window for GAZE_WINDOW_S: a look plus «Что?» invites an answer. A look does not extend an open window
-    (core's answer 2: false looks kept it open). The last 3 gaze lines go into the prompt; a line starting like one of
-    them is dropped — silence beats the fourth «Смотри.» (core's answer 4)."""
+    (core's answer 2: false looks kept it open). The prompt bans saying it is being looked at (and the roots смотр- /
+    гляд- / наблюда-), turns the request in a circle (ask / complain / notice something around) and lists the last 3
+    gaze lines. A line starting like one of them, or with a banned root, is generated once more; then silence — silence
+    beats the fourth «Смотри.» (core's answers 4 of 2026-10-29 and 3 of 2026-10-30)."""
     global last_gaze
     now = time.time()
     why = None
@@ -183,13 +189,20 @@ def on_gaze(fields):
     window, _ = build_window(history, sys_tokens, 200)
     tail = {}
     recent = [x.decode() for x in r.lrange(GAZE_LINES, 0, 2)]
-    prompt = GAZE_PROMPT + (GAZE_RECENT.format(", ".join(f"«{x}»" for x in recent)) if recent else "")
-    raw = "".join(chat_stream(to_messages(window) + [{"role": "user", "content": prompt}], 40, tail)).strip()
-    line, _ = clean_reply(raw, "")
-    if not line or first_word(line) in {first_word(x) for x in recent}:
-        print(f"brain: gaze -> {line!r} dropped (repeats {recent})")
-        r.xadd("events:ambient", {"text": "", "decision": "gaze_drop", "why": "repeat", "state": "idle",
+    turn = GAZE_TURNS[(r.incr(GAZE_TURN) - 1) % len(GAZE_TURNS)]
+    prompt = GAZE_PROMPT + GAZE_BAN + turn + (GAZE_RECENT.format(", ".join(f"«{x}»" for x in recent)) if recent else "")
+    starts = {first_word(x) for x in recent}
+    for attempt in (1, 2):
+        raw = "".join(chat_stream(to_messages(window) + [{"role": "user", "content": prompt}], 40, tail)).strip()
+        line, _ = clean_reply(raw, "")
+        why = ("empty" if not line else "banned root" if GAZE_ROOTS.search(line)
+               else "repeat" if first_word(line) in starts else None)
+        if not why:
+            break
+        print(f"brain: gaze -> {line!r} dropped ({why}, attempt {attempt}; recent {recent})")
+        r.xadd("events:ambient", {"text": "", "decision": "gaze_drop", "why": why, "state": "idle",
                                   "ts": f"{now:.3f}", "reply": line}, maxlen=5000, approximate=True)
+    if why:
         return
     r.lpush(GAZE_LINES, line); r.ltrim(GAZE_LINES, 0, 2)
     reply_id = uuid.uuid4().hex[:12]
@@ -197,7 +210,7 @@ def on_gaze(fields):
     r.set(OPEN_KEY, json.dumps({"reply_id": reply_id, "t": time.time(), "s": GAZE_WINDOW_S}))
     r.xadd("events:ambient", {"text": "", "decision": "gaze", "why": f"look {fields.get(b'dur_s', b'?').decode()} s",
                               "state": "idle", "ts": f"{now:.3f}", "reply": line}, maxlen=5000, approximate=True)
-    print(f"brain: gaze -> {line!r} ({time.time() - now:.2f} s)")
+    print(f"brain: gaze -> {line!r} ({turn.strip()}; {time.time() - now:.2f} s)")
 
 
 def load_memory(history):
