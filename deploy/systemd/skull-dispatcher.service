@@ -1,0 +1,15 @@
+[Unit]
+ConditionPathExists=!@MAINT_FLAG@
+PartOf=skull.target
+Description=Skull: mode dispatcher (D-030): residents of mode:current by the manifests, cmd:mode -> switch A/B
+After=skull-capture.service skull-wakeword.service skull-stt.service skull-llm.service skull-embed.service skull-brain.service skull-tts.service
+
+[Service]
+WorkingDirectory=@REPO@
+ExecStart=@REPO@/.venv/bin/python -m core.dispatcher
+Restart=on-failure
+RestartSec=10
+Environment="PYTHONUNBUFFERED=1"
+
+[Install]
+WantedBy=skull.target

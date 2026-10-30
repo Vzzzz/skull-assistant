@@ -1,0 +1,252 @@
+{
+ "switches": [
+  {
+   "to": "B",
+   "t0": 1793379769.4972324,
+   "t1": 1793379778.9533281,
+   "total_s": 9.46,
+   "failed": false,
+   "phases": [
+    {
+     "id": "ms79769497",
+     "from": "A",
+     "to": "B",
+     "phase": "begin",
+     "service": "",
+     "t_ms": "0",
+     "ts": "1793379769.498",
+     "reason": "bench 1/2",
+     "rollback": "0"
+    },
+    {
+     "id": "ms79769497",
+     "from": "A",
+     "to": "B",
+     "phase": "save",
+     "service": "brain",
+     "t_ms": "56",
+     "ts": "1793379769.553",
+     "dt_ms": "32",
+     "file": "A-da39a3ee5e6b.bin"
+    },
+    {
+     "id": "ms79769497",
+     "from": "A",
+     "to": "B",
+     "phase": "stop",
+     "service": "brain",
+     "t_ms": "515",
+     "ts": "1793379770.013",
+     "dt_ms": "459",
+     "unit": "skull-llm"
+    },
+    {
+     "id": "ms79769497",
+     "from": "A",
+     "to": "B",
+     "phase": "stop",
+     "service": "embed",
+     "t_ms": "572",
+     "ts": "1793379770.070",
+     "dt_ms": "57",
+     "unit": "skull-embed"
+    },
+    {
+     "id": "ms79769497",
+     "from": "A",
+     "to": "B",
+     "phase": "switch",
+     "service": "",
+     "t_ms": "573",
+     "ts": "1793379770.071"
+    },
+    {
+     "id": "ms79769497",
+     "from": "A",
+     "to": "B",
+     "phase": "start",
+     "service": "brain",
+     "t_ms": "619",
+     "ts": "1793379770.117",
+     "dt_ms": "42"
+    },
+    {
+     "id": "ms79769497",
+     "from": "A",
+     "to": "B",
+     "phase": "health",
+     "service": "brain",
+     "t_ms": "9448",
+     "ts": "1793379778.946",
+     "dt_ms": "8872",
+     "budget_s": "4",
+     "over": "1"
+    },
+    {
+     "id": "ms79769497",
+     "from": "A",
+     "to": "B",
+     "phase": "restore_skipped",
+     "service": "brain",
+     "t_ms": "9449",
+     "ts": "1793379778.947",
+     "reason": "history changed"
+    },
+    {
+     "id": "ms79769497",
+     "from": "A",
+     "to": "B",
+     "phase": "done",
+     "service": "",
+     "t_ms": "9455",
+     "ts": "1793379778.953"
+    }
+   ],
+   "llm_mem_before_stop": {
+    "VmHWM": 2847,
+    "VmRSS": 1112,
+    "RssAnon": 497
+   },
+   "vram_before": 3838,
+   "vram_peak": 6578,
+   "vram_after": 6578,
+   "mic_max_gap_s": 0.03
+  },
+  {
+   "to": "A",
+   "t0": 1793379778.9581702,
+   "t1": 1793379786.8665326,
+   "total_s": 7.91,
+   "failed": false,
+   "phases": [
+    {
+     "id": "ms79778958",
+     "from": "B",
+     "to": "A",
+     "phase": "begin",
+     "service": "",
+     "t_ms": "0",
+     "ts": "1793379778.959",
+     "reason": "bench 2/2",
+     "rollback": "0"
+    },
+    {
+     "id": "ms79778958",
+     "from": "B",
+     "to": "A",
+     "phase": "save",
+     "service": "brain",
+     "t_ms": "29",
+     "ts": "1793379778.987",
+     "dt_ms": "2",
+     "file": "B-da39a3ee5e6b.bin"
+    },
+    {
+     "id": "ms79778958",
+     "from": "B",
+     "to": "A",
+     "phase": "stop",
+     "service": "brain",
+     "t_ms": "839",
+     "ts": "1793379779.797",
+     "dt_ms": "810",
+     "unit": "skull-llm"
+    },
+    {
+     "id": "ms79778958",
+     "from": "B",
+     "to": "A",
+     "phase": "switch",
+     "service": "",
+     "t_ms": "840",
+     "ts": "1793379779.798"
+    },
+    {
+     "id": "ms79778958",
+     "from": "B",
+     "to": "A",
+     "phase": "start",
+     "service": "brain",
+     "t_ms": "886",
+     "ts": "1793379779.845",
+     "dt_ms": "43"
+    },
+    {
+     "id": "ms79778958",
+     "from": "B",
+     "to": "A",
+     "phase": "health",
+     "service": "brain",
+     "t_ms": "6787",
+     "ts": "1793379785.746",
+     "dt_ms": "5944",
+     "budget_s": "4",
+     "over": "1"
+    },
+    {
+     "id": "ms79778958",
+     "from": "B",
+     "to": "A",
+     "phase": "restore",
+     "service": "brain",
+     "t_ms": "6799",
+     "ts": "1793379785.758",
+     "dt_ms": "11",
+     "file": "A-da39a3ee5e6b.bin"
+    },
+    {
+     "id": "ms79778958",
+     "from": "B",
+     "to": "A",
+     "phase": "start",
+     "service": "embed",
+     "t_ms": "6847",
+     "ts": "1793379785.805",
+     "dt_ms": "41"
+    },
+    {
+     "id": "ms79778958",
+     "from": "B",
+     "to": "A",
+     "phase": "health",
+     "service": "embed",
+     "t_ms": "7904",
+     "ts": "1793379786.863",
+     "dt_ms": "1099",
+     "budget_s": "30",
+     "over": "0"
+    },
+    {
+     "id": "ms79778958",
+     "from": "B",
+     "to": "A",
+     "phase": "done",
+     "service": "",
+     "t_ms": "7908",
+     "ts": "1793379786.866"
+    }
+   ],
+   "llm_mem_before_stop": {
+    "VmHWM": 16466,
+    "VmRSS": 13327,
+    "RssAnon": 331
+   },
+   "vram_before": 6578,
+   "vram_peak": 3812,
+   "vram_after": 3812,
+   "mic_max_gap_s": 0.03
+  }
+ ],
+ "turn_after": {
+  "text": "Сколько будет семь умножить на восемь?",
+  "reply": "Семь на восемь — пятьдесят шесть.",
+  "first_chunk_s": 0.68,
+  "final_s": 0.68,
+  "ttft_s": 0.03,
+  "prompt_tokens": 635,
+  "vram_peak": 3838
+ },
+ "wakeword_restarts": 0,
+ "mic_max_gap_s": 0.03,
+ "units_after": "skull-brain.service      loaded active running Skull: brain (llama-server)\nskull-capture.service    loaded active running Skull: audio capture to Redis\nskull-dispatcher.service loaded active running Skull: mode dispatcher (D-030): residents of mode:current by the manifests, cmd:mode -> switch A/B\nskull-embed.service      loaded active running Skull: llama-server embedder for brain memory (CPU build)\nskull-llm.service        loaded active running Skull: llama-server for brain (VLM + mmproj, GPU)\nskull-stt.service        loaded active running Skull: speech-to-text (GigaAM v3 CTC, sherpa-onnx) + voice id\nskull-wakeword.service   loaded active running Skull: wake word detector\nskull.target             loaded active active  Skull: all stand services (capture, wakeword, stt, brain, tts, vision) + the mode dispatcher\n"
+}

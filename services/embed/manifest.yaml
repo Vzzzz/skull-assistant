@@ -13,7 +13,7 @@ residency:
 lifecycle:
   freeze: kill
   thaw: start
-  thaw_budget_s: null    # TODO: measure (restart until /health)
+  thaw_budget_s: 1.5     # start -> /health 1.05-1.09 s alone, 1.19-1.24 s inside a B -> A switch (stand 2026-10-31)
 bus:
   in:  []                # HTTP /v1/embeddings for brain memory (core/memory.py), not the bus
   out: []

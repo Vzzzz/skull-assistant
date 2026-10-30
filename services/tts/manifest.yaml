@@ -13,7 +13,7 @@ residency:
 lifecycle:
   freeze: kill
   thaw: start
-  thaw_budget_s: null    # TODO: measure (restart until ready)
+  thaw_budget_s: 1.5     # start -> «dmitri ready» 0.95-1.02 s (stand 2026-10-31)
 bus:
   in:  [events:reply]
   out: [tts:speaking]

@@ -1,0 +1,21 @@
+# Mode budgets per target (D-030, T-044): core/manifests.py checks the manifests against them; the dispatcher refuses
+# to start on a violation. Peaks only (MEMORY_BUDGET rule). On Jetson only this file and the model paths change.
+target: stand              # the target core.manifests / core.dispatcher validate by default (--target overrides)
+
+targets:
+  stand:                   # RTX 3080 Laptop 8 GB in WSL2 (AGENTS «Две копии репозитория и стенд»)
+    unified: false
+    vram_mb: 7592          # 8192 - 600 reserved by the driver / Windows display (MEMORY_BUDGET §2)
+    ram_mb: 15500          # WSL MemTotal ~19.5 GB (.wslconfig) - ~4 GB system, redis, ollama idle, page-cache headroom
+                           # for the mmapped GGUFs (subjective margin; RAM peaks of the services are anonymous memory)
+  orin:                    # Jetson Orin Nano Super 8 GB (MEMORY_BUDGET §2): GPU and CPU share one pool
+    unified: true
+    unified_mb: 7600       # 7.6 GB available to processes after the system (MEMORY_BUDGET §2, T-033 estimate)
+
+modes:
+  A:                       # conversation: VLM 4B + voice + embedder (+ vision when enabled)
+    kv_reserve_mb: 0       # brain's vram_mb is the peak @ num_ctx 8192 with the KV cache, mmproj and an image (T-033)
+  B:                       # thinking: MoE 26B-A4B with the experts on the CPU + voice (T-044 step 2, Q-045)
+    kv_reserve_mb: 0       # brain's modes.B budget is the measured peak @ num_ctx 8192 with the KV cache
+  C:                       # everything for one model; the voice tract is out (M8, not implemented)
+    kv_reserve_mb: 0

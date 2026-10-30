@@ -1,0 +1,32 @@
+{
+ "thaw_s": {
+  "skull-capture": [
+   0.34,
+   0.28,
+   0.27
+  ],
+  "skull-stt": [
+   1.78,
+   1.57,
+   1.58
+  ],
+  "skull-tts": [
+   1.02,
+   0.95,
+   0.96
+  ],
+  "skull-embed": [
+   1.09,
+   1.07,
+   1.05
+  ],
+  "skull-vision": [
+   null,
+   null,
+   null
+  ]
+ },
+ "wakeword_restarts": 0,
+ "mic_max_gap_s": 1.24,
+ "units_after": "skull-brain.service      loaded active running Skull: brain (llama-server)\nskull-capture.service    loaded active running Skull: audio capture to Redis\nskull-dispatcher.service loaded active running Skull: mode dispatcher (D-030): residents of mode:current by the manifests, cmd:mode -> switch A/B\nskull-embed.service      loaded active running Skull: llama-server embedder for brain memory (CPU build)\nskull-llm.service        loaded active running Skull: llama-server for brain (VLM + mmproj, GPU)\nskull-stt.service        loaded active running Skull: speech-to-text (GigaAM v3 CTC, sherpa-onnx) + voice id\nskull-wakeword.service   loaded active running Skull: wake word detector\nskull.target             loaded active active  Skull: all stand services (capture, wakeword, stt, brain, tts, vision) + the mode dispatcher\n"
+}

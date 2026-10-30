@@ -13,7 +13,7 @@ residency:
 lifecycle:
   freeze: kill
   thaw: start
-  thaw_budget_s: null    # TODO: measure (restart until ready)
+  thaw_budget_s: null    # never thawed: never_evict (the dispatcher does not touch it)
 bus:
   in:  [audio:mic]
   out: [events:wakeword]

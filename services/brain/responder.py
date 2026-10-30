@@ -12,7 +12,7 @@ import redis, requests, yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
-from core.ambient import OPEN_KEY, Ambient, engaged_until
+from core.ambient import OPEN_KEY, Ambient, engaged_until, has_name
 from core.memory import SYSTEM_RULE, AssocMemory, clean_reply, format_note
 from core.speech import for_speech
 from core.router import POLICY, decide, duck_bin_llamaserver, policy_prefix, route_llamaserver
@@ -48,6 +48,10 @@ GAZE_RECENT = " Твои последние реплики на такой вз�
 GAZE_ROOTS = re.compile(r"смотр|гляд|наблюда", re.IGNORECASE)   # the ban, checked: the 4B copies the situation into the line
 GAZE_TURN = "gaze:turn"         # Redis counter: which of GAZE_TURNS comes next
 GAZE_COOLDOWN_S = AMB.get("gaze_cooldown_s", 30)
+# T-044: while the dispatcher swaps the model (Redis mode:transition) llama-server is down or loading: one fixed line
+# in character to an address (the name / the wake word), never the model; overheard speech is ignored, no duck
+HOLD = "Погоди, думаю."
+TRANSITION = "mode:transition"
 GAZE_WINDOW_S = AMB.get("gaze_window_s", 15)
 GAZE_LINES = "gaze:lines"       # Redis list, newest first: the last gaze lines (the prompt and the repeat check)
 last_gaze = 0.0
@@ -175,6 +179,8 @@ def on_gaze(fields):
     why = None
     if r.exists('tts:speaking'):
         why = "speaking"
+    elif r.exists(TRANSITION):
+        why = "mode transition"
     elif amb.busy:
         why = "busy"
     elif now < engaged_until(r):
@@ -267,6 +273,11 @@ while True:
         amb.reset()                                    # a new conversation starts idle
         r.delete(OPEN_KEY)
         print("brain: history reset")
+        continue
+    if r.exists(TRANSITION):
+        if fields.get(b'trigger') != b'speech' or has_name(text):
+            say(uuid.uuid4().hex[:12], 0, HOLD, "", ts, final=True, meta={"reply": HOLD, "mode": "transition"})
+        print(f"brain: mode transition -> {'hold line' if fields.get(b'trigger') != b'speech' or has_name(text) else 'ignored'}")
         continue
     t0 = time.perf_counter()
 
