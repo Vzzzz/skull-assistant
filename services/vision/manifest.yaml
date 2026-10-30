@@ -33,6 +33,7 @@ params:
     mesh_model: models/vision/face_landmarks_478.onnx   # MediaPipe Face Mesh with irises -> ONNX (research/vision/export_face_mesh.sh), step 1b
     presence_min: 0.5       # Face Mesh face presence on the crop
     open_min: 0.0           # eye openness (lid gap / eye width) below -> a blink, no eye feature that frame
+    gaze_k: 90              # gaze_h = yaw + gaze_k * (iris_h - 0.5): eye turn ~+-45 deg across the eye width (geometry, not fitted)
     # «looking at the skull» = every band holds; calibrated per placement (research/vision/gaze_calib.py):
     # step 1 (--static, 2026-10-29): nose offset — skull -0.30 [p10 -0.38, p90 -0.21], monitor centre -1.02 [p90 -0.61];
     # the working posture lay inside it (live gate: 31 false in 10 min) -> step 1b: irises (--work, 2026-10-30, camera

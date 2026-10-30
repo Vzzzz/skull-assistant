@@ -7,7 +7,9 @@ Camera at the skull's eyes -> YuNet (OpenCV FaceDetectorYN, CPU) at `fps` -> the
   * eyes (step 1b): MediaPipe Face Mesh with irises (478 points, exported to ONNX — research/vision/export_face_mesh.sh)
     on a 256x256 crop around the YuNet box, rotated so the eyes are level -> iris centre against the eye corners
     (iris_h: 0 — at the image-left corner, 1 — at the image-right one) and below the corner line (iris_v, in eye widths),
-    averaged over both eyes; eye openness drops blinks.
+    averaged over both eyes; eye openness drops blinks;
+  * one gaze axis: gaze_h = yaw + gaze_k * (iris_h - 0.5) — the head turn plus the eye turn in the head, k from geometry
+    (the eye turns about +-45 deg across the eye width: 90 deg per unit), not fitted.
 «Looking at the skull» is a calibrated band per feature (`gaze.bands`, all must hold), not «facing the camera»: with the
 skull beside the monitor the owner turns the eyes, not the head. Step 1 used the nose offset alone; the working posture
 (reading, the messenger on the right) lay inside its band (live gate 2026-10-29: 31 false triggers in 10 min) — hence the
@@ -16,9 +18,10 @@ irises (research/vision/gaze_calib.py --work). In the bands for dwell_s (dropout
 (or the face to vanish) first and min_interval_s since the last one. tts:speaking mutes it (the owner looks at the skull
 while it answers). Frames are not stored.
 
-  .venv/bin/python services/vision/gaze.py [--show]     # --show: per-frame features in the log
+  .venv/bin/python services/vision/gaze.py [--show] [--log frames.csv]   # per-frame features: to the log / to a CSV
 """
 import argparse
+import csv
 import math
 import time
 from pathlib import Path
@@ -119,6 +122,8 @@ def measure(det, sess, frame, w, h):
         eyes = iris_features(sess, frame, f[:4], lm)
         if eyes and eyes["open"] >= G.get("open_min", 0.0):    # a blink: no eye feature this frame
             m.update(eyes)
+            if pose:
+                m["gaze_h"] = m["yaw"] + G.get("gaze_k", 90.0) * (m["iris_h"] - 0.5)
     return m
 
 
@@ -130,7 +135,14 @@ def main():
     cv2.setNumThreads(P.get("threads", 1))   # OpenCV's default thread pool spins: 71 % of a core -> ~20 % with one thread
     ap = argparse.ArgumentParser()
     ap.add_argument("--show", action="store_true")
+    ap.add_argument("--log", help="per-frame features to this CSV (diagnostics; frames themselves are not stored)")
     a = ap.parse_args()
+    log = None
+    if a.log:
+        fh = open(a.log, "w", newline="", encoding="utf-8")     # flushed per frame: the run ends with a kill
+        log = csv.DictWriter(fh, extrasaction="ignore",
+                             fieldnames=["t", "face", "score", "nose", "yaw", "pitch", "iris_h", "iris_v", "open", "gaze_h", "facing"])
+        log.writeheader()
     cap = cv2.VideoCapture(P.get("device", 0), cv2.CAP_V4L2)
     if P.get("fourcc"):     # MJPG: raw YUYV 640x480@30 (~18 MB/s) arrives broken over usbip (green frames, T-031 step 0)
         cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*P["fourcc"]))
@@ -157,6 +169,9 @@ def main():
         m = measure(det, sess, frame, w, h)
         facing = in_bands(m, bands)
         now = time.time()
+        if log:
+            log.writerow({"t": f"{now:.3f}", "face": int(bool(m)), "facing": int(facing), **{k: f"{v:.4f}" for k, v in m.items()}})
+            fh.flush()
         if a.show:
             print("  " + (" ".join(f"{k} {v:+.2f}" for k, v in m.items()) if m else "----")
                   + (" FACING" if facing else "") + f"  {1000 * (now - t0):.0f} ms", flush=True)
