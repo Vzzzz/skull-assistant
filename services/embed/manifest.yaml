@@ -8,7 +8,7 @@ budget:
   measured_on: stand
 residency:
   A: resident
-  B: evacuated
+  B: resident             # memory beyond the window is needed in B too (core, T-044 answer 3; Orin: T-032)
   C: evacuated
 lifecycle:
   freeze: kill
