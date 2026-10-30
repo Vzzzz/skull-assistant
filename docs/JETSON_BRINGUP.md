@@ -26,6 +26,7 @@ sudo tegrastats --interval 1000 | head -5                         # пустой
 | `research/bench/bench_vlm_mem.sh` | — | **nvidia-smi на Jetson нет**: вариант с `tegrastats` (RAM used, GR3D) и `/proc/<pid>/status` RSS — TASKS T-009 |
 | `research/bench/measure_voice_rss.sh`, `research/tts/piper_rt.py` | как есть | — |
 | Микрофон/динамик | ReSpeaker Lite (USB, аппаратный AEC) или любой USB | в SC7 USB обесточен → капча должна переживать re-enumerate (T-005) |
+| Камера (в глазницах) и место черепа | `skull-vision`, `services/vision/gaze.py`, калибровка `gaze_calib.py --natural` по месту | **требование к месту (T-031 1б, 2026-10-30):** направление «владелец → череп» должно отстоять **≥ 35°** от края рабочей зоны (монитор, окно мессенджера) — естественный взгляд на череп это поворот головы, и рабочая поза, повёрнутая в ту же сторону, от него неотличима ни по радужкам, ни по позе; на стенде череп в 10 см от монитора — триггер не проходит гейт |
 
 ## 2. Порядок дня
 
