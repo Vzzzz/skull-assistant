@@ -6,6 +6,9 @@ MediaPipe stays out of the prod .venv (the wheel imports matplotlib, wants openc
   ~/venvs/skull-mediapipe-ref/bin/pip install absl-py certifi flatbuffers matplotlib numpy==2.2.6 \
       opencv-python-headless==5.0.0.93 onnxruntime redis pyyaml
   ~/venvs/skull-mediapipe-ref/bin/python research/vision/iris_ref.py --task <face_landmarker.task> [--seconds 20]
+The Tasks API dlopens libGLESv2.so.2 (not on the stand): without sudo — `apt-get download libgles2 && dpkg-deb -x
+libgles2_*.deb x` and LD_LIBRARY_PATH=x/usr/lib/x86_64-linux-gnu. The face has to be whole in the frame: at the edge
+the two crops disagree (corr 0.56 instead of 0.90, 2026-10-30).
 """
 import argparse
 import importlib.util

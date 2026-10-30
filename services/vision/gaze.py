@@ -43,7 +43,7 @@ FACE_3D = np.array([(-165.0, 170.0, -135.0), (165.0, 170.0, -135.0), (0.0, 0.0, 
 # The subject's right eye is on the image left: outer corner 33, inner 133; the left eye: inner 362, outer 263.
 EYES = ((33, 133, 159, 145, 468), (362, 263, 386, 374, 473))
 MESH_SIZE = 256
-MESH_SCALE = 1.5        # crop side = 1.5 x the larger side of the face box (MediaPipe's detection-to-ROI scale)
+MESH_SCALE = 1.3        # crop side = 1.3 x the larger side of the YuNet box: closest to MediaPipe's own pipeline (iris_ref.py, 2026-10-30)
 
 
 def head_pose(lm, w, h):
