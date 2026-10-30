@@ -1,0 +1,24 @@
+name: tests
+
+# T-045: pytest on core/ — no models, no Redis server (fakeredis), no GPU; seconds. The same run as
+# `.venv/bin/pytest -q` before every merge (docs/agents/EXECUTOR.md §5).
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+      - name: Install (test deps + the runtime core/ imports, not requirements.txt)
+        run: pip install -r requirements-dev.txt
+      - name: Test
+        run: pytest -q

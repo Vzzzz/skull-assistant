@@ -1,0 +1,13 @@
+name: llm
+unit: skull-brain
+server_unit: skull-llm
+cuda_context: true
+budget: {vram_mb: 4000, ram_mb: 600, measured_on: stand}
+residency: {A: resident, B: resident, C: evacuated}
+lifecycle: {freeze: slot-save-kill, thaw: start-slot-restore, thaw_budget_s: 4}
+healthcheck: http://127.0.0.1:11437/health
+never_evict: false
+modes:
+  B:
+    gguf: models/big.gguf
+    budget: {vram_mb: 7000, ram_mb: 500, measured_on: stand}

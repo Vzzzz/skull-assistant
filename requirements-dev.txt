@@ -1,0 +1,8 @@
+# tests (T-045): pytest on core/ without models, Redis or GPU — `.venv/bin/pip install -r requirements-dev.txt`
+pytest==9.2.0
+fakeredis==2.40.0
+# the runtime core/* imports (CI installs only this, not requirements.txt)
+PyYAML==6.0.3
+numpy==2.2.6
+redis==8.1.0
+requests==2.34.2

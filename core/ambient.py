@@ -49,6 +49,28 @@ def engaged_until(r):
     return (float(end) if end else o["t"]) + o["s"]
 
 
+def open_window(r, reply_id, s, now):
+    """Open / extend ENGAGED: s seconds after the reply `reply_id` has been played (an answer: engaged_s; a gaze line:
+    15 s, T-031). Until tts:end has it, the window counts from `now`."""
+    r.set(OPEN_KEY, json.dumps({"reply_id": reply_id, "t": now, "s": s}))
+
+
+def gaze_skip(r, now, busy, last_gaze, cooldown_s, transition_key="mode:transition"):
+    """Why a silent look gets no line (None: answer it). A look never extends an open window (core's answer 2 of
+    2026-10-29: false looks kept it open) — inside it the look is just ignored."""
+    if r.exists("tts:speaking"):
+        return "speaking"
+    if r.exists(transition_key):
+        return "mode transition"
+    if busy:
+        return "busy"
+    if now < engaged_until(r):
+        return "engaged"
+    if now - last_gaze < cooldown_s:
+        return f"cooldown ({now - last_gaze:.0f} s ago)"
+    return None
+
+
 def needs_pause(text, speaker, engaged):
     """STT waits for the pause after a phrase only when the duck pass will use it: the owner's voice, idle, no name,
     no question word (other / uncertain voices outside the window are silent whatever the pause)."""

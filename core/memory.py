@@ -22,12 +22,15 @@ STOP = set("и а но не ни да нет ты я он она мы вы он�
 
 _ASIDE = re.compile(r"\s*\((?:из памяти|ты помнишь|не надо|не буду|не жди|я не стану|примерно столько)[^)]*\)\s*$", re.I | re.S)
 _ANY_TRAILING_PAREN = re.compile(r"\n\s*\([^)]{15,}\)\s*$", re.S)
+# a bare «Не знаю.» carries nothing: kept, it trains the model to repeat it («Дорсет.» x4 the same way) — not stored
+# in the history or the memory, like «угу» (T-042, core's answer 2 of 2026-10-29)
+_BARE_DUNNO = re.compile(r"(?:я\s+)?(?:не\s+знаю|без\s+понятия|понятия\s+не\s+имею)[\s.!…]*", re.I)
 
 
 def clean_reply(reply: str, note: str = ""):
     """Deterministic guard (brain-side): strip a copied memory note and trailing bracketed asides.
     Applied before TTS, before the history and before the memory. Returns (clean, flags) where flags is
-    a set of what fired: 'copied', 'aside'."""
+    a set of what fired: 'copied', 'aside', 'dunno' (the whole reply is a bare «Не знаю.»: say it, do not store it)."""
     flags = set()
     out = reply
     if note:
@@ -45,7 +48,10 @@ def clean_reply(reply: str, note: str = ""):
     if m:
         out = out[:m.start()]; flags.add("aside")
     out = out.strip()
-    return (out if out else reply.strip()), flags
+    out = out if out else reply.strip()
+    if _BARE_DUNNO.fullmatch(out):
+        flags.add("dunno")
+    return out, flags
 
 
 def tokens(text: str):
