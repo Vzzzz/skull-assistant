@@ -1,6 +1,6 @@
 name: vision
 unit: skull-vision
-backend: cpu                 # OpenCV FaceDetectorYN (YuNet ONNX), cv2.setNumThreads(1)
+backend: cpu                 # OpenCV FaceDetectorYN (YuNet ONNX) + Face Mesh 478 (ONNX, onnxruntime), 1 thread each
 cuda_context: false
 trigger: gaze                # what it publishes for now: events:vision {kind: gaze}; scene / objects — later (T-031)
 budget:
@@ -30,10 +30,14 @@ params:
     model: models/vision/face_detection_yunet_2023mar.onnx
     fps: 5                  # detection rate; the camera may give more
     score_min: 0.6          # YuNet face confidence; 0.8 lost the face at the bottom edge of a camera tilted up (2026-10-29)
-    # «looking at the skull» = nose offset band, calibrated per placement (research/vision/gaze_calib.py --static):
-    # stand 2026-10-29, camera 10 cm left of the monitor, ~30° up — skull -0.30 [p10 -0.38, p90 -0.21], monitor -1.02 [p90 -0.61]
-    nose_min: -0.50
-    nose_max: -0.10
+    mesh_model: models/vision/face_landmarks_478.onnx   # MediaPipe Face Mesh with irises -> ONNX (research/vision/export_face_mesh.sh), step 1b
+    presence_min: 0.5       # Face Mesh face presence on the crop
+    open_min: 0.0           # eye openness (lid gap / eye width) below -> a blink, no eye feature that frame
+    # «looking at the skull» = every band holds; calibrated per placement (research/vision/gaze_calib.py):
+    # step 1 (--static, 2026-10-29): nose offset — skull -0.30 [p10 -0.38, p90 -0.21], monitor centre -1.02 [p90 -0.61];
+    # the working posture lay inside it (live gate: 31 false in 10 min) -> step 1b: irises (--work)
+    bands:
+      nose: [-0.50, -0.10]
     dwell_s: 1.5            # in the band (dropouts <= gap_s allowed) this long -> events:vision {kind: gaze}
     gap_s: 0.4              # live: 4 looks -> 1 trigger without it, 2 with it (3 with dwell 1.5 s)
     min_interval_s: 10      # not more often; and the face has to turn away first
