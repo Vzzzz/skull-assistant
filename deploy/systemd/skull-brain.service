@@ -2,7 +2,8 @@
 ConditionPathExists=!@MAINT_FLAG@
 PartOf=skull.target
 Description=Skull: brain (llama-server)
-Wants=skull-llm.service skull-embed.service
+# skull-embed is not wanted here: in mode B it is evacuated (services/embed manifest), the dispatcher owns it (T-044)
+Wants=skull-llm.service
 After=skull-stt.service skull-llm.service skull-embed.service
 
 [Service]

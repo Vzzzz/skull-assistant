@@ -1,5 +1,5 @@
 [Unit]
-Description=Skull: all stand services (capture, wakeword, stt, brain, tts, vision)
+Description=Skull: all stand services (capture, wakeword, stt, brain, tts, vision) + the mode dispatcher
 Documentation=file:@REPO@/README.md
 # Сервисный режим: если на Windows-стороне есть флаг, ни один skull-юнит не стартует
 # (условие продублировано в каждом юните: условие на target не блокирует его Wants).

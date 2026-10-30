@@ -1,5 +1,6 @@
 name: brain
 unit: skull-brain
+server_unit: skull-llm   # holds the model (GPU): freeze / thaw / healthcheck act on it; `unit` (responder) stays up while brain is resident (T-044)
 backend: llama-server      # D-024; server units: skull-llm (VLM, GPU), skull-embed (embedder, CPU build)
 cuda_context: true
 budget:
@@ -8,7 +9,7 @@ budget:
   measured_on: stand
 residency:
   A: resident
-  B: evacuated
+  B: resident             # another model: modes.B (T-044)
   C: evacuated
 lifecycle:
   freeze: slot-save-kill
@@ -20,6 +21,20 @@ bus:
   out: [events:reply]
 healthcheck: http://127.0.0.1:11437/health   # llama-server (skull-llm)
 never_evict: false
+modes:                   # per-mode model of skull-llm (services/brain/llm_server.py reads Redis mode:current; T-044, D-030)
+  B:                     # thinking: Gemma 4 26B-A4B, experts of 24 of 30 layers on the CPU (the rest of the file by mmap)
+    # main model of ollama's gemma4:26b-a4b-it-mtp-q4_K_M (`ollama show --modelfile`); the plain gemma4:26b-a4b-it-q4_K_M
+    # blob does not load in llama-server (wrong number of tensors: 658 of 1014)
+    gguf: /usr/share/ollama/.ollama/models/blobs/sha256-a8bdd07a49b895083bb1420bb895ad9ab3e3b8f7d5cc42c7582ca0fa765eede2
+    mmproj: null
+    num_ctx: 8192
+    # -ncmoe: --cpu-moe 3806 MB VRAM, 15.4 tok/s, prefill 205 tok/s; 24 -> 6606 MB, 18.6 tok/s, 249 tok/s;
+    # 23 -> 7060 MB (too close to the B budget 7592), 19.4 tok/s (stand 2026-10-30)
+    extra_args: ["-ncmoe", "24"]
+    budget:
+      vram_mb: 6606        # ПИК: -ncmoe 24 @8192, KV q8_0 (stand 2026-10-30, T-044 step 2)
+      ram_mb: 512          # RssAnon (VmRSS ~17 GB is the mmapped GGUF: page cache)
+      measured_on: stand
 params:                  # read by services/brain/responder.py and services/brain/llm_server.py; paths from repo root
   backend: llama-server
   host: http://127.0.0.1:11437
