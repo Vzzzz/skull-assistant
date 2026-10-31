@@ -1,0 +1,2547 @@
+[
+{
+"t": 1793440495.46,
+"s": "events:transcript",
+"f": {
+"text": "К гостям в субботу ко мне приедет брат Саша",
+"lang": "ru",
+"ts": "1793440495.266",
+"stt_s": "0.148",
+"trigger": "speech",
+"pause_s": "1.01",
+"pause_wait": "",
+"seg_s": "2.91",
+"speaker": "owner",
+"spk_score": "0.454",
+"spk_ms": "46"
+}
+},
+{
+"t": 1793440495.93,
+"s": "events:ambient",
+"f": {
+"text": "К гостям в субботу ко мне приедет брат Саша",
+"decision": "respond",
+"why": "engaged duck да {'да': 0.932, 'нет': 0.064}",
+"state": "engaged",
+"ts": "1793440495.266",
+"speaker": "owner",
+"spk_score": "0.454",
+"pause_s": "1.01",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793440496.02,
+"s": "events:reply",
+"f": {
+"text": "Приезжает.",
+"reply_id": "cc2369466d50"
+}
+},
+{
+"t": 1793440496.16,
+"s": "events:reply",
+"f": {
+"text": "И что с этого выйдет?",
+"reply_id": "cc2369466d50",
+"seq": "1",
+"final": "1",
+"ts": "1793440495.266",
+"meta": "{\"turn\": 3, \"window_turns\": 2, \"prompt_tokens\": 682, \"completion_tokens\": 12, \"ttft_s\": 0.026, \"tok_s\": 63.6, \"finish_reason\": \"stop\", \"wall_s\": 0.7, \"max_tokens\": 300, \"reply\": \"Приезжает. И что с этого выйдет?\", \"sentences\": 2, \"mode\": \"A\", \"llm_calls\": [\"router\", \"duck\", \"chat\"], \"route\": {\"label\": \"chat\", \"raw\": \"chat\", \"probs\": {\"chat\": 0.992, \"memory\": 0.005}, \"s\": 0.346}, \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793440515.4,
+"s": "events:transcript",
+"f": {
+"text": "В в субботу ко мне приедет брат Саша",
+"lang": "ru",
+"ts": "1793440515.147",
+"stt_s": "0.130",
+"trigger": "speech",
+"pause_s": "1.06",
+"pause_wait": "",
+"seg_s": "2.55",
+"speaker": "uncertain",
+"spk_score": "0.367",
+"spk_win": "0.408",
+"spk_region": "0.00-2.52",
+"spk_ms": "116"
+}
+},
+{
+"t": 1793440515.79,
+"s": "events:ambient",
+"f": {
+"text": "В в субботу ко мне приедет брат Саша",
+"decision": "silent",
+"why": "uncertain voice (window)",
+"state": "engaged",
+"ts": "1793440515.147",
+"speaker": "uncertain",
+"spk_score": "0.367",
+"pause_s": "1.06",
+"pause_wait": "",
+"spk_win": "0.408",
+"spk_region": "0.00-2.52",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793440526.46,
+"s": "events:transcript",
+"f": {
+"text": "Костян, ты тут",
+"lang": "ru",
+"ts": "1793440526.370",
+"stt_s": "0.066",
+"trigger": "speech",
+"pause_s": "0.92",
+"pause_wait": "",
+"seg_s": "1.14",
+"speaker": "other",
+"spk_score": "0.256",
+"spk_ms": "21"
+}
+},
+{
+"t": 1793440526.73,
+"s": "events:ambient",
+"f": {
+"text": "Костян, ты тут",
+"decision": "silent",
+"why": "other voice",
+"state": "engaged",
+"ts": "1793440526.370",
+"speaker": "other",
+"spk_score": "0.256",
+"pause_s": "0.92",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793440538.74,
+"s": "events:transcript",
+"f": {
+"text": "Костян, ты тут",
+"lang": "ru",
+"ts": "1793440538.647",
+"stt_s": "0.069",
+"trigger": "speech",
+"pause_s": "0.90",
+"pause_wait": "",
+"seg_s": "1.23",
+"speaker": "uncertain",
+"spk_score": "0.294",
+"bcast": "1",
+"spk_ms": "21"
+}
+},
+{
+"t": 1793440538.95,
+"s": "events:ambient",
+"f": {
+"text": "Костян, ты тут",
+"decision": "respond",
+"why": "name",
+"state": "idle",
+"ts": "1793440538.647",
+"speaker": "uncertain",
+"spk_score": "0.294",
+"pause_s": "0.90",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "1",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793440539.12,
+"s": "events:reply",
+"f": {
+"text": "Да.",
+"reply_id": "f3610c9c428d"
+}
+},
+{
+"t": 1793440539.17,
+"s": "events:reply",
+"f": {
+"text": "Стою.",
+"reply_id": "f3610c9c428d"
+}
+},
+{
+"t": 1793440539.5,
+"s": "events:reply",
+"f": {
+"text": "И жду, пока ты решишь, какую часть своей одежды мне накинуть в следующий раз.",
+"reply_id": "f3610c9c428d",
+"seq": "2",
+"final": "1",
+"ts": "1793440538.647",
+"meta": "{\"turn\": 4, \"window_turns\": 3, \"prompt_tokens\": 709, \"completion_tokens\": 27, \"ttft_s\": 0.125, \"tok_s\": 68.2, \"finish_reason\": \"stop\", \"wall_s\": 0.76, \"max_tokens\": 300, \"reply\": \"Да. Стою. И жду, пока ты решишь, какую часть своей одежды мне накинуть в следующий раз.\", \"sentences\": 3, \"mode\": \"A\", \"llm_calls\": [\"router\", \"chat\"], \"route\": {\"label\": \"chat\", \"raw\": \"chat\", \"probs\": {\"chat\": 0.984, \"command\": 0.001}, \"s\": 0.204}, \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793440562.64,
+"s": "events:transcript",
+"f": {
+"text": "Костян, подумай как следует, какого цвета мой новый чайник",
+"lang": "ru",
+"ts": "1793440562.280",
+"stt_s": "0.280",
+"trigger": "speech",
+"pause_s": "1.17",
+"pause_wait": "",
+"seg_s": "4.83",
+"speaker": "owner",
+"spk_score": "0.517",
+"spk_ms": "73"
+}
+},
+{
+"t": 1793440562.64,
+"s": "events:reply",
+"f": {
+"text": "Сейчас.",
+"reply_id": "3f9b8116ece4",
+"seq": "0",
+"final": "1",
+"ts": "1793440562.280",
+"meta": "{\"reply\": \"Сейчас.\", \"mode\": \"mode\"}"
+}
+},
+{
+"t": 1793440562.64,
+"s": "cmd:mode",
+"f": {
+"mode": "B",
+"reason": "voice:подумай как следует",
+"id": "bra860b9"
+}
+},
+{
+"t": 1793440565.33,
+"s": "events:mode",
+"f": {
+"id": "rc-e2d7dd",
+"from": "A",
+"to": "A",
+"phase": "reconcile_begin",
+"service": "",
+"t_ms": "0",
+"ts": "1793440565.329"
+}
+},
+{
+"t": 1793440565.37,
+"s": "events:mode",
+"f": {
+"id": "rc-e2d7dd",
+"from": "A",
+"to": "A",
+"phase": "not_managed",
+"service": "vision",
+"t_ms": "38",
+"ts": "1793440565.367",
+"reason": "unit not enabled"
+}
+},
+{
+"t": 1793440565.37,
+"s": "events:mode",
+"f": {
+"id": "rc-e2d7dd",
+"from": "A",
+"to": "A",
+"phase": "reconcile_done",
+"service": "",
+"t_ms": "39",
+"ts": "1793440565.368"
+}
+},
+{
+"t": 1793440611.9,
+"s": "events:transcript",
+"f": {
+"text": "Костян, подумай как следует, какого цвета мой новый чайник",
+"lang": "ru",
+"ts": "1793440611.538",
+"stt_s": "0.280",
+"trigger": "speech",
+"pause_s": "1.17",
+"pause_wait": "",
+"seg_s": "5.22",
+"speaker": "owner",
+"spk_score": "0.561",
+"spk_ms": "78"
+}
+},
+{
+"t": 1793440611.9,
+"s": "events:reply",
+"f": {
+"text": "Погоди, думаю.",
+"reply_id": "9d9afebf920c",
+"seq": "0",
+"final": "1",
+"ts": "1793440611.538",
+"meta": "{\"reply\": \"Погоди, думаю.\", \"mode\": \"transition\"}"
+}
+},
+{
+"t": 1793440647.01,
+"s": "events:transcript",
+"f": {
+"text": "Хватит думать",
+"lang": "ru",
+"ts": "1793440646.928",
+"stt_s": "0.061",
+"trigger": "speech",
+"pause_s": "0.91",
+"pause_wait": "",
+"seg_s": "1.05",
+"speaker": "other",
+"spk_score": "0.249",
+"spk_ms": "20"
+}
+},
+{
+"t": 1793440671.13,
+"s": "events:transcript",
+"f": {
+"text": "Костян, кто приедет ко мне в субботу, хорошенько подумай",
+"lang": "ru",
+"ts": "1793440670.914",
+"stt_s": "0.164",
+"trigger": "speech",
+"pause_s": "1.04",
+"pause_wait": "",
+"seg_s": "3.39",
+"speaker": "owner",
+"spk_score": "0.583",
+"bcast": "1",
+"spk_ms": "50"
+}
+},
+{
+"t": 1793440671.14,
+"s": "events:reply",
+"f": {
+"text": "Погоди, думаю.",
+"reply_id": "54c8b02b9077",
+"seq": "0",
+"final": "1",
+"ts": "1793440670.914",
+"meta": "{\"reply\": \"Погоди, думаю.\", \"mode\": \"transition\"}"
+}
+},
+{
+"t": 1793440820.66,
+"s": "events:mode",
+"f": {
+"id": "rc-c46588",
+"from": "A",
+"to": "A",
+"phase": "reconcile_begin",
+"service": "",
+"t_ms": "0",
+"ts": "1793440820.659"
+}
+},
+{
+"t": 1793440820.7,
+"s": "events:mode",
+"f": {
+"id": "rc-c46588",
+"from": "A",
+"to": "A",
+"phase": "not_managed",
+"service": "vision",
+"t_ms": "45",
+"ts": "1793440820.703",
+"reason": "unit not enabled"
+}
+},
+{
+"t": 1793440820.7,
+"s": "events:mode",
+"f": {
+"id": "rc-c46588",
+"from": "A",
+"to": "A",
+"phase": "reconcile_done",
+"service": "",
+"t_ms": "45",
+"ts": "1793440820.704"
+}
+},
+{
+"t": 1793440897.74,
+"s": "events:transcript",
+"f": {
+"text": "Костян, подумай как следует, какого цвета мой новый чайник?",
+"lang": "ru",
+"ts": "1793440897.439",
+"stt_s": "0.228",
+"trigger": "speech",
+"pause_s": "1.11",
+"pause_wait": "",
+"seg_s": "4.44",
+"speaker": "owner",
+"spk_score": "0.485",
+"spk_ms": "69"
+}
+},
+{
+"t": 1793440897.74,
+"s": "events:reply",
+"f": {
+"text": "Сейчас.",
+"reply_id": "01e457f5607d",
+"seq": "0",
+"final": "1",
+"ts": "1793440897.439",
+"meta": "{\"reply\": \"Сейчас.\", \"mode\": \"mode\"}"
+}
+},
+{
+"t": 1793440897.74,
+"s": "cmd:mode",
+"f": {
+"mode": "B",
+"reason": "voice:подумай как следует",
+"id": "br953da7"
+}
+},
+{
+"t": 1793440897.74,
+"s": "events:mode",
+"f": {
+"id": "br953da7",
+"from": "A",
+"to": "B",
+"phase": "begin",
+"service": "",
+"t_ms": "0",
+"ts": "1793440897.744",
+"reason": "voice:подумай как следует",
+"rollback": "0"
+}
+},
+{
+"t": 1793440897.85,
+"s": "events:mode",
+"f": {
+"id": "br953da7",
+"from": "A",
+"to": "B",
+"phase": "save",
+"service": "brain",
+"t_ms": "103",
+"ts": "1793440897.847",
+"dt_ms": "44",
+"file": "A-f004ab1aaf90.bin"
+}
+},
+{
+"t": 1793440898.66,
+"s": "events:mode",
+"f": {
+"id": "br953da7",
+"from": "A",
+"to": "B",
+"phase": "stop",
+"service": "brain",
+"t_ms": "919",
+"ts": "1793440898.663",
+"dt_ms": "816",
+"unit": "skull-llm"
+}
+},
+{
+"t": 1793440898.66,
+"s": "events:mode",
+"f": {
+"id": "br953da7",
+"from": "A",
+"to": "B",
+"phase": "switch",
+"service": "",
+"t_ms": "920",
+"ts": "1793440898.664"
+}
+},
+{
+"t": 1793440898.71,
+"s": "events:mode",
+"f": {
+"id": "br953da7",
+"from": "A",
+"to": "B",
+"phase": "start",
+"service": "brain",
+"t_ms": "968",
+"ts": "1793440898.712",
+"dt_ms": "45"
+}
+},
+{
+"t": 1793440918.15,
+"s": "events:mode",
+"f": {
+"id": "br953da7",
+"from": "A",
+"to": "B",
+"phase": "health",
+"service": "brain",
+"t_ms": "20401",
+"ts": "1793440918.145",
+"dt_ms": "19478",
+"budget_s": "10",
+"over": "1"
+}
+},
+{
+"t": 1793440918.15,
+"s": "events:mode",
+"f": {
+"id": "br953da7",
+"from": "A",
+"to": "B",
+"phase": "restore_skipped",
+"service": "brain",
+"t_ms": "20402",
+"ts": "1793440918.146",
+"reason": "history changed"
+}
+},
+{
+"t": 1793440918.16,
+"s": "events:mode",
+"f": {
+"id": "br953da7",
+"from": "A",
+"to": "B",
+"phase": "done",
+"service": "",
+"t_ms": "20413",
+"ts": "1793440918.157"
+}
+},
+{
+"t": 1793440918.16,
+"s": "events:transcript",
+"f": {
+"text": "какого цвета мой новый чайник?",
+"trigger": "wakeword",
+"speaker": "owner",
+"deferred": "1",
+"ts": "1793440918.157"
+}
+},
+{
+"t": 1793440923.33,
+"s": "events:reply",
+"f": {
+"text": "Синий.",
+"reply_id": "3755ad3b31c3"
+}
+},
+{
+"t": 1793440923.72,
+"s": "events:reply",
+"f": {
+"text": "Ты сам сказал.",
+"reply_id": "3755ad3b31c3",
+"seq": "1",
+"final": "1",
+"ts": "1793440918.157",
+"meta": "{\"turn\": 5, \"window_turns\": 4, \"prompt_tokens\": 805, \"completion_tokens\": 8, \"ttft_s\": 5.556, \"tok_s\": 15.5, \"finish_reason\": \"stop\", \"wall_s\": 6.16, \"max_tokens\": 900, \"reply\": \"Синий. Ты сам сказал.\", \"sentences\": 2, \"mode\": \"B\", \"llm_calls\": [\"chat\"], \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793440978.92,
+"s": "cmd:mode",
+"f": {
+"mode": "A",
+"reason": "idle",
+"id": "br02e0fe"
+}
+},
+{
+"t": 1793440978.92,
+"s": "events:mode",
+"f": {
+"id": "br02e0fe",
+"from": "B",
+"to": "A",
+"phase": "begin",
+"service": "",
+"t_ms": "0",
+"ts": "1793440978.922",
+"reason": "idle",
+"rollback": "0"
+}
+},
+{
+"t": 1793440979.06,
+"s": "events:mode",
+"f": {
+"id": "br02e0fe",
+"from": "B",
+"to": "A",
+"phase": "save",
+"service": "brain",
+"t_ms": "140",
+"ts": "1793440979.062",
+"dt_ms": "116",
+"file": "B-f54b47de94fb.bin"
+}
+},
+{
+"t": 1793440979.84,
+"s": "events:mode",
+"f": {
+"id": "br02e0fe",
+"from": "B",
+"to": "A",
+"phase": "stop",
+"service": "brain",
+"t_ms": "915",
+"ts": "1793440979.837",
+"dt_ms": "775",
+"unit": "skull-llm"
+}
+},
+{
+"t": 1793440979.84,
+"s": "events:mode",
+"f": {
+"id": "br02e0fe",
+"from": "B",
+"to": "A",
+"phase": "switch",
+"service": "",
+"t_ms": "916",
+"ts": "1793440979.838"
+}
+},
+{
+"t": 1793440979.87,
+"s": "events:mode",
+"f": {
+"id": "br02e0fe",
+"from": "B",
+"to": "A",
+"phase": "start",
+"service": "brain",
+"t_ms": "946",
+"ts": "1793440979.868",
+"dt_ms": "27"
+}
+},
+{
+"t": 1793440983.99,
+"s": "events:mode",
+"f": {
+"id": "br02e0fe",
+"from": "B",
+"to": "A",
+"phase": "health",
+"service": "brain",
+"t_ms": "5065",
+"ts": "1793440983.987",
+"dt_ms": "4145",
+"budget_s": "7",
+"over": "0"
+}
+},
+{
+"t": 1793440983.99,
+"s": "events:mode",
+"f": {
+"id": "br02e0fe",
+"from": "B",
+"to": "A",
+"phase": "restore_skipped",
+"service": "brain",
+"t_ms": "5066",
+"ts": "1793440983.988",
+"reason": "history changed"
+}
+},
+{
+"t": 1793440984.0,
+"s": "events:mode",
+"f": {
+"id": "br02e0fe",
+"from": "B",
+"to": "A",
+"phase": "done",
+"service": "",
+"t_ms": "5077",
+"ts": "1793440983.999"
+}
+},
+{
+"t": 1793441271.22,
+"s": "events:transcript",
+"f": {
+"text": "О, нихуя себе",
+"lang": "ru",
+"ts": "1793441271.090",
+"stt_s": "0.085",
+"trigger": "speech",
+"pause_s": "0.95",
+"pause_wait": "",
+"seg_s": "1.53",
+"speaker": "uncertain",
+"spk_score": "0.358",
+"spk_ms": "31"
+}
+},
+{
+"t": 1793441272.08,
+"s": "events:ambient",
+"f": {
+"text": "О, нихуя себе",
+"decision": "silent",
+"why": "uncertain voice",
+"state": "idle",
+"ts": "1793441271.090",
+"speaker": "uncertain",
+"spk_score": "0.358",
+"pause_s": "0.95",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793441292.48,
+"s": "events:transcript",
+"f": {
+"text": "Ко, кто приедет ко мне в субботу? подумай хорошенько.",
+"lang": "ru",
+"ts": "1793441292.247",
+"stt_s": "0.181",
+"trigger": "speech",
+"pause_s": "1.05",
+"pause_wait": "",
+"seg_s": "2.88",
+"speaker": "owner",
+"spk_score": "0.516",
+"spk_ms": "46"
+}
+},
+{
+"t": 1793441292.48,
+"s": "events:reply",
+"f": {
+"text": "Сейчас.",
+"reply_id": "84b1bb15b8ce",
+"seq": "0",
+"final": "1",
+"ts": "1793441292.247",
+"meta": "{\"reply\": \"Сейчас.\", \"mode\": \"mode\"}"
+}
+},
+{
+"t": 1793441292.48,
+"s": "cmd:mode",
+"f": {
+"mode": "B",
+"reason": "voice:подумай хорошенько",
+"id": "br6d052a"
+}
+},
+{
+"t": 1793441292.48,
+"s": "events:mode",
+"f": {
+"id": "br6d052a",
+"from": "A",
+"to": "B",
+"phase": "begin",
+"service": "",
+"t_ms": "0",
+"ts": "1793441292.481",
+"reason": "voice:подумай хорошенько",
+"rollback": "0"
+}
+},
+{
+"t": 1793441292.54,
+"s": "events:mode",
+"f": {
+"id": "br6d052a",
+"from": "A",
+"to": "B",
+"phase": "save",
+"service": "brain",
+"t_ms": "54",
+"ts": "1793441292.535",
+"dt_ms": "29",
+"file": "A-f54b47de94fb.bin"
+}
+},
+{
+"t": 1793441293.28,
+"s": "events:mode",
+"f": {
+"id": "br6d052a",
+"from": "A",
+"to": "B",
+"phase": "stop",
+"service": "brain",
+"t_ms": "801",
+"ts": "1793441293.282",
+"dt_ms": "746",
+"unit": "skull-llm"
+}
+},
+{
+"t": 1793441293.28,
+"s": "events:mode",
+"f": {
+"id": "br6d052a",
+"from": "A",
+"to": "B",
+"phase": "switch",
+"service": "",
+"t_ms": "802",
+"ts": "1793441293.283"
+}
+},
+{
+"t": 1793441293.32,
+"s": "events:mode",
+"f": {
+"id": "br6d052a",
+"from": "A",
+"to": "B",
+"phase": "start",
+"service": "brain",
+"t_ms": "840",
+"ts": "1793441293.320",
+"dt_ms": "35"
+}
+},
+{
+"t": 1793441312.05,
+"s": "events:mode",
+"f": {
+"id": "br6d052a",
+"from": "A",
+"to": "B",
+"phase": "health",
+"service": "brain",
+"t_ms": "19574",
+"ts": "1793441312.054",
+"dt_ms": "18768",
+"budget_s": "10",
+"over": "1"
+}
+},
+{
+"t": 1793441312.11,
+"s": "events:mode",
+"f": {
+"id": "br6d052a",
+"from": "A",
+"to": "B",
+"phase": "restore",
+"service": "brain",
+"t_ms": "19628",
+"ts": "1793441312.109",
+"dt_ms": "54",
+"file": "B-f54b47de94fb.bin"
+}
+},
+{
+"t": 1793441312.12,
+"s": "events:mode",
+"f": {
+"id": "br6d052a",
+"from": "A",
+"to": "B",
+"phase": "done",
+"service": "",
+"t_ms": "19641",
+"ts": "1793441312.122"
+}
+},
+{
+"t": 1793441312.12,
+"s": "events:transcript",
+"f": {
+"text": "Ко, кто приедет ко мне в субботу?",
+"trigger": "wakeword",
+"speaker": "owner",
+"deferred": "1",
+"ts": "1793441312.122"
+}
+},
+{
+"t": 1793441318.26,
+"s": "events:reply",
+"f": {
+"text": "Твой брат Саша.",
+"reply_id": "8e994692efb4",
+"seq": "0",
+"final": "1",
+"ts": "1793441312.122",
+"meta": "{\"turn\": 6, \"window_turns\": 5, \"prompt_tokens\": 835, \"completion_tokens\": 6, \"ttft_s\": 5.677, \"tok_s\": 16.3, \"finish_reason\": \"stop\", \"wall_s\": 6.14, \"max_tokens\": 900, \"reply\": \"Твой брат Саша.\", \"sentences\": 1, \"mode\": \"B\", \"llm_calls\": [\"chat\"], \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793441373.4,
+"s": "cmd:mode",
+"f": {
+"mode": "A",
+"reason": "idle",
+"id": "br082b1d"
+}
+},
+{
+"t": 1793441373.4,
+"s": "events:mode",
+"f": {
+"id": "br082b1d",
+"from": "B",
+"to": "A",
+"phase": "begin",
+"service": "",
+"t_ms": "0",
+"ts": "1793441373.401",
+"reason": "idle",
+"rollback": "0"
+}
+},
+{
+"t": 1793441373.54,
+"s": "events:mode",
+"f": {
+"id": "br082b1d",
+"from": "B",
+"to": "A",
+"phase": "save",
+"service": "brain",
+"t_ms": "141",
+"ts": "1793441373.542",
+"dt_ms": "118",
+"file": "B-74ee018d9bff.bin"
+}
+},
+{
+"t": 1793441374.33,
+"s": "events:mode",
+"f": {
+"id": "br082b1d",
+"from": "B",
+"to": "A",
+"phase": "stop",
+"service": "brain",
+"t_ms": "930",
+"ts": "1793441374.331",
+"dt_ms": "788",
+"unit": "skull-llm"
+}
+},
+{
+"t": 1793441374.33,
+"s": "events:mode",
+"f": {
+"id": "br082b1d",
+"from": "B",
+"to": "A",
+"phase": "switch",
+"service": "",
+"t_ms": "931",
+"ts": "1793441374.332"
+}
+},
+{
+"t": 1793441374.37,
+"s": "events:mode",
+"f": {
+"id": "br082b1d",
+"from": "B",
+"to": "A",
+"phase": "start",
+"service": "brain",
+"t_ms": "967",
+"ts": "1793441374.367",
+"dt_ms": "32"
+}
+},
+{
+"t": 1793441379.83,
+"s": "events:mode",
+"f": {
+"id": "br082b1d",
+"from": "B",
+"to": "A",
+"phase": "health",
+"service": "brain",
+"t_ms": "6426",
+"ts": "1793441379.826",
+"dt_ms": "5491",
+"budget_s": "7",
+"over": "0"
+}
+},
+{
+"t": 1793441379.83,
+"s": "events:mode",
+"f": {
+"id": "br082b1d",
+"from": "B",
+"to": "A",
+"phase": "restore_skipped",
+"service": "brain",
+"t_ms": "6426",
+"ts": "1793441379.827",
+"reason": "history changed"
+}
+},
+{
+"t": 1793441379.84,
+"s": "events:mode",
+"f": {
+"id": "br082b1d",
+"from": "B",
+"to": "A",
+"phase": "done",
+"service": "",
+"t_ms": "6438",
+"ts": "1793441379.839"
+}
+},
+{
+"t": 1793441556.85,
+"s": "events:transcript",
+"f": {
+"text": "Костян, включи мозги. Что я купил сегодня?",
+"lang": "ru",
+"ts": "1793441556.659",
+"stt_s": "0.136",
+"trigger": "speech",
+"pause_s": "1.02",
+"pause_wait": "",
+"seg_s": "2.52",
+"speaker": "owner",
+"spk_score": "0.502",
+"spk_ms": "49"
+}
+},
+{
+"t": 1793441556.85,
+"s": "events:reply",
+"f": {
+"text": "Сейчас.",
+"reply_id": "92a8fb7cbb10",
+"seq": "0",
+"final": "1",
+"ts": "1793441556.659",
+"meta": "{\"reply\": \"Сейчас.\", \"mode\": \"mode\"}"
+}
+},
+{
+"t": 1793441556.85,
+"s": "cmd:mode",
+"f": {
+"mode": "B",
+"reason": "voice:включи мозги",
+"id": "br72b021"
+}
+},
+{
+"t": 1793441556.85,
+"s": "events:mode",
+"f": {
+"id": "br72b021",
+"from": "A",
+"to": "B",
+"phase": "begin",
+"service": "",
+"t_ms": "0",
+"ts": "1793441556.852",
+"reason": "voice:включи мозги",
+"rollback": "0"
+}
+},
+{
+"t": 1793441556.91,
+"s": "events:mode",
+"f": {
+"id": "br72b021",
+"from": "A",
+"to": "B",
+"phase": "save",
+"service": "brain",
+"t_ms": "59",
+"ts": "1793441556.911",
+"dt_ms": "33",
+"file": "A-74ee018d9bff.bin"
+}
+},
+{
+"t": 1793441557.74,
+"s": "events:mode",
+"f": {
+"id": "br72b021",
+"from": "A",
+"to": "B",
+"phase": "stop",
+"service": "brain",
+"t_ms": "890",
+"ts": "1793441557.742",
+"dt_ms": "831",
+"unit": "skull-llm"
+}
+},
+{
+"t": 1793441557.74,
+"s": "events:mode",
+"f": {
+"id": "br72b021",
+"from": "A",
+"to": "B",
+"phase": "switch",
+"service": "",
+"t_ms": "891",
+"ts": "1793441557.743"
+}
+},
+{
+"t": 1793441557.77,
+"s": "events:mode",
+"f": {
+"id": "br72b021",
+"from": "A",
+"to": "B",
+"phase": "start",
+"service": "brain",
+"t_ms": "922",
+"ts": "1793441557.773",
+"dt_ms": "27"
+}
+},
+{
+"t": 1793441576.88,
+"s": "events:mode",
+"f": {
+"id": "br72b021",
+"from": "A",
+"to": "B",
+"phase": "health",
+"service": "brain",
+"t_ms": "20031",
+"ts": "1793441576.883",
+"dt_ms": "19137",
+"budget_s": "10",
+"over": "1"
+}
+},
+{
+"t": 1793441576.95,
+"s": "events:mode",
+"f": {
+"id": "br72b021",
+"from": "A",
+"to": "B",
+"phase": "restore",
+"service": "brain",
+"t_ms": "20096",
+"ts": "1793441576.948",
+"dt_ms": "64",
+"file": "B-74ee018d9bff.bin"
+}
+},
+{
+"t": 1793441576.96,
+"s": "events:mode",
+"f": {
+"id": "br72b021",
+"from": "A",
+"to": "B",
+"phase": "done",
+"service": "",
+"t_ms": "20108",
+"ts": "1793441576.960"
+}
+},
+{
+"t": 1793441576.96,
+"s": "events:transcript",
+"f": {
+"text": "Что я купил сегодня?",
+"trigger": "wakeword",
+"speaker": "owner",
+"deferred": "1",
+"ts": "1793441576.960"
+}
+},
+{
+"t": 1793441583.13,
+"s": "events:reply",
+"f": {
+"text": "Синий чайник.",
+"reply_id": "e5fa88a2f98f",
+"seq": "0",
+"final": "1",
+"ts": "1793441576.960",
+"meta": "{\"turn\": 7, \"window_turns\": 6, \"prompt_tokens\": 856, \"completion_tokens\": 6, \"ttft_s\": 5.727, \"tok_s\": 17.2, \"finish_reason\": \"stop\", \"wall_s\": 6.17, \"max_tokens\": 900, \"reply\": \"Синий чайник.\", \"sentences\": 1, \"mode\": \"B\", \"llm_calls\": [\"chat\"], \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793441591.93,
+"s": "events:transcript",
+"f": {
+"text": "А зачем людям чайники",
+"lang": "ru",
+"ts": "1793441591.801",
+"stt_s": "0.095",
+"trigger": "speech",
+"pause_s": "0.95",
+"pause_wait": "",
+"seg_s": "1.71",
+"speaker": "uncertain",
+"spk_score": "0.391",
+"spk_ms": "28"
+}
+},
+{
+"t": 1793441591.93,
+"s": "events:ambient",
+"f": {
+"text": "А зачем людям чайники",
+"decision": "silent",
+"why": "uncertain voice (mode B)",
+"state": "engaged",
+"ts": "1793441591.801",
+"speaker": "uncertain",
+"spk_score": "0.391",
+"pause_s": "0.95",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793441637.02,
+"s": "cmd:mode",
+"f": {
+"mode": "A",
+"reason": "idle",
+"id": "br58585b"
+}
+},
+{
+"t": 1793441637.03,
+"s": "events:mode",
+"f": {
+"id": "br58585b",
+"from": "B",
+"to": "A",
+"phase": "begin",
+"service": "",
+"t_ms": "0",
+"ts": "1793441637.025",
+"reason": "idle",
+"rollback": "0"
+}
+},
+{
+"t": 1793441637.17,
+"s": "events:mode",
+"f": {
+"id": "br58585b",
+"from": "B",
+"to": "A",
+"phase": "save",
+"service": "brain",
+"t_ms": "140",
+"ts": "1793441637.165",
+"dt_ms": "118",
+"file": "B-28a7a990f05c.bin"
+}
+},
+{
+"t": 1793441637.95,
+"s": "events:mode",
+"f": {
+"id": "br58585b",
+"from": "B",
+"to": "A",
+"phase": "stop",
+"service": "brain",
+"t_ms": "924",
+"ts": "1793441637.949",
+"dt_ms": "784",
+"unit": "skull-llm"
+}
+},
+{
+"t": 1793441637.95,
+"s": "events:mode",
+"f": {
+"id": "br58585b",
+"from": "B",
+"to": "A",
+"phase": "switch",
+"service": "",
+"t_ms": "925",
+"ts": "1793441637.950"
+}
+},
+{
+"t": 1793441637.98,
+"s": "events:mode",
+"f": {
+"id": "br58585b",
+"from": "B",
+"to": "A",
+"phase": "start",
+"service": "brain",
+"t_ms": "956",
+"ts": "1793441637.981",
+"dt_ms": "28"
+}
+},
+{
+"t": 1793441642.44,
+"s": "events:mode",
+"f": {
+"id": "br58585b",
+"from": "B",
+"to": "A",
+"phase": "health",
+"service": "brain",
+"t_ms": "5420",
+"ts": "1793441642.444",
+"dt_ms": "4491",
+"budget_s": "7",
+"over": "0"
+}
+},
+{
+"t": 1793441642.45,
+"s": "events:mode",
+"f": {
+"id": "br58585b",
+"from": "B",
+"to": "A",
+"phase": "restore_skipped",
+"service": "brain",
+"t_ms": "5420",
+"ts": "1793441642.445",
+"reason": "history changed"
+}
+},
+{
+"t": 1793441642.46,
+"s": "events:mode",
+"f": {
+"id": "br58585b",
+"from": "B",
+"to": "A",
+"phase": "done",
+"service": "",
+"t_ms": "5432",
+"ts": "1793441642.456"
+}
+},
+{
+"t": 1793441647.68,
+"s": "events:transcript",
+"f": {
+"text": "Достаточно думать",
+"lang": "ru",
+"ts": "1793441647.590",
+"stt_s": "0.063",
+"trigger": "speech",
+"pause_s": "0.91",
+"pause_wait": "",
+"seg_s": "1.05",
+"speaker": "uncertain",
+"spk_score": "0.305",
+"spk_ms": "20"
+}
+},
+{
+"t": 1793441648.41,
+"s": "events:ambient",
+"f": {
+"text": "Достаточно думать",
+"decision": "silent",
+"why": "uncertain voice",
+"state": "idle",
+"ts": "1793441647.590",
+"speaker": "uncertain",
+"spk_score": "0.305",
+"pause_s": "0.91",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793441781.91,
+"s": "events:transcript",
+"f": {
+"text": "Костян, подумай как следует. Что ты помнишь про моего брата",
+"lang": "ru",
+"ts": "1793441781.693",
+"stt_s": "0.162",
+"trigger": "speech",
+"pause_s": "1.02",
+"pause_wait": "",
+"seg_s": "3.27",
+"speaker": "owner",
+"spk_score": "0.512",
+"spk_ms": "50"
+}
+},
+{
+"t": 1793441781.91,
+"s": "events:reply",
+"f": {
+"text": "Сейчас.",
+"reply_id": "ba1e86340037",
+"seq": "0",
+"final": "1",
+"ts": "1793441781.693",
+"meta": "{\"reply\": \"Сейчас.\", \"mode\": \"mode\"}"
+}
+},
+{
+"t": 1793441781.91,
+"s": "cmd:mode",
+"f": {
+"mode": "B",
+"reason": "voice:подумай как следует",
+"id": "br978346"
+}
+},
+{
+"t": 1793441781.91,
+"s": "events:mode",
+"f": {
+"id": "br978346",
+"from": "A",
+"to": "B",
+"phase": "begin",
+"service": "",
+"t_ms": "0",
+"ts": "1793441781.911",
+"reason": "voice:подумай как следует",
+"rollback": "0"
+}
+},
+{
+"t": 1793441782.01,
+"s": "events:mode",
+"f": {
+"id": "br978346",
+"from": "A",
+"to": "B",
+"phase": "save",
+"service": "brain",
+"t_ms": "98",
+"ts": "1793441782.009",
+"dt_ms": "57",
+"file": "A-28a7a990f05c.bin"
+}
+},
+{
+"t": 1793441782.42,
+"s": "events:mode",
+"f": {
+"id": "br978346",
+"from": "A",
+"to": "B",
+"phase": "stop",
+"service": "brain",
+"t_ms": "511",
+"ts": "1793441782.422",
+"dt_ms": "412",
+"unit": "skull-llm"
+}
+},
+{
+"t": 1793441782.42,
+"s": "events:mode",
+"f": {
+"id": "br978346",
+"from": "A",
+"to": "B",
+"phase": "switch",
+"service": "",
+"t_ms": "511",
+"ts": "1793441782.423"
+}
+},
+{
+"t": 1793441782.46,
+"s": "events:mode",
+"f": {
+"id": "br978346",
+"from": "A",
+"to": "B",
+"phase": "start",
+"service": "brain",
+"t_ms": "547",
+"ts": "1793441782.458",
+"dt_ms": "32"
+}
+},
+{
+"t": 1793441793.33,
+"s": "events:mode",
+"f": {
+"id": "br978346",
+"from": "A",
+"to": "B",
+"phase": "health",
+"service": "brain",
+"t_ms": "11421",
+"ts": "1793441793.332",
+"dt_ms": "10906",
+"budget_s": "10",
+"over": "1"
+}
+},
+{
+"t": 1793441793.41,
+"s": "events:mode",
+"f": {
+"id": "br978346",
+"from": "A",
+"to": "B",
+"phase": "restore",
+"service": "brain",
+"t_ms": "11497",
+"ts": "1793441793.409",
+"dt_ms": "74",
+"file": "B-28a7a990f05c.bin"
+}
+},
+{
+"t": 1793441793.42,
+"s": "events:mode",
+"f": {
+"id": "br978346",
+"from": "A",
+"to": "B",
+"phase": "done",
+"service": "",
+"t_ms": "11509",
+"ts": "1793441793.421"
+}
+},
+{
+"t": 1793441793.42,
+"s": "events:transcript",
+"f": {
+"text": "Что ты помнишь про моего брата",
+"trigger": "wakeword",
+"speaker": "owner",
+"deferred": "1",
+"ts": "1793441793.421"
+}
+},
+{
+"t": 1793441797.97,
+"s": "events:transcript",
+"f": {
+"text": "Занят",
+"lang": "ru",
+"ts": "1793441797.908",
+"stt_s": "0.050",
+"trigger": "speech",
+"pause_s": "0.87",
+"pause_wait": "",
+"seg_s": "0.42",
+"speaker": "unknown",
+"spk_score": "",
+"spk_ms": "0"
+}
+},
+{
+"t": 1793441800.09,
+"s": "events:reply",
+"f": {
+"text": "Ты сказал, что его зовут Саша и он приедет в субботу.",
+"reply_id": "11df1b34ba05"
+}
+},
+{
+"t": 1793441800.98,
+"s": "events:reply",
+"f": {
+"text": "Больше я о нем ничего не знаю.",
+"reply_id": "11df1b34ba05",
+"seq": "1",
+"final": "1",
+"ts": "1793441793.421",
+"meta": "{\"turn\": 8, \"window_turns\": 7, \"prompt_tokens\": 880, \"completion_tokens\": 27, \"ttft_s\": 5.753, \"tok_s\": 15.5, \"finish_reason\": \"stop\", \"wall_s\": 7.56, \"max_tokens\": 900, \"reply\": \"Ты сказал, что его зовут Саша и он приедет в субботу. Больше я о нем ничего не знаю.\", \"sentences\": 2, \"mode\": \"B\", \"llm_calls\": [\"chat\"], \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793441800.98,
+"s": "events:ambient",
+"f": {
+"text": "Занят",
+"decision": "silent",
+"why": "unknown voice",
+"state": "engaged",
+"ts": "1793441797.908",
+"speaker": "unknown",
+"spk_score": "",
+"pause_s": "0.87",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793441817.0,
+"s": "events:transcript",
+"f": {
+"text": "Зачем людям чайники?",
+"lang": "ru",
+"ts": "1793441816.913",
+"stt_s": "0.065",
+"trigger": "speech",
+"pause_s": "0.90",
+"pause_wait": "",
+"seg_s": "1.20",
+"speaker": "other",
+"spk_score": "0.263",
+"spk_ms": "21"
+}
+},
+{
+"t": 1793441817.0,
+"s": "events:ambient",
+"f": {
+"text": "Зачем людям чайники?",
+"decision": "silent",
+"why": "other voice",
+"state": "engaged",
+"ts": "1793441816.913",
+"speaker": "other",
+"spk_score": "0.263",
+"pause_s": "0.90",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793441857.12,
+"s": "cmd:mode",
+"f": {
+"mode": "A",
+"reason": "idle",
+"id": "br64ec43"
+}
+},
+{
+"t": 1793441857.13,
+"s": "events:mode",
+"f": {
+"id": "br64ec43",
+"from": "B",
+"to": "A",
+"phase": "begin",
+"service": "",
+"t_ms": "0",
+"ts": "1793441857.125",
+"reason": "idle",
+"rollback": "0"
+}
+},
+{
+"t": 1793441857.27,
+"s": "events:mode",
+"f": {
+"id": "br64ec43",
+"from": "B",
+"to": "A",
+"phase": "save",
+"service": "brain",
+"t_ms": "142",
+"ts": "1793441857.267",
+"dt_ms": "119",
+"file": "B-5e66f7f44b80.bin"
+}
+},
+{
+"t": 1793441858.34,
+"s": "events:mode",
+"f": {
+"id": "br64ec43",
+"from": "B",
+"to": "A",
+"phase": "stop",
+"service": "brain",
+"t_ms": "1212",
+"ts": "1793441858.337",
+"dt_ms": "1070",
+"unit": "skull-llm"
+}
+},
+{
+"t": 1793441858.34,
+"s": "events:mode",
+"f": {
+"id": "br64ec43",
+"from": "B",
+"to": "A",
+"phase": "switch",
+"service": "",
+"t_ms": "1213",
+"ts": "1793441858.338"
+}
+},
+{
+"t": 1793441858.37,
+"s": "events:mode",
+"f": {
+"id": "br64ec43",
+"from": "B",
+"to": "A",
+"phase": "start",
+"service": "brain",
+"t_ms": "1243",
+"ts": "1793441858.368",
+"dt_ms": "27"
+}
+},
+{
+"t": 1793441864.14,
+"s": "events:mode",
+"f": {
+"id": "br64ec43",
+"from": "B",
+"to": "A",
+"phase": "health",
+"service": "brain",
+"t_ms": "7014",
+"ts": "1793441864.139",
+"dt_ms": "5798",
+"budget_s": "7",
+"over": "0"
+}
+},
+{
+"t": 1793441864.14,
+"s": "events:mode",
+"f": {
+"id": "br64ec43",
+"from": "B",
+"to": "A",
+"phase": "restore_skipped",
+"service": "brain",
+"t_ms": "7015",
+"ts": "1793441864.140",
+"reason": "history changed"
+}
+},
+{
+"t": 1793441864.15,
+"s": "events:mode",
+"f": {
+"id": "br64ec43",
+"from": "B",
+"to": "A",
+"phase": "done",
+"service": "",
+"t_ms": "7027",
+"ts": "1793441864.152"
+}
+},
+{
+"t": 1793442142.2,
+"s": "events:transcript",
+"f": {
+"text": "Костян, подумай как следует, что мне подарить брату на день рождения",
+"lang": "ru",
+"ts": "1793442141.889",
+"stt_s": "0.217",
+"trigger": "speech",
+"pause_s": "1.15",
+"pause_wait": "",
+"seg_s": "4.29",
+"speaker": "owner",
+"spk_score": "0.552",
+"spk_ms": "81"
+}
+},
+{
+"t": 1793442142.21,
+"s": "events:reply",
+"f": {
+"text": "Сейчас.",
+"reply_id": "4fe8279d67fb",
+"seq": "0",
+"final": "1",
+"ts": "1793442141.889",
+"meta": "{\"reply\": \"Сейчас.\", \"mode\": \"mode\"}"
+}
+},
+{
+"t": 1793442142.21,
+"s": "cmd:mode",
+"f": {
+"mode": "B",
+"reason": "voice:подумай как следует",
+"id": "br290226"
+}
+},
+{
+"t": 1793442142.21,
+"s": "events:mode",
+"f": {
+"id": "br290226",
+"from": "A",
+"to": "B",
+"phase": "begin",
+"service": "",
+"t_ms": "0",
+"ts": "1793442142.208",
+"reason": "voice:подумай как следует",
+"rollback": "0"
+}
+},
+{
+"t": 1793442142.24,
+"s": "events:mode",
+"f": {
+"id": "br290226",
+"from": "A",
+"to": "B",
+"phase": "save",
+"service": "brain",
+"t_ms": "28",
+"ts": "1793442142.236",
+"dt_ms": "4",
+"file": "A-5e66f7f44b80.bin"
+}
+},
+{
+"t": 1793442143.07,
+"s": "events:mode",
+"f": {
+"id": "br290226",
+"from": "A",
+"to": "B",
+"phase": "stop",
+"service": "brain",
+"t_ms": "864",
+"ts": "1793442143.072",
+"dt_ms": "836",
+"unit": "skull-llm"
+}
+},
+{
+"t": 1793442143.07,
+"s": "events:mode",
+"f": {
+"id": "br290226",
+"from": "A",
+"to": "B",
+"phase": "switch",
+"service": "",
+"t_ms": "865",
+"ts": "1793442143.073"
+}
+},
+{
+"t": 1793442143.1,
+"s": "events:mode",
+"f": {
+"id": "br290226",
+"from": "A",
+"to": "B",
+"phase": "start",
+"service": "brain",
+"t_ms": "889",
+"ts": "1793442143.097",
+"dt_ms": "21"
+}
+},
+{
+"t": 1793442162.69,
+"s": "events:mode",
+"f": {
+"id": "br290226",
+"from": "A",
+"to": "B",
+"phase": "health",
+"service": "brain",
+"t_ms": "20486",
+"ts": "1793442162.694",
+"dt_ms": "19618",
+"budget_s": "10",
+"over": "1"
+}
+},
+{
+"t": 1793442162.75,
+"s": "events:mode",
+"f": {
+"id": "br290226",
+"from": "A",
+"to": "B",
+"phase": "restore",
+"service": "brain",
+"t_ms": "20545",
+"ts": "1793442162.753",
+"dt_ms": "57",
+"file": "B-5e66f7f44b80.bin"
+}
+},
+{
+"t": 1793442162.77,
+"s": "events:mode",
+"f": {
+"id": "br290226",
+"from": "A",
+"to": "B",
+"phase": "done",
+"service": "",
+"t_ms": "20557",
+"ts": "1793442162.765"
+}
+},
+{
+"t": 1793442162.77,
+"s": "events:transcript",
+"f": {
+"text": "что мне подарить брату на день рождения",
+"trigger": "wakeword",
+"speaker": "owner",
+"deferred": "1",
+"ts": "1793442162.766"
+}
+},
+{
+"t": 1793442168.76,
+"s": "events:reply",
+"f": {
+"text": "Я не знаю твоего брата, его интересов и твоего бюджета.",
+"reply_id": "3fde94032646"
+}
+},
+{
+"t": 1793442170.21,
+"s": "events:reply",
+"f": {
+"text": "Попробуй вспомнить, на что он тратит деньги или о чем ворчит.",
+"reply_id": "3fde94032646",
+"seq": "1",
+"final": "1",
+"ts": "1793442162.766",
+"meta": "{\"turn\": 9, \"window_turns\": 8, \"prompt_tokens\": 925, \"completion_tokens\": 38, \"ttft_s\": 5.575, \"tok_s\": 16.3, \"finish_reason\": \"stop\", \"wall_s\": 8.01, \"max_tokens\": 900, \"reply\": \"Я не знаю твоего брата, его интересов и твоего бюджета. Попробуй вспомнить, на что он тратит деньги или о чем ворчит.\", \"sentences\": 2, \"mode\": \"B\", \"llm_calls\": [\"chat\"], \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793442190.79,
+"s": "events:transcript",
+"f": {
+"text": "Костян, ну скажи мне, зачем вообще людям нужны электрические чайники",
+"lang": "ru",
+"ts": "1793442190.526",
+"stt_s": "0.198",
+"trigger": "speech",
+"pause_s": "1.08",
+"pause_wait": "",
+"seg_s": "3.87",
+"speaker": "owner",
+"spk_score": "0.519",
+"spk_ms": "61"
+}
+},
+{
+"t": 1793442190.79,
+"s": "events:ambient",
+"f": {
+"text": "Костян, ну скажи мне, зачем вообще людям нужны электрические чайники",
+"decision": "respond",
+"why": "name",
+"state": "engaged",
+"ts": "1793442190.526",
+"speaker": "owner",
+"spk_score": "0.519",
+"pause_s": "1.08",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793442196.56,
+"s": "events:reply",
+"f": {
+"text": "Чтобы не тратить время на разведение огня и не ждать, пока вода закипит в котелке.",
+"reply_id": "aeea1c5f530d"
+}
+},
+{
+"t": 1793442197.56,
+"s": "events:reply",
+"f": {
+"text": "Эффективность, скорость и автоматическое отключение.",
+"reply_id": "aeea1c5f530d"
+}
+},
+{
+"t": 1793442198.24,
+"s": "events:reply",
+"f": {
+"text": "По сути, просто способ быстрее получить кипяток для чая или кофе.",
+"reply_id": "aeea1c5f530d",
+"seq": "2",
+"final": "1",
+"ts": "1793442190.526",
+"meta": "{\"turn\": 10, \"window_turns\": 9, \"prompt_tokens\": 989, \"completion_tokens\": 53, \"ttft_s\": 4.5, \"tok_s\": 15.3, \"finish_reason\": \"stop\", \"wall_s\": 8.04, \"max_tokens\": 900, \"reply\": \"Чтобы не тратить время на разведение огня и не ждать, пока вода закипит в котелке. Эффективность, скорость и автоматическое отключение. По сути, просто способ быстрее получить кипяток для чая или кофе.\", \"sentences\": 3, \"mode\": \"B\", \"llm_calls\": [\"chat\"], \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793442253.6,
+"s": "cmd:mode",
+"f": {
+"mode": "A",
+"reason": "idle",
+"id": "breef5ba"
+}
+},
+{
+"t": 1793442253.6,
+"s": "events:mode",
+"f": {
+"id": "breef5ba",
+"from": "B",
+"to": "A",
+"phase": "begin",
+"service": "",
+"t_ms": "0",
+"ts": "1793442253.599",
+"reason": "idle",
+"rollback": "0"
+}
+},
+{
+"t": 1793442253.77,
+"s": "events:mode",
+"f": {
+"id": "breef5ba",
+"from": "B",
+"to": "A",
+"phase": "save",
+"service": "brain",
+"t_ms": "172",
+"ts": "1793442253.771",
+"dt_ms": "149",
+"file": "B-318725063a97.bin"
+}
+},
+{
+"t": 1793442254.6,
+"s": "events:mode",
+"f": {
+"id": "breef5ba",
+"from": "B",
+"to": "A",
+"phase": "stop",
+"service": "brain",
+"t_ms": "1000",
+"ts": "1793442254.599",
+"dt_ms": "827",
+"unit": "skull-llm"
+}
+},
+{
+"t": 1793442254.6,
+"s": "events:mode",
+"f": {
+"id": "breef5ba",
+"from": "B",
+"to": "A",
+"phase": "switch",
+"service": "",
+"t_ms": "1001",
+"ts": "1793442254.600"
+}
+},
+{
+"t": 1793442254.63,
+"s": "events:mode",
+"f": {
+"id": "breef5ba",
+"from": "B",
+"to": "A",
+"phase": "start",
+"service": "brain",
+"t_ms": "1029",
+"ts": "1793442254.628",
+"dt_ms": "25"
+}
+},
+{
+"t": 1793442259.21,
+"s": "events:mode",
+"f": {
+"id": "breef5ba",
+"from": "B",
+"to": "A",
+"phase": "health",
+"service": "brain",
+"t_ms": "5608",
+"ts": "1793442259.207",
+"dt_ms": "4604",
+"budget_s": "7",
+"over": "0"
+}
+},
+{
+"t": 1793442259.21,
+"s": "events:mode",
+"f": {
+"id": "breef5ba",
+"from": "B",
+"to": "A",
+"phase": "restore_skipped",
+"service": "brain",
+"t_ms": "5609",
+"ts": "1793442259.208",
+"reason": "history changed"
+}
+},
+{
+"t": 1793442259.22,
+"s": "events:mode",
+"f": {
+"id": "breef5ba",
+"from": "B",
+"to": "A",
+"phase": "done",
+"service": "",
+"t_ms": "5620",
+"ts": "1793442259.219"
+}
+},
+{
+"t": 1793442298.24,
+"s": "events:transcript",
+"f": {
+"text": "Всё, Костян. Хватит думать, давай обратно",
+"lang": "ru",
+"ts": "1793442298.022",
+"stt_s": "0.123",
+"trigger": "speech",
+"pause_s": "1.02",
+"pause_wait": "",
+"seg_s": "2.46",
+"speaker": "uncertain",
+"spk_score": "0.366",
+"spk_win": "0.338",
+"spk_ms": "88"
+}
+},
+{
+"t": 1793442299.1,
+"s": "events:ambient",
+"f": {
+"text": "Всё, Костян. Хватит думать, давай обратно",
+"decision": "respond",
+"why": "name",
+"state": "idle",
+"ts": "1793442298.022",
+"speaker": "uncertain",
+"spk_score": "0.366",
+"pause_s": "1.02",
+"pause_wait": "",
+"spk_win": "0.338",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793442299.26,
+"s": "events:reply",
+"f": {
+"text": "Куртку сними.",
+"reply_id": "c57fe690d91f"
+}
+},
+{
+"t": 1793442299.4,
+"s": "events:reply",
+"f": {
+"text": "Она мне не подходит.",
+"reply_id": "c57fe690d91f",
+"seq": "1",
+"final": "1",
+"ts": "1793442298.022",
+"meta": "{\"turn\": 11, \"window_turns\": 10, \"prompt_tokens\": 1014, \"completion_tokens\": 12, \"ttft_s\": 0.026, \"tok_s\": 55.1, \"finish_reason\": \"stop\", \"wall_s\": 1.16, \"max_tokens\": 200, \"reply\": \"Куртку сними. Она мне не подходит.\", \"sentences\": 2, \"mode\": \"A\", \"llm_calls\": [\"router\", \"chat\"], \"route\": {\"label\": \"command\", \"raw\": \"command\", \"probs\": {\"command\": 0.992, \"chat\": 0.007, \"memory\": 0.0, \"world\": 0.0, \"aside\": 0.0, \"calc\": 0.0}, \"s\": 0.865}, \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793442355.68,
+"s": "events:transcript",
+"f": {
+"text": "Костян, подумай серьёзно, почему зимой рано темнеет?",
+"lang": "ru",
+"ts": "1793442355.481",
+"stt_s": "0.153",
+"trigger": "speech",
+"pause_s": "1.03",
+"pause_wait": "",
+"seg_s": "3.12",
+"speaker": "owner",
+"spk_score": "0.555",
+"spk_ms": "47"
+}
+},
+{
+"t": 1793442355.69,
+"s": "events:reply",
+"f": {
+"text": "Сейчас.",
+"reply_id": "a9ea890d9049",
+"seq": "0",
+"final": "1",
+"ts": "1793442355.481",
+"meta": "{\"reply\": \"Сейчас.\", \"mode\": \"mode\"}"
+}
+},
+{
+"t": 1793442355.69,
+"s": "cmd:mode",
+"f": {
+"mode": "B",
+"reason": "voice:подумай серьёзно",
+"id": "br684bb7"
+}
+},
+{
+"t": 1793442355.69,
+"s": "events:mode",
+"f": {
+"id": "br684bb7",
+"from": "A",
+"to": "B",
+"phase": "begin",
+"service": "",
+"t_ms": "0",
+"ts": "1793442355.686",
+"reason": "voice:подумай серьёзно",
+"rollback": "0"
+}
+},
+{
+"t": 1793442355.78,
+"s": "events:mode",
+"f": {
+"id": "br684bb7",
+"from": "A",
+"to": "B",
+"phase": "save",
+"service": "brain",
+"t_ms": "95",
+"ts": "1793442355.781",
+"dt_ms": "57",
+"file": "A-a3e1baa80716.bin"
+}
+},
+{
+"t": 1793442356.18,
+"s": "events:mode",
+"f": {
+"id": "br684bb7",
+"from": "A",
+"to": "B",
+"phase": "stop",
+"service": "brain",
+"t_ms": "496",
+"ts": "1793442356.182",
+"dt_ms": "401",
+"unit": "skull-llm"
+}
+},
+{
+"t": 1793442356.18,
+"s": "events:mode",
+"f": {
+"id": "br684bb7",
+"from": "A",
+"to": "B",
+"phase": "switch",
+"service": "",
+"t_ms": "497",
+"ts": "1793442356.183"
+}
+},
+{
+"t": 1793442356.22,
+"s": "events:mode",
+"f": {
+"id": "br684bb7",
+"from": "A",
+"to": "B",
+"phase": "start",
+"service": "brain",
+"t_ms": "535",
+"ts": "1793442356.221",
+"dt_ms": "35"
+}
+},
+{
+"t": 1793442367.63,
+"s": "events:mode",
+"f": {
+"id": "br684bb7",
+"from": "A",
+"to": "B",
+"phase": "health",
+"service": "brain",
+"t_ms": "11947",
+"ts": "1793442367.633",
+"dt_ms": "11447",
+"budget_s": "10",
+"over": "1"
+}
+},
+{
+"t": 1793442367.63,
+"s": "events:mode",
+"f": {
+"id": "br684bb7",
+"from": "A",
+"to": "B",
+"phase": "restore_skipped",
+"service": "brain",
+"t_ms": "11948",
+"ts": "1793442367.634",
+"reason": "history changed"
+}
+},
+{
+"t": 1793442367.65,
+"s": "events:mode",
+"f": {
+"id": "br684bb7",
+"from": "A",
+"to": "B",
+"phase": "done",
+"service": "",
+"t_ms": "11960",
+"ts": "1793442367.646"
+}
+},
+{
+"t": 1793442367.65,
+"s": "events:transcript",
+"f": {
+"text": "почему зимой рано темнеет?",
+"trigger": "wakeword",
+"speaker": "owner",
+"deferred": "1",
+"ts": "1793442367.646"
+}
+},
+{
+"t": 1793442375.26,
+"s": "events:reply",
+"f": {
+"text": "Зимой Земля наклонена своей северной или южной оконечностью от Солнца.",
+"reply_id": "b45709ac2b7d"
+}
+},
+{
+"t": 1793442376.76,
+"s": "events:reply",
+"f": {
+"text": "Из-за этого угол падения солнечных лучей становится меньше, а световой день — короче.",
+"reply_id": "b45709ac2b7d"
+}
+},
+{
+"t": 1793442378.17,
+"s": "events:reply",
+"f": {
+"text": "Чем меньше угол, тем быстрее Солнце уходит за горизонт.",
+"reply_id": "b45709ac2b7d",
+"seq": "2",
+"final": "1",
+"ts": "1793442367.646",
+"meta": "{\"turn\": 12, \"window_turns\": 11, \"prompt_tokens\": 1095, \"completion_tokens\": 58, \"ttft_s\": 7.045, \"tok_s\": 15.0, \"finish_reason\": \"stop\", \"wall_s\": 11.08, \"max_tokens\": 900, \"reply\": \"Зимой Земля наклонена своей северной или южной оконечностью от Солнца. Из-за этого угол падения солнечных лучей становится меньше, а световой день — короче. Чем меньше угол, тем быстрее Солнце уходит за горизонт.\", \"sentences\": 3, \"mode\": \"B\", \"llm_calls\": [\"chat\"], \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793442428.49,
+"s": "cmd:mode",
+"f": {
+"mode": "A",
+"reason": "idle",
+"id": "bra2aa17"
+}
+},
+{
+"t": 1793442428.49,
+"s": "events:mode",
+"f": {
+"id": "bra2aa17",
+"from": "B",
+"to": "A",
+"phase": "begin",
+"service": "",
+"t_ms": "0",
+"ts": "1793442428.488",
+"reason": "idle",
+"rollback": "0"
+}
+},
+{
+"t": 1793442428.65,
+"s": "events:mode",
+"f": {
+"id": "bra2aa17",
+"from": "B",
+"to": "A",
+"phase": "save",
+"service": "brain",
+"t_ms": "164",
+"ts": "1793442428.653",
+"dt_ms": "139",
+"file": "B-caa28dfa650e.bin"
+}
+},
+{
+"t": 1793442429.66,
+"s": "events:mode",
+"f": {
+"id": "bra2aa17",
+"from": "B",
+"to": "A",
+"phase": "stop",
+"service": "brain",
+"t_ms": "1167",
+"ts": "1793442429.655",
+"dt_ms": "1002",
+"unit": "skull-llm"
+}
+},
+{
+"t": 1793442429.66,
+"s": "events:mode",
+"f": {
+"id": "bra2aa17",
+"from": "B",
+"to": "A",
+"phase": "switch",
+"service": "",
+"t_ms": "1168",
+"ts": "1793442429.656"
+}
+},
+{
+"t": 1793442429.69,
+"s": "events:mode",
+"f": {
+"id": "bra2aa17",
+"from": "B",
+"to": "A",
+"phase": "start",
+"service": "brain",
+"t_ms": "1202",
+"ts": "1793442429.691",
+"dt_ms": "31"
+}
+},
+{
+"t": 1793442434.92,
+"s": "events:mode",
+"f": {
+"id": "bra2aa17",
+"from": "B",
+"to": "A",
+"phase": "health",
+"service": "brain",
+"t_ms": "6428",
+"ts": "1793442434.916",
+"dt_ms": "5257",
+"budget_s": "7",
+"over": "0"
+}
+},
+{
+"t": 1793442434.92,
+"s": "events:mode",
+"f": {
+"id": "bra2aa17",
+"from": "B",
+"to": "A",
+"phase": "restore_skipped",
+"service": "brain",
+"t_ms": "6428",
+"ts": "1793442434.917",
+"reason": "history changed"
+}
+},
+{
+"t": 1793442434.93,
+"s": "events:mode",
+"f": {
+"id": "bra2aa17",
+"from": "B",
+"to": "A",
+"phase": "done",
+"service": "",
+"t_ms": "6440",
+"ts": "1793442434.928"
+}
+}
+]
