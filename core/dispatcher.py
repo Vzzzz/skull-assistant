@@ -16,7 +16,8 @@ thaws; this process only applies them:
   - units installed but not enabled (systemctl is-enabled != enabled) are not production (skull-vision after T-031):
     never started or stopped here.
 On start: reconcile — the residents of mode:current running (and skull-llm holding that mode's model), the rest
-stopped.
+stopped; then cmd:mode from the last command handled (mode:cmd_last), so one sent while the dispatcher restarted is not
+lost — unless it is older than CMD_MAX_AGE_S: that one is answered `failed` (brain says so) instead of switching late.
 
   .venv/bin/python -m core.dispatcher                 # the service (unit skull-dispatcher)
   .venv/bin/python -m core.dispatcher --switch B      # ask the running dispatcher, print the phases
@@ -37,10 +38,12 @@ import requests
 
 from core.manifests import ROOT, validate
 
-r = redis.Redis()
+r = redis.Redis(socket_timeout=None)     # redis-py 8 defaults to 5 s: it races xread(block=5000) and kills the loop
 CURRENT, TRANSITION, CMD, EVENTS = "mode:current", "mode:transition", "cmd:mode", "events:mode"
+LAST_CMD = "mode:cmd_last"
 HISTORY = "dialog:history"
 TRANSITION_TTL_S = 300
+CMD_MAX_AGE_S = 20        # = brain's PENDING_ACK_S: older, brain has already said «Не вышло» (RestartSec is 10)
 DEFAULT_THAW_S = 30
 
 
@@ -54,6 +57,11 @@ def is_active(unit):
 
 def is_enabled(unit):
     return systemctl("is-enabled", unit).stdout.strip() == "enabled"
+
+
+def stale(cmd_id, now, max_age_s=CMD_MAX_AGE_S):
+    """A stream id is its time in ms: a command older than max_age_s is no longer what the owner waits for."""
+    return now - int(cmd_id.split("-")[0]) / 1000 > max_age_s
 
 
 def history_hash():
@@ -245,17 +253,21 @@ class Dispatcher:
     def run(self):
         print(f"dispatcher: {len(self.manifests)} manifests ok on {self.target}", flush=True)
         self.reconcile()
-        last = "$"
+        last = (r.get(LAST_CMD) or b"$").decode()
         while True:
             ev = r.xread({CMD: last}, count=1, block=5000)
             if not ev:
                 continue
             last, f = ev[0][1][0]
-            dst = f.get(b"mode", b"").decode()
+            r.set(LAST_CMD, last)
+            dst, reason, req = (f.get(k, b"").decode() for k in (b"mode", b"reason", b"id"))
             if dst not in ("A", "B"):
                 print(f"dispatcher: ignored command {f}", flush=True)
-                continue
-            self.switch(dst, f.get(b"reason", b"").decode(), f.get(b"id", b"").decode() or None)
+            elif stale(last.decode(), time.time()):
+                src = (r.get(CURRENT) or b"A").decode()
+                Switch(src, dst, reason, req or uuid.uuid4().hex[:8]).event("failed", error=f"stale command {last.decode()}")
+            else:
+                self.switch(dst, reason, req or None)
 
 
 def ask(dst, reason, timeout_s=300):

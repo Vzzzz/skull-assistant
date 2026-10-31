@@ -53,6 +53,7 @@ GAZE_COOLDOWN_S = AMB.get("gaze_cooldown_s", 30)
 # in character to an address (the name / the wake word), never the model; overheard speech is ignored, no duck
 HOLD = "Погоди, думаю."
 TRANSITION = "mode:transition"
+TRANSITION_TTL_S = 300          # core/dispatcher.py: a switch that has begun ends (done / failed) within this
 GAZE_WINDOW_S = AMB.get("gaze_window_s", 15)
 GAZE_LINES = "gaze:lines"       # Redis list, newest first: the last gaze lines (the prompt and the repeat check)
 last_gaze = 0.0
@@ -62,7 +63,8 @@ last_gaze = 0.0
 # after idle_exit_s without the owner's turns
 MODES = P.get("modes", {})
 LINES = MODES.get("lines", {})
-pending = None                  # {"id", "to", "question", "voice"}: a switch brain asked for and waits on
+pending = None                  # {"id", "to", "question", "voice", "t", "seen"}: a switch brain asked for and waits on
+PENDING_ACK_S = 20              # no event for it this long (the dispatcher is down / restarting): give up, say so
 calls = []                      # this turn's requests to llama-server (router / duck / chat): one per turn in B (T-046)
 last_owner_b = time.time()      # the owner's last turn in B (the idle exit counts from it)
 
@@ -189,7 +191,7 @@ def fixed_line(key, ts=None, kind="mode"):
 def ask_mode(dst, reason, question="", voice=True):
     global pending
     req = "br" + uuid.uuid4().hex[:6]
-    pending = {"id": req, "to": dst, "question": question, "voice": voice}
+    pending = {"id": req, "to": dst, "question": question, "voice": voice, "t": time.time(), "seen": False}
     r.xadd("cmd:mode", {"mode": dst, "reason": reason, "id": req})
     print(f"brain: cmd:mode {dst} ({reason}){' deferred: ' + repr(question) if question else ''}")
 
@@ -202,6 +204,7 @@ def on_mode_event(f):
         last_owner_b = time.time()                 # also when B was entered by hand (skull-mode.sh)
     if not pending or f.get("id") != pending["id"]:
         return
+    pending["seen"] = True
     if f["phase"] == "failed":
         fixed_line("failed")
         pending = None
@@ -298,6 +301,11 @@ last_ev, last_vis, last_mode = '$', '$', '$'
 print(f"brain: system~{sys_tokens} tokens, {r.llen(HISTORY)} exchanges in {HISTORY}, waiting for transcripts...")
 while True:
     ev = r.xread({'events:transcript': last_ev, 'events:vision': last_vis, 'events:mode': last_mode}, count=1, block=5000)
+    if pending and time.time() - pending["t"] > (TRANSITION_TTL_S if pending["seen"] else PENDING_ACK_S):
+        print(f"brain: no answer to cmd:mode {pending['to']} ({pending['id']}) — given up")
+        if pending["voice"]:
+            fixed_line("failed")
+        pending = None
     if (MODES and not pending and mode_now() == "B" and not r.exists(TRANSITION)
             and time.time() - last_owner_b > MODES.get("idle_exit_s", 300)):
         ask_mode("A", "idle", voice=False)        # the owner has gone quiet: back to A, silently
