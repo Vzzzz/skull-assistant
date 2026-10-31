@@ -7,7 +7,7 @@ import pytest
 import yaml
 
 from core.ambient import Ambient, engaged_until, open_window
-from core.modes import deferred_question, find_phrase, imperative, stem
+from core.modes import accepts_exit, deferred_question, find_phrase, imperative, only_phrase, stem
 from core.router import POLICY, POLICY_B, WORLD_SOFT
 
 MODES = yaml.safe_load((Path(__file__).resolve().parents[2] / "services/brain/manifest.yaml").read_text(encoding="utf-8"))["params"]["modes"]
@@ -68,6 +68,28 @@ def test_no_enter_phrase(text):
 ])
 def test_exit_phrase(text, found):
     assert (find_phrase(text, EXIT) is not None) is found
+
+
+@pytest.mark.parametrize("speaker, text, seg_s, ok", [
+    ("unknown", "Хватит думать", 0.99, True),             # the gate: under 1 s, no embedding
+    ("unknown", "Костян, возвращайся.", 0.87, True),     # the name does not count
+    ("unknown", "Ну всё, хватит думать", 1.2, True),     # fillers do not count
+    ("unknown", "Хватит думать", 1.6, False),            # long enough for a voice class: unknown is not the owner
+    ("unknown", "Хватит думать о работе", 1.3, False),   # more than the phrase
+    ("unknown", "Соседу пора, возвращайся", 1.4, False),
+    ("unknown", "Хватит думать", None, False),
+    ("uncertain", "Хватит думать о работе", 2.5, True),  # owner / uncertain: as before
+    ("owner", "Ладно, достаточно думать на сегодня", 3.0, True),
+    ("other", "Хватит думать", 0.9, False),
+])
+def test_accepts_exit(speaker, text, seg_s, ok):
+    span = find_phrase(text, EXIT)
+    assert span and accepts_exit(speaker, text, span, seg_s) is ok
+
+
+def test_only_phrase():
+    assert only_phrase("Костян, ну, вернись!", find_phrase("Костян, ну, вернись!", EXIT))
+    assert not only_phrase("Вернись домой", find_phrase("Вернись домой", EXIT))
 
 
 def test_policy_b_is_explain_with_soft_hedge_and_memory():
