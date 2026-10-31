@@ -78,6 +78,8 @@ redis-cli ping
 ```bash
 # стенд
 systemctl --user start|stop|restart skull.target
+deploy/stand/skull-restart.sh [--mode A|B] [--drop-caches] [--fresh]   # T-047: чистый перезапуск без wsl --shutdown (stop → процессы мертвы, GPU пуст → pulse ожил → start → health → режим), коды 0 / 1 не поднялся / 2 флаг / 3 звук завис; из Git Bash — deploy/stand/skull-stand.sh restart
+deploy/stand/skull-restart.sh --check-sound    # только pulse WSLg: тайм-аут и «Connection refused» = зависание I-15; skull-stand.sh status — плюс устройство вывода Windows и гарнитура
 systemctl --user restart skull-brain && journalctl --user -u skull-brain -f
 redis-cli xlen audio:mic; redis-cli xrevrange events:transcript + - COUNT 3
 # замеры
