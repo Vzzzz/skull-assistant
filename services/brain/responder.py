@@ -194,6 +194,8 @@ def ask_mode(dst, reason, question="", voice=True):
     global pending
     req = "br" + uuid.uuid4().hex[:6]
     pending = {"id": req, "to": dst, "question": question, "voice": voice, "t": time.time(), "seen": False}
+    if voice:                  # a line follows the switch: skull-tts keeps the transition sound until it is ready
+        r.set("tts:sfx_hold", req, ex=TRANSITION_TTL_S)
     r.xadd("cmd:mode", {"mode": dst, "reason": reason, "id": req})
     print(f"brain: cmd:mode {dst} ({reason}){' deferred: ' + repr(question) if question else ''}")
 
@@ -307,6 +309,7 @@ while True:
         print(f"brain: no answer to cmd:mode {pending['to']} ({pending['id']}) — given up")
         if pending["voice"]:
             fixed_line("failed")
+        r.delete("tts:sfx_hold")
         pending = None
     if (MODES and not pending and mode_now() == "B" and not r.exists(TRANSITION)
             and time.time() - idle_since(r, last_owner_b, last_reply) > MODES.get("idle_exit_s", 300)):
