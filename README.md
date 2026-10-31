@@ -1,6 +1,6 @@
 # Skull Assistant
 
-[![tests](https://github.com/Vzzzz/skull-assistant/actions/workflows/tests.yml/badge.svg)](https://github.com/Vzzzz/skull-assistant/actions/workflows/tests.yml)
+[![tests](https://github.com/Vzzzz/skull-assistant/actions/workflows/tests.yml/badge.svg)](https://github.com/Vzzzz/skull-assistant/actions/workflows/tests.yml) [![license: MIT](https://img.shields.io/github/license/Vzzzz/skull-assistant)](LICENSE) ![python 3.10](https://img.shields.io/badge/python-3.10-blue) ![status: work in progress](https://img.shields.io/badge/status-work_in_progress-orange) ![platform: Jetson Orin Nano 8 GB](https://img.shields.io/badge/platform-Jetson_Orin_Nano_8_GB-76B900)
 
 > **Проект в работе** (октябрь 2026). Стендовая часть сделана и измерена; на устройство (Jetson Orin Nano Super 8 GB) код ещё не переносился. Что именно работает сейчас — ниже, текущее состояние по дням — `docs/JOURNAL.md`. English: [README.en.md](README.en.md).
 

@@ -1,6 +1,6 @@
 # Skull Assistant
 
-[![tests](https://github.com/Vzzzz/skull-assistant/actions/workflows/tests.yml/badge.svg)](https://github.com/Vzzzz/skull-assistant/actions/workflows/tests.yml)
+[![tests](https://github.com/Vzzzz/skull-assistant/actions/workflows/tests.yml/badge.svg)](https://github.com/Vzzzz/skull-assistant/actions/workflows/tests.yml) [![license: MIT](https://img.shields.io/github/license/Vzzzz/skull-assistant)](LICENSE) ![python 3.10](https://img.shields.io/badge/python-3.10-blue) ![status: work in progress](https://img.shields.io/badge/status-work_in_progress-orange) ![platform: Jetson Orin Nano 8 GB](https://img.shields.io/badge/platform-Jetson_Orin_Nano_8_GB-76B900)
 
 > **Work in progress** (October 2026). The bench part is built and measured; nothing has been deployed to the device (Jetson Orin Nano Super 8 GB) yet. What works today is listed below; day-by-day state is in `docs/JOURNAL.md` (Russian).
 
