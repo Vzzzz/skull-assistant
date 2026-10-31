@@ -135,13 +135,12 @@ class Ambient:
             return "respond", "name", True
         if speaker == "unknown":                 # no embedding: too little voice, or mostly noise / broadcast
             return "silent", "unknown voice", False
-        if speaker == "uncertain" and thinking:   # B: the window never closes, so the addressee is the owner's voice only
-            return "silent", "uncertain voice (mode B)", False
         if speaker == "uncertain" and (lifted or bcast or not engaged):
             return "silent", "uncertain voice" + (" (window)" if lifted else " (broadcast)" if bcast else ""), False
         if is_question(text):   # by words (step 7a); the duck often says «нет» to a bare question in a fresh conversation
             return "respond", "question", True
-        if thinking:            # mode B: the owner's (or, in the window, uncertain) statement is answered, no duck pass
+        if thinking:            # mode B: the owner's or uncertain statement is answered, no duck pass. B is the window
+            # (always open), so uncertain counts as there: the T-046 gate had the owner's short turns at 0.30-0.39
             return "respond", "mode B", True
         dk = duck(text, pause_s)
         ans, probs = dk.get("ans_tok"), dk.get("probs") or {}

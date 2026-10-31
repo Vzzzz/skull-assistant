@@ -344,7 +344,10 @@ while True:
     mode = mode_now()
     thinking = mode == "B"
     owner = fields.get(b'speaker') == b'owner'
-    if MODES and owner and not deferred:
+    # in B the owner's short turns often come `uncertain` (T-046 gate): they count, and may say the exit phrase (a wrong
+    # exit costs a phrase; a wrong entry costs 20-30 s of silence, so entering stays the owner's voice only)
+    owner_b = thinking and fields.get(b'speaker') in (b'owner', b'uncertain')
+    if MODES and (owner or owner_b) and not deferred:
         span = find_phrase(text, MODES["enter"]) if mode == "A" else find_phrase(text, MODES["exit"])
         if span and mode == "A":
             fixed_line("wait", ts)
@@ -353,7 +356,7 @@ while True:
         if span:
             ask_mode("A", f"voice:{span[0]}")
             continue
-    if thinking and owner:
+    if owner_b:
         last_owner_b = time.time()
     t0 = time.perf_counter()
     calls.clear()
