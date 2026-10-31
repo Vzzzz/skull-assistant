@@ -12,7 +12,8 @@ import redis, requests, yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
-from core.ambient import OPEN_KEY, Ambient, engaged_until, gaze_skip, has_name, idle_since, open_window, voice_class
+from core.ambient import (OPEN_KEY, Ambient, engaged_until, gaze_skip, has_name, idle_since, open_window, reply_end,
+                          turn_prior, voice_class)
 from core.memory import SYSTEM_RULE, AssocMemory, clean_reply, format_note
 from core.modes import accepts_exit, deferred_question, find_phrase
 from core.speech import for_speech
@@ -351,7 +352,10 @@ while True:
     spk_raw = fields.get(b'speaker', b'unknown').decode()
     seg_s = float(fields[b'seg_s']) if fields.get(b'seg_s') else None
     score = float(fields[b'spk_score']) if fields.get(b'spk_score') else None
-    speaker = voice_class(spk_raw, score, seg_s, thinking or time.time() < engaged_until(r))   # I-19
+    window_open = thinking or time.time() < engaged_until(r)
+    speaker = voice_class(spk_raw, score, seg_s, window_open)                                   # I-19
+    end = reply_end(r, last_reply)
+    speaker = turn_prior(speaker, seg_s, window_open, ts - end if end else None, fields.get(b'bcast') == b'1')   # T-050
     owner = speaker == "owner"
     # in B the owner's short turns often come `uncertain` (T-046 gate): they count, and may say the exit phrase (a wrong
     # exit costs a phrase; a wrong entry costs 20-30 s of silence, so entering stays the owner's voice only)

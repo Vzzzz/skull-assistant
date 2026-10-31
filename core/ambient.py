@@ -53,6 +53,26 @@ def voice_class(speaker, spk_score, seg_s, window):
     return speaker
 
 
+TURN_PRIOR_S = 8.0             # T-050: a turn this soon after the skull's reply ended is most likely the owner's answer
+
+
+def reply_end(r, reply_id):
+    """When the playback of reply `reply_id` ended (tts:end), or None."""
+    end = r.hget(TTS_END, reply_id) if reply_id else None
+    return float(end) if end else None
+
+
+def turn_prior(speaker, seg_s, window, since_reply_s, bcast):
+    """T-050, prior by turn order: a phrase too short for a voice score (`unknown`) inside the ENGAGED window or in mode B
+    (`window`), coming within TURN_PRIOR_S of the end of the skull's reply and with no broadcast around (`bcast`: an
+    `other` segment in the last 30 s), is taken as the owner's answer — `uncertain`, which counts as the owner there.
+    Outside the window, or long (`seg_s` >= SHORT_OTHER_S: no score on that much audio means noise), it stays `unknown`."""
+    if (speaker == "unknown" and window and not bcast and since_reply_s is not None and 0 <= since_reply_s <= TURN_PRIOR_S
+            and (seg_s is None or seg_s < SHORT_OTHER_S)):
+        return "uncertain"
+    return speaker
+
+
 def idle_since(r, last_owner, reply_id):
     """I-20: mode B's idle exit counts from the owner's last turn or the end of the last reply's playback (tts:end),
     whichever is later — a long or delayed reply must not eat idle_exit_s; while anything plays, nobody is idle."""
