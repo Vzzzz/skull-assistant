@@ -29,7 +29,8 @@ params:
     threshold: 0.29        # cosine; FAR 5 % at 0.284 on the stand set (research/voice/results/voiceid_2026-10-25.md)
     threshold_high: 0.45   # owner >= 0.45; uncertain 0.29..0.45 (owner_far from 0.42, false podcast 0.433) — T-039 answer 1
     voiced_rms: 150        # int16 frame RMS counted as speech; same gate as the measurement
-    min_speech_s: 1.0
+    min_speech_s: 0.5      # T-050: 1.0 -> 0.5 (research/voice/results/voiceid_short_2026-10-31.md): on 0.5-1.0 s the owner gets a score
+                           # (>= 0.29 in 39-77 %), negatives never reach 0.45 (max 0.35) -> no own threshold for short phrases
     win_s: 1.5             # T-038 2в: segments of win_min_s+ not `owner` as a whole are also scored in sliding windows
     win_hop_s: 0.5         # (research/voice/bench_windows.py: owner over a podcast 8/10 owner, podcast 0/13; 2.0/1.0 — 8/10, more uncertain podcast)
     win_min_s: 2.0         # 2в answer 5: short phrases over a broadcast came as 2–3-s segments without windows

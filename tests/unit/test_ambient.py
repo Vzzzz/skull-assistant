@@ -11,7 +11,7 @@ import pytest
 import yaml
 
 from core.ambient import (OPEN_KEY, TTS_END, Ambient, engaged_until, gaze_skip, has_name, idle_since, needs_pause, open_window,
-                          voice_class)
+                          reply_end, turn_prior, voice_class)
 
 AMB = yaml.safe_load((Path(__file__).resolve().parents[2] / "services/brain/manifest.yaml").read_text(encoding="utf-8"))["params"]["ambient"]
 STATEMENT = "закончил отчёт наконец сегодня"          # 4 words, no question, no name
@@ -229,3 +229,28 @@ def test_idle_since_last_owner_or_reply_end(r):
     assert idle_since(r, 100.0, "other-rid") == 100.0
     r.set("tts:speaking", 1)
     assert idle_since(r, 100.0, "rid") == float("inf")   # while it plays nobody is idle
+
+
+# --- T-050: prior by turn order — a phrase too short for a voice score right after the skull's reply is the owner's
+
+@pytest.mark.parametrize("speaker, seg_s, window, since, bcast, expect", [
+    ("unknown", 0.99, True, 3.0, False, "uncertain"),   # «Хватит думать» in B, 3 s after the reply
+    ("unknown", 0.87, True, 8.0, False, "uncertain"),
+    ("unknown", 0.9, True, 9.5, False, "unknown"),      # too late: not an answer to the reply
+    ("unknown", 0.9, False, 3.0, False, "unknown"),     # outside the window / B
+    ("unknown", 0.9, True, 3.0, True, "unknown"),       # a broadcast around: could be its fragment
+    ("unknown", 2.5, True, 3.0, False, "unknown"),      # long and still no score: noise
+    ("unknown", None, True, 3.0, False, "uncertain"),
+    ("unknown", 0.9, True, None, False, "unknown"),     # no reply played yet
+    ("unknown", 0.9, True, -1.0, False, "unknown"),     # said while the reply still played
+    ("other", 0.9, True, 3.0, False, "other"),          # a score exists: the voice decides
+    ("owner", 0.9, True, 3.0, False, "owner"),
+])
+def test_turn_prior(speaker, seg_s, window, since, bcast, expect):
+    assert turn_prior(speaker, seg_s, window, since, bcast) == expect
+
+
+def test_reply_end(r):
+    assert reply_end(r, None) is None and reply_end(r, "rid") is None
+    r.hset(TTS_END, "rid", 123.5)
+    assert reply_end(r, "rid") == 123.5
