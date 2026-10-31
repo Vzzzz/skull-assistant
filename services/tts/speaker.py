@@ -9,8 +9,8 @@ per sentence through a pipe on raw PCM, no files; FX = [] turns it off (preset f
 Ambient (T-038 stage 2b): tts:speaking stays up TAIL_S after the sound (room echo of the last word), and the expected
 end of each reply's playback goes to the hash tts:end (core/ambient.py counts the ENGAGED window from it).
 Mode switch (T-046, U-003): from events:mode {phase: begin} to done / failed a quiet loop «the skull is thinking»
-(manifest params.sfx.transition) goes through the same player in BLOCK pieces, at most two queued, so it stops within
-~0.4 s; tts:speaking is up while it plays (the VAD must not take the clicks for speech).
+(manifest params.sfx.transition) goes through the same player in 0.1-s pieces, one queued ahead, so it stops soon
+after `done`; tts:speaking is up while it plays (the VAD must not take the clicks for speech).
 """
 import queue
 import subprocess
@@ -39,6 +39,7 @@ TAIL_S = 1.0                                         # tts:speaking after the so
 ROOT = Path(__file__).resolve().parents[2]
 SFX = (yaml.safe_load(Path(__file__).with_name("manifest.yaml").read_text(encoding="utf-8")).get("params") or {}).get("sfx", {})
 sfx_on = threading.Event()   # set between events:mode begin and done / failed
+SFX_BLOCK = RATE // 10       # 0.1-s pieces of the loop (0.2 s, two queued: the sound ran ~1.5 s past `done`)
 
 texts = queue.Queue()        # (reply_id, seq, text, ts)
 pcm = queue.Queue()          # (reply_id, seq, float32 mono chunk, ts)
@@ -105,7 +106,7 @@ def play():
                 first.add(reply_id)
                 if ts:
                     print(f"tts: first audio +{time.time() - ts:.2f}s", flush=True)
-            elif speaking and time.time() - until > 0.03:   # the card ran dry inside a reply: audible gap
+            elif speaking and reply_id != "sfx" and time.time() - until > 0.03:   # the card ran dry inside a reply: audible gap
                 print(f"tts: gap {(time.time() - until) * 1000:.0f} ms before {reply_id} #{seq} "
                       f"(chunk {len(audio) / RATE:.2f} s, queued {pcm.qsize()})", flush=True)
             until = max(until, time.time()) + len(audio) / RATE
@@ -129,13 +130,13 @@ def load_sfx(path):
 def sfx_loop(audio):
     """While sfx_on: keep the player fed with the loop, one BLOCK at a time, never more than two queued."""
     pos, n = 0, len(audio)
-    tiled = np.concatenate([audio, audio[:BLOCK]])           # a block may run over the end of the loop
+    tiled = np.concatenate([audio, audio[:SFX_BLOCK]])       # a block may run over the end of the loop
     while True:
         sfx_on.wait()
         while sfx_on.is_set():
-            if pcm.qsize() < 2:
-                pcm.put(("sfx", 0, tiled[pos:pos + BLOCK], None))
-                pos = (pos + BLOCK) % n
+            if pcm.empty():                                  # one piece ahead: the sound stops soon after `done`
+                pcm.put(("sfx", 0, tiled[pos:pos + SFX_BLOCK], None))
+                pos = (pos + SFX_BLOCK) % n
             else:
                 time.sleep(0.02)
 
