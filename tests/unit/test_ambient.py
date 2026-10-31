@@ -10,7 +10,8 @@ import fakeredis
 import pytest
 import yaml
 
-from core.ambient import OPEN_KEY, TTS_END, Ambient, engaged_until, gaze_skip, has_name, needs_pause, open_window
+from core.ambient import (OPEN_KEY, TTS_END, Ambient, engaged_until, gaze_skip, has_name, idle_since, needs_pause, open_window,
+                          voice_class)
 
 AMB = yaml.safe_load((Path(__file__).resolve().parents[2] / "services/brain/manifest.yaml").read_text(encoding="utf-8"))["params"]["ambient"]
 STATEMENT = "закончил отчёт наконец сегодня"          # 4 words, no question, no name
@@ -194,3 +195,31 @@ def test_needs_pause(text, speaker, engaged, wait):
 
 def test_has_name():
     assert has_name("Костян, ты где") and has_name("КОСТЯНЧИК") and not has_name("череп на столе")
+
+
+# --- I-19: the owner's short phrases score low (T-046 gate)
+
+@pytest.mark.parametrize("speaker, score, seg_s, window, expect", [
+    ("other", 0.25, 1.2, True, "uncertain"),      # «Хватит думать» 0.249, 1.0 s, in B
+    ("other", 0.26, 1.7, True, "uncertain"),      # «Зачем людям чайники?» 0.263
+    ("other", 0.25, 1.2, False, "other"),         # outside the window / B a stranger stays a stranger
+    ("other", 0.15, 1.2, True, "other"),          # too far from the owner
+    ("other", 0.25, 2.5, True, "other"),          # long enough for a sure class
+    ("other", None, 1.2, True, "other"),
+    ("owner", 0.50, 1.2, True, "owner"),
+    ("uncertain", 0.30, 1.2, False, "uncertain"),
+])
+def test_voice_class_short_other(speaker, score, seg_s, window, expect):
+    assert voice_class(speaker, score, seg_s, window) == expect
+
+
+# --- I-20: the idle exit in B counts from the later of the owner's turn and the end of the last reply's playback
+
+def test_idle_since_last_owner_or_reply_end(r):
+    assert idle_since(r, 100.0, None) == 100.0
+    r.hset(TTS_END, "rid", 172.0)                 # a reply stuck in the sound (I-15) ended long after the turn
+    assert idle_since(r, 100.0, "rid") == 172.0
+    assert idle_since(r, 200.0, "rid") == 200.0   # the owner spoke after it
+    assert idle_since(r, 100.0, "other-rid") == 100.0
+    r.set("tts:speaking", 1)
+    assert idle_since(r, 100.0, "rid") == float("inf")   # while it plays nobody is idle

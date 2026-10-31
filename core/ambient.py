@@ -38,6 +38,28 @@ def has_name(text):
 
 
 MODE_KEY = "mode:current"      # Redis: A | B (core/dispatcher.py)
+SHORT_OTHER_S = 2.0            # I-19: speech shorter than this, scored at least SHORT_OTHER_MIN, is not a sure `other`
+SHORT_OTHER_MIN = 0.2
+
+
+def voice_class(speaker, spk_score, seg_s, window):
+    """I-19 (T-046 gate): the owner's short phrases score low — 1.0-1.7 s gave `uncertain` 0.29-0.39 or `other`
+    0.25-0.26, while 2.4-5.2 s gave `owner` 0.45-0.58. Inside the ENGAGED window or in mode B (`window`) an `other`
+    under SHORT_OTHER_S of audio with a score >= SHORT_OTHER_MIN counts as `uncertain`, like `unknown` right after the
+    owner (T-042 4a); outside, a stranger stays a stranger."""
+    if (speaker == "other" and window and seg_s is not None and seg_s < SHORT_OTHER_S
+            and spk_score is not None and spk_score >= SHORT_OTHER_MIN):
+        return "uncertain"
+    return speaker
+
+
+def idle_since(r, last_owner, reply_id):
+    """I-20: mode B's idle exit counts from the owner's last turn or the end of the last reply's playback (tts:end),
+    whichever is later — a long or delayed reply must not eat idle_exit_s; while anything plays, nobody is idle."""
+    if r.exists("tts:speaking"):
+        return float("inf")
+    end = r.hget(TTS_END, reply_id) if reply_id else None
+    return max(last_owner, float(end) if end else 0.0)
 
 
 def engaged_until(r):
