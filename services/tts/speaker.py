@@ -10,7 +10,10 @@ Ambient (T-038 stage 2b): tts:speaking stays up TAIL_S after the sound (room ech
 end of each reply's playback goes to the hash tts:end (core/ambient.py counts the ENGAGED window from it).
 Mode switch (T-046, U-003): from events:mode {phase: begin} to done / failed a quiet loop «the skull is thinking»
 (manifest params.sfx.transition) goes through the same player in 0.1-s pieces, one queued ahead, so it stops soon
-after `done`; tts:speaking is up while it plays (the VAD must not take the clicks for speech).
+after `done`; tts:speaking is up while it plays (the VAD must not take the clicks for speech). When brain asked for the
+switch and a line follows it (the deferred answer, «Ну, думаю…», «Всё, я обратно.»), brain sets tts:sfx_hold: the loop
+then plays on past `done` until the first sentence of that line is synthesized — no silence while model B prefills
+(owner, T-046 gate: «пауза между окончанием щелчков и началом реплики слишком заметная»); SFX_HOLD_MAX_S at most.
 """
 import queue
 import subprocess
@@ -38,7 +41,10 @@ TAIL_S = 1.0                                         # tts:speaking after the so
 
 ROOT = Path(__file__).resolve().parents[2]
 SFX = (yaml.safe_load(Path(__file__).with_name("manifest.yaml").read_text(encoding="utf-8")).get("params") or {}).get("sfx", {})
-sfx_on = threading.Event()   # set between events:mode begin and done / failed
+sfx_on = threading.Event()   # set between events:mode begin and done / failed (or the first sentence after, if held)
+sfx_held = threading.Event() # past `done`, waiting for the line brain promised (tts:sfx_hold)
+SFX_HOLD = "tts:sfx_hold"    # Redis, set by services/brain/responder.py for a switch a line follows
+SFX_HOLD_MAX_S = 30          # the line never came (brain failed): stop anyway
 SFX_BLOCK = RATE // 10       # 0.1-s pieces of the loop (0.2 s, two queued: the sound ran ~1.5 s past `done`)
 
 texts = queue.Queue()        # (reply_id, seq, text, ts)
@@ -71,6 +77,10 @@ def synth():
                 audio, fx_s = fx(audio)
                 print(f"tts: sox {fx_s * 1000:.0f} ms for {len(audio) / RATE:.1f} s (#{seq})", flush=True)
             audio = audio.astype(np.float32) / 32768.0
+            if sfx_held.is_set():   # the promised line is ready: the clicks give way to it
+                sfx_held.clear()
+                sfx_on.clear()
+                print(f"tts: transition sound off (reply {reply_id})", flush=True)
             for i in range(0, len(audio), BLOCK):
                 pcm.put((reply_id, seq, audio[i:i + BLOCK], ts))
         except Exception as e:      # one bad sentence must not stop the voice
@@ -148,10 +158,15 @@ if sfx is not None:
     threading.Thread(target=sfx_loop, args=(sfx,), daemon=True).start()
 
 last_ev, last_mode = '$', '$'
+held_since = 0.0
 print(f"speaker: dmitri ready ({RATE} Hz), transition sound {'on' if sfx is not None else 'off'}, waiting for replies...",
       flush=True)
 while True:
-    ev = r.xread({'events:reply': last_ev, 'events:mode': last_mode}, count=10, block=5000)
+    ev = r.xread({'events:reply': last_ev, 'events:mode': last_mode}, count=10, block=1000)
+    if sfx_held.is_set() and time.time() - held_since > SFX_HOLD_MAX_S:
+        sfx_held.clear()
+        sfx_on.clear()
+        print("tts: transition sound off (no line after the switch)", flush=True)
     if not ev:
         continue
     for stream, items in ev:
@@ -162,8 +177,13 @@ while True:
                     sfx_on.set()
                     print(f"tts: transition sound on ({f.get(b'from', b'').decode()}->{f.get(b'to', b'').decode()})", flush=True)
                 elif phase in ("done", "failed", "noop") and sfx_on.is_set():
-                    sfx_on.clear()
-                    print(f"tts: transition sound off ({phase})", flush=True)
+                    if r.delete(SFX_HOLD):   # brain promised a line: keep clicking until it is ready
+                        sfx_held.set()
+                        held_since = time.time()
+                        print(f"tts: transition {phase}, sound held until the line", flush=True)
+                    elif not sfx_held.is_set():
+                        sfx_on.clear()
+                        print(f"tts: transition sound off ({phase})", flush=True)
     for ev_id, fields in next((items for stream, items in ev if stream == b'events:reply'), []):
         last_ev = ev_id
         text = fields[b'text'].decode().strip()
