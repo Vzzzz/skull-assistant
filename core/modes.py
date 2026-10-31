@@ -1,7 +1,9 @@
 """Voice control of the thinking mode (T-046): the owner's phrase sends the skull to mode B and back (D-030 dispatcher).
 
-A phrase from the manifest (`params.modes.enter` / `exit`) matches by word stems anywhere in the turn, like the question
-detector: «Костян, подумайте как следует: почему небо синее?» contains «подумай как следует». The rest of the turn is the
+A phrase from the manifest (`params.modes.enter` / `exit`) matches anywhere in the turn: its first word whole, in the
+imperative («подумай» / «подумайте», «возвращайся» / «возвращайтесь»), the rest by word stems, like the question
+detector: «Костян, подумайте как следует: почему небо синее?» contains «подумай как следует», «Надо подумать, как следует
+покрасить» does not (a false switch costs 20-30 s of silence, a missed one only a repeat). The rest of the turn is the
 deferred question, asked to model B once the switch is done; the part after the phrase wins, else the part before it
 («Почему небо синее? Подумай как следует.»), the name and fillers not counted.
 """
@@ -21,14 +23,23 @@ def stem(word):
     return w[:max(3, len(w) - 2)]
 
 
+def imperative(word):
+    """The singular and plural imperative of a phrase's first word: «подумай» -> {подумай, подумайте},
+    «возвращайся» -> {возвращайся, возвращайтесь}; other words («хватит», «достаточно») get «-те» too, harmlessly."""
+    w = _norm(word)
+    return {w, w[:-2] + "тесь"} if w.endswith(("ся", "сь")) else {w, w + "те"}
+
+
 def find_phrase(text, phrases):
-    """-> (phrase, start, end) of the first phrase whose words' stems open consecutive words of the text, else None."""
+    """-> (phrase, start, end) of the first phrase found in consecutive words of the text, else None: the first word
+    in one of its imperative forms, the others opening with their stems."""
     words = [(m.start(), m.end(), _norm(m.group(0))) for m in _WORD.finditer(text)]
     for phrase in phrases:
-        stems = [stem(w) for w in _WORD.findall(phrase)]
-        for i in range(len(words) - len(stems) + 1):
-            if all(words[i + j][2].startswith(s) for j, s in enumerate(stems)):
-                return phrase, words[i][0], words[i + len(stems) - 1][1]
+        first, *rest = _WORD.findall(phrase)
+        forms, stems = imperative(first), [stem(w) for w in rest]
+        for i in range(len(words) - len(stems)):
+            if words[i][2] in forms and all(words[i + 1 + j][2].startswith(s) for j, s in enumerate(stems)):
+                return phrase, words[i][0], words[i + len(stems)][1]
     return None
 
 
