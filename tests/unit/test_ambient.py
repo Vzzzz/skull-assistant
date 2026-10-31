@@ -41,9 +41,10 @@ def r():
 
 def test_manifest_numbers_are_the_accepted_ones():
     """Window after an answer 30 s (2в replay), after a gaze line 15 s (T-031), BUSY ends after 20 s of the owner's
-    silence, «угу» not more often than once in 20 s, the duck's bars 0.7 / 0.3 (T-042 4a)."""
-    assert (AMB["engaged_s"], AMB["gaze_window_s"], AMB["busy_pause_s"], AMB["ack_gap_s"]) == (30, 15, 20, 20)
-    assert (AMB["engaged_yes_p"], AMB["engaged_ack_p"], AMB["idle_yes_p"], AMB["idle_ack_p"]) == (0.7, 0.3, 0.7, 0.3)
+    silence, «угу» not more often than once in 10 s (T-049); the duck's bars in the window 0.5 / 0.25 (T-049: replay of
+    the T-046 gate and 2в), outside it 0.7 / 0.3 (T-042 4a)."""
+    assert (AMB["engaged_s"], AMB["gaze_window_s"], AMB["busy_pause_s"], AMB["ack_gap_s"]) == (30, 15, 20, 10)
+    assert (AMB["engaged_yes_p"], AMB["engaged_ack_p"], AMB["idle_yes_p"], AMB["idle_ack_p"]) == (0.5, 0.25, 0.7, 0.3)
 
 
 # --- IDLE
@@ -82,8 +83,8 @@ def test_idle_statement_by_the_duck(p_yes, pause, expect):
 def test_ack_not_more_often_than_gap():
     a = brain_ambient()
     assert a.decide(STATEMENT, "owner", 2.0, 0.0, 100.0, False, Duck(0.5))[0] == "ack"
-    assert a.decide(STATEMENT, "owner", 2.0, 0.0, 110.0, False, Duck(0.5))[0] == "silent"
-    assert a.decide(STATEMENT, "owner", 2.0, 0.0, 121.0, False, Duck(0.5))[0] == "ack"
+    assert a.decide(STATEMENT, "owner", 2.0, 0.0, 105.0, False, Duck(0.5))[0] == "silent"
+    assert a.decide(STATEMENT, "owner", 2.0, 0.0, 111.0, False, Duck(0.5))[0] == "ack"
 
 
 def test_idle_uncertain_and_unknown_are_silent():
@@ -95,7 +96,12 @@ def test_idle_uncertain_and_unknown_are_silent():
 
 # --- ENGAGED
 
-@pytest.mark.parametrize("p_yes, expect", [(0.75, ("respond", True)), (0.5, ("ack", False)), (0.1, ("ack", False))])
+@pytest.mark.parametrize("p_yes, expect", [
+    (0.75, ("respond", True)),
+    (0.55, ("respond", True)),    # T-049: «Я думаю, ты просто вредничаешь» 0.59, «Просто выбери» 0.60 — threads go on
+    (0.4, ("ack", False)),        # 0.25..0.5 -> «угу»
+    (0.1, ("ack", False)),        # below: «угу» by the pause rule
+])
 def test_engaged_statement_extends_only_when_answered(p_yes, expect):
     out = brain_ambient().decide(STATEMENT, "owner", 2.0, 0.0, 100.0, True, Duck(p_yes))
     assert (out[0], out[2]) == expect

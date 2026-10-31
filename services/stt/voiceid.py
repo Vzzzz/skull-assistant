@@ -21,6 +21,7 @@ import time
 import numpy as np
 
 HANGOVER = 3
+RANK = {"unknown": 0, "other": 0, "uncertain": 1, "owner": 2}
 
 
 class VoiceID:
@@ -80,8 +81,11 @@ class VoiceID:
 
     def __call__(self, frames, now=None):
         """frames: int16 30-ms chunks of the phrase. Returns event fields speaker / spk_score / spk_ms, and with windows
-        spk_win (best window score) and spk_region ("start-end" seconds, only when the best window is above the segment
-        and not `other`: the class then comes from the window)."""
+        spk_win (best window score) and spk_region ("start-end" seconds, only when the best window raises the class of
+        the segment: other / unknown -> uncertain / owner, uncertain -> owner; the class then comes from the window).
+        A window that only scores a little higher within the same class finds nothing: no region — brain reads a region
+        as «a voice found inside a broadcast» and wants the name for it (T-049: «Ты же всё равно не умеешь бегать»,
+        segment uncertain 0.425, window 0.445, went silent in the window under music)."""
         if self.ex is None:
             return {"speaker": "unknown", "spk_score": "", "spk_ms": ""}
         t0, now = time.perf_counter(), time.time() if now is None else now
@@ -100,7 +104,7 @@ class VoiceID:
             if w:
                 k = max(range(len(w)), key=lambda j: w[j][2])
                 out["spk_win"] = f"{w[k][2]:.3f}"
-                if self.label(w[k][2], high) != "other" and (score is None or w[k][2] > score):
+                if RANK[self.label(w[k][2], high)] > RANK[out["speaker"]]:
                     a = b = k                       # the run of windows at or above `threshold` around the best one
                     while a > 0 and w[a - 1][2] >= self.threshold and w[a - 1][1] >= w[a][0]:
                         a -= 1

@@ -16,7 +16,7 @@ too; «угу» not more often than once in ack_gap_s; a voice found only by a w
 leaves a 20-s gap between segments); the text veto `aside` does not apply to a question in the owner's voice (a
 question «about the podcast» was vetoed at 0.90); while a broadcast plays (`bcast`, STT: an `other` segment in the last
 30 s) an `uncertain` voice counts only with the name, also inside the window. A statement inside the window (no name,
-no question) is answered only at p(«да») >= engaged_yes_p (0.7), 0.3..0.7 is «угу» («Так, это надо переделать» at 0.827
+no question) is answered only at p(«да») >= engaged_yes_p (0.7; T-049: 0.5), engaged_ack_p..engaged_yes_p is «угу» («Так, это надо переделать» at 0.827
 was answered as the window used to let 0.3 through, music 2в).
 T-042 step 4a: outside the window a phrase without a question word is decided by the duck, not by the rule «statement
 -> угу»: p(«да») >= idle_yes_p with the owner's voice and a pause >= 1.5 s -> answer (live, «Бостонское чаепитие» at
