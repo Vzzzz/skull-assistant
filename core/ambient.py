@@ -37,8 +37,14 @@ def has_name(text):
     return "костян" in text.lower()
 
 
+MODE_KEY = "mode:current"      # Redis: A | B (core/dispatcher.py)
+
+
 def engaged_until(r):
-    """End of the ENGAGED window: engaged_s after the opening answer has been played (while it plays: open)."""
+    """End of the ENGAGED window: engaged_s after the opening answer has been played (while it plays: open). In mode B
+    the window is open all the time (T-046: B is entered on purpose, the owner is in a conversation)."""
+    if r.get(MODE_KEY) == b"B":
+        return float("inf")
     raw = r.get(OPEN_KEY)
     if not raw:
         return 0.0
@@ -88,23 +94,26 @@ class Ambient:
     def reset(self):
         self.busy, self.last_own, self.last_owner, self.last_ack = False, 0.0, -1e9, -1e9
 
-    def decide(self, text, speaker, pause_s, p_aside, now, engaged, duck, lifted=False, bcast=False, seg_s=None):
+    def decide(self, text, speaker, pause_s, p_aside, now, engaged, duck, lifted=False, bcast=False, seg_s=None,
+               thinking=False):
         """Returns (decision, why, opens): decision respond | ack | silent; opens — the answer opens or extends ENGAGED.
         duck(text, pause_s) -> {"ans_tok", "probs"} (core.router.duck_bin_llamaserver), called only when needed.
+        thinking — mode B (T-046): no model is asked (no router, so p_aside = 0; no duck): what passes the voice rules
+        is answered.
         lifted — the voice class came from a window inside the segment, not from the whole segment; seg_s — length of the
         phrase audio (STT), for `unknown` right after the owner."""
         if speaker == "unknown" and seg_s is not None and seg_s < self.short_s and now - self.last_owner <= self.after_owner_s:
             speaker = "uncertain"                # too short for an embedding, said right after the owner's phrase
         if speaker == "owner":
             self.last_owner = now
-        decision, why, opens = self._decide(text, speaker, pause_s, p_aside, now, engaged, duck, lifted, bcast)
+        decision, why, opens = self._decide(text, speaker, pause_s, p_aside, now, engaged, duck, lifted, bcast, thinking)
         if decision == "ack":
             if now - self.last_ack < self.ack_gap_s:
                 return "silent", f"{why} (ack {now - self.last_ack:.0f} s ago)", False
             self.last_ack = now
         return decision, why, opens
 
-    def _decide(self, text, speaker, pause_s, p_aside, now, engaged, duck, lifted, bcast):
+    def _decide(self, text, speaker, pause_s, p_aside, now, engaged, duck, lifted, bcast, thinking=False):
         name = has_name(text)
         gap = now - self.last_own                # the owner's silence: other voices do not count (2в)
         if speaker in ("owner", "uncertain"):
@@ -126,10 +135,14 @@ class Ambient:
             return "respond", "name", True
         if speaker == "unknown":                 # no embedding: too little voice, or mostly noise / broadcast
             return "silent", "unknown voice", False
+        if speaker == "uncertain" and thinking:   # B: the window never closes, so the addressee is the owner's voice only
+            return "silent", "uncertain voice (mode B)", False
         if speaker == "uncertain" and (lifted or bcast or not engaged):
             return "silent", "uncertain voice" + (" (window)" if lifted else " (broadcast)" if bcast else ""), False
         if is_question(text):   # by words (step 7a); the duck often says «нет» to a bare question in a fresh conversation
             return "respond", "question", True
+        if thinking:            # mode B: the owner's (or, in the window, uncertain) statement is answered, no duck pass
+            return "respond", "mode B", True
         dk = duck(text, pause_s)
         ans, probs = dk.get("ans_tok"), dk.get("probs") or {}
         tag = f"duck {ans} {probs}"

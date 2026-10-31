@@ -59,6 +59,15 @@ params:                  # read by services/brain/responder.py and services/brai
     ack_gap_s: 20        # «угу» not more often (T-038 2в, core's answer 4)
     busy_pause_s: 20     # after an aside veto: silent until this pause or the name
     veto_aside_p: 0.9    # router aside probability that vetoes (radio / podcast / call / «Алло»)
+  modes:                 # T-046: the thinking mode B by the owner's voice (core/modes.py: word stems anywhere in the turn)
+    enter: [подумай как следует, подумай хорошенько, включи мозги, подумай серьёзно]
+    exit: [хватит думать, возвращайся, достаточно]
+    idle_exit_s: 300     # no owner turn this long in B -> back to A, silently
+    lines:               # fixed lines, never the model (the model is being swapped)
+      wait: "Сейчас."                       # the trigger heard, the switch starts
+      ready: "Ну, думаю. Спрашивай."        # in B, the trigger had no question
+      back: "Всё, я обратно."               # back in A by the phrase (by the timeout — silent)
+      failed: "Не вышло. Остаюсь как есть." # the switch failed and was rolled back
   memory:                # associative memory beyond the window (D-026, note v6)
     k: 3
     mode: hybrid

@@ -19,3 +19,6 @@ bus:
   out: [tts:speaking]
 healthcheck: null        # TODO: systemd notify
 never_evict: false
+params:
+  sfx:
+    transition: services/tts/sfx/thinking.wav   # looped from events:mode begin to done / failed (T-046, U-003: a stub — HDD clicks by sox, services/tts/sfx/make_thinking.sh; the real sample is the owner's choice)
