@@ -11,6 +11,8 @@ import re
 
 _WORD = re.compile(r"[а-яёa-z]+", re.I)
 _EMPTY = {"костян", "ну", "а", "и", "так", "слушай", "давай", "пожалуйста", "эй"}
+_AROUND = _EMPTY | {"все", "ладно", "хорошо", "спасибо", "уже"}   # «Ну всё, хватит думать» is the phrase alone; not in
+                                                                 # _EMPTY: «все ли…» opens a deferred question
 
 
 def _norm(w):
@@ -54,6 +56,25 @@ def _trim(part):
     while (m := re.match(r"(\w+)[\s,]*", part)) and (_norm(m.group(1)) in _EMPTY or _norm(m.group(1)).startswith("костян")):
         part = part[m.end():]
     return part.strip(" \t:;,.!—-–")
+
+
+def only_phrase(text, span):
+    """True when the turn is the phrase alone: nothing around it but the name and fillers («Костян, хватит думать»)."""
+    _, start, end = span
+    rest = _WORD.findall(text[:start]) + _WORD.findall(text[end:])
+    return all(_norm(w) in _AROUND or _norm(w).startswith("костян") for w in rest)
+
+
+EXIT_UNKNOWN_S = 1.5
+
+
+def accepts_exit(speaker, text, span, seg_s):
+    """Who may send the skull back from B (T-046 gate (12)): the owner's or an uncertain voice; an `unknown` one (under
+    a second of speech the voice id has no embedding — «Хватит думать», 0.99 s) only when the turn is the exit phrase
+    alone and shorter than EXIT_UNKNOWN_S. A wrong exit costs a phrase; entering stays the owner's voice only."""
+    if speaker in ("owner", "uncertain"):
+        return True
+    return speaker == "unknown" and seg_s is not None and seg_s < EXIT_UNKNOWN_S and only_phrase(text, span)
 
 
 def deferred_question(text, span):

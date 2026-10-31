@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 from core.ambient import OPEN_KEY, Ambient, engaged_until, gaze_skip, has_name, idle_since, open_window, voice_class
 from core.memory import SYSTEM_RULE, AssocMemory, clean_reply, format_note
-from core.modes import deferred_question, find_phrase
+from core.modes import accepts_exit, deferred_question, find_phrase
 from core.speech import for_speech
 from core.router import POLICY, POLICY_B, decide, duck_bin_llamaserver, policy_prefix, route_llamaserver
 
@@ -356,13 +356,13 @@ while True:
     # in B the owner's short turns often come `uncertain` (T-046 gate): they count, and may say the exit phrase (a wrong
     # exit costs a phrase; a wrong entry costs 20-30 s of silence, so entering stays the owner's voice only)
     owner_b = thinking and speaker in ("owner", "uncertain")
-    if MODES and (owner or owner_b) and not deferred:
+    if MODES and not deferred and (owner or (thinking and speaker in ("uncertain", "unknown"))):
         span = find_phrase(text, MODES["enter"]) if mode == "A" else find_phrase(text, MODES["exit"])
         if span and mode == "A":
             fixed_line("wait", ts)
             ask_mode("B", f"voice:{span[0]}", deferred_question(text, span))
             continue
-        if span:
+        if span and accepts_exit(speaker, text, span, seg_s):
             ask_mode("A", f"voice:{span[0]}")
             continue
     if owner_b:
