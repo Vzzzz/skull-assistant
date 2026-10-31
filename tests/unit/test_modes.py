@@ -100,9 +100,15 @@ def test_b_answers_owner_statement_without_the_duck():
     assert a.decide("закончил отчёт наконец сегодня", "owner", 0.4, 0.0, 100.0, True, never, thinking=True)[:2] == ("respond", "mode B")
 
 
-def test_b_addressee_is_the_owner_voice():
+def test_b_addressee_is_the_owner_or_uncertain_voice():
+    """T-046 gate: the owner's short turns in B came `uncertain` (0.30-0.39) and were left unanswered; B is the window,
+    so uncertain counts as the owner there, unknown / other / a window or broadcast class do not."""
     a = Ambient(engaged_s=30)
-    assert a.decide("ну и что теперь делать", "uncertain", 0.4, 0.0, 100.0, True, never, thinking=True)[0] == "silent"
+    assert a.decide("А зачем людям чайники", "uncertain", 0.4, 0.0, 100.0, True, never, thinking=True)[0] == "respond"
+    assert a.decide("ну и что теперь делать", "uncertain", 0.4, 0.0, 105.0, True, never, thinking=True)[0] == "respond"
+    assert a.decide("ну и что теперь делать", "uncertain", 0.4, 0.0, 106.0, True, never, lifted=True, thinking=True)[0] == "silent"
+    assert a.decide("ну и что теперь делать", "uncertain", 0.4, 0.0, 107.0, True, never, bcast=True, thinking=True)[0] == "silent"
     assert a.decide("ну и что теперь делать", "unknown", 0.4, 0.0, 110.0, True, never, thinking=True)[0] == "silent"
+    assert a.decide("ну и что теперь делать", "other", 0.4, 0.0, 115.0, True, never, thinking=True)[0] == "silent"
     assert a.decide("Костян, ну и что", "uncertain", 0.4, 0.0, 120.0, True, never, thinking=True)[0] == "respond"
     assert a.decide("Алло, да, слушаю", "owner", 0.4, 0.0, 130.0, True, never, thinking=True)[0] == "silent"   # the call rule stays

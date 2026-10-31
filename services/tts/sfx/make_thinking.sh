@@ -17,5 +17,5 @@ for t in 0.21 0.24 0.83 1.37 1.40 1.46 2.18 2.62 2.65; do
   args+=("$W/c$t.wav")
 done
 sox -m "$W/hiss.wav" "${args[@]}" "$W/mix.wav"     # -m scales every input down by their count
-sox "$W/mix.wav" thinking.wav gain -n -20          # peak back to -20 dBFS
+sox "$W/mix.wav" thinking.wav gain -n -6           # peak to -6 dBFS (-20 was too quiet to hear at the gate)
 sox thinking.wav -n stat 2>&1 | grep -E "Length|Maximum amplitude|RMS     amplitude"
