@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-"""Offline simulation over T-038 stage-1 JSON logs: does a sticky conversational state (FSM-lite) beat per-turn labels?
+"""historical: stage 1 text-only automaton; superseded by core/ambient.py + tests/unit/test_ambient.py
+(kept as the negative result of D-029: addressee by text alone; Windows paths left as they were).
+
+Offline simulation over T-038 stage-1 JSON logs: does a sticky conversational state (FSM-lite) beat per-turn labels?
 Uses the router probabilities already in the logs; `block` change = proxy for a pause (stage 2 will have real time)."""
 import json, sys, glob, os
 NAMES = ("костян", "череп")

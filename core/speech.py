@@ -38,7 +38,35 @@ def _markdown(s: str) -> str:
     s = re.sub(r"^\s*[-*•+]\s+", "", s, flags=re.M)                # bullets
     s = re.sub(r"^\s*>\s?", "", s, flags=re.M)                     # quotes
     s = re.sub(r"^\s*\|?\s*:?-{3,}.*$", "", s, flags=re.M)         # table rule lines
+    s = re.sub(r"^[ \t]*\|(.*)\|[ \t]*$", _table_row, s, flags=re.M)   # | a | b | -> «a, b.»
     return s.replace("|", ", ")
+
+
+def _table_row(m):
+    """A markdown table row read as a sentence: cells through commas (T-045, core's answer 3)."""
+    cells = [c.strip() for c in m.group(1).split("|") if c.strip()]
+    return ", ".join(cells) + "." if cells else ""
+
+
+# «21 декабря» is read «двадцать один декабря» by Piper: the day before a month in the genitive is an ordinal in the
+# genitive (T-042, core's answer 5). Days 1..31 only; the year and other numbers stay digits.
+_MONTHS = "января|февраля|марта|апреля|мая|июня|июля|августа|сентября|октября|ноября|декабря"
+_ORD_GEN = ("", "первого", "второго", "третьего", "четвёртого", "пятого", "шестого", "седьмого", "восьмого", "девятого",
+            "десятого", "одиннадцатого", "двенадцатого", "тринадцатого", "четырнадцатого", "пятнадцатого",
+            "шестнадцатого", "семнадцатого", "восемнадцатого", "девятнадцатого", "двадцатого")
+_DATE_RE = re.compile(r"\b(\d{1,2})(?:-?го)?\s+(" + _MONTHS + r")\b", re.I)
+
+
+def _day(n: int) -> str:
+    if n <= 20:
+        return _ORD_GEN[n]
+    tens, unit = divmod(n, 10)
+    word = ("двадцать", "тридцать")[tens - 2]
+    return word + " " + _ORD_GEN[unit] if unit else ("двадцатого", "тридцатого")[tens - 2]
+
+
+def _dates(s: str) -> str:
+    return _DATE_RE.sub(lambda m: f"{_day(int(m.group(1)))} {m.group(2)}" if 1 <= int(m.group(1)) <= 31 else m.group(0), s)
 
 
 # units after a number (T-003 step 6): Piper swallows «₽», reads «3 л» as «три эль» and «15%» as «пятнадцать процент»
@@ -73,6 +101,7 @@ def for_speech(text: str) -> str:
     s = _latex(s) if "\\" in s else s
     s = _markdown(s)
     s = _units(s)
+    s = _dates(s)
     s = re.sub(r"(\d)\s*[*×xх]\s*(?=\d)", r"\1 умножить на ", s)    # 17 * 3, 17 × 3, 17x3
     s = re.sub(r"(\d)\s*[÷:]\s*(?=\d+\s*=)", r"\1 разделить на ", s)  # 12 : 4 = 3 (not 08:40)
     s = s.replace("×", " умножить на ").replace("÷", " разделить на ").replace("≈", " примерно ")
