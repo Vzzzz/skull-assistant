@@ -135,6 +135,11 @@ WORLD_SOFT = ("Отвечай по существу из общих знаний
               "о котором ты ничего не знаешь, — так и скажи одной фразой, не выдумывай.")
 
 
+# mode B (T-046, core's answer 1 to T-044): the router is not called — B is entered on purpose («подумай как следует»), every
+# turn is treated as `explain` with the soft world hedge, and the memory beyond the window stays on: one prefill per turn
+POLICY_B = {"max_tokens": POLICY["explain"]["max_tokens"], "memory": True, "prefix": WORLD_SOFT}
+
+
 def policy_prefix(label, text):
     """The policy prefix for the turn: `world` gets the full hedge only with a perception / event word and no question
     word («Ты слышал, из чего готовят…» is a question, not perception: it got «Не слышал.», T-042 step 4a), else the

@@ -14,8 +14,9 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 from core.ambient import OPEN_KEY, Ambient, engaged_until, gaze_skip, has_name, open_window
 from core.memory import SYSTEM_RULE, AssocMemory, clean_reply, format_note
+from core.modes import deferred_question, find_phrase
 from core.speech import for_speech
-from core.router import POLICY, decide, duck_bin_llamaserver, policy_prefix, route_llamaserver
+from core.router import POLICY, POLICY_B, decide, duck_bin_llamaserver, policy_prefix, route_llamaserver
 
 P = yaml.safe_load(Path(__file__).with_name("manifest.yaml").read_text(encoding="utf-8"))["params"]
 HOST = P["host"]
@@ -55,6 +56,15 @@ TRANSITION = "mode:transition"
 GAZE_WINDOW_S = AMB.get("gaze_window_s", 15)
 GAZE_LINES = "gaze:lines"       # Redis list, newest first: the last gaze lines (the prompt and the repeat check)
 last_gaze = 0.0
+# T-046: mode B by the owner's voice. The trigger phrase sends cmd:mode B (core/dispatcher.py); the rest of the turn is
+# asked to model B after events:mode {phase: done} — re-published on events:transcript with `deferred` (it skips the
+# transition check and the trigger). In B: no router, no duck (POLICY_B, Ambient thinking); back by the exit phrase or
+# after idle_exit_s without the owner's turns
+MODES = P.get("modes", {})
+LINES = MODES.get("lines", {})
+pending = None                  # {"id", "to", "question", "voice"}: a switch brain asked for and waits on
+calls = []                      # this turn's requests to llama-server (router / duck / chat): one per turn in B (T-046)
+last_owner_b = time.time()      # the owner's last turn in B (the idle exit counts from it)
 
 
 def est_tokens(text):
@@ -143,7 +153,7 @@ def say(reply_id, seq, sentence, note, ts, final=False, meta=None):
     return True
 
 
-def ambient_gate(text, fields, route, window):
+def ambient_gate(text, fields, route, window, thinking=False):
     """Answer or not, for a turn heard without a wake word: core/ambient.py (rules, D-029). Returns
     (decision, why, opens, engaged): decision respond | ack | silent; opens — the answer opens / extends ENGAGED."""
     speaker = fields.get(b'speaker', b'unknown').decode()
@@ -152,6 +162,7 @@ def ambient_gate(text, fields, route, window):
     engaged = time.time() < engaged_until(r)
 
     def duck(t, pause_s):
+        calls.append("duck")
         try:
             return duck_bin_llamaserver(HOST, to_messages(window), t, pause_s)
         except requests.RequestException as e:
@@ -160,7 +171,51 @@ def ambient_gate(text, fields, route, window):
     lifted = bool(fields.get(b'spk_region'))      # the voice was found by a window inside a broadcast segment (2в)
     bcast = fields.get(b'bcast') == b'1'          # STT heard a foreign voice in the last 30 s
     seg_s = float(fields[b'seg_s']) if fields.get(b'seg_s') else None
-    return (*amb.decide(text, speaker, pause, p_aside, time.time(), engaged, duck, lifted, bcast, seg_s), engaged)
+    return (*amb.decide(text, speaker, pause, p_aside, time.time(), engaged, duck, lifted, bcast, seg_s, thinking), engaged)
+
+
+def mode_now():
+    return (r.get("mode:current") or b"A").decode()
+
+
+def fixed_line(key, ts=None, kind="mode"):
+    """A constant line in character (never the model); returns its reply_id."""
+    rid = uuid.uuid4().hex[:12]
+    say(rid, 0, LINES[key], "", ts or time.time(), final=True, meta={"reply": LINES[key], "mode": kind})
+    print(f"brain: >> {LINES[key]} ({kind})")
+    return rid
+
+
+def ask_mode(dst, reason, question="", voice=True):
+    global pending
+    req = "br" + uuid.uuid4().hex[:6]
+    pending = {"id": req, "to": dst, "question": question, "voice": voice}
+    r.xadd("cmd:mode", {"mode": dst, "reason": reason, "id": req})
+    print(f"brain: cmd:mode {dst} ({reason}){' deferred: ' + repr(question) if question else ''}")
+
+
+def on_mode_event(f):
+    """events:mode: finish what brain asked for (the deferred question, the fixed lines); note entries to B."""
+    global pending, last_owner_b
+    f = {k.decode(): v.decode() for k, v in f.items()}
+    if f.get("phase") == "done" and f.get("to") == "B":
+        last_owner_b = time.time()                 # also when B was entered by hand (skull-mode.sh)
+    if not pending or f.get("id") != pending["id"]:
+        return
+    if f["phase"] == "failed":
+        fixed_line("failed")
+        pending = None
+    elif f["phase"] in ("done", "noop"):
+        p_, pending = pending, None
+        if p_["to"] == "B":
+            if p_["question"]:
+                r.xadd("events:transcript", {"text": p_["question"], "trigger": "wakeword", "speaker": "owner",
+                                             "deferred": "1", "ts": f"{time.time():.3f}"})
+            else:
+                fixed_line("ready")
+        elif p_["voice"]:
+            rid = fixed_line("back")
+            open_window(r, rid, amb.engaged_s, time.time())   # back in A: the usual window, counted from this line
 
 
 def first_word(line):
@@ -239,13 +294,20 @@ if MEM:
 calib = json.loads(r.get(SYS_CALIB) or "{}")
 # measured size if the prompt is unchanged, else the estimate until a call with an empty window calibrates it
 sys_tokens = calib["tokens"] if calib.get("chars") == len(SYSTEM) else est_tokens(SYSTEM)
-last_ev, last_vis = '$', '$'
+last_ev, last_vis, last_mode = '$', '$', '$'
 print(f"brain: system~{sys_tokens} tokens, {r.llen(HISTORY)} exchanges in {HISTORY}, waiting for transcripts...")
 while True:
-    ev = r.xread({'events:transcript': last_ev, 'events:vision': last_vis}, count=1, block=5000)
+    ev = r.xread({'events:transcript': last_ev, 'events:vision': last_vis, 'events:mode': last_mode}, count=1, block=5000)
+    if (MODES and not pending and mode_now() == "B" and not r.exists(TRANSITION)
+            and time.time() - last_owner_b > MODES.get("idle_exit_s", 300)):
+        ask_mode("A", "idle", voice=False)        # the owner has gone quiet: back to A, silently
     if not ev:
         continue
     stream, ((ev_id, fields),) = ev[0]
+    if stream == b'events:mode':
+        last_mode = ev_id
+        on_mode_event(fields)
+        continue
     if stream == b'events:vision':
         last_vis = ev_id
         if fields.get(b'kind') == b'gaze':
@@ -265,20 +327,39 @@ while True:
         r.delete(OPEN_KEY)
         print("brain: history reset")
         continue
-    if r.exists(TRANSITION):
+    deferred = fields.get(b'deferred') == b'1'
+    if (r.exists(TRANSITION) or pending) and not deferred:
         if fields.get(b'trigger') != b'speech' or has_name(text):
             say(uuid.uuid4().hex[:12], 0, HOLD, "", ts, final=True, meta={"reply": HOLD, "mode": "transition"})
         print(f"brain: mode transition -> {'hold line' if fields.get(b'trigger') != b'speech' or has_name(text) else 'ignored'}")
         continue
+    mode = mode_now()
+    thinking = mode == "B"
+    owner = fields.get(b'speaker') == b'owner'
+    if MODES and owner and not deferred:
+        span = find_phrase(text, MODES["enter"]) if mode == "A" else find_phrase(text, MODES["exit"])
+        if span and mode == "A":
+            fixed_line("wait", ts)
+            ask_mode("B", f"voice:{span[0]}", deferred_question(text, span))
+            continue
+        if span:
+            ask_mode("A", f"voice:{span[0]}")
+            continue
+    if thinking and owner:
+        last_owner_b = time.time()
     t0 = time.perf_counter()
+    calls.clear()
 
     history = [json.loads(x) for x in r.lrange(HISTORY, 0, -1)]   # Redis is the only copy
     est_new = est_tokens(text) + 8
     route, policy, label = None, None, None
-    if P.get("router"):
+    if thinking:                  # T-046: no router in B — one prefill per turn
+        label, policy = "explain", POLICY_B
+    elif P.get("router"):
         # same window as an ordinary chat turn, so the main call reuses the KV prefix
         window, _ = build_window(history, sys_tokens, est_new + POLICY["chat"]["max_tokens"] + NOTE_RESERVE)
         try:
+            calls.append("router")
             route = route_llamaserver(HOST, to_messages(window), text)
             label, reason = decide(route, text)
             if reason:
@@ -289,7 +370,8 @@ while True:
         policy = POLICY.get(label, POLICY["chat"])
     if fields.get(b'trigger') == b'speech':
         # ambient: who speaks, conversation state and the duck pass decide; the router label only shapes the answer
-        decision, why, opens, engaged = ambient_gate(text, fields, route, window if P.get("router") else [])
+        decision, why, opens, engaged = ambient_gate(text, fields, route, window if P.get("router") and not thinking else [],
+                                                     thinking)
         st = "busy" if amb.busy else "engaged" if engaged else "idle"
         print(f"brain: ambient {decision} ({why}) state={st} speaker={fields.get(b'speaker', b'-').decode()} "
               f"pause={fields.get(b'pause_s', b'-').decode()}")
@@ -314,7 +396,8 @@ while True:
         if policy is not None and policy.get("respond") is False:
             label, policy = "chat", POLICY["chat"]    # an aside label below the veto threshold does not silence
     max_tokens = policy["max_tokens"] if policy else MAX_TOKENS
-    prefix = policy_prefix(label, text) if policy else ""   # world: hedge only for perception words (T-042)
+    prefix = (policy.get("prefix", "") if thinking else            # B: WORLD_SOFT always
+              policy_prefix(label, text) if policy else "")          # world: hedge only for perception words (T-042)
     use_mem = mem is not None and (policy is None or policy["memory"])
     extra = est_tokens(prefix) + (NOTE_RESERVE if use_mem else 0)
     window, used = build_window(history, sys_tokens, est_new + extra + max_tokens)
@@ -334,6 +417,7 @@ while True:
     sent = (prefix + "\n" + text if prefix else text) + ("\n\n" + note if note else "")
     # stream: sentences go to TTS as soon as they are complete (T-003); the whole reply is stored once at the end
     reply_id, seq, buf, parts, tail = uuid.uuid4().hex[:12], 0, "", [], {}
+    calls.append("chat")
     for delta in chat_stream(to_messages(window) + [{"role": "user", "content": sent}], max_tokens, tail):
         buf += delta
         parts.append(delta)
@@ -379,7 +463,7 @@ while True:
             "ttft_s": round(timings.get("prompt_ms", 0) / 1000, 3),
             "tok_s": round(timings["predicted_per_second"], 1) if timings.get("predicted_per_second") and ec >= 5 else None,
             "finish_reason": tail.get("finish_reason"), "wall_s": round(wall, 2), "max_tokens": max_tokens,
-            "reply": reply, "sentences": seq + 1}
+            "reply": reply, "sentences": seq + 1, "mode": mode, "llm_calls": list(calls)}
     if route:
         meta["route"] = route
     if mem is not None:
@@ -389,7 +473,7 @@ while True:
         meta["raw"] = raw
     say(reply_id, seq, buf, note, ts, final=True, meta=meta)   # the rest of the text (may be empty) closes the reply
     print(f"brain: >> {reply}")
-    print(f"brain: turn {turn} prompt={pe} reply={ec} exchange~{tokens} tokens {wall:.1f}s")
+    print(f"brain: turn {turn} [{mode}] prompt={pe} reply={ec} exchange~{tokens} tokens {wall:.1f}s llm_calls={calls}")
     if fields.get(b'trigger') == b'speech' and opens:
         # the conversation is on: the window runs engaged_s after this answer has been played (tts:end)
         open_window(r, reply_id, amb.engaged_s, time.time())

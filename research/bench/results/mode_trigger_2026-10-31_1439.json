@@ -1,0 +1,306 @@
+{
+ "enter": [
+  {
+   "text": "Костян, подумай как следует: где мои ключи и кто завтра придёт?",
+   "wait_line": "Сейчас.",
+   "wait_line_s": 0.01,
+   "begin_s": 0.01,
+   "done_s": 11.84,
+   "reason": "voice:подумай как следует",
+   "answer_first_chunk_s": 18.88,
+   "answer_final_s": 20.11,
+   "answer": "Ключи в переднем кармане твоего рюкзака. Завтра в одиннадцать тридцать придёт Дима с собакой.",
+   "mode": "B",
+   "llm_calls": [
+    "chat"
+   ],
+   "prompt_tokens": 798,
+   "tts_cpu_pct_during_switch": 38.5,
+   "tts_rss": 273,
+   "tts_hwm": 277,
+   "switch_s": 11.83
+  },
+  {
+   "text": "Костян, подумай как следует: где мои ключи и кто завтра придёт?",
+   "wait_line": "Сейчас.",
+   "wait_line_s": 0.0,
+   "begin_s": 0.01,
+   "done_s": 10.14,
+   "reason": "voice:подумай как следует",
+   "answer_first_chunk_s": 16.85,
+   "answer_final_s": 18.11,
+   "answer": "Ключи в переднем кармане твоего рюкзака. Завтра в одиннадцать тридцать придёт Дима с собакой.",
+   "mode": "B",
+   "llm_calls": [
+    "chat"
+   ],
+   "prompt_tokens": 1038,
+   "tts_cpu_pct_during_switch": 37.5,
+   "tts_rss": 271,
+   "tts_hwm": 291,
+   "switch_s": 10.13
+  },
+  {
+   "text": "Костян, подумай как следует: где мои ключи и кто завтра придёт?",
+   "wait_line": "Сейчас.",
+   "wait_line_s": 0.0,
+   "begin_s": 0.01,
+   "done_s": 9.07,
+   "reason": "voice:подумай как следует",
+   "answer_first_chunk_s": 16.73,
+   "answer_final_s": 17.88,
+   "answer": "Ключи в переднем кармане твоего рюкзака. Завтра в одиннадцать тридцать придёт Дима с собакой.",
+   "mode": "B",
+   "llm_calls": [
+    "chat"
+   ],
+   "prompt_tokens": 1219,
+   "tts_cpu_pct_during_switch": 31.6,
+   "tts_rss": 269,
+   "tts_hwm": 291,
+   "switch_s": 9.06
+  }
+ ],
+ "in_b": [
+  {
+   "text": "А почему кот любит спать именно на клавиатуре?",
+   "first_chunk_s": 5.5,
+   "final_s": 7.44,
+   "reply": "Там тепло от работающего железа и удобно, потому что это плоская поверхность, которая находится прямо перед тобой. Плюс, ты не сможешь игнорировать его присутствие, пока печатаешь.",
+   "mode": "B",
+   "llm_calls": [
+    "chat"
+   ],
+   "prompt_tokens": 852
+  },
+  {
+   "text": "Ладно. А сколько лет живут коты?",
+   "first_chunk_s": 5.24,
+   "final_s": 8.65,
+   "reply": "В среднем домашние коты живут от 12 до 18 лет. Если за ними хорошо ухаживать, срок может доходить до 20 и более. Но всё зависит от генетики и того, насколько часто Бублик будет пытаться съесть что-то несъедобное.",
+   "mode": "B",
+   "llm_calls": [
+    "chat"
+   ],
+   "prompt_tokens": 917
+  },
+  {
+   "text": "А почему кот любит спать именно на клавиатуре?",
+   "first_chunk_s": 6.84,
+   "final_s": 6.84,
+   "reply": "Тепло от работающего устройства, удобная плоская поверхность и желание контролировать твоё внимание.",
+   "mode": "B",
+   "llm_calls": [
+    "chat"
+   ],
+   "prompt_tokens": 1092
+  },
+  {
+   "text": "Ладно. А сколько лет живут коты?",
+   "first_chunk_s": 2.67,
+   "final_s": 4.0,
+   "reply": "В среднем домашние коты живут от 12 до 18 лет. При хорошем уходе и отсутствии вредных привычек — до 20 и выше.",
+   "mode": "B",
+   "llm_calls": [
+    "chat"
+   ],
+   "prompt_tokens": 1132
+  },
+  {
+   "text": "А почему кот любит спать именно на клавиатуре?",
+   "first_chunk_s": 2.95,
+   "final_s": 2.95,
+   "reply": "Тепло от работающего железа, удобная плоская поверхность и способ привлечь твоё внимание.",
+   "mode": "B",
+   "llm_calls": [
+    "chat"
+   ],
+   "prompt_tokens": 1273
+  },
+  {
+   "text": "Ладно. А сколько лет живут коты?",
+   "first_chunk_s": 2.67,
+   "final_s": 3.7,
+   "reply": "В среднем домашние коты живут от 12 до 18 лет. При должном уходе — до 20 и более.",
+   "mode": "B",
+   "llm_calls": [
+    "chat"
+   ],
+   "prompt_tokens": 1314
+  }
+ ],
+ "leave": [
+  {
+   "text": "Хватит думать",
+   "back_line": "Всё, я обратно.",
+   "back_line_s": 7.03,
+   "begin_s": 0.0,
+   "done_s": 7.03,
+   "reason": "voice:хватит думать"
+  },
+  {
+   "text": "Хватит думать",
+   "back_line": "Всё, я обратно.",
+   "back_line_s": 6.99,
+   "begin_s": 0.0,
+   "done_s": 6.99,
+   "reason": "voice:хватит думать"
+  },
+  {
+   "text": "Хватит думать",
+   "back_line": "Всё, я обратно.",
+   "back_line_s": 6.47,
+   "begin_s": 0.0,
+   "done_s": 6.47,
+   "reason": "voice:хватит думать"
+  }
+ ],
+ "in_a": [
+  {
+   "text": "А сейчас ты кто, обычный?",
+   "first_chunk_s": 1.07,
+   "final_s": 1.47,
+   "reply": "Я Костян. Пластиковый. Анатомический. И не обычный.",
+   "mode": "A",
+   "llm_calls": [
+    "router",
+    "chat"
+   ],
+   "prompt_tokens": 948
+  },
+  {
+   "text": "А сейчас ты кто, обычный?",
+   "first_chunk_s": 0.89,
+   "final_s": 1.15,
+   "reply": "Я Костян. Пластиковый. Анатомический.",
+   "mode": "A",
+   "llm_calls": [
+    "router",
+    "chat"
+   ],
+   "prompt_tokens": 1182
+  },
+  {
+   "text": "А сейчас ты кто, обычный?",
+   "first_chunk_s": 0.92,
+   "final_s": 1.16,
+   "reply": "Я Костян. Пластиковый. Анатомический.",
+   "mode": "A",
+   "llm_calls": [
+    "router",
+    "chat"
+   ],
+   "prompt_tokens": 1358
+  }
+ ],
+ "idle": [
+  [
+   0.0,
+   "events:reply",
+   "Сейчас.",
+   null
+  ],
+  [
+   0.0,
+   "events:mode",
+   "begin",
+   "voice:подумай хорошенько"
+  ],
+  [
+   0.08,
+   "events:mode",
+   "save",
+   null
+  ],
+  [
+   0.51,
+   "events:mode",
+   "stop",
+   null
+  ],
+  [
+   0.51,
+   "events:mode",
+   "switch",
+   null
+  ],
+  [
+   0.55,
+   "events:mode",
+   "start",
+   null
+  ],
+  [
+   7.87,
+   "events:mode",
+   "health",
+   null
+  ],
+  [
+   7.87,
+   "events:mode",
+   "restore_skipped",
+   "history changed"
+  ],
+  [
+   7.89,
+   "events:mode",
+   "done",
+   null
+  ],
+  [
+   7.89,
+   "events:reply",
+   "Ну, думаю. Спрашивай.",
+   null
+  ],
+  [
+   308.48,
+   "events:mode",
+   "begin",
+   "idle"
+  ],
+  [
+   308.51,
+   "events:mode",
+   "save",
+   null
+  ],
+  [
+   309.32,
+   "events:mode",
+   "stop",
+   null
+  ],
+  [
+   309.32,
+   "events:mode",
+   "switch",
+   null
+  ],
+  [
+   309.36,
+   "events:mode",
+   "start",
+   null
+  ],
+  [
+   315.56,
+   "events:mode",
+   "health",
+   null
+  ],
+  [
+   315.58,
+   "events:mode",
+   "restore",
+   null
+  ],
+  [
+   315.6,
+   "events:mode",
+   "done",
+   null
+  ]
+ ]
+}
