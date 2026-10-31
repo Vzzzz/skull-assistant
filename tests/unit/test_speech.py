@@ -1,5 +1,5 @@
-"""core/speech.py for_speech: what Piper must not read literally — LaTeX, markdown, pictographs — and units after a
-number with Russian agreement (T-003 step 6). Idempotent: brain applies it per sentence, research tools again."""
+"""core/speech.py for_speech: what Piper must not read literally — LaTeX, markdown (tables too), pictographs — units
+after a number with Russian agreement (T-003 step 6) and dates as ordinals (T-042). Idempotent: brain applies it per sentence, research tools again."""
 import pytest
 
 from core.speech import for_speech
@@ -28,6 +28,31 @@ UNITS = [
 ]
 
 
+DATES = [  # T-042, core's answer 5: the day before a month in the genitive is an ordinal in the genitive
+    ("Встреча 21 декабря в 11:30.", "Встреча двадцать первого декабря в 11:30."),
+    ("1 января 2027 года", "первого января 2027 года."),                    # the year stays digits
+    ("3-го марта", "третьего марта."), ("12 июня", "двенадцатого июня."), ("20 февраля", "двадцатого февраля."),
+    ("30 апреля и 31 мая", "тридцатого апреля и тридцать первого мая."),
+    ("32 мая", "32 мая."),                                                   # not a day
+    ("5 кг и 22 декабря", "5 килограммов и двадцать второго декабря."),
+]
+
+TABLES = [  # T-045, core's answer 3: rule lines out, cells through commas, rows as sentences
+    ("| a | b |\n|---|---|\n| 1 | 2 |", "a, b. 1, 2."),
+    ("Итог:\n| Имя | Возраст |\n|:---|---:|\n| Бублик | 3 |", "Итог: Имя, Возраст. Бублик, 3."),
+]
+
+
+@pytest.mark.parametrize("text, spoken", DATES)
+def test_dates(text, spoken):
+    assert for_speech(text) == spoken
+
+
+@pytest.mark.parametrize("text, spoken", TABLES)
+def test_tables(text, spoken):
+    assert for_speech(text) == spoken
+
+
 @pytest.mark.parametrize("text, spoken", CASES)
 def test_markup(text, spoken):
     assert for_speech(text) == spoken
@@ -38,7 +63,7 @@ def test_units(text, spoken):
     assert for_speech(text) == spoken
 
 
-@pytest.mark.parametrize("text", [t for t, _ in CASES + UNITS] + ["Ответ: **42** ✅\n\n- итог $x^2$"])
+@pytest.mark.parametrize("text", [t for t, _ in CASES + UNITS + DATES + TABLES] + ["Ответ: **42** ✅\n\n- итог $x^2$"])
 def test_idempotent(text):
     once = for_speech(text)
     assert for_speech(once) == once

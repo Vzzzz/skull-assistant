@@ -82,6 +82,12 @@ def test_policy_prefix(label, text, prefix):
     assert policy_prefix(label, text) == prefix
 
 
+def test_full_world_prefix_refuses_in_character():
+    """T-042, core's answer 2: not a bare «Не знаю.» — say what you see or remember instead."""
+    assert "не одним словом: скажи, что видишь или помнишь вместо этого" in POLICY["world"]["prefix"]
+    assert "не одним словом" not in WORLD_SOFT
+
+
 # --- the question detector: words anywhere, imperatives, «?» only with «ты», «ж/же» (T-038 2в, T-042)
 
 @pytest.mark.parametrize("text", [
