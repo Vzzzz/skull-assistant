@@ -7,7 +7,7 @@ import pytest
 import yaml
 
 from core.ambient import Ambient, engaged_until, open_window
-from core.modes import deferred_question, find_phrase, stem
+from core.modes import deferred_question, find_phrase, imperative, stem
 from core.router import POLICY, POLICY_B, WORLD_SOFT
 
 MODES = yaml.safe_load((Path(__file__).resolve().parents[2] / "services/brain/manifest.yaml").read_text(encoding="utf-8"))["params"]["modes"]
@@ -16,7 +16,7 @@ ENTER, EXIT = MODES["enter"], MODES["exit"]
 
 def test_manifest_phrases_and_timeout():
     assert {"подумай как следует", "подумай хорошенько", "включи мозги", "подумай серьёзно"} <= set(ENTER)
-    assert {"хватит думать", "возвращайся", "достаточно"} <= set(EXIT)
+    assert set(EXIT) == {"хватит думать", "достаточно думать", "возвращайся", "вернись"}   # no bare «достаточно»
     assert MODES["idle_exit_s"] == 300
 
 
@@ -25,11 +25,20 @@ def test_stem(word, s):
     assert stem(word) == s
 
 
+@pytest.mark.parametrize("word, forms", [
+    ("подумай", {"подумай", "подумайте"}), ("Включи", {"включи", "включите"}),
+    ("возвращайся", {"возвращайся", "возвращайтесь"}), ("вернись", {"вернись", "вернитесь"}),
+])
+def test_imperative(word, forms):
+    assert imperative(word) == forms
+
+
 @pytest.mark.parametrize("text, phrase, question", [
     ("Костян, подумай как следует: почему небо синее?", "подумай как следует", "почему небо синее?"),
     ("Почему небо синее? Подумай как следует.", "подумай как следует", "Почему небо синее?"),   # the question first
     ("Костян, включи мозг и скажи, сколько стоит Луна", "включи мозги", "скажи, сколько стоит Луна"),
     ("Подумайте хорошенько", "подумай хорошенько", ""),                    # no question: «Ну, думаю. Спрашивай.»
+    ("Подумайте как следует", "подумай как следует", ""),                  # the plural imperative
     ("Костян, ну, подумай серьезно", "подумай серьёзно", ""),             # ё / е, fillers and the name are no question
     ("Костян, а почему трава зелёная, подумай серьёзно", "подумай серьёзно", "почему трава зелёная"),
 ])
@@ -44,13 +53,18 @@ def test_enter_phrase_and_deferred_question(text, phrase, question):
     "Я подумаю об этом завтра",
     "Включи свет",
     "Как следует покрасить забор",
+    "Надо подумать, как следует покрасить",    # the infinitive: only the imperative switches (core, 2026-11-01)
+    "Я подумал хорошенько и решил",
+    "Включил мозги наконец",
 ])
 def test_no_enter_phrase(text):
     assert find_phrase(text, ENTER) is None
 
 
 @pytest.mark.parametrize("text, found", [
-    ("Хватит думать", True), ("Ну всё, возвращайся", True), ("Достаточно, спасибо", True), ("Думать хватит", False),
+    ("Хватит думать", True), ("Ну всё, возвращайся", True), ("Достаточно думать, спасибо", True), ("Вернись", True),
+    ("Вернитесь уже", True), ("Думать хватит", False), ("Соли достаточно", False), ("Достаточно, спасибо", False),
+    ("Верни мне ключи", False), ("Он вернулся вчера", False), ("Возвращайте книги вовремя", False),
 ])
 def test_exit_phrase(text, found):
     assert (find_phrase(text, EXIT) is not None) is found
