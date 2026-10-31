@@ -12,7 +12,7 @@ import redis, requests, yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
-from core.ambient import OPEN_KEY, Ambient, engaged_until, gaze_skip, has_name, open_window
+from core.ambient import OPEN_KEY, Ambient, engaged_until, gaze_skip, has_name, idle_since, open_window, voice_class
 from core.memory import SYSTEM_RULE, AssocMemory, clean_reply, format_note
 from core.modes import deferred_question, find_phrase
 from core.speech import for_speech
@@ -66,7 +66,8 @@ LINES = MODES.get("lines", {})
 pending = None                  # {"id", "to", "question", "voice", "t", "seen"}: a switch brain asked for and waits on
 PENDING_ACK_S = 20              # no event for it this long (the dispatcher is down / restarting): give up, say so
 calls = []                      # this turn's requests to llama-server (router / duck / chat): one per turn in B (T-046)
-last_owner_b = time.time()      # the owner's last turn in B (the idle exit counts from it)
+last_owner_b = time.time()      # the owner's last turn in B (the idle exit counts from it or the last reply's end)
+last_reply = None               # reply_id of the last published reply (its playback end is in tts:end)
 
 
 def est_tokens(text):
@@ -141,6 +142,7 @@ LIST_MARK = re.compile(r"(?:\d+|[a-zа-я])[.)]")
 def say(reply_id, seq, sentence, note, ts, final=False, meta=None):
     """Publishes one sentence for TTS: memory guard and speech form applied here, per sentence.
     Returns True if something was published."""
+    global last_reply
     text = sentence.strip()
     if text:
         clean, flags = clean_reply(text, note)
@@ -152,13 +154,13 @@ def say(reply_id, seq, sentence, note, ts, final=False, meta=None):
     if meta is not None:
         fields["meta"] = json.dumps(meta, ensure_ascii=False)
     r.xadd("events:reply", fields)
+    last_reply = reply_id
     return True
 
 
-def ambient_gate(text, fields, route, window, thinking=False):
+def ambient_gate(text, fields, speaker, route, window, thinking=False):
     """Answer or not, for a turn heard without a wake word: core/ambient.py (rules, D-029). Returns
     (decision, why, opens, engaged): decision respond | ack | silent; opens — the answer opens / extends ENGAGED."""
-    speaker = fields.get(b'speaker', b'unknown').decode()
     pause = float(fields.get(b'pause_s', b'2.0'))
     p_aside = ((route or {}).get("probs") or {}).get("aside", 0.0)
     engaged = time.time() < engaged_until(r)
@@ -307,7 +309,7 @@ while True:
             fixed_line("failed")
         pending = None
     if (MODES and not pending and mode_now() == "B" and not r.exists(TRANSITION)
-            and time.time() - last_owner_b > MODES.get("idle_exit_s", 300)):
+            and time.time() - idle_since(r, last_owner_b, last_reply) > MODES.get("idle_exit_s", 300)):
         ask_mode("A", "idle", voice=False)        # the owner has gone quiet: back to A, silently
     if not ev:
         continue
@@ -343,10 +345,14 @@ while True:
         continue
     mode = mode_now()
     thinking = mode == "B"
-    owner = fields.get(b'speaker') == b'owner'
+    spk_raw = fields.get(b'speaker', b'unknown').decode()
+    seg_s = float(fields[b'seg_s']) if fields.get(b'seg_s') else None
+    score = float(fields[b'spk_score']) if fields.get(b'spk_score') else None
+    speaker = voice_class(spk_raw, score, seg_s, thinking or time.time() < engaged_until(r))   # I-19
+    owner = speaker == "owner"
     # in B the owner's short turns often come `uncertain` (T-046 gate): they count, and may say the exit phrase (a wrong
     # exit costs a phrase; a wrong entry costs 20-30 s of silence, so entering stays the owner's voice only)
-    owner_b = thinking and fields.get(b'speaker') in (b'owner', b'uncertain')
+    owner_b = thinking and speaker in ("owner", "uncertain")
     if MODES and (owner or owner_b) and not deferred:
         span = find_phrase(text, MODES["enter"]) if mode == "A" else find_phrase(text, MODES["exit"])
         if span and mode == "A":
@@ -381,13 +387,13 @@ while True:
         policy = POLICY.get(label, POLICY["chat"])
     if fields.get(b'trigger') == b'speech':
         # ambient: who speaks, conversation state and the duck pass decide; the router label only shapes the answer
-        decision, why, opens, engaged = ambient_gate(text, fields, route, window if P.get("router") and not thinking else [],
-                                                     thinking)
+        decision, why, opens, engaged = ambient_gate(text, fields, speaker, route,
+                                                     window if P.get("router") and not thinking else [], thinking)
         st = "busy" if amb.busy else "engaged" if engaged else "idle"
-        print(f"brain: ambient {decision} ({why}) state={st} speaker={fields.get(b'speaker', b'-').decode()} "
+        print(f"brain: ambient {decision} ({why}) state={st} speaker={speaker}{'' if speaker == spk_raw else ' (' + spk_raw + ')'} "
               f"pause={fields.get(b'pause_s', b'-').decode()}")
         r.xadd("events:ambient", {"text": text, "decision": decision, "why": why, "state": st, "ts": f"{ts:.3f}",
-                                  "speaker": fields.get(b'speaker', b'').decode(), "spk_score": fields.get(b'spk_score', b'').decode(),
+                                  "speaker": speaker, "spk_raw": spk_raw, "spk_score": fields.get(b'spk_score', b'').decode(),
                                   "pause_s": fields.get(b'pause_s', b'').decode(), "pause_wait": fields.get(b'pause_wait', b'').decode(),
                                   "spk_win": fields.get(b'spk_win', b'').decode(), "spk_region": fields.get(b'spk_region', b'').decode(),
                                   "text_full": fields.get(b'text_full', b'').decode(), "bcast": fields.get(b'bcast', b'').decode(),
