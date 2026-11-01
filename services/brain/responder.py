@@ -17,7 +17,9 @@ from core.ambient import (OPEN_KEY, Ambient, engaged_until, gaze_skip, has_name,
 from core.memory import SYSTEM_RULE, AssocMemory, clean_reply, format_note
 from core.modes import accepts_exit, deferred_question, find_phrase
 from core.speech import for_speech
-from core.router import POLICY, POLICY_B, decide, duck_bin_llamaserver, policy_prefix, route_llamaserver
+from core.numbers_ru import normalize
+from core.router import CALC_DONE, POLICY, POLICY_B, decide, duck_bin_llamaserver, policy_prefix, route_llamaserver
+from tools import note as calc_note     # services/brain/tools.py (T-015)
 
 P = yaml.safe_load(Path(__file__).with_name("manifest.yaml").read_text(encoding="utf-8"))["params"]
 HOST = P["host"]
@@ -331,7 +333,7 @@ while True:
                 print(f"brain: gaze line failed: {e}")
         continue
     last_ev = ev_id
-    text = fields[b'text'].decode()
+    text = normalize(fields[b'text'].decode())   # T-015: time words -> HH:MM, a leading numeral, dictated codes
     ts = float(fields[b'ts']) if b'ts' in fields else time.time()
     print(f"brain: << {text}")
     if text.strip() == "/reset":
@@ -438,7 +440,11 @@ while True:
         note = format_note(hits)
         if hits:
             print(f"brain: memory {[h[1]['turn'] for h in hits]}")
-    sent = (prefix + "\n" + text if prefix else text) + ("\n\n" + note if note else "")
+    tool = calc_note(text) if label == "calc" else ""   # T-015: computed outside the model, given as a note
+    if tool:
+        prefix = CALC_DONE
+        print(f"brain: calc {tool}")
+    sent = (prefix + "\n" + text if prefix else text) + ("\n\n" + tool if tool else "") + ("\n\n" + note if note else "")
     # stream: sentences go to TTS as soon as they are complete (T-003); the whole reply is stored once at the end
     reply_id, seq, buf, parts, tail = uuid.uuid4().hex[:12], 0, "", [], {}
     calls.append("chat")
@@ -483,7 +489,7 @@ while True:
             print(f"brain: memory add failed: {e}")
     wall = time.perf_counter() - t0
     # per-turn details for logs and research/eval/ctx_bus.py, on the final message of the reply (TTS reads `text`)
-    meta = {"turn": turn, "window_turns": len(window), "prompt_tokens": pe, "completion_tokens": ec,
+    meta = {"turn": turn, "window_turns": len(window), "prompt_tokens": pe, "completion_tokens": ec, "calc": tool or None,
             "ttft_s": round(timings.get("prompt_ms", 0) / 1000, 3),
             "tok_s": round(timings["predicted_per_second"], 1) if timings.get("predicted_per_second") and ec >= 5 else None,
             "finish_reason": tail.get("finish_reason"), "wall_s": round(wall, 2), "max_tokens": max_tokens,
