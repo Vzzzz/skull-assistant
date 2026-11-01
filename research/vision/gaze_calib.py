@@ -362,7 +362,7 @@ def report_natural(rows):
         for d in sorted(set(DWELLS) | {need}):
             caught, false = score_triggers([x["t"] for x in replay(frames, bands, d)], looks)
             cells.append(f"{d:.2f} s{' (2x run)' if d == need else ''}: {caught}/{len(looks)}, {len(false)} false, "
-                         f"x{d / max(run, 1e-9):.1f}")
+                         + (f"x{d / run:.1f}" if run > 0 else "no work run"))
         print(f"{'+'.join(combo):<14} | " + " | ".join(cells))
 
 
