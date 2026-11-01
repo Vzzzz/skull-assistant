@@ -32,3 +32,5 @@ persona/dataset/**
 # локальное
 *.log
 .DS_Store
+# кадры с камеры стенда (T-053 --save-frames): приватно
+research/vision/results/frames*/
