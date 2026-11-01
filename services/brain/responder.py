@@ -19,10 +19,11 @@ from core.memory import SYSTEM_RULE, AssocMemory, clean_reply, format_note
 from core.modes import accepts_exit, deferred_question, find_phrase
 from core.speech import for_speech
 from core.numbers_ru import normalize
-from core.router import (CALC_DONE, NET_PREFIX, POLICY, POLICY_B, decide, duck_bin_llamaserver, is_question, policy_prefix,
+from core.router import (CALC_DONE, NET_PREFIX, POLICY, POLICY_B, _yesno_probs, decide, duck_bin_llamaserver, is_question,
+                         policy_prefix,
                          route_llamaserver)
 from tools import note as calc_note     # services/brain/tools.py (T-015)
-from net import Net, excerpts, note_for_memory, personal   # services/brain/net.py (T-051)
+from net import ASK_S, Net, excerpts, note_for_memory, personal, yesno   # services/brain/net.py (T-051, T-054)
 
 P = yaml.safe_load(Path(__file__).with_name("manifest.yaml").read_text(encoding="utf-8"))["params"]
 HOST = P["host"]
@@ -66,7 +67,33 @@ gaze_fallback = 0
 # question in B -> «Сейчас гляну.», events:net (the modem sound in skull-tts), search, the model answers by the excerpts
 NETP = P.get("net") or {}
 net = Net(NETP, r)
-NET_LINES = {"look": "Сейчас гляну.", "empty": "Сеть молчит.", "ask": "Спрашивай, гляну.", **NETP.get("lines", {})}
+NET_LINES = {"look": "Сейчас гляну.", "empty": "Сеть молчит.", "ask": "Спрашивай, гляну.", "ask_net": "Глянуть в сети?",
+             "refuse": "Мне в сеть нельзя.", **NETP.get("lines", {})}
+net_pending = None              # T-054 `ask`: {"q", "until"} — the world question waiting for the owner's yes / no
+
+
+def net_consent(text):
+    """The owner's answer to «Глянуть в сети?»: rules by words, else one cheap yes/no call (the duck's way, T-042)."""
+    v = yesno(text)
+    if v:
+        return v
+    calls.append("yesno")
+    body = {"messages": [{"role": "user", "content": f"Ты спросил владельца: «Глянуть в сети?». Он ответил: «{text}». "
+                                                      "Это согласие? Ответь одним словом: да или нет."}],
+            "max_tokens": 1, "temperature": 0.0, "logprobs": True, "top_logprobs": 10,
+            "chat_template_kwargs": {"enable_thinking": False}}
+    try:
+        ch = requests.post(f"{HOST}/v1/chat/completions", json=body, timeout=30).json()["choices"][0]
+        p = _yesno_probs(ch["logprobs"]["content"][0]["top_logprobs"])
+    except (requests.RequestException, KeyError, IndexError, TypeError, ValueError):
+        return "no"
+    return "yes" if p.get("да", 0.0) >= 0.5 else "no"
+
+
+def net_republish(q, decision):
+    """The waiting question back to the bus with the owner's decision (deferred: no mode / transition checks)."""
+    r.xadd("events:transcript", {"text": q, "trigger": "wakeword", "speaker": "owner", "deferred": "1", "net": decision,
+                                 "ts": f"{time.time():.3f}"})
 GAZE_COOLDOWN_S = AMB.get("gaze_cooldown_s", 30)
 # T-044: while the dispatcher swaps the model (Redis mode:transition) llama-server is down or loading: one fixed line
 # in character to an address (the name / the wake word), never the model; overheard speech is ignored, no duck
@@ -389,6 +416,10 @@ last_ev, last_vis, last_mode = '$', '$', '$'
 print(f"brain: system~{sys_tokens} tokens, {r.llen(HISTORY)} exchanges in {HISTORY}, waiting for transcripts...")
 while True:
     ev = r.xread({'events:transcript': last_ev, 'events:vision': last_vis, 'events:mode': last_mode}, count=1, block=5000)
+    if net_pending and time.time() > net_pending["until"]:      # T-054: no answer to «Глянуть в сети?» -> offline
+        print(f"brain: net ask timed out -> offline")
+        net_republish(net_pending["q"], "no")
+        net_pending = None
     if pending and time.time() - pending["t"] > (TRANSITION_TTL_S if pending["seen"] else PENDING_ACK_S):
         print(f"brain: no answer to cmd:mode {pending['to']} ({pending['id']}) — given up")
         if pending["voice"]:
@@ -439,6 +470,12 @@ while True:
     speaker = voice_class(spk_raw, score, seg_s, window_open)                                   # I-19
     end = reply_end(r, last_reply)
     speaker = turn_prior(speaker, seg_s, window_open, ts - end if end else None, fields.get(b'bcast') == b'1')   # T-050
+    if net_pending and not deferred and speaker != "other":   # T-054: the answer to «Глянуть в сети?»
+        decision = net_consent(text)
+        print(f"brain: net ask answered {text!r} -> {decision}")
+        net_republish(net_pending["q"], decision)
+        net_pending = None
+        continue
     owner = speaker == "owner"
     # in B the owner's short turns often come `uncertain` (T-046 gate): they count, and may say the exit phrase (a wrong
     # exit costs a phrase; a wrong entry costs 20-30 s of silence, so entering stays the owner's voice only)
@@ -455,11 +492,18 @@ while True:
     net_forced = False
     if NETP and (owner or owner_b) and not deferred and (span_n := net.once_phrase(text)):
         q = deferred_question(text, span_n)
-        if not q:                  # «Погугли.» — the next question goes to the net (ONCE_S)
+        if net.policy()[0] == "never":     # T-054: the owner asked for the net, the policy forbids it
+            say(uuid.uuid4().hex[:12], 0, NET_LINES["refuse"], "", ts, final=True, meta={"reply": NET_LINES["refuse"], "net": "refuse"})
+            print(f"brain: net refused (policy never)")
+            if not q:
+                continue
+            text = q                      # the question itself is answered offline
+        elif not q:                # «Погугли.» — the next question goes to the net (ONCE_S)
             say(uuid.uuid4().hex[:12], 0, NET_LINES["ask"], "", ts, final=True, meta={"reply": NET_LINES["ask"], "net": "armed"})
             print(f"brain: net armed for the next question")
             continue
-        text, net_forced = q, True
+        else:
+            text, net_forced = q, True
     if owner_b:
         last_owner_b = time.time()
     t0 = time.perf_counter()
@@ -531,8 +575,17 @@ while True:
             print(f"brain: memory {[h[1]['turn'] for h in hits]}")
     tool = calc_note(text) if label == "calc" else ""   # T-015: computed outside the model, given as a note
     net_res, net_note = None, ""
-    if (NETP and (net_forced or ((label == "world" and not thinking) or (thinking and is_question(text))) and not personal(text))
-            and net.allowed()):
+    consent = "yes" if net_forced else {b"yes": "yes", b"no": "no"}.get(fields.get(b"net"))
+    world_q = (label == "world" and not thinking) or (thinking and is_question(text))
+    act = net.decide(world_q, personal(text), consent) if NETP else "offline"
+    if act == "ask":                # T-054 `ask`: the question waits for the owner's yes / no (ASK_S)
+        say(uuid.uuid4().hex[:12], 0, NET_LINES["ask_net"], "", ts, final=True, meta={"reply": NET_LINES["ask_net"], "net": "ask"})
+        net_pending = {"q": text, "until": time.time() + ASK_S}
+        print(f"brain: net ask: {text!r}")
+        continue
+    if act == "refuse":
+        say(uuid.uuid4().hex[:12], 0, NET_LINES["refuse"], "", ts, final=True, meta={"reply": NET_LINES["refuse"], "net": "refuse"})
+    if act == "search":
         say(uuid.uuid4().hex[:12], 0, NET_LINES["look"], "", ts, final=True, meta={"reply": NET_LINES["look"], "net": "look"})
         r.xadd("events:net", {"phase": "begin", "ts": f"{time.time():.3f}"}, maxlen=1000, approximate=True)
         net_res = net.search(text)

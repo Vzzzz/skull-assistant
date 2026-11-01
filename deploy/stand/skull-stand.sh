@@ -6,6 +6,9 @@
 #   skull-stand.sh status    флаг, состояние WSL и юнитов, звук (Windows и pulse WSLg)
 #   skull-stand.sh restart [--mode A|B] [--drop-caches] [--fresh]
 #                            перезапуск стенда без wsl --shutdown (deploy/stand/skull-restart.sh, T-047) + звук
+#   skull-stand.sh net always|ask|never|manifest|status
+#                            сетевая политика черепа (T-054): ключ net:policy в Redis перекрывает манифест без перезапуска;
+#                            manifest — снять ключ (вернуть значение из манифеста), status — показать, откуда взято
 #   skull-stand.sh stop      остановить WSL целиком (все сервисы гаснут)
 #
 # Сервисный режим = флаг-файл $HOME/.skull-maintenance (= /mnt/c/Users/<user>/.skull-maintenance
@@ -79,10 +82,14 @@ case "$MODE" in
     [ $r -ne 0 ] && exit $r
     exit $w
     ;;
+  net)
+    case "${2:-status}" in always|ask|never|manifest|status) ;; *) echo "usage: $0 net always|ask|never|manifest|status" >&2; exit 2 ;; esac
+    wslq "cd $PROJECT && .venv/bin/python services/brain/net.py policy ${2:-status}"
+    ;;
   stop)
     wsl.exe -t "$DISTRO" && echo "[stop] $DISTRO остановлен"
     ;;
   *)
-    echo "usage: $0 {service|normal|status|restart|stop}" >&2; exit 2
+    echo "usage: $0 {service|normal|status|restart|net|stop}" >&2; exit 2
     ;;
 esac

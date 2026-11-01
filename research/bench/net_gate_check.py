@@ -1,7 +1,8 @@
 """T-051: would brain go to the net on the turns of the T-046 gate (part 2, mode_gate_2026-10-31_2_bus.json) with the
 net on? Same order as services/brain/responder.py: mode phrases first (an entry / exit phrase never reaches the net),
 then the policy — router label `world` in A, a question in B, never a question about the owner (net.personal). The
-router runs on llama-server (mode A) with the gate's history.  .venv/bin/python research/bench/net_gate_check.py"""
+router runs on llama-server (mode A) with the gate's history; T-054: the decision through Net.decide under `always`
+(-> trips to the net) and `ask` (-> «Глянуть в сети?»).  .venv/bin/python research/bench/net_gate_check.py"""
 import json, sys
 from pathlib import Path
 import yaml
@@ -11,7 +12,8 @@ from core.memory import SYSTEM_RULE
 from core.modes import find_phrase
 from core.numbers_ru import normalize
 from core.router import decide, is_question, route_llamaserver
-from net import personal
+import fakeredis
+from net import Net, personal
 
 P = yaml.safe_load((ROOT / "services/brain/manifest.yaml").read_text())["params"]
 SYSTEM = (ROOT / P["persona"]).read_text().strip() + "\n\n" + SYSTEM_RULE
@@ -34,6 +36,10 @@ for i, e in enumerate(bus):
         rows.append((mode, "B question" if is_question(t) else "B", is_question(t) and not personal(t), t))
     if rep:
         hist.append((t, rep))
-print(f"{len(rows)} owner turns; to the net: {sum(r[2] for r in rows)}")
+nets = {pol: Net({"policy": pol}, fakeredis.FakeRedis()) for pol in ("always", "ask")}
+acts = {pol: [n.decide(go or (l in ("world", "B question")), personal(t)) if l != "mode phrase" else "-"
+              for (m, l, go, t) in rows] for pol, n in nets.items()}
+print(f"{len(rows)} owner turns; to the net: {sum(r[2] for r in rows)}; always -> search {acts['always'].count('search')}; "
+      f"ask -> «Глянуть в сети?» {acts['ask'].count('ask')}")
 for m, l, go, t in rows:
     print(f"  {'NET ' if go else '    '}{m} {l:<11} | {t[:80]}")

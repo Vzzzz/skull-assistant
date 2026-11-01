@@ -99,25 +99,75 @@ def r():
     return fakeredis.FakeRedis()
 
 
-def test_off_by_default_no_request(r, monkeypatch):
-    def boom(*a, **k):
-        raise AssertionError("no outgoing request while the net is off")
-    monkeypatch.setattr(requests.Session, "get", boom)
-    n = Net({"enabled": False}, r)
-    assert not n.allowed()
-    assert not Net({}, r).allowed()
+# --- the policy (T-054): always | ask | never; Redis net:policy over the manifest; the old `enabled` migrates
+
+@pytest.mark.parametrize("params, redis_value, expect", [
+    ({"policy": "always"}, None, ("always", "manifest")),
+    ({"policy": "ask"}, b"never", ("never", "redis")),          # Redis overrides without a restart
+    ({"policy": "never"}, b"bogus", ("never", "manifest")),     # an unknown Redis value is ignored
+    ({"enabled": True}, None, ("always", "manifest (enabled, migrated)")),
+    ({"enabled": False}, None, ("ask", "manifest (enabled, migrated)")),
+    ({}, None, ("ask", "default")),
+])
+def test_policy_source(r, params, redis_value, expect):
+    if redis_value:
+        r.set(net.POLICY_KEY, redis_value)
+    assert Net(params, r).policy() == expect
 
 
-def test_one_shot_phrase(r):
-    n = Net({"enabled": False}, r)
+@pytest.mark.parametrize("policy, world, personal_q, consent, act", [
+    ("always", True, False, None, "search"),
+    ("always", True, True, None, "offline"),       # about the owner: from the dialog, not a reference book
+    ("always", False, False, None, "offline"),
+    ("always", True, False, "yes", "search"),
+    ("ask", True, False, None, "ask"),             # «Глянуть в сети?»
+    ("ask", True, False, "yes", "search"),         # the owner said yes / the one-shot phrase
+    ("ask", True, False, "no", "offline"),
+    ("ask", True, True, None, "offline"),
+    ("ask", False, False, None, "offline"),
+    ("ask", True, True, "yes", "search"),          # asked explicitly about himself — his call
+    ("never", True, False, None, "offline"),
+    ("never", True, False, "yes", "refuse"),       # «Мне в сеть нельзя.»
+    ("never", False, True, None, "offline"),
+])
+def test_decide(r, policy, world, personal_q, consent, act):
+    assert Net({"policy": policy}, r).decide(world, personal_q, consent) == act
+
+
+def test_one_shot_phrase_is_consent(r):
+    n = Net({"policy": "ask"}, r)
     assert n.once_phrase("Костян, погугли")
+    assert n.decide(True) == "search" and n.decide(True) == "ask"    # one question, then asking again
     assert n.once_phrase("Проверь в сети, кто изобрёл гравиметр")
-    assert not n.once_phrase("Я проверил в сети вчера")        # not the imperative: no
-    assert n.allowed() and not n.allowed()                     # one request, then off again
+    assert not n.once_phrase("Я проверил в сети вчера")              # not the imperative: no
 
 
-def test_enabled_always_allowed(r):
-    assert Net({"enabled": True}, r).allowed()
+def test_never_sends_nothing(r, monkeypatch):
+    def boom(*a, **k):
+        raise AssertionError("no outgoing request under policy never")
+    monkeypatch.setattr(requests.Session, "get", boom)
+    before = net.REQUESTS
+    n = Net({"policy": "never"}, r)
+    assert not n.once_phrase("Погугли") or not r.get(net.ONCE_KEY)   # the phrase arms nothing
+    assert n.search("Какая высота Эльбруса?") == []
+    r.set(net.POLICY_KEY, "never")
+    assert Net({"policy": "always"}, r).search("Кто открыл пенициллин?") == []   # Redis never beats the manifest
+    assert net.REQUESTS == before
+
+
+def test_requests_counted():
+    before = net.REQUESTS
+    search("высота Эльбруса", session=wiki())
+    assert net.REQUESTS == before + 1
+
+
+@pytest.mark.parametrize("text, answer", [
+    ("Да", "yes"), ("Давай", "yes"), ("Ага, глянь", "yes"), ("Посмотри", "yes"), ("Конечно", "yes"),
+    ("Нет", "no"), ("Не надо", "no"), ("Да не надо", "no"), ("Сам скажи", "no"), ("Неа", "no"),
+    ("Ну не знаю", None), ("Хм", None),
+])
+def test_yesno(text, answer):
+    assert net.yesno(text) == answer
 
 
 @pytest.mark.parametrize("text, own", [
