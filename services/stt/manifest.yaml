@@ -36,3 +36,4 @@ params:
     win_min_s: 2.0         # 2в answer 5: short phrases over a broadcast came as 2–3-s segments without windows
     threshold_high_bcast: 0.40   # experiment (2в answer 3): owner threshold for windows / short phrases while a broadcast plays; null = off
     bcast_s: 30            # broadcast = a segment `other` as a whole within this many seconds
+    bcast_min_speech_s: 1.0   # T-050 live check: only `other` with this much speech marks a broadcast (owner's short «да» / «нет» scored `other`)

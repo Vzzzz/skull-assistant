@@ -36,3 +36,17 @@ def test_window_region_only_when_the_class_rises(seg, wins, speaker, region):
     out = voiceid(seg, wins)(FRAMES, now=1000.0)
     assert out["speaker"] == speaker
     assert ("spk_region" in out) is region
+
+
+def loud(seconds):
+    return [np.full(480, 1000, dtype=np.int16)] * int(round(seconds / 0.03))
+
+
+@pytest.mark.parametrize("speech_s, bcast_after", [
+    (0.6, False),        # T-050 live: the owner's «Нет» at 3 m, `other` 0.24 — not a broadcast
+    (1.5, True),         # a foreign voice with enough speech: broadcast for bcast_s
+])
+def test_short_other_does_not_mark_a_broadcast(speech_s, bcast_after):
+    v = voiceid(0.20, [])
+    assert v(loud(speech_s), now=1000.0)["speaker"] == "other"
+    assert ("bcast" in v(loud(0.9), now=1010.0)) is bcast_after

@@ -33,6 +33,9 @@ class VoiceID:
         self.win_s, self.win_min_s = params.get("win_s", 1.5), params.get("win_min_s", 3.0)   # 0 = no windows
         self.win_hop_s = params.get("win_hop_s", self.win_s / 2)
         self.high_bcast, self.bcast_s = params.get("threshold_high_bcast"), params.get("bcast_s", 30)   # None = off
+        # T-050 live check: since min_speech_s 0.5 the owner's own «да» / «нет» at 3 m score `other` 0.12–0.24; a broadcast
+        # is told only by a segment with at least this much speech (the old min_speech_s), else they switched `bcast` on
+        self.bcast_min_speech_s = params.get("bcast_min_speech_s", 1.0)
         self.last_other = -1e9
         model, owner = root / params["model"], root / params["owner"]
         self.ex = self.owner = None
@@ -95,7 +98,8 @@ class VoiceID:
         score = self.score(frames, self.min_speech_s)
         out = {"speaker": "unknown" if score is None else self.label(score, None if windowed else high),
                "spk_score": "" if score is None else f"{score:.3f}"}
-        if score is not None and self.label(score) == "other":
+        if (score is not None and self.label(score) == "other"
+                and len(self.voiced(frames)) * len(frames[0]) / 16000 >= self.bcast_min_speech_s):
             self.last_other = now                   # a foreign voice as a whole: broadcast / guests (2в)
         if bcast:
             out["bcast"] = "1"
