@@ -105,6 +105,8 @@ POLICY = {
     "chat":    {"max_tokens": 300, "memory": False},
     "memory":  {"max_tokens": 300, "memory": True},
     "calc":    {"max_tokens": 500, "memory": False, "prefix": "Считай по шагам, все числа пиши цифрами, итог — в конце."},
+    # T-015: when services/brain/tools.py has computed the result, the note «(вычислено: …)» follows the turn and the
+    # prefix becomes CALC_DONE — no redo, the number as given
     "explain": {"max_tokens": 900, "memory": False},
     # world keeps memory on: at 2k the router labelled "как зовут моего кота?" as world when the cat had fallen out of
     # the window (T-028: 4 probes -> "Не знаю."); with retrieval the note arrives and the hedge applies only if memory is empty.
@@ -137,6 +139,7 @@ WORLD_SOFT = ("Отвечай по существу из общих знаний
 
 # mode B (T-046, core's answer 1 to T-044): the router is not called — B is entered on purpose («подумай как следует»), every
 # turn is treated as `explain` with the soft world hedge, and the memory beyond the window stays on: one prefill per turn
+CALC_DONE = "Результат уже вычислен (справка ниже) — назови его в образе, коротко, числом как есть, не пересчитывай."
 POLICY_B = {"max_tokens": POLICY["explain"]["max_tokens"], "memory": True, "prefix": WORLD_SOFT}
 
 
