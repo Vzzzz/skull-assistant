@@ -34,7 +34,10 @@ params:
     presence_min: 0.5       # Face Mesh face presence on the crop
     open_min: 0.0           # eye openness (lid gap / eye width) below -> a blink, no eye feature that frame
     gaze_k: 90              # gaze_h = yaw + gaze_k * (iris_h - 0.5): eye turn ~+-45 deg across the eye width (geometry, not fitted)
-    # «looking at the skull» = every band holds; calibrated per placement (research/vision/gaze_calib.py):
+    gaze_kv: -90            # gaze_v = pitch + gaze_kv * (iris_v - iris_v0) (step 1г): same scale; minus — iris_v grows down, pitch up
+    iris_v0: -0.08          # iris centre vs the corner line, eyes level (median of the 30.10 recordings: looks -0.05, work -0.10)
+    # «looking at the skull» = every band holds, any per-frame feature may have one (nose, yaw, pitch, iris_h, iris_v,
+    # gaze_h, gaze_v); chosen by core/gaze_bands.py: gap >= 2 x spread, at most three; calibrated per placement (research/vision/gaze_calib.py):
     # step 1 (--static, 2026-10-29): nose offset — skull -0.30 [p10 -0.38, p90 -0.21], monitor centre -1.02 [p90 -0.61];
     # the working posture lay inside it (live gate: 31 false in 10 min) -> step 1b: irises (--work, 2026-10-30, camera
     # re-aimed lower): iris_h skull 0.59 (spread 0.017) vs work 0.45 (0.068), gap 2.1x; bands = [p5, p95] of the skull

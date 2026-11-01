@@ -9,6 +9,8 @@ Camera at the skull's eyes -> YuNet (OpenCV FaceDetectorYN, CPU) at `fps` -> the
     (iris_h: 0 — at the image-left corner, 1 — at the image-right one) and below the corner line (iris_v, in eye widths),
     averaged over both eyes; eye openness drops blinks;
   * one gaze axis: gaze_h = yaw + gaze_k * (iris_h - 0.5) — the head turn plus the eye turn in the head, k from geometry
+  * and the vertical one (step 1г, camera above the desk): gaze_v = pitch + gaze_kv * (iris_v - iris_v0); pitch > 0 is
+    the face up, iris_v > 0 the iris down, so gaze_kv < 0 (one eye width ~ 90 deg, as gaze_k)
     (the eye turns about +-45 deg across the eye width: 90 deg per unit), not fitted.
 «Looking at the skull» is a calibrated band per feature (`gaze.bands`, all must hold), not «facing the camera»: with the
 skull beside the monitor the owner turns the eyes, not the head. Step 1 used the nose offset alone; the working posture
@@ -123,8 +125,14 @@ def measure(det, sess, frame, w, h):
         if eyes and eyes["open"] >= G.get("open_min", 0.0):    # a blink: no eye feature this frame
             m.update(eyes)
             if pose:
-                m["gaze_h"] = m["yaw"] + G.get("gaze_k", 90.0) * (m["iris_h"] - 0.5)
+                m.update(gaze_axes(m))
     return m
+
+
+def gaze_axes(m):
+    """gaze_h / gaze_v from head pose + irises (step 1b / 1г); the manifest's k by geometry, not fitted."""
+    return {"gaze_h": m["yaw"] + G.get("gaze_k", 90.0) * (m["iris_h"] - 0.5),
+            "gaze_v": m["pitch"] + G.get("gaze_kv", -90.0) * (m["iris_v"] - G.get("iris_v0", -0.08))}
 
 
 def in_bands(m, bands):
@@ -141,7 +149,7 @@ def main():
     if a.log:
         fh = open(a.log, "w", newline="", encoding="utf-8")     # flushed per frame: the run ends with a kill
         log = csv.DictWriter(fh, extrasaction="ignore",
-                             fieldnames=["t", "face", "score", "nose", "yaw", "pitch", "iris_h", "iris_v", "open", "gaze_h", "facing"])
+                             fieldnames=["t", "face", "score", "nose", "yaw", "pitch", "iris_h", "iris_v", "open", "gaze_h", "gaze_v", "facing"])
         log.writeheader()
     cap = cv2.VideoCapture(P.get("device", 0), cv2.CAP_V4L2)
     if P.get("fourcc"):     # MJPG: raw YUYV 640x480@30 (~18 MB/s) arrives broken over usbip (green frames, T-031 step 0)

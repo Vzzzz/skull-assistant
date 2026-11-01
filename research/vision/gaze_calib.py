@@ -34,15 +34,19 @@ from pathlib import Path
 import cv2
 import numpy as np
 import redis
+import sys
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+from core.gaze_bands import RATIO, feature_stats, select_bands
 spec = importlib.util.spec_from_file_location("gaze", ROOT / "services/vision/gaze.py")
 gaze = importlib.util.module_from_spec(spec); spec.loader.exec_module(gaze)   # measure() etc., no service loop
 P, G = gaze.P, gaze.G
 OUT = Path(__file__).resolve().parent / "results"
 KEYS = ["phase", "look", "t", "settled", "face", "score", "nose", "yaw", "pitch", "iris_h", "iris_v", "iris_vl", "open",
-        "presence", "gaze_h", "ms"]
-FEATURES = ["iris_h", "iris_v", "iris_vl", "nose", "yaw", "pitch", "gaze_h"]
+        "presence", "gaze_h", "gaze_v", "ms"]
+FEATURES = ["iris_h", "iris_v", "iris_vl", "nose", "yaw", "pitch", "gaze_h", "gaze_v"]
+BAND_KEYS = ["yaw", "pitch", "iris_h", "iris_v", "nose", "gaze_h", "gaze_v"]   # step 1г: the bands are chosen among these
 COMBOS = [("iris_h", "iris_v"), ("iris_h", "iris_vl"), ("iris_h", "nose"), ("iris_h", "iris_v", "nose")]
 LOOK_S, SETTLE_S = 4.0, 1.2           # a look on command: held 4 s, the first 1.2 s the eyes are still moving
 GUARD_S = 1.0                         # marked recordings: frames this close to a look are neither «skull» nor «work»
@@ -179,6 +183,8 @@ def load(files):
                 if k in x:
                     x[k] = float(x[k])
             x["settled"], x["face"], x["look"] = int(x.get("settled", 1)), int(x.get("face", 0)), int(x.get("look", x.get("cycle", 0)))
+            if all(k in x for k in ("yaw", "pitch", "iris_h", "iris_v")):
+                x.update(gaze.gaze_axes(x))      # recordings before 1b / 1г have no gaze_h / gaze_v column: same formula
             rows.append(x)
     return sorted(rows, key=lambda x: x["t"])
 
@@ -207,12 +213,29 @@ def replay(rows, bands, dwell=None):
     return out
 
 
+def band_rule(looks, work, title):
+    """Step 1г: [p5, p95], spread, gap for every feature and the bands chosen by core/gaze_bands (gap >= 2 x spread,
+    at most three)."""
+    st = feature_stats(looks, work, BAND_KEYS)
+    print(f"\nband rule ({title}): band = [p5, p95] of the looks, spread = larger robust spread, gap = |median looks - median work|")
+    print("feature | band               | med looks | med work | spread | gap    | gap/spread")
+    for k in BAND_KEYS:
+        if k in st:
+            s = st[k]
+            print(f"{k:<7} | [{s['band'][0]:+8.3f},{s['band'][1]:+8.3f}] | {s['med_look']:+9.3f} | {s['med_work']:+8.3f} | "
+                  f"{s['spread']:6.3f} | {s['gap']:6.3f} | {s['ratio']:5.1f}{' ok' if s['ratio'] >= RATIO else ''}")
+    bands = select_bands(st)
+    print("chosen: " + (", ".join(f"{k} [{lo:+.3f}, {hi:+.3f}]" for k, (lo, hi) in bands.items()) or "none qualifies"))
+    return bands
+
+
 def report(rows):
     if any(x["phase"] == "key_down" for x in rows):
         return report_natural(rows)
     pos = [x for x in rows if x["phase"] == "skull" and x["settled"]]
     neg = [x for x in rows if x["phase"] != "skull" and x["settled"]]
     phases = sorted({x["phase"] for x in rows})
+    chosen = band_rule(pos, [x for x in neg if x["phase"] == "work"] or neg, "looks vs work")
     print(f"\nframes: " + ", ".join(f"{p} {sum(1 for x in rows if x['phase'] == p)} "
                                     f"(face {sum(1 for x in rows if x['phase'] == p and x['face'])}, "
                                     f"eyes {sum(1 for x in rows if x['phase'] == p and 'iris_h' in x)})" for p in phases))
@@ -235,7 +258,7 @@ def report(rows):
     print(f"\nbands = [p5, p95] of the settled «skull» frames; dwell {G['dwell_s']} s, gap {G.get('gap_s', 0.4)} s, "
           f"min interval {G['min_interval_s']} s replayed over the whole log")
     print("features              | band(s)                          | skull in | other in | triggers: work / between / looks caught")
-    for combo in [(k,) for k in FEATURES] + COMBOS:
+    for combo in [(k,) for k in FEATURES] + COMBOS + ([tuple(chosen)] if chosen and tuple(chosen) not in COMBOS else []):
         if not all(any(k in x for x in pos) for k in combo):
             continue
         bands = {k: (float(np.percentile([x[k] for x in pos if k in x], 5)),
@@ -304,9 +327,10 @@ def report_natural(rows):
     print(f"\nlooks marked {len(looks)}: duration median {np.median(dur):.1f} s [{min(dur):.1f}..{max(dur):.1f}]; "
           f"frames skull {len(pos)} (eyes {sum('iris_h' in x for x in pos)}), work {len(work)} "
           f"(eyes {sum('iris_h' in x for x in work)}), edge {sum(x['state'] == 'edge' for x in frames)}")
+    chosen = band_rule(pos, work, "marked looks vs work")
     print("\nfeature | skull: median p10 .. p90, spread | work: median p10 .. p90, spread | gap / spread")
     gs = {}
-    for k in ("iris_h", "iris_v", "nose", "yaw", "pitch", "gaze_h"):
+    for k in ("iris_h", "iris_v", "nose", "yaw", "pitch", "gaze_h", "gaze_v"):
         s, w = [x[k] for x in pos if k in x], [x[k] for x in work if k in x]
         if not s or not w:
             continue
@@ -318,7 +342,7 @@ def report_natural(rows):
           f"min interval {G['min_interval_s']} s")
     print("set            | bands                                   | gap/spread  | skull in | work in | false | longest work run | caught")
     out = {}
-    for combo in SETS:
+    for combo in SETS + ([tuple(chosen)] if chosen and tuple(chosen) not in SETS else []):
         if not all(any(k in x for x in pos) for k in combo):
             continue
         bands = {k: (float(np.percentile([x[k] for x in pos if k in x], 5)),
