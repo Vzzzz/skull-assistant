@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 from core.ambient import (OPEN_KEY, Ambient, engaged_until, gaze_skip, has_name, idle_since, open_window, reply_end,
                           turn_prior, voice_class)
+from core.gaze_lines import RECENT as GAZE_RECENT_N, frame_message, is_repeat
 from core.memory import SYSTEM_RULE, AssocMemory, clean_reply, format_note
 from core.modes import accepts_exit, deferred_question, find_phrase
 from core.speech import for_speech
@@ -51,6 +52,14 @@ GAZE_TURNS = (" Спроси у него что-нибудь.", " Пожалуй
 GAZE_RECENT = " Твои последние реплики на такой взгляд: {}. Не повторяй их начало и форму."
 GAZE_ROOTS = re.compile(r"смотр|гляд|наблюда", re.IGNORECASE)   # the ban, checked: the 4B copies the situation into the line
 GAZE_TURN = "gaze:turn"         # Redis counter: which of GAZE_TURNS comes next
+# T-053 (step 1в): with the look's frame (params.gaze.frame) the third turn is about what the camera sees, not «around»
+GZ = P.get("gaze", {})
+GAZE_TURNS_1V = (" Спроси у него что-нибудь.", " Пожалуйся на своё.")
+GAZE_FRAME_TURN = (" На кадре с камеры — твой владелец смотрит на тебя. Одна фраза в образе о том, что видно (одежда, "
+                   "предмет в руках, поза, что за спиной). Если ничего примечательного — так и скажи, не выдумывай.")
+GAZE_FALLBACK = ("Хм.", "Ну?", "Что?")   # all attempts dropped: an interjection in turn instead of silence
+FRAME_KEY = "vision:frame"      # services/vision/gaze.py: JPEG of the look's frame, ex=frame_ttl_s
+gaze_fallback = 0
 GAZE_COOLDOWN_S = AMB.get("gaze_cooldown_s", 30)
 # T-044: while the dispatcher swaps the model (Redis mode:transition) llama-server is down or loading: one fixed line
 # in character to an address (the name / the wake word), never the model; overheard speech is ignored, no duck
@@ -233,6 +242,70 @@ def first_word(line):
 
 
 def on_gaze(fields):
+    return on_gaze_frame(fields) if GZ.get("frame") else on_gaze_1g(fields)
+
+
+def gaze_frame(fields):
+    """The look's JPEG for the VLM call, or None: mode A only (B has no mmproj), the key not expired, not too large."""
+    if fields.get(b"frame") != b"1" or mode_now() != "A":
+        return None
+    jpg = r.get(FRAME_KEY)
+    return jpg if jpg and len(jpg) <= GZ.get("frame_max_kb", 120) * 1024 else None
+
+
+def on_gaze_frame(fields):
+    """Step 1в (T-053): a look line, the frame in this one call. Turns in a circle: ask / complain about his own / what
+    the frame shows (only with a frame). The frame goes to llama-server once and never into the history or the KV of
+    the dialog beyond this call. Repeats by the stems of the whole line against the last 5 look lines (core's answer to
+    the 1г gate): two attempts with the turn, a third with the next turn, then an interjection (not kept as a look line).
+    Unlike 1г the prompt does not list the recent lines — the model copied them."""
+    global last_gaze, gaze_fallback
+    now = time.time()
+    why = gaze_skip(r, now, amb.busy, last_gaze, GAZE_COOLDOWN_S, TRANSITION)
+    if why:
+        print(f"brain: gaze {fields.get(b'dur_s', b'?').decode()} s -> no line ({why})")
+        return
+    last_gaze = now
+    history = [json.loads(x) for x in r.lrange(HISTORY, 0, -1)]
+    window, _ = build_window(history, sys_tokens, 400)
+    recent = [x.decode() for x in r.lrange(GAZE_LINES, 0, GAZE_RECENT_N - 1)]
+    jpg = gaze_frame(fields)
+    turns = GAZE_TURNS_1V + ((GAZE_FRAME_TURN,) if jpg else ())
+    k = r.incr(GAZE_TURN) - 1
+    line, turn, used_frame, prompt_tokens = None, None, False, None
+    for attempt, turn in enumerate([turns[k % len(turns)]] * 2 + [turns[(k + 1) % len(turns)]], 1):
+        # no list of the recent lines in the prompt: the 4B copies them («Твоя куртка всё ещё здесь.» 3 of 3 even with
+        # the frame, T-053 measurement) — the stems check below does the job
+        prompt = GAZE_PROMPT + GAZE_BAN + turn
+        used_frame = turn == GAZE_FRAME_TURN
+        msg = frame_message(prompt, jpg) if used_frame else {"role": "user", "content": prompt}
+        tail = {}
+        raw = "".join(chat_stream(to_messages(window) + [msg], 60 if used_frame else 40, tail)).strip()
+        cand, _ = clean_reply(raw, "")
+        prompt_tokens = (tail.get("usage") or {}).get("prompt_tokens")
+        why = ("empty" if not cand else "banned root" if GAZE_ROOTS.search(cand) else "repeat" if is_repeat(cand, recent) else None)
+        if not why:
+            line = cand
+            break
+        print(f"brain: gaze -> {cand!r} dropped ({why}, attempt {attempt}; recent {recent})")
+        r.xadd("events:ambient", {"text": "", "decision": "gaze_drop", "why": why, "state": "idle",
+                                  "ts": f"{now:.3f}", "reply": cand}, maxlen=5000, approximate=True)
+    if line is None:
+        line, turn, used_frame = GAZE_FALLBACK[gaze_fallback % len(GAZE_FALLBACK)], " (interjection)", False
+        gaze_fallback += 1
+    else:
+        r.lpush(GAZE_LINES, line); r.ltrim(GAZE_LINES, 0, GAZE_RECENT_N - 1)
+    reply_id = uuid.uuid4().hex[:12]
+    say(reply_id, 0, line, "", now, final=True, meta={"reply": line, "ambient": "gaze", "frame": int(used_frame)})
+    open_window(r, reply_id, GAZE_WINDOW_S, time.time())
+    r.xadd("events:ambient", {"text": "", "decision": "gaze", "why": f"look {fields.get(b'dur_s', b'?').decode()} s",
+                              "state": "idle", "ts": f"{now:.3f}", "reply": line, "frame": str(int(used_frame))},
+           maxlen=5000, approximate=True)
+    print(f"brain: gaze -> {line!r} ({turn.strip()[:40]}; frame {'yes' if used_frame else 'no' if jpg is None else 'not this turn'}; "
+          f"prompt {prompt_tokens} tok; {time.time() - now:.2f} s)")
+
+
+def on_gaze_1g(fields):
     """A silent look (T-031 steps 2-3): in IDLE, outside the skull's speech and not during a call (BUSY), one short line
     in character, not more often than GAZE_COOLDOWN_S, kept out of the history and the memory (like «угу»). The line
     opens the window for GAZE_WINDOW_S: a look plus «Что?» invites an answer. A look does not extend an open window

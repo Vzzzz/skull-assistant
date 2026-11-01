@@ -34,3 +34,6 @@ persona/dataset/**
 .DS_Store
 # кадры с камеры стенда (T-053 --save-frames): приватно
 research/vision/results/frames*/
+
+# look frames saved for measurement (services/vision/gaze.py --save-frames, T-053): never in git
+research/vision/frames/

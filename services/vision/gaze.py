@@ -16,7 +16,8 @@ Camera at the skull's eyes -> YuNet (OpenCV FaceDetectorYN, CPU) at `fps` -> the
 skull beside the monitor the owner turns the eyes, not the head. Step 1 used the nose offset alone; the working posture
 (reading, the messenger on the right) lay inside its band (live gate 2026-10-29: 31 false triggers in 10 min) — hence the
 irises (research/vision/gaze_calib.py --work). In the bands for dwell_s (dropouts <= gap_s allowed) -> events:vision
-{kind: gaze, dur_s, iris_h, iris_v, nose, yaw, pitch, score, ts} once; the next event needs the gaze to leave the bands
+{kind: gaze, dur_s, iris_h, iris_v, nose, yaw, pitch, score, ts, frame} once (frame: the JPEG is in Redis vision:frame
+for frame_ttl_s — step 1в, brain puts it into one VLM call); the next event needs the gaze to leave the bands
 (or the face to vanish) first and min_interval_s since the last one. tts:speaking mutes it (the owner looks at the skull
 while it answers). Frames are not stored.
 
@@ -38,6 +39,7 @@ ROOT = Path(__file__).resolve().parents[2]
 P = yaml.safe_load(Path(__file__).with_name("manifest.yaml").read_text(encoding="utf-8"))["params"]
 G = P["gaze"]
 r = redis.Redis()
+FRAME_KEY = "vision:frame"      # step 1в (T-053): JPEG of the look's frame, read by services/brain on_gaze
 
 # generic face, model units (x right, y up, z out of the face), the 5 YuNet landmarks in YuNet's order:
 # right eye, left eye (the subject's), nose tip, right / left mouth corner
@@ -144,6 +146,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--show", action="store_true")
     ap.add_argument("--log", help="per-frame features to this CSV (diagnostics; frames themselves are not stored)")
+    ap.add_argument("--save-frames", help="also write the frame of every look to this dir (measurement only; in .gitignore)")
     a = ap.parse_args()
     log = None
     if a.log:
@@ -192,6 +195,14 @@ def main():
             if armed and dur >= G["dwell_s"] and now - last_event >= G["min_interval_s"] and not r.exists("tts:speaking"):
                 ev = {k: f"{m[k]:.2f}" for k in ("iris_h", "iris_v", "nose", "score") if k in m}
                 ev.update({k: f"{m[k]:.1f}" for k in ("yaw", "pitch") if k in m})
+                if G.get("frame_ttl_s"):     # step 1в: the look's frame for brain's VLM call, in Redis only, short-lived
+                    ok, jpg = cv2.imencode(".jpg", frame, [cv2.IMWRITE_JPEG_QUALITY, G.get("frame_quality", 80)])
+                    if ok:
+                        r.set(FRAME_KEY, jpg.tobytes(), ex=G["frame_ttl_s"])
+                        ev["frame"] = "1"
+                        if a.save_frames:
+                            Path(a.save_frames).mkdir(parents=True, exist_ok=True)
+                            (Path(a.save_frames) / f"{now:.3f}.jpg").write_bytes(jpg.tobytes())
                 r.xadd("events:vision", {"kind": "gaze", "dur_s": f"{dur:.1f}", **ev, "ts": f"{now:.3f}"},
                        maxlen=1000, approximate=True)
                 print(f"GAZE {dur:.1f} s " + " ".join(f"{k} {v}" for k, v in ev.items()), flush=True)

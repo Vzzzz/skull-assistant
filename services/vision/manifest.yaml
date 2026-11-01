@@ -49,6 +49,8 @@ params:
     # alone at dwell 1.0 s — 11 of 12, 0 false, work in the band 0.1 %, longest work run 0.4 s (x2.5)
     bands:
       yaw: [-15.28, 18.44]
+    frame_ttl_s: 10         # step 1в (T-053): the look's frame -> Redis vision:frame (JPEG) for brain; 0 = off
+    frame_quality: 80       # JPEG quality: 640x480 ~40-60 KB
     dwell_s: 1.0            # in the bands (dropouts <= gap_s allowed) this long -> events:vision {kind: gaze}; step 1г: 1.5 -> 1.0 (replay 9/12 -> 11/12, 0 false; core 2026-11-01)
     gap_s: 0.4              # live: 4 looks -> 1 trigger without it, 2 with it (3 with dwell 1.5 s)
     min_interval_s: 10      # not more often; and the face has to turn away first

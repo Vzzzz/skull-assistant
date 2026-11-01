@@ -59,6 +59,9 @@ params:                  # read by services/brain/responder.py and services/brai
     ack_gap_s: 10        # «угу» not more often (T-049: 20 -> 10; T-038 2в, core's answer 4)
     busy_pause_s: 20     # after an aside veto: silent until this pause or the name
     veto_aside_p: 0.9    # router aside probability that vetoes (radio / podcast / call / «Алло»)
+  gaze:                  # T-053 (T-031 step 1в): the look's frame (services/vision -> Redis vision:frame) in the line's VLM call
+    frame: true          # false -> the step 1г path byte for byte (no frame, «заметь вокруг», first-word repeat check)
+    frame_max_kb: 120    # a larger JPEG is not sent
   modes:                 # T-046: the thinking mode B by the owner's voice (core/modes.py: anywhere in the turn, 1st word an imperative, the rest by stems)
     enter: [подумай как следует, подумай хорошенько, включи мозги, подумай серьёзно]
     exit: [хватит думать, достаточно думать, возвращайся, вернись]
