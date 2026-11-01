@@ -2,7 +2,7 @@
 
 [![tests](https://github.com/Vzzzz/skull-assistant/actions/workflows/tests.yml/badge.svg)](https://github.com/Vzzzz/skull-assistant/actions/workflows/tests.yml) [![license: MIT](https://img.shields.io/github/license/Vzzzz/skull-assistant)](LICENSE) ![python 3.10](https://img.shields.io/badge/python-3.10-blue) ![status: work in progress](https://img.shields.io/badge/status-work_in_progress-orange) ![platform: Jetson Orin Nano 8 GB](https://img.shields.io/badge/platform-Jetson_Orin_Nano_8_GB-76B900)
 
-> **Work in progress** (October 2026). The bench part is built and measured; nothing has been deployed to the device (Jetson Orin Nano Super 8 GB) yet. What works today is listed below; day-by-day state is in `docs/JOURNAL.md` (Russian).
+> **Work in progress** (early November 2026). The bench part is built and measured: the voice loop, the "think hard" mode on a 26B model through the dispatcher, the gaze trigger with a camera, arithmetic outside the model; nothing has been deployed to the device (Jetson Orin Nano Super 8 GB) yet. What works today is listed below; day-by-day state is in `docs/JOURNAL.md` (Russian).
 
 <p align="center">
   <img src="docs/media/skull-jetson.jpg" width="420" alt="Jetson Orin Nano inside an anatomical skull model">
@@ -27,23 +27,26 @@ The full voice loop runs as a set of systemd units on a Redis Streams bus:
 | Turn router | turn type (chat / about the speaker / arithmetic / explain / outside world / command) in one model call, policy per type | accuracy 0.88–0.93 |
 | "Should I speak now" | rubber-duck mode: addresses, muttering, phone calls, broadcast, music — conversation state + a binary model question | live: 0 replies over 3.5 h of household background, 1 false of 16 mutterings, 6/6 addresses over a podcast |
 | TTS | Piper (CPU), sentence streaming, sox timbre; Qwen3-TTS 0.6B measured as a GPU candidate | first audio 0.5–1.3 s; Piper RT 0.06; Qwen3-TTS RT 0.13, 1.9 GB VRAM |
-| Vision | camera in the loop on the bench: gaze at the skull as a trigger (YuNet + head pose), scene context next | working posture still confused with gaze — being tuned |
+| Vision | gaze at the skull as a trigger (YuNet + Face Mesh, head turn, bands calibrated per placement); on the event one frame goes to the VLM and the line is about what is in it; the frame never enters the history | 10/12 gazes, 0 false over 20 min of work; gaze → sound 0.8–2.1 s, frame 183 tokens |
+| "Think hard" mode (B) | the owner's phrase «подумай как следует» switches, through the dispatcher, to **Gemma 4 26B-A4B** (experts on CPU); the question from the same phrase goes to it with the full history; return by phrase or on idle; the switch is audible (HDD clicks) | trigger → 26B answer 17–19 s, return 7 s, 1 call per turn; A↔B switch 8–30 s, memory survives the switch |
+| Arithmetic | outside the model: number/time normalization, `calc` via `ast`, the model gets a note «computed: …» | CTX-1 math 3/3 over the bus, 0 false calls |
 
 The evaluation set **CTX-1** (60 turns with anchors for memory, arithmetic and "don't make things up") was run on 14 models from 1.7B to 9B; it picked the brain and measured what memory and the router add (`research/eval/`). The memory budget of the whole mode A — voice stack, VLM with projector, embedder, YOLO detector — was measured all at once: **6.3–6.5 GB of the 7.6 GB available on Orin** (bench-based estimate, `docs/MEMORY_BUDGET.md` §2).
 
-Not there yet: running on the Jetson (next milestone), model swapping between modes A/B, an own wake word on an MCU (sibling project), interrupting the skull while it speaks (barge-in), fact checking via the network. Queue: `docs/TASKS.md`; milestone plan: `docs/ROADMAP.md` §7a.
+Not there yet: running on the Jetson (next milestone), an own wake word on an MCU (sibling project), interrupting the skull while it speaks (barge-in), an object detector for the scene (full M7); fact checking via the network is in progress (Wikipedia as a reference, off by default, `docs/DECISION_LOG.md` D-031). Tests on `core/` — 430+ in seconds, no models or GPU, the same run in CI. Queue: `docs/TASKS.md`; milestone plan: `docs/ROADMAP.md` §7a.
 
 ## How it is made
 
-Two commit authors. The **human** — hardware, the bench, running every measurement, listening to voices, architectural decisions and acceptance of results. The **AI assistant** (Claude Code in two roles, see `docs/agents/`) — measurement scripts, service code against task cards, paper and repo reviews, documentation. Yes, it is vibe coding — with a journal that shows what was tried, where it broke and why this option was chosen; every number is reproducible with the scripts in `research/`.
+Two commit authors. The **human** — hardware, the bench, running every measurement, listening to voices, architectural decisions and acceptance of results. The **AI assistant** (Claude Code in three roles — researcher, executor, reviewer, see `docs/agents/`) — measurement scripts, service code against task cards, paper and repo reviews, documentation. Yes, it is vibe coding — with a journal that shows what was tried, where it broke and why this option was chosen; every number is reproducible with the scripts in `research/`.
 
 ## Layout
 
 ```
 AGENTS.md     context and role protocol for agents (CLAUDE.md is the Claude Code wrapper)
 services/     production: one service = folder with code + manifest.yaml (budget, residency, lifecycle)
-core/         shared code: out-of-window memory, router, text filters; the mode dispatcher arrives in M8
-deploy/       systemd/ — skull.target + units, install.sh; stand/ — bench control from Git Bash
+core/         shared code: out-of-window memory, router, text and speech filters, ambient policy, A/B mode dispatcher, manifests, number normalization
+tests/        pytest on core/ — no models, Redis or GPU, seconds; the same run in CI
+deploy/       systemd/ — skull.target + units, install.sh; modes.yaml — per-mode budgets; stand/ — bench status, restart and mode switch from Git Bash
 research/     reproducible measurements: bench/ (memory, speed), eval/ (CTX-1), memory/ (prototypes), tts/, vision/
 docs/         session journal, task queue, open questions, roadmap, decision log, memory budgets, paper reviews
 persona/      the character's system prompt (dataset is private, see persona/README)
@@ -57,7 +60,7 @@ The "production / research" boundary: `services/` holds only what a unit runs on
 - Bus: Redis Streams (`audio:mic` → `events:wakeword` → `events:transcript` → `events:reply`); dialogue history in Redis, one exchange = one memory record.
 - Each service is a separate systemd unit; process isolation is the model-swap mechanism (GPU memory comes back only when the process dies).
 - Voice stack and embedder are CPU-only; only the VLM and the detector get the GPU. Every CUDA context costs hundreds of MB out of the same 8 GB.
-- Three modes: A — 4B VLM + full sensor stack; B — a large MoE (26B-A4B) streamed from NVMe; C — "trophy". Invariant: the wake word / KWS is never evicted (it moves to an MCU in the sibling project `bitladder`).
+- Three modes: A — 4B VLM + full sensor stack; B — a large MoE (26B-A4B) streamed from NVMe; C — "trophy". A and B work on the bench: the dispatcher (`core/dispatcher.py`) stops and starts units by their manifests, saves the llama-server KV slot across the switch, and reports the phases on `events:mode`. Invariant: the wake word / KWS is never evicted (it moves to an MCU in the sibling project `bitladder`).
 
 Details: `docs/ROADMAP.md`; the original plan: `docs/roadmap-v1.md`.
 
