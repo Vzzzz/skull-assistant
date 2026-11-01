@@ -7,7 +7,7 @@ import math
 import os
 from PIL import Image, ImageDraw, ImageFont
 
-W, H = 2400, 1280
+W, H = 2300, 1290
 BG, INK, GREY = (255, 255, 255), (28, 28, 30), (110, 110, 115)
 CPU, GPU, EXT, BUS, PLAT = (225, 236, 250), (222, 243, 226), (250, 240, 222), (240, 240, 244), (246, 246, 248)
 CPU_B, GPU_B, EXT_B, BUS_B = (70, 110, 170), (60, 140, 80), (190, 130, 50), (120, 120, 130)
@@ -75,9 +75,11 @@ text(L, 96, "Jetson Orin Nano Super 8 ГБ (стенд — RTX 3080 Laptop 8 Г�
 text(L, 150, "Датчики и вывод", F_BUS, GREY)
 box(L, 185, 450, 280, "Микрофон", ["C270 (USB) / массив ноутбука"], EXT, EXT_B)
 box(1840, 185, R, 280, "Динамик", ["22 кГц моно"], EXT, EXT_B)
+# network above brain: brain -> net straight up, dashed (off by default)
+box(1100, 185, 1785, 280, "Сеть — по умолчанию выключена (D-031)", ["Wikipedia API (справочник) · SearXNG по URL"], EXT, EXT_B)
 
 # ---- voice pipeline: five boxes, 390 wide, 55 gaps
-Y0, Y1 = 330, 450
+Y0, Y1 = 330, 460
 cols = [(L + i * 445, L + i * 445 + 390) for i in range(5)]     # 60..450 … 1840..2230
 
 
@@ -86,18 +88,20 @@ def pbox(i, title, lines, fill=CPU, border=CPU_B, tag="CPU"):
 
 
 pbox(0, "skull-capture", ["PulseAudio / ALSA → audio:mic"])
-pbox(1, "skull-wakeword", ["Silero VAD (openWakeWord — запасной)"])
+pbox(1, "skull-wakeword", ["Silero VAD", "(openWakeWord — запасной)"])
 pbox(2, "skull-stt", ["GigaAM v3 CTC · CAM++ (voice id)"])
-pbox(3, "skull-brain", ["роутер · политика · память · режимы"])
+pbox(3, "skull-brain", ["роутер · политика · память", "режимы A/B · calc · сеть"])
 pbox(4, "skull-tts", ["Piper (+ sox)"])
 
 arrow((255, 280), (255, Y0))                      # mic -> capture
 arrow((2035, Y0), (2035, 280))                    # tts -> speaker (from the top edge of the box)
+arrow((1590, Y0), (1590, 280), color=EXT_B, dashed=True)   # brain -> net
+text(1604, 305, "HTTPS", F_SMALL, EXT_B, anchor="lm")
 for i in range(4):
     arrow((cols[i][1], 390), (cols[i + 1][0], 390))   # stream names are listed on the bus band
 
 # ---- bus band
-BY0, BY1 = 530, 650
+BY0, BY1 = 540, 660
 d.rounded_rectangle((L, BY0, R, BY1), radius=18, fill=BUS, outline=BUS_B, width=3)
 text(L + 20, BY0 + 14, "Redis — шина и состояние", F_BUS)
 text(L + 20, BY0 + 52, "Streams: audio:mic → events:wakeword → events:transcript → events:reply · events:vision · cmd:mode → events:mode · events:net", F_BODY)
@@ -106,26 +110,23 @@ for (a, b) in cols:
     d.line(((a + b) / 2, Y1, (a + b) / 2, BY0), fill=BUS_B, width=3)
 
 # ---- lower row: models and helpers
-Y2, Y3 = 730, 850
+Y2, Y3 = 740, 860
 box(L, Y2, 600, Y3, "skull-llm · llama-server", ["A: Gemma 4 E4B (IQ4_XS + imatrix, mmproj)", "B: Gemma 4 26B-A4B (Q4_K_M, эксперты на CPU)"], GPU, GPU_B, "GPU")
 box(640, Y2, 1060, Y3, "skull-embed", ["EmbeddingGemma"], CPU, CPU_B, "CPU")
 box(1100, Y2, 1560, Y3, "skull-vision", ["YuNet · Face Mesh 478"], CPU, CPU_B, "CPU")
 box(1600, Y2, R, Y3, "skull-dispatcher", ["режимы A / B по манифестам"], CPU, CPU_B, "CPU")
 
 arrow((330, Y2), (330, BY1)); text(350, Y2 - 30, "HTTP /v1 от brain", F_SMALL, GREY)
-arrow((850, Y2), (850, BY1)); text(870, Y2 - 30, "HTTP от brain", F_SMALL, GREY)
+arrow((850, Y2), (850, BY1)); text(870, Y2 - 30, "HTTP от brain: память за окном (по метке роутера)", F_SMALL, GREY)
 arrow((1330, Y2), (1330, BY1)); text(1350, Y2 - 30, "events:vision · vision:frame", F_SMALL, GREY)
 arrow((1920, Y2), (1920, BY1)); text(1940, Y2 - 30, "cmd:mode · events:mode", F_SMALL, GREY)
 
 # ---- camera under vision, network under dispatcher
-box(1100, 910, 1560, 1000, "Камера", ["C270, 640×480 MJPG"], EXT, EXT_B)
-arrow((1330, 910), (1330, Y3))                    # camera -> vision
-box(1600, 910, R, 1020, "Сеть — по умолчанию выключена (D-031)", ["Wikipedia API (справочник) · SearXNG по URL"], EXT, EXT_B)
-arrow((cols[3][1], 420), (2310, 420), (2310, 965), (R, 965), color=EXT_B, dashed=True)     # brain -> net, around the bus
-text(2322, 690, "HTTPS", F_SMALL, EXT_B, anchor="lm")
+box(1100, 920, 1560, 1010, "Камера", ["C270, 640×480 MJPG"], EXT, EXT_B)
+arrow((1330, 920), (1330, Y3))                    # camera -> vision
 
 # ---- platform band + legend
-PY0, PY1 = 1080, 1230
+PY0, PY1 = 1090, 1240
 d.rounded_rectangle((L, PY0, 1560, PY1), radius=18, fill=PLAT, outline=BUS_B, width=3)
 text(L + 20, PY0 + 14, "Платформа", F_BUS)
 text(L + 20, PY0 + 52, "• один сервис = папка + manifest.yaml: бюджет по пикам, резидентность в режимах A/B/C, freeze/thaw, топики шины", F_BODY)
