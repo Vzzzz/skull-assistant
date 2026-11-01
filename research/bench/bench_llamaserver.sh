@@ -5,6 +5,8 @@
 #   bash bench_llamaserver.sh bench  out.csv   # peak VRAM / RSS / host RAM / load / warm TTFT / prefill / tok/s at CTXS
 #   bash bench_llamaserver.sh slots            # fill ~8k context, save slot, restart, restore: times and file size
 #   bash bench_llamaserver.sh probs            # n_probs on a yes/no question: first-token distribution + latency
+#   bash bench_llamaserver.sh draft [--quick]  # T-052: MTP draft for mode B — research/bench/bench_draft.py (a build with
+#                                              # --spec-type draft-mtp: LLAMA_BIN=~/llama.cpp-master/build-cuda/bin)
 #
 # Env: GGUF (default models/quant/kostyan-e4b-iq4xs-imx.gguf), MMPROJ (optional: path to mmproj gguf -> VRAM with vision),
 #      LLAMA_BIN (default ~/llama.cpp/build-cuda/bin), CTXS, KV (q8_0), FA (on), PORT (11436).
@@ -54,6 +56,9 @@ completion() {  # $1 user text (templated here), $2 extra json fields
   curl -s "$HOST/completion" -d "{\"prompt\": $(printf '%s' "$p" | jstr), \"n_predict\": 64, \"temperature\": 0, \"cache_prompt\": false ${2:+, $2}}"
 }
 
+if [ "$MODE" = draft ]; then   # its own model / server per configuration: the Python helper does the whole run
+  LLAMA_BIN="${LLAMA_BIN_DRAFT:-$HOME/llama.cpp-master/build-cuda/bin}" exec "$ROOT/.venv/bin/python" "$ROOT/research/bench/bench_draft.py" "${@:2}"
+fi
 case "$MODE" in
 bench)
   [ -s "$OUT" ] || echo "runtime,model,num_ctx,kv,flash,vram_idle_mb,vram_peak_mb,vram_delta_mb,rss_server_mb,ram_delta_mb,load_s,ttft_warm_s,prompt_tok_s,tok_s" > "$OUT"
