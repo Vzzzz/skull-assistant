@@ -2,7 +2,7 @@
 import numpy as np
 import pytest
 
-from core.gaze_bands import feature_stats, select_bands, spread
+from core.gaze_bands import candidates, choose_by_replay, feature_stats, select_bands, spread
 
 rng = np.random.default_rng(1)
 
@@ -42,3 +42,30 @@ def test_spread_is_the_larger_of_looks_and_work():
     st = feature_stats(looks, work, ["a"])
     assert st["a"]["spread"] == pytest.approx(0.6, rel=0.2)
     assert select_bands(st) == {}
+
+
+def fake_stats(**ratios):
+    return {k: {"band": (0.0, 1.0), "ratio": r} for k, r in ratios.items()}
+
+
+def test_candidates_order():
+    assert candidates(fake_stats(a=2.1, b=0.8, c=2.3)) == ["c", "a"]
+
+
+def test_replay_picks_the_passing_set_with_fewest_features():
+    st = fake_stats(yaw=8.7, gaze_h=4.4, nose=2.7)
+    table = {("yaw",): (9, 12, 1), ("gaze_h",): (11, 12, 0), ("nose",): (12, 12, 3), ("gaze_h", "yaw"): (11, 12, 0)}
+    bands, res = choose_by_replay(st, lambda b: table.get(tuple(sorted(b)), (12, 12, 0)))
+    assert list(bands) == ["gaze_h"] and res == (11, 12, 0)
+
+
+def test_replay_none_passes_like_30_10():
+    """30.10: candidates iris_v + iris_h only; iris_h — 1 false, iris_v — 2, both — 5 of 10: no set passes; among all
+    features the replay finds iris_h + nose (8 of 10, 0 false)."""
+    st = fake_stats(iris_h=2.1, iris_v=2.3, nose=0.8)
+    table = {("iris_h",): (8, 10, 1), ("iris_v",): (7, 10, 2), ("iris_h", "iris_v"): (5, 10, 2), ("nose",): (7, 10, 9),
+             ("iris_h", "nose"): (8, 10, 0), ("iris_v", "nose"): (6, 10, 0), ("iris_h", "iris_v", "nose"): (5, 10, 0)}
+    ev = lambda b: table[tuple(sorted(b))]
+    assert choose_by_replay(st, ev) == (None, None)
+    bands, res = choose_by_replay(st, ev, keys=list(st))
+    assert set(bands) == {"iris_h", "nose"} and res == (8, 10, 0)

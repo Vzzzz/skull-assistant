@@ -44,11 +44,11 @@ params:
     # frames; iris_h alone — 1 false in 5 min of work, iris_h + nose — 0, looks 9 of 10 (research/vision/results/gaze_1b_2026-10-30.md)
     # step 1г (2026-11-01, camera right of and above the desk): rule over --natural 600 (12 marked looks) — yaw 8.7,
     # gaze_h 4.4, nose 2.7 (gap / spread; iris_h 1.2, pitch 1.2, gaze_v 1.0); replay: 0 false, 9 of 12 at dwell 1.5 s,
-    # 11 of 12 at 1.0 s (research/vision/results/gaze_1g_2026-11-01.md). Step 1b bands (camera below, left): iris_h + nose
+    # 11 of 12 at 1.0 s (research/vision/results/gaze_1g_2026-11-01.md). Step 1b bands (camera below, left): iris_h + nose.
+    # The set by the replay (core 2026-11-01: candidates by the gap, the set by the replay, fewer features first): yaw
+    # alone at dwell 1.0 s — 11 of 12, 0 false, work in the band 0.1 %, longest work run 0.4 s (x2.5)
     bands:
       yaw: [-15.28, 18.44]
-      gaze_h: [-13.84, 16.16]
-      nose: [-0.06, 0.21]
-    dwell_s: 1.5            # in the band (dropouts <= gap_s allowed) this long -> events:vision {kind: gaze}
+    dwell_s: 1.0            # in the bands (dropouts <= gap_s allowed) this long -> events:vision {kind: gaze}; step 1г: 1.5 -> 1.0 (replay 9/12 -> 11/12, 0 false; core 2026-11-01)
     gap_s: 0.4              # live: 4 looks -> 1 trigger without it, 2 with it (3 with dwell 1.5 s)
     min_interval_s: 10      # not more often; and the face has to turn away first

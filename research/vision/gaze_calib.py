@@ -13,6 +13,9 @@ features are logged with its phase. Frames are not stored. CSV -> research/visio
   .venv/bin/python research/vision/gaze_calib.py --static skull --seconds 15     # one state, said in the chat
   .venv/bin/python research/vision/gaze_calib.py --report <csv> [<csv> ...]       # over saved recordings
 
+Bands (step 1г, core 2026-11-01): candidates by the gap (gap >= 2 x spread), the set of 1-3 by the replay (caught >= 8 of
+10, 0 false, fewer features first) — core/gaze_bands.py; the report prints both lines.
+
 Report: per feature, «skull» frames against everything else (work, between the looks, monitor): medians, p10 / p90,
 robust spread (1.4826 x MAD) and the gap between the medians; criterion (core, 2026-10-29): gap >= 2 x the larger
 spread. Bands are fixed in advance — [p5, p95] of the «skull» frames — for single features and their combinations; per
@@ -38,7 +41,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
-from core.gaze_bands import RATIO, feature_stats, select_bands
+from core.gaze_bands import RATIO, choose_by_replay, feature_stats, select_bands
 spec = importlib.util.spec_from_file_location("gaze", ROOT / "services/vision/gaze.py")
 gaze = importlib.util.module_from_spec(spec); spec.loader.exec_module(gaze)   # measure() etc., no service loop
 P, G = gaze.P, gaze.G
@@ -213,9 +216,9 @@ def replay(rows, bands, dwell=None):
     return out
 
 
-def band_rule(looks, work, title):
-    """Step 1г: [p5, p95], spread, gap for every feature and the bands chosen by core/gaze_bands (gap >= 2 x spread,
-    at most three)."""
+def band_rule(looks, work, title, evaluate=None):
+    """Step 1г: [p5, p95], spread, gap for every feature; the method of core/gaze_bands — candidates by the gap, the set
+    by the replay (evaluate(bands) -> (caught, looks, false)); returns the replay's set (or the gap's when it has none)."""
     st = feature_stats(looks, work, BAND_KEYS)
     print(f"\nband rule ({title}): band = [p5, p95] of the looks, spread = larger robust spread, gap = |median looks - median work|")
     print("feature | band               | med looks | med work | spread | gap    | gap/spread")
@@ -225,8 +228,18 @@ def band_rule(looks, work, title):
             print(f"{k:<7} | [{s['band'][0]:+8.3f},{s['band'][1]:+8.3f}] | {s['med_look']:+9.3f} | {s['med_work']:+8.3f} | "
                   f"{s['spread']:6.3f} | {s['gap']:6.3f} | {s['ratio']:5.1f}{' ok' if s['ratio'] >= RATIO else ''}")
     bands = select_bands(st)
-    print("chosen: " + (", ".join(f"{k} [{lo:+.3f}, {hi:+.3f}]" for k, (lo, hi) in bands.items()) or "none qualifies"))
-    return bands
+    fmt = lambda b: ", ".join(f"{k} [{lo:+.3f}, {hi:+.3f}]" for k, (lo, hi) in b.items())
+    print("by the gap (candidates):  " + (fmt(bands) or "none qualifies"))
+    if evaluate is None:
+        return bands
+    best, res = choose_by_replay(st, evaluate)
+    print(f"by the replay (dwell {G['dwell_s']} s, caught >= 80 %, 0 false, fewer features first): "
+          + (f"{fmt(best)} — caught {res[0]} of {res[1]}, false {res[2]}" if best else "no candidate set passes"))
+    if not best or set(best) != set(bands):
+        alt, ares = choose_by_replay(st, evaluate, keys=BAND_KEYS)
+        print("  (by the replay over all features, for reference: "
+              + (f"{fmt(alt)} — caught {ares[0]} of {ares[1]}, false {ares[2]})" if alt else "none passes)"))
+    return best or bands
 
 
 def report(rows):
@@ -235,7 +248,13 @@ def report(rows):
     pos = [x for x in rows if x["phase"] == "skull" and x["settled"]]
     neg = [x for x in rows if x["phase"] != "skull" and x["settled"]]
     phases = sorted({x["phase"] for x in rows})
-    chosen = band_rule(pos, [x for x in neg if x["phase"] == "work"] or neg, "looks vs work")
+    looks_n = sorted({x["look"] for x in rows if x["phase"] == "skull"})
+
+    def evaluate(bands):
+        trig = replay(rows, bands)
+        return (len({x["look"] for x in trig if x["phase"] == "skull"}), len(looks_n),
+                sum(1 for x in trig if x["phase"] != "skull"))
+    chosen = band_rule(pos, [x for x in neg if x["phase"] == "work"] or neg, "looks vs work", evaluate)
     print(f"\nframes: " + ", ".join(f"{p} {sum(1 for x in rows if x['phase'] == p)} "
                                     f"(face {sum(1 for x in rows if x['phase'] == p and x['face'])}, "
                                     f"eyes {sum(1 for x in rows if x['phase'] == p and 'iris_h' in x)})" for p in phases))
@@ -327,7 +346,10 @@ def report_natural(rows):
     print(f"\nlooks marked {len(looks)}: duration median {np.median(dur):.1f} s [{min(dur):.1f}..{max(dur):.1f}]; "
           f"frames skull {len(pos)} (eyes {sum('iris_h' in x for x in pos)}), work {len(work)} "
           f"(eyes {sum('iris_h' in x for x in work)}), edge {sum(x['state'] == 'edge' for x in frames)}")
-    chosen = band_rule(pos, work, "marked looks vs work")
+    def evaluate(bands):
+        caught, false = score_triggers([x["t"] for x in replay(frames, bands)], looks)
+        return caught, len(looks), len(false)
+    chosen = band_rule(pos, work, "marked looks vs work", evaluate)
     print("\nfeature | skull: median p10 .. p90, spread | work: median p10 .. p90, spread | gap / spread")
     gs = {}
     for k in ("iris_h", "iris_v", "nose", "yaw", "pitch", "gaze_h", "gaze_v"):
