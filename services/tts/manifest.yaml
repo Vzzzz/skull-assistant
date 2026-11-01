@@ -22,3 +22,4 @@ never_evict: false
 params:
   sfx:
     transition: services/tts/sfx/thinking.wav   # looped from events:mode begin to done / failed (T-046, U-003: a stub — HDD clicks by sox, services/tts/sfx/make_thinking.sh; the real sample is the owner's choice)
+    net: services/tts/sfx/dialup.wav   # T-051: from events:net begin to done (a modem handshake, services/tts/sfx/make_dialup.sh)

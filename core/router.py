@@ -139,6 +139,8 @@ WORLD_SOFT = ("Отвечай по существу из общих знаний
 
 # mode B (T-046, core's answer 1 to T-044): the router is not called — B is entered on purpose («подумай как следует»), every
 # turn is treated as `explain` with the soft world hedge, and the memory beyond the window stays on: one prefill per turn
+NET_PREFIX = ("Отвечай по выдержкам из сети ниже, в образе и коротко. Если они не отвечают на вопрос — скажи, что в сети "
+              "не нашёл. Если они расходятся с тем, что ты думал, — скажи, что в сети пишут иначе.")   # T-051
 CALC_DONE = "Результат уже вычислен (справка ниже) — назови его в образе, коротко, числом как есть, не пересчитывай."
 POLICY_B = {"max_tokens": POLICY["explain"]["max_tokens"], "memory": True, "prefix": WORLD_SOFT}
 

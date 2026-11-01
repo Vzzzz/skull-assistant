@@ -19,8 +19,10 @@ from core.memory import SYSTEM_RULE, AssocMemory, clean_reply, format_note
 from core.modes import accepts_exit, deferred_question, find_phrase
 from core.speech import for_speech
 from core.numbers_ru import normalize
-from core.router import CALC_DONE, POLICY, POLICY_B, decide, duck_bin_llamaserver, policy_prefix, route_llamaserver
+from core.router import (CALC_DONE, NET_PREFIX, POLICY, POLICY_B, decide, duck_bin_llamaserver, is_question, policy_prefix,
+                         route_llamaserver)
 from tools import note as calc_note     # services/brain/tools.py (T-015)
+from net import Net, excerpts, note_for_memory, personal   # services/brain/net.py (T-051)
 
 P = yaml.safe_load(Path(__file__).with_name("manifest.yaml").read_text(encoding="utf-8"))["params"]
 HOST = P["host"]
@@ -60,6 +62,11 @@ GAZE_FRAME_TURN = (" На кадре с камеры — твой владеле
 GAZE_FALLBACK = ("Хм.", "Ну?", "Что?")   # all attempts dropped: an interjection in turn instead of silence
 FRAME_KEY = "vision:frame"      # services/vision/gaze.py: JPEG of the look's frame, ex=frame_ttl_s
 gaze_fallback = 0
+# T-051: checking in the net (D-031) — off unless params.net.enabled or the owner's one-shot phrase; world (A) or a
+# question in B -> «Сейчас гляну.», events:net (the modem sound in skull-tts), search, the model answers by the excerpts
+NETP = P.get("net") or {}
+net = Net(NETP, r)
+NET_LINES = {"look": "Сейчас гляну.", "empty": "Сеть молчит.", "ask": "Спрашивай, гляну.", **NETP.get("lines", {})}
 GAZE_COOLDOWN_S = AMB.get("gaze_cooldown_s", 30)
 # T-044: while the dispatcher swaps the model (Redis mode:transition) llama-server is down or loading: one fixed line
 # in character to an address (the name / the wake word), never the model; overheard speech is ignored, no duck
@@ -353,7 +360,8 @@ def load_memory(history):
     for ex in history:
         cached = r.hget(VECS, ex["turn"])
         try:
-            v = mem.add(ex["turn"], ex["user"], ex["reply"], vec=np.frombuffer(cached, dtype=np.float32) if cached else None)
+            v = mem.add(ex["turn"], ex["user"], ex["reply"] + (" — " + ex["net"] if ex.get("net") else ""),
+                        vec=np.frombuffer(cached, dtype=np.float32) if cached else None)
         except requests.RequestException as e:
             print(f"brain: memory skips turn {ex['turn']}: {e}")
             continue
@@ -444,6 +452,14 @@ while True:
         if span and accepts_exit(speaker, text, span, seg_s):
             ask_mode("A", f"voice:{span[0]}")
             continue
+    net_forced = False
+    if NETP and (owner or owner_b) and not deferred and (span_n := net.once_phrase(text)):
+        q = deferred_question(text, span_n)
+        if not q:                  # «Погугли.» — the next question goes to the net (ONCE_S)
+            say(uuid.uuid4().hex[:12], 0, NET_LINES["ask"], "", ts, final=True, meta={"reply": NET_LINES["ask"], "net": "armed"})
+            print(f"brain: net armed for the next question")
+            continue
+        text, net_forced = q, True
     if owner_b:
         last_owner_b = time.time()
     t0 = time.perf_counter()
@@ -514,7 +530,20 @@ while True:
         if hits:
             print(f"brain: memory {[h[1]['turn'] for h in hits]}")
     tool = calc_note(text) if label == "calc" else ""   # T-015: computed outside the model, given as a note
-    if tool:
+    net_res, net_note = None, ""
+    if (NETP and (net_forced or ((label == "world" and not thinking) or (thinking and is_question(text))) and not personal(text))
+            and net.allowed()):
+        say(uuid.uuid4().hex[:12], 0, NET_LINES["look"], "", ts, final=True, meta={"reply": NET_LINES["look"], "net": "look"})
+        r.xadd("events:net", {"phase": "begin", "ts": f"{time.time():.3f}"}, maxlen=1000, approximate=True)
+        net_res = net.search(text)
+        r.xadd("events:net", {"phase": "done", "n": str(len(net_res)), "ts": f"{time.time():.3f}"}, maxlen=1000, approximate=True)
+        if net_res:
+            prefix, tool = NET_PREFIX, excerpts(net_res)
+            window, used = build_window(history, sys_tokens, est_new + extra + max_tokens + est_tokens(prefix + tool))
+        else:
+            say(uuid.uuid4().hex[:12], 0, NET_LINES["empty"], "", ts, final=True, meta={"reply": NET_LINES["empty"], "net": "empty"})
+        print(f"brain: net {len(net_res)} result(s): {[x['title'] for x in net_res]}")
+    if tool and net_res is None:
         prefix = CALC_DONE
         print(f"brain: calc {tool}")
     sent = (prefix + "\n" + text if prefix else text) + ("\n\n" + tool if tool else "") + ("\n\n" + note if note else "")
@@ -551,18 +580,21 @@ while True:
     tokens = max(1, pe - sys_tokens - in_window - not_kept) + ec if pe else est_new + est_tokens(raw)
     turn = history[-1]["turn"] + 1 if history else 1
     if "dunno" not in flags:      # a bare «Не знаю.» is said, not kept (T-042): nothing in the history or the memory
+        if net_res is not None:   # T-051: the memory record carries its source
+            net_note = note_for_memory(text, net_res, reply)
         r.rpush(HISTORY, json.dumps({"turn": turn, "ts": ts, "user": text, "reply": reply, "raw": raw,
-                                     "tokens": tokens}, ensure_ascii=False))
+                                     "tokens": tokens, **({"net": net_note} if net_note else {})}, ensure_ascii=False))
     if mem is not None and "dunno" not in flags:
         try:
-            v = mem.add(turn, text, reply)
+            v = mem.add(turn, text, reply + (" — " + net_note if net_note else ""))
             if v is not None:
                 r.hset(VECS, turn, v.astype(np.float32).tobytes())
         except requests.RequestException as e:
             print(f"brain: memory add failed: {e}")
     wall = time.perf_counter() - t0
     # per-turn details for logs and research/eval/ctx_bus.py, on the final message of the reply (TTS reads `text`)
-    meta = {"turn": turn, "window_turns": len(window), "prompt_tokens": pe, "completion_tokens": ec, "calc": tool or None,
+    meta = {"turn": turn, "window_turns": len(window), "prompt_tokens": pe, "completion_tokens": ec,
+            "calc": tool if tool and net_res is None else None, "net": None if net_res is None else [x["title"] for x in net_res],
             "ttft_s": round(timings.get("prompt_ms", 0) / 1000, 3),
             "tok_s": round(timings["predicted_per_second"], 1) if timings.get("predicted_per_second") and ec >= 5 else None,
             "finish_reason": tail.get("finish_reason"), "wall_s": round(wall, 2), "max_tokens": max_tokens,

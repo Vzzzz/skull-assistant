@@ -1,0 +1,23 @@
+{
+ "query": "высота Эльбруса",
+ "number_of_results": 2,
+ "results": [
+  {
+   "title": "Эльбрус — Википедия",
+   "url": "https://ru.wikipedia.org/wiki/Эльбрус",
+   "content": "Эльбрус — стратовулкан на Кавказе, 5642 м над уровнем моря.",
+   "engine": "wikipedia"
+  },
+  {
+   "title": "Эльбрус: высота, маршруты",
+   "url": "https://example.org/elbrus",
+   "content": "Западная вершина — 5642 м, восточная — 5621 м.",
+   "engine": "duckduckgo"
+  },
+  {
+   "title": "Без текста",
+   "url": "https://example.org/empty",
+   "content": ""
+  }
+ ]
+}
