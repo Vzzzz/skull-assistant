@@ -33,6 +33,7 @@
 | YOLOv8n | tensorrt | да | | | / / | — | | services/vision |
 | audio_capture (soundcard→Redis) | cpu | нет | 0 | 44 | CPU 4 % | стенд, 2026-10-12 | 2026-10-12 | services/audio_capture |
 | brain (клиент ollama) | cpu | нет | 0 | 30 | модель — в строке VLM | стенд, 2026-10-12 | 2026-10-12 | services/brain |
+| **Взгляд с кадром (T-053, шаг 1в): кадр по событию в вызове VLM** — `skull-vision` JPEG 640×480 q80 (~31 КБ) в Redis `vision:frame` на 10 с; brain — один вызов с `image_url` | llama-server A (mmproj) | да | — | llama-server VmHWM 2927 → **2997 МБ (+70)** после вызовов с кадром; brain RSS 48 МБ | кадр **183 токена**; взгляд → первый звук **0.8–2.1 с** (с кадром 0.9–1.0 с), в историю и KV диалога кадр не идёт | стенд, 2026-11-01, по шине (`research/vision/results/gaze_1v_2026-11-01.md`) | 2026-11-01 | services/brain `params.gaze.frame`, services/vision `frame_ttl_s` |
 | Память (SQLite) | cpu | нет | 0 | | / / | — | | services/memory |
 | Диспетчер + Redis | cpu | нет | 0 | redis 10 | / / | стенд, 2026-10-12 | | core |
 | Пустой след системы (JetPack, X off) | — | — | | | | устройство | | — |
