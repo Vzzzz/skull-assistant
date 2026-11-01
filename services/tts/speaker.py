@@ -14,6 +14,8 @@ after `done`; tts:speaking is up while it plays (the VAD must not take the click
 switch and a line follows it (the deferred answer, «Ну, думаю…», «Всё, я обратно.»), brain sets tts:sfx_hold: the loop
 then plays on past `done` until the first sentence of that line is synthesized — no silence while model B prefills
 (owner, T-046 gate: «пауза между окончанием щелчков и началом реплики слишком заметная»); SFX_HOLD_MAX_S at most.
+Checking in the net (T-051): events:net begin -> the modem handshake loop (params.sfx.net), done -> off; same player
+and pieces, no hold (the answer by the excerpts follows the model's prefill).
 """
 import queue
 import subprocess
@@ -137,16 +139,24 @@ def load_sfx(path):
         return None
 
 
-def sfx_loop(audio):
-    """While sfx_on: keep the player fed with the loop, one BLOCK at a time, never more than two queued."""
-    pos, n = 0, len(audio)
-    tiled = np.concatenate([audio, audio[:SFX_BLOCK]])       # a block may run over the end of the loop
+sfx_cur = {"audio": None}    # the loop playing now: the transition clicks or the modem (T-051)
+
+
+def sfx_loop():
+    """While sfx_on: keep the player fed with the current loop, one BLOCK at a time, never more than two queued."""
+    pos, playing = 0, None
     while True:
         sfx_on.wait()
         while sfx_on.is_set():
+            audio = sfx_cur["audio"]
+            if audio is None:
+                time.sleep(0.02); continue
+            if audio is not playing:                         # another sound: start it from the top
+                playing, pos = audio, 0
+                tiled = np.concatenate([audio, audio[:SFX_BLOCK]])   # a block may run over the end of the loop
             if pcm.empty():                                  # one piece ahead: the sound stops soon after `done`
                 pcm.put(("sfx", 0, tiled[pos:pos + SFX_BLOCK], None))
-                pos = (pos + SFX_BLOCK) % n
+                pos = (pos + SFX_BLOCK) % len(audio)
             else:
                 time.sleep(0.02)
 
@@ -154,15 +164,16 @@ def sfx_loop(audio):
 threading.Thread(target=synth, daemon=True).start()
 threading.Thread(target=play, daemon=True).start()
 sfx = load_sfx(SFX["transition"]) if SFX.get("transition") else None
-if sfx is not None:
-    threading.Thread(target=sfx_loop, args=(sfx,), daemon=True).start()
+sfx_net = load_sfx(SFX["net"]) if SFX.get("net") else None
+if sfx is not None or sfx_net is not None:
+    threading.Thread(target=sfx_loop, daemon=True).start()
 
-last_ev, last_mode = '$', '$'
+last_ev, last_mode, last_net = '$', '$', '$'
 held_since = 0.0
 print(f"speaker: dmitri ready ({RATE} Hz), transition sound {'on' if sfx is not None else 'off'}, waiting for replies...",
       flush=True)
 while True:
-    ev = r.xread({'events:reply': last_ev, 'events:mode': last_mode}, count=10, block=1000)
+    ev = r.xread({'events:reply': last_ev, 'events:mode': last_mode, 'events:net': last_net}, count=10, block=1000)
     if sfx_held.is_set() and time.time() - held_since > SFX_HOLD_MAX_S:
         sfx_held.clear()
         sfx_on.clear()
@@ -170,10 +181,21 @@ while True:
     if not ev:
         continue
     for stream, items in ev:
+        if stream == b'events:net':
+            for last_net, f in items:
+                phase = f.get(b'phase', b'').decode()
+                if phase == "begin" and sfx_net is not None:
+                    sfx_cur["audio"] = sfx_net
+                    sfx_on.set()
+                    print("tts: net sound on", flush=True)
+                elif phase == "done" and sfx_cur["audio"] is sfx_net and sfx_on.is_set():
+                    sfx_on.clear()
+                    print(f"tts: net sound off ({f.get(b'n', b'?').decode()} results)", flush=True)
         if stream == b'events:mode':
             for last_mode, f in items:
                 phase = f.get(b'phase', b'').decode()
                 if phase == "begin" and sfx is not None:
+                    sfx_cur["audio"] = sfx
                     sfx_on.set()
                     print(f"tts: transition sound on ({f.get(b'from', b'').decode()}->{f.get(b'to', b'').decode()})", flush=True)
                 elif phase in ("done", "failed", "noop") and sfx_on.is_set():

@@ -1,0 +1,204 @@
+[
+ {
+  "look_s": null,
+  "first_answer_s": 1.28,
+  "lines": [],
+  "reply": "Не знаю.",
+  "net": null,
+  "label": "world",
+  "calls": [
+   "router",
+   "chat"
+  ],
+  "text": "А что ты знаешь о гравиметре Тюленева тысяча девятьсот восемьдесят седьмого года? Его вроде на кафедре у нас стоял.",
+  "keys": [],
+  "correct": null
+ },
+ {
+  "look_s": null,
+  "first_answer_s": 1.23,
+  "lines": [],
+  "reply": "На Марсе сейчас не знаю.",
+  "net": null,
+  "label": "world",
+  "calls": [
+   "router",
+   "chat"
+  ],
+  "text": "Oh wait, what's the weather like on Mars today?",
+  "keys": [],
+  "correct": null
+ },
+ {
+  "look_s": null,
+  "first_answer_s": 1.33,
+  "lines": [],
+  "reply": "Высота Эльбруса — 5642 метра.",
+  "net": null,
+  "label": "world",
+  "calls": [
+   "router",
+   "chat"
+  ],
+  "text": "Какая высота Эльбруса?",
+  "keys": [
+   "5642",
+   "5 642",
+   "пять тысяч шестьсот сорок"
+  ],
+  "correct": true
+ },
+ {
+  "look_s": null,
+  "first_answer_s": 1.3,
+  "lines": [],
+  "reply": "Аделаида.",
+  "net": null,
+  "label": "world",
+  "calls": [
+   "router",
+   "chat"
+  ],
+  "text": "Какой город столица Австралии?",
+  "keys": [
+   "Канберр"
+  ],
+  "correct": false
+ },
+ {
+  "look_s": null,
+  "first_answer_s": 1.4,
+  "lines": [],
+  "reply": "Санкт-Петербург основан в 1703 году.",
+  "net": null,
+  "label": "world",
+  "calls": [
+   "router",
+   "chat"
+  ],
+  "text": "В каком году основан Санкт-Петербург?",
+  "keys": [
+   "1703",
+   "тысяча семьсот третьем",
+   "тысяча семьсот третий"
+  ],
+  "correct": true
+ },
+ {
+  "look_s": null,
+  "first_answer_s": 1.35,
+  "lines": [],
+  "reply": "Михаил Булгаков.",
+  "net": null,
+  "label": "world",
+  "calls": [
+   "router",
+   "chat"
+  ],
+  "text": "Кто написал роман Мастер и Маргарита?",
+  "keys": [
+   "Булгаков"
+  ],
+  "correct": true
+ },
+ {
+  "look_s": null,
+  "first_answer_s": 1.55,
+  "lines": [],
+  "reply": "У Марса два спутника: Фобос и Деймос.",
+  "net": null,
+  "label": "world",
+  "calls": [
+   "router",
+   "chat"
+  ],
+  "text": "Сколько спутников у Марса и как они называются?",
+  "keys": [
+   "Фобос",
+   "Деймос"
+  ],
+  "correct": true
+ },
+ {
+  "look_s": null,
+  "first_answer_s": 1.56,
+  "lines": [],
+  "reply": "Железо плавится при температуре около 1538 градусов Цельсия.",
+  "net": null,
+  "label": "world",
+  "calls": [
+   "router",
+   "chat"
+  ],
+  "text": "При какой температуре плавится железо?",
+  "keys": [
+   "1538",
+   "1 538",
+   "тысяча пятьсот тридцать восемь",
+   "1539"
+  ],
+  "correct": true
+ },
+ {
+  "look_s": null,
+  "first_answer_s": 2.03,
+  "lines": [],
+  "reply": "Александр Флеминг.",
+  "net": null,
+  "label": "world",
+  "calls": [
+   "router",
+   "chat"
+  ],
+  "text": "Кто открыл пенициллин?",
+  "keys": [
+   "Флеминг"
+  ],
+  "correct": true
+ },
+ {
+  "look_s": null,
+  "first_answer_s": 1.38,
+  "lines": [],
+  "reply": "Я не могу знать погоду в Москве.",
+  "net": null,
+  "label": "world",
+  "calls": [
+   "router",
+   "chat"
+  ],
+  "text": "Какая сегодня погода в Москве?",
+  "keys": [],
+  "correct": null
+ },
+ {
+  "look_s": null,
+  "first_answer_s": 1.49,
+  "lines": [],
+  "reply": "Я вижу стол, твою куртку на себе и дверь. Курса среди этого нет.",
+  "net": null,
+  "label": "world",
+  "calls": [
+   "router",
+   "chat"
+  ],
+  "text": "Какой сегодня курс доллара?",
+  "keys": [],
+  "correct": null
+ },
+ {
+  "look_s": null,
+  "first_answer_s": 1.5,
+  "lines": [],
+  "reply": "Я не имею доступа к текущим новостям.",
+  "net": null,
+  "label": "world",
+  "calls": [
+   "router",
+   "chat"
+  ],
+  "text": "Что сегодня главное в новостях?",
+  "keys": [],
+  "correct": null
+ }
+]
