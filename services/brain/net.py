@@ -4,8 +4,13 @@ search(q)        -> [{title, snippet, url}] (k=3), [] on a timeout or any error;
 excerpts(res)    -> «Выдержки из сети (…): 1) Заголовок: текст (домен) …», at most MAX_CHARS (~600 tokens)
 query_of(text)   -> the search words of a question (question words, the name, fillers dropped)
 personal(text)   -> a question about the owner himself (мой / мне / у меня…): never to the net
-Gate             -> Net(params, redis).allowed(): params.net.enabled, or a one-shot phrase («проверь в сети», «посмотри
-                    в интернете», «погугли» — by stems, like core/modes.py) for the next question within ONCE_S
+Gate             -> Net(params, redis): the policy (T-054) `always | ask | never` — Redis net:policy over the manifest's
+                    params.net.policy (switch without a restart: skull-stand.sh net …), the old `enabled` migrates
+                    (true -> always, false -> ask); Net.decide() -> search / ask / offline / refuse; a one-shot phrase
+                    («проверь в сети», «погугли» — by stems, like core/modes.py) is consent in advance; under `never` no
+                    request leaves Net at all (REQUESTS counts the outgoing ones)
+
+  .venv/bin/python services/brain/net.py policy [always|ask|never|status]   # the switch (skull-stand.sh net …)
 
 Backends (manifest params.net.backend): `wikipedia` — ru.wikipedia.org API, search -> top-3 -> intro extracts (core,
 2026-11-01: a reference book, not the internet — weather, prices, news are not there and the skull says so);
@@ -28,6 +33,11 @@ UA = "skull-assistant/0.1 (https://github.com/Vzzzz/skull-assistant; offline voi
 WIKI_API = "https://ru.wikipedia.org/w/api.php"
 MAX_CHARS, PER_ITEM = 2000, 600
 ONCE_KEY, ONCE_S = "net:once", 60
+POLICY_KEY, POLICIES = "net:policy", ("always", "ask", "never")
+ASK_S = 15                    # `ask`: the owner's yes / no to «Глянуть в сети?» within this, else offline
+REQUESTS = 0                  # outgoing requests of this process (the `never` test: stays 0)
+_YES = ["да", "давай", "глянь", "посмотри", "ага", "угу", "конечно", "валяй", "проверь", "поищи", "загляни", "можно"]
+_NO = ["нет", "не надо", "не нужно", "сам", "неа", "не стоит", "обойдёмся", "отбой"]
 PHRASES = ["проверь в сети", "посмотри в интернете", "погугли", "поищи в интернете", "проверь в интернете"]
 _STOP = {"кто", "что", "чего", "чем", "как", "какой", "какая", "какое", "какие", "каков", "сколько", "где", "куда",
          "когда", "почему", "зачем", "ли", "ты", "вы", "знаешь", "скажи", "расскажи", "подскажи", "а", "ну", "и", "же",
@@ -88,9 +98,11 @@ def search(q, k=3, timeout_s=4.0, backend="wikipedia", url=None, session=None):
     """-> [{title, snippet, url}]; [] on a timeout, an HTTP / JSON error or an empty query (never raises)."""
     if not q.strip():
         return []
+    global REQUESTS
     session = session or requests.Session()
     session.headers.update({"User-Agent": UA})
     t0 = time.time()
+    REQUESTS += 1
     try:
         res = _searxng(q, k, timeout_s, session, url) if backend == "searxng" else _wikipedia(q, k, timeout_s, session)
     except (requests.RequestException, ValueError, KeyError, TypeError) as e:
@@ -121,28 +133,82 @@ def note_for_memory(question, results, reply):
     return f"проверял в сети: {question} → {gist} ({_domain(results[0]['url'])})"
 
 
+def yesno(text):
+    """The owner's answer to «Глянуть в сети?» by rules: 'yes' / 'no' / None (unclear -> the model's yes/no probs)."""
+    t = " " + re.sub(r"[^\w\s]", " ", text.lower().replace("ё", "е")) + " "
+    no = any(f" {w.replace('ё', 'е')} " in t for w in _NO)
+    yes = any(f" {w} " in t for w in _YES)
+    return "no" if no else "yes" if yes else None
+
+
 class Net:
-    """The gate: no request leaves unless params.net.enabled or the owner's one-shot phrase in the last ONCE_S."""
+    """The gate (D-031, T-054): the policy decides; under `never` nothing leaves, whatever the caller does."""
 
     def __init__(self, params, r):
         self.p, self.r = params or {}, r
 
+    def policy(self):
+        """-> (policy, source): Redis net:policy, else the manifest's policy, else the old `enabled`, else ask."""
+        v = self.r.get(POLICY_KEY)
+        v = v.decode() if isinstance(v, bytes) else v
+        if v in POLICIES:
+            return v, "redis"
+        if self.p.get("policy") in POLICIES:
+            return self.p["policy"], "manifest"
+        if "enabled" in self.p:
+            return ("always" if self.p["enabled"] else "ask"), "manifest (enabled, migrated)"
+        return "ask", "default"
+
     def once_phrase(self, text):
-        """The owner asked to check in the net: arm one request for the next question. -> True when the turn was that."""
+        """The owner asked to check in the net: consent for this or the next question (ONCE_S). -> the span or None."""
         span = find_phrase(text, self.p.get("phrases", PHRASES))
-        if span:
+        if span and self.policy()[0] != "never":
             self.r.set(ONCE_KEY, 1, ex=self.p.get("once_s", ONCE_S))
         return span
 
-    def allowed(self, consume=True):
-        if self.p.get("enabled"):
-            return True
-        if self.r.get(ONCE_KEY):
-            if consume:
-                self.r.delete(ONCE_KEY)
-            return True
-        return False
+    def decide(self, world, personal_q=False, consent=None):
+        """world — a question about the world (router `world` in A, a question in B); personal_q — about the owner;
+        consent — 'yes' / 'no' from the owner (an answer to «Глянуть в сети?» or the one-shot phrase), None — none.
+        -> 'search' | 'ask' | 'offline' | 'refuse' ('refuse': under never the owner asked for the net explicitly)."""
+        pol = self.policy()[0]
+        if consent is None and self.r.get(ONCE_KEY):
+            consent = "yes"
+            self.r.delete(ONCE_KEY)
+        if pol == "never":
+            return "refuse" if consent == "yes" else "offline"
+        if consent == "no" or (personal_q and consent != "yes"):
+            return "offline"
+        if consent == "yes":
+            return "search"
+        if not world:
+            return "offline"
+        return "search" if pol == "always" else "ask"
 
     def search(self, question):
+        if self.policy()[0] == "never":           # closed at the gate itself, not only in the caller
+            log(f"blocked by policy never: {question[:40]!r}")
+            return []
         return search(query_of(question), k=self.p.get("k", 3), timeout_s=self.p.get("timeout_s", 4.0),
                       backend=self.p.get("backend", "wikipedia"), url=self.p.get("url"))
+
+
+def main():
+    """policy [always|ask|never|status]: write / show the policy (Redis net:policy over the manifest)."""
+    import redis
+    import yaml
+    params = yaml.safe_load((Path(__file__).with_name("manifest.yaml")).read_text(encoding="utf-8"))["params"].get("net") or {}
+    r = redis.Redis()
+    arg = sys.argv[2] if len(sys.argv) > 2 else "status"
+    if arg in POLICIES:
+        r.set(POLICY_KEY, arg)
+    elif arg == "manifest":
+        r.delete(POLICY_KEY)
+    elif arg != "status":
+        raise SystemExit("usage: net.py policy always|ask|never|manifest|status")
+    pol, src = Net(params, r).policy()
+    print(f"net policy: {pol} (from {src}); manifest: {params.get('policy', params.get('enabled', '-'))}; "
+          f"redis {POLICY_KEY}: {(r.get(POLICY_KEY) or b'-').decode()}")
+
+
+if __name__ == "__main__" and len(sys.argv) > 1 and sys.argv[1] == "policy":
+    main()
