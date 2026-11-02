@@ -9,7 +9,7 @@
 set -euo pipefail
 UNIT="$1"; HOLD="${2:-30}"; STOP="${3:-}"
 TMP="$(mktemp -d)"; trap 'sudo pkill -f "tegrastats --interval 500 --logfile $TMP" 2>/dev/null || true; rm -rf "$TMP"' EXIT
-ram_used() { sudo timeout "$1" tegrastats --interval 500 | awk '{split($4,a,"/"); s+=a[1]; n++} END{printf "%.0f", s/n}'; }
+ram_used() { { sudo timeout "$1" tegrastats --interval 500 || true; } | awk '{split($4,a,"/"); s+=a[1]; n++} END{printf "%.0f", s/n}'; }
 cached() { awk '/^Cached:/{printf "%.0f", $2/1024}' /proc/meminfo; }
 health() {  # start -> /health for the llama-server units, start -> active for the rest
   local url=""
