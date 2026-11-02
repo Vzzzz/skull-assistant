@@ -41,6 +41,25 @@ The evaluation set **CTX-1** (60 turns with anchors for memory, arithmetic and "
 
 Not there yet: a live voice dialogue on the Jetson (mode A is resident; sound and the first conversation are day 2), an own wake word on an MCU (sibling project), interrupting the skull while it speaks (barge-in), an object detector for the scene (full M7); fact checking via the network is done as a reference lookup (Wikipedia, D-031) — whole-web search and an agentic mode are not planned before the device. Tests on `core/` — 430+ in seconds, no models or GPU, the same run in CI. Queue: `docs/TASKS.md`; milestone plan: `docs/ROADMAP.md` §7a.
 
+## First numbers from the device (Jetson Orin Nano Super 8 GB, November 2, 2026)
+
+Same code and manifests as on the bench; JetPack 6.2.1, models on NVMe, eight systemd units. Full report: `research/bench/results/orin_day1_2026-11-02.md`; decisions: `docs/DECISION_LOG.md` D-032 (Russian).
+
+| What | Bench (estimate) | Device |
+|---|---|---|
+| Idle system footprint | ~900 MB | **712 MB** |
+| Empty CUDA context | "hundreds of MB" | **+70–82 MB** (GPU memory goes through nvmap and is invisible in process RSS) |
+| Voice: capture + VAD + STT with voice id + TTS | 640–780 MB | 534 MB |
+| Memory embedder (CPU) | 650 MB | 403 MB |
+| VLM Gemma 4 E4B IQ4_XS + projector, 8k context | ~3.8 GB | **~4.55 GB** (nvmap 4281 + RSS 277) |
+| **Whole mode A resident** | 6.3–6.5 GB | **6.15 GB idle, 6.66 GB peak** under 60 turns over the bus, 0 OOM, 945 MB headroom |
+| E4B prefill / decode | ~2000 / 66–70 tok/s | **672 / 15.0** tok/s (12.8 with the voice stack running) |
+| Time to first token on a 3k history | — | **4.7 s** cold, **0.1 s** with the prefix kept in the slot |
+| STT GigaAM v3, RTF | — | 0.10–0.12 |
+| Piper, RT | 0.06 | 0.22 |
+
+Takeaways: the budget held, but by compensation — voice, embedder and system came in lighter than estimated while the VLM on unified memory is 0.75 GB heavier; our own IQ4_XS quantization is faster than Q4_K_M on sm_87 and 250 MB smaller; re-prefilling the history costs 5 s per 3k tokens on the device, so keeping the KV prefix in a llama-server slot is mandatory. Exceeding the budget on unified memory does not kill a process — it hangs the whole device (the OOM killer cannot see nvmap), hence admission by manifests and earlyoom preferring llama-server.
+
 ## How it is made
 
 Two commit authors. The **human** — hardware, the bench, running every measurement, listening to voices, architectural decisions and acceptance of results. The **AI assistant** (Claude Code in three roles — researcher, executor, reviewer, see `docs/agents/`) — measurement scripts, service code against task cards, paper and repo reviews, documentation. Yes, it is vibe coding — with a journal that shows what was tried, where it broke and why this option was chosen; every number is reproducible with the scripts in `research/`.
