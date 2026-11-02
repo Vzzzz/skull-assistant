@@ -130,6 +130,8 @@ cmake --build build-cuda -j2 --target llama-server llama-cli llama-bench
 
 ## 2. Порядок дня
 
+**Карточка дня 1 — T-056** (2026-11-02): цель — режим A резидентен на устройстве и Σ пиков сверена с MEMORY_BUDGET §2; скорость — если успеем. Пункты ниже — исходный план, порядок и гейт берутся из карточки.
+
 1. §0: версия, nvpmodel, jetson_clocks, пустой след (tegrastats 60 с) → MEMORY_BUDGET §1 «Пустой след системы».
 2. **Пустой CUDA-контекст** (замер D): три варианта — python с `torch.cuda.init()` (если torch есть), `ollama run` любой модели и `tegrastats` до/после, и голый `cudaFree(0)` на C — RAM-дельта → MEMORY_BUDGET строка «Пустой CUDA-контекст».
 3. **C270**: подключить, `v4l2-ctl --list-devices`, `arecord -l`; кадр из `.venv` (`gaze.py --show` или `cv2.VideoCapture('/dev/v4l/by-id/...')`), 10 с записи с микрофона камеры → RMS и прослушать; C270 — источник по умолчанию (см. §1). Затем redis, venv, модели wake word/Piper, `install.sh`, `systemctl --user start skull.target` без brain → голосовой CPU-стек на Orin: `measure_voice_rss.sh` → RSS и CPU% (ожидание: RSS ≈ стенд, CPU ×2–3).
