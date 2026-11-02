@@ -27,7 +27,7 @@ redis-cli ping
 Правила:
 - **Замеры памяти GPU** — только при погашенном стенде: `systemctl --user stop skull.target`, `ollama ps` пуст. После замера вернуть: `systemctl --user start skull.target`.
 - Не держать две модели в ollama одновременно, если задача не требует; llama-server и ollama с моделью одновременно на GPU не запускать (8 ГБ).
-- Загрузка моделей (`deploy/fetch_models.sh`, `ollama pull`) — в сервисном режиме; флаг ставится из Git Bash на Windows (`deploy/stand/skull-stand.sh service`), тебе достаточно проверить, что он есть.
+- Загрузка моделей (`deploy/fetch_models.sh`, `ollama pull`) — в сервисном режиме; флаг ставится из Git Bash на Windows (`deploy/stand/skull-stand.sh service`), тебе достаточно проверить, что он есть. Если на стенде работает второй исполнитель (с 2026-11-02 так бывает: стенд + Jetson), флаг и остановку `skull.target` не трогай сам — только через владельца или ядро.
 - Микрофон и динамик — это WSLg/PulseAudio; при проверках, где нужно говорить и слушать, так и сказано в карточке.
 - Сервисы читают код из репозитория напрямую (юниты запускают `@REPO@/services/...`): после правки — `systemctl --user restart skull-<name>`, лог — `journalctl --user -u skull-<name> -f`.
 
