@@ -1,0 +1,4 @@
+runtime,model,num_ctx,kv,flash,vram_idle_mb,vram_peak_mb,vram_delta_mb,rss_server_mb,ram_delta_mb,load_s,ttft_warm_s,prompt_tok_s,tok_s
+llama-server,kostyan-e4b-iq4xs-imx+mmproj,8192,q8_0,on,0,3782,3782,3255,614,5.99,0.09,2191,69.2
+llama-server,bolt-e4b-iq4xs-imx+mmproj,8192,q8_0,on,0,3782,3782,1464,625,5.23,0.13,1504,56.0
+llama-server,Nemotron-3.5-Bolt-E4B-Q4_K_M+mmproj,8192,q8_0,on,0,4190,4190,1453,583,5.25,0.14,1406,52.9

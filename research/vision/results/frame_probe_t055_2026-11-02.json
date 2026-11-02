@@ -1,0 +1,128 @@
+[
+ {
+  "model": "kostyan-e4b-iq4xs-imx.gguf",
+  "frame": "0.jpg",
+  "try": 1,
+  "line": "Твоя футболка.",
+  "prompt_tokens": 776
+ },
+ {
+  "model": "kostyan-e4b-iq4xs-imx.gguf",
+  "frame": "0.jpg",
+  "try": 2,
+  "line": "Твоя рубашка.",
+  "prompt_tokens": 776
+ },
+ {
+  "model": "kostyan-e4b-iq4xs-imx.gguf",
+  "frame": "0.jpg",
+  "try": 3,
+  "line": "Твоя толстовка тут.",
+  "prompt_tokens": 776
+ },
+ {
+  "model": "kostyan-e4b-iq4xs-imx.gguf",
+  "frame": "1.jpg",
+  "try": 1,
+  "line": "Твоя футболка.",
+  "prompt_tokens": 776
+ },
+ {
+  "model": "kostyan-e4b-iq4xs-imx.gguf",
+  "frame": "1.jpg",
+  "try": 2,
+  "line": "Твоя толстовка.",
+  "prompt_tokens": 776
+ },
+ {
+  "model": "kostyan-e4b-iq4xs-imx.gguf",
+  "frame": "1.jpg",
+  "try": 3,
+  "line": "Твоя толстовка на мне.",
+  "prompt_tokens": 776
+ },
+ {
+  "model": "kostyan-e4b-iq4xs-imx.gguf",
+  "frame": "2.jpg",
+  "try": 1,
+  "line": "Твоя толстовка на мне.",
+  "prompt_tokens": 776
+ },
+ {
+  "model": "kostyan-e4b-iq4xs-imx.gguf",
+  "frame": "2.jpg",
+  "try": 2,
+  "line": "Твоя толстовка снова тут.",
+  "prompt_tokens": 776
+ },
+ {
+  "model": "kostyan-e4b-iq4xs-imx.gguf",
+  "frame": "2.jpg",
+  "try": 3,
+  "line": "Твоя толстовка на мне.",
+  "prompt_tokens": 776
+ },
+ {
+  "model": "bolt-e4b-iq4xs-imx.gguf",
+  "frame": "0.jpg",
+  "try": 1,
+  "line": "Твоя куртка.",
+  "prompt_tokens": 776
+ },
+ {
+  "model": "bolt-e4b-iq4xs-imx.gguf",
+  "frame": "0.jpg",
+  "try": 2,
+  "line": "Твоя куртка.",
+  "prompt_tokens": 776
+ },
+ {
+  "model": "bolt-e4b-iq4xs-imx.gguf",
+  "frame": "0.jpg",
+  "try": 3,
+  "line": "Твоя куртка.",
+  "prompt_tokens": 776
+ },
+ {
+  "model": "bolt-e4b-iq4xs-imx.gguf",
+  "frame": "1.jpg",
+  "try": 1,
+  "line": "Твоя футболка.",
+  "prompt_tokens": 776
+ },
+ {
+  "model": "bolt-e4b-iq4xs-imx.gguf",
+  "frame": "1.jpg",
+  "try": 2,
+  "line": "Твоя футболка.",
+  "prompt_tokens": 776
+ },
+ {
+  "model": "bolt-e4b-iq4xs-imx.gguf",
+  "frame": "1.jpg",
+  "try": 3,
+  "line": "Твоя толстовка.",
+  "prompt_tokens": 776
+ },
+ {
+  "model": "bolt-e4b-iq4xs-imx.gguf",
+  "frame": "2.jpg",
+  "try": 1,
+  "line": "Твоя куртка.",
+  "prompt_tokens": 776
+ },
+ {
+  "model": "bolt-e4b-iq4xs-imx.gguf",
+  "frame": "2.jpg",
+  "try": 2,
+  "line": "Твоя куртка.",
+  "prompt_tokens": 776
+ },
+ {
+  "model": "bolt-e4b-iq4xs-imx.gguf",
+  "frame": "2.jpg",
+  "try": 3,
+  "line": "Твоя куртка.",
+  "prompt_tokens": 776
+ }
+]

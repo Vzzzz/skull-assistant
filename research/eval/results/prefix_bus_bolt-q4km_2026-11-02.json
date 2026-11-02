@@ -1,0 +1,104 @@
+[
+ {
+  "kind": "world",
+  "text": "Что сейчас за окном, видишь?",
+  "label": "world",
+  "calc": null,
+  "net": null,
+  "reply": "Окно. Твоя куртка.",
+  "completion_tokens": 11
+ },
+ {
+  "kind": "world",
+  "text": "Какая погода сегодня на улице?",
+  "label": "world",
+  "calc": null,
+  "net": null,
+  "reply": "Я вижу стол, твою куртку и дверь. Погоды среди этого нет.",
+  "completion_tokens": 20
+ },
+ {
+  "kind": "world",
+  "text": "Почему небо голубое?",
+  "label": "world",
+  "calc": null,
+  "net": null,
+  "reply": "Из-за рэлеевского рассеяния света.",
+  "completion_tokens": 13
+ },
+ {
+  "kind": "world",
+  "text": "Кто такой Тюленев, который гравиметр сделал?",
+  "label": "world",
+  "calc": null,
+  "net": null,
+  "reply": "Не знаю.",
+  "completion_tokens": 4
+ },
+ {
+  "kind": "calc",
+  "text": "Сколько будет 47 умножить на 21?",
+  "label": "calc",
+  "calc": "(вычислено: 47 × 21 = 987)",
+  "net": null,
+  "reply": "47 на 20 — 940, 47 на 1 — 47. Итого 987.\n987",
+  "completion_tokens": 35
+ },
+ {
+  "kind": "calc",
+  "text": "Пятнадцать процентов от 2 400 — это сколько?",
+  "label": "calc",
+  "calc": "(вычислено: 15 % от 2400 = 360)",
+  "net": null,
+  "reply": "360",
+  "completion_tokens": 4
+ },
+ {
+  "kind": "calc",
+  "text": "Выйду в 8:40, ехать час тридцать пять, когда буду?",
+  "label": "memory",
+  "calc": null,
+  "net": null,
+  "reply": "8:40 плюс 1 час — 9:40. 9:40 плюс 35 минут — 10:15.\n10:15",
+  "completion_tokens": 40
+ },
+ {
+  "kind": "net",
+  "text": "Какая высота Эльбруса?",
+  "label": "world",
+  "calc": null,
+  "net": [
+   "Эльбрус",
+   "Приют на седловине Эльбруса",
+   "Кавказские горы"
+  ],
+  "reply": "5642 метра.\nВ сети пишут иначе.",
+  "completion_tokens": 14
+ },
+ {
+  "kind": "net",
+  "text": "Кто открыл пенициллин?",
+  "label": "world",
+  "calc": null,
+  "net": [
+   "Флеминг, Александр",
+   "Ермольева, Зинаида Виссарионовна",
+   "Флори, Хоуард Уолтер"
+  ],
+  "reply": "В сети пишут иначе. Флеминг, Флори.",
+  "completion_tokens": 15
+ },
+ {
+  "kind": "net",
+  "text": "Какой город столица Австралии?",
+  "label": "world",
+  "calc": null,
+  "net": [
+   "Города Австралии",
+   "Канберра",
+   "Рига"
+  ],
+  "reply": "Канберра.",
+  "completion_tokens": 6
+ }
+]
