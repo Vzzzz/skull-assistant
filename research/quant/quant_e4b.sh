@@ -6,12 +6,15 @@
 #   kostyan-e4b-q4km       Q4_K_M without imatrix (separates the imatrix effect from the QAT effect)
 # Runs in WSL from the repo root. CPU-only llama.cpp build is enough (quantize is CPU; imatrix on CPU ~10-30 min).
 # Needs: research/quant/calib_ru.txt (make_calib.py), ~20 GB free, hf auth (ggml-org repo is public).
+# Another model of the same architecture (T-055: Nemotron 3.5 Bolt E4B) through env, the defaults are the Gemma run:
+#   BF16=<bf16.gguf> URL=<its url> IMX=<imatrix.gguf> PREFIX=bolt-e4b QUANTS="iq4xs-imx" OLLAMA=0 bash research/quant/quant_e4b.sh
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 QD="$ROOT/models/quant"; mkdir -p "$QD"
 LLAMA="${LLAMA:-$HOME/llama.cpp}"
 CALIB="$ROOT/research/quant/calib_ru.txt"
-BF16="$QD/gemma-4-E4B-it-BF16.gguf"
+BF16="${BF16:-$QD/gemma-4-E4B-it-BF16.gguf}"
+PREFIX="${PREFIX:-kostyan-e4b}"; QUANTS="${QUANTS:-q4km-imx iq4xs-imx q4km}"; OLLAMA="${OLLAMA:-1}"
 HF_CLI="$ROOT/.venv/bin/hf"
 [ -s "$CALIB" ] || { echo "нет $CALIB — сначала research/quant/make_calib.py"; exit 1; }
 
@@ -26,7 +29,7 @@ BIN="$LLAMA/build/bin"; echo "llama.cpp: $(cd "$LLAMA" && git rev-parse --short 
 
 # 2. BF16 GGUF (16 GB) — no HF conversion step needed. Xet backend of `hf download` does not resume a dropped
 #    download (2026-10-19), so prefer aria2c (multi-connection, resumable); fall back to wget -c, then hf without Xet.
-URL="https://huggingface.co/ggml-org/gemma-4-E4B-it-GGUF/resolve/main/gemma-4-E4B-it-BF16.gguf"
+URL="${URL:-https://huggingface.co/ggml-org/gemma-4-E4B-it-GGUF/resolve/main/gemma-4-E4B-it-BF16.gguf}"
 if [ ! -s "$BF16" ]; then
   if command -v aria2c >/dev/null; then aria2c -c -x 8 -s 8 -k 1M --retry-wait=10 --max-tries=0 -d "$QD" -o "$(basename "$BF16")" "$URL"
   elif command -v wget >/dev/null; then until wget -c -L -O "$BF16" "$URL"; do sleep 20; done
@@ -34,7 +37,7 @@ if [ ! -s "$BF16" ]; then
 fi
 
 # 3. imatrix on the Russian calibration text (chunks of 512 tokens)
-IMX="$QD/imatrix-e4b-ru.gguf"
+IMX="${IMX:-$QD/imatrix-e4b-ru.gguf}"
 if [ ! -s "$IMX" ]; then
   # -c = chunk size; NOT --chunk (that is --from-chunk, "skip the first N chunks" — bit us on 2026-10-19)
   /usr/bin/time -f "imatrix: %e s, %M KB maxrss" "$BIN/llama-imatrix" -m "$BF16" -f "$CALIB" -o "$IMX" -c 512 -t "$(nproc)" ${GGML_CUDA:+-ngl 99}
@@ -44,10 +47,15 @@ fi
 q() { local out="$QD/$1.gguf"; shift
   [ -s "$out" ] && { echo "есть $out"; return; }
   /usr/bin/time -f "$out: %e s" "$BIN/llama-quantize" "$@" "$BF16" "$out" "$QTYPE" "$(nproc)"; }
-QTYPE=Q4_K_M q kostyan-e4b-q4km-imx --imatrix "$IMX"
-QTYPE=IQ4_XS q kostyan-e4b-iq4xs-imx --imatrix "$IMX"
-QTYPE=Q4_K_M q kostyan-e4b-q4km
+for v in $QUANTS; do
+  case "$v" in
+    q4km-imx)  QTYPE=Q4_K_M q "$PREFIX-q4km-imx" --imatrix "$IMX" ;;
+    iq4xs-imx) QTYPE=IQ4_XS q "$PREFIX-iq4xs-imx" --imatrix "$IMX" ;;
+    q4km)      QTYPE=Q4_K_M q "$PREFIX-q4km" ;;
+  esac
+done
 ls -la "$QD"/*.gguf
+[ "$OLLAMA" = 1 ] || { echo "OLLAMA=0: модели ollama не создаются (llama-server читает GGUF)"; exit 0; }
 
 # 5. ollama models (text-only: mmproj not attached — CTX-1 and bench are text; vision later)
 for n in kostyan-e4b-q4km-imx kostyan-e4b-iq4xs-imx kostyan-e4b-q4km; do
