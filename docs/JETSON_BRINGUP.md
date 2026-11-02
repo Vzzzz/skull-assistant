@@ -10,6 +10,16 @@
 - **Запасной канал — USB-C device mode** devkit'а: кабель USB-C в ноутбук даёт сеть 192.168.55.1 (Jetson) / .100 (хост) и **последовательную консоль** (`/dev/ttyACM0`, 115200) — единственный способ видеть загрузку и отладить SC7 (D-013), когда сеть ещё не поднялась.
 - **Исполнитель на устройстве:** агент остаётся на стенде/Windows, команды — через `ssh` (рабочая копия репо на Jetson: `git clone` с GitHub, push оттуда же); ставить агента на сам Jetson не стоит — память.
 
+## 0b. Прошивка и SD-образ (владелец, 2026-11-02: «jetson-orin-nano-devkit-super-SD-image_JP6.2.1.zip — это то, что надо закидывать на SD?»)
+
+Да. Это официальный образ SD-карты для **Jetson Orin Nano Super Developer Kit**, JetPack 6.2.1 (Jetson Linux 36.4.x, Ubuntu 22.04, Python 3.10 — совпадает с `.venv` стенда, §1b). Порядок:
+1. **Карта:** microSD ≥ 64 ГБ (UHS-1/A2). Распаковать zip → `.img` → записать **balenaEtcher** или Raspberry Pi Imager на Windows (из Git Bash ничего не нужно). Корень системы на SD — нормально для первого дня; модели режима B и `OLLAMA_MODELS` — на NVMe (§1a); перенос корня на NVMe — потом, отдельным шагом, не сейчас.
+2. **Прошивка платы (QSPI).** Образ JetPack 6 грузится только при прошивке UEFI серии 36.x. У devkit, продающегося как **Super** (с декабря 2024), она уже стоит — карта грузится сразу. Если плата старее (куплена с JetPack 5): первая загрузка с JP6-карты не пройдёт; тогда один раз: образ JetPack **5.1.3** на карту → загрузиться → `sudo apt update && sudo apt install nvidia-l4t-jetson-orin-nano-qspi-updater` → перезагрузка (QSPI → 35.5) → снова карта JP6.2.1, при первой загрузке UEFI сама обновится до 36.x. Проверка после загрузки: `cat /etc/nv_tegra_release` (R36), `sudo nvbootctrl dump-slots-info` при желании.
+3. **Первая загрузка:** монитор (DP) + клавиатура, мастер OEM-настройки: язык, пользователь, hostname, SSH включён по умолчанию. Без монитора — консоль по USB-C (устройство видно как COM-порт на Windows, PuTTY 115200). Сразу: `sudo nvpmodel -m 0` (MAXN SUPER, 25 Вт) и `sudo jetson_clocks` — §0.
+4. Дальше по порядку: §0 (версия, пустой след) → §0a (RJ-45 к ноутбуку, SSH из WSL) → §1b (сборка) → §1a (копия моделей) → §2 (порядок дня).
+
+**Ориентир скорости для режима A на устройстве** (NVIDIA, P-049, Nemotron Bolt E4B = Gemma 4 E4B-класс, llama.cpp CUDA, Q4_K_M, вход 3k / выход 50): **VRAM 4.2 ГБ, TTFT 5.8 с, 15.5 ток/с** на Orin Nano 8 ГБ (AGX Orin: 3.7 с / 24 ток/с). Против стенда (префилл ~2000 ток/с, 66–70 ток/с) это ×4 медленнее по префиллу и ×4.5 по декоду; для диалога это означает: полный пере-префилл истории 3k — 6 с, поэтому переиспользование префикса слота (P-033) на устройстве обязательно, а декод 15 ток/с для речи достаточен. Числа заменить своими в §2 п. 6.
+
 ## 0. Перед всем: версия и сон (для D-013)
 
 ```bash
@@ -125,7 +135,7 @@ cmake --build build-cuda -j2 --target llama-server llama-cli llama-bench
 3. **C270**: подключить, `v4l2-ctl --list-devices`, `arecord -l`; кадр из `.venv` (`gaze.py --show` или `cv2.VideoCapture('/dev/v4l/by-id/...')`), 10 с записи с микрофона камеры → RMS и прослушать; C270 — источник по умолчанию (см. §1). Затем redis, venv, модели wake word/Piper, `install.sh`, `systemctl --user start skull.target` без brain → голосовой CPU-стек на Orin: `measure_voice_rss.sh` → RSS и CPU% (ожидание: RSS ≈ стенд, CPU ×2–3).
 4. `piper_rt.py` → RT на Orin (гейт ≤ 0.3).
 5. ollama + `gemma3:4b` → первый диалог через шину на устройстве. Это **порог портфолио №1 в черновом виде** — снять видео.
-6. `bench_vlm_mem` (tegrastats-вариант) по кандидатам A: gemma3:4b, gemma4:e2b(-qat), e4b(-qat), qwen3.5:4b, ministral-3:3b, phi4-mini — пик RAM по tegrastats, RSS раннера, tok/s, TTFT тёплый. **Отдельно для Gemma 4 E-моделей: RSS + page cache** (PLE в mmap) под длинным диалогом.
+6. `bench_vlm_mem` (tegrastats-вариант) по кандидатам A: наша `kostyan-e4b-iq4xs-imx` (прод) и, по итогу T-055, Nemotron Bolt E4B; ориентир NVIDIA — §0b (TTFT 5.8 с @3k, 15.5 ток/с, 4.2 ГБ); запасные gemma4:e2b-qat, qwen3.5:4b — пик RAM по tegrastats, RSS раннера, tok/s, TTFT тёплый. **Отдельно для Gemma 4 E-моделей: RSS + page cache** (PLE в mmap) под длинным диалогом.
 7. Гейт со-резидентности: кандидат + wake word + STT + Piper одновременно, затем + YOLO (когда появится TensorRT-движок) → headroom.
 8. **Smoke-test режима B (Q-045, день 2):** `OLLAMA_MODELS` на NVMe, `ollama run gemma4:26b-a4b-it-mtp-q4_K_M` — tok/s и TTFT на 5 запросах, `tegrastats` RAM + `/proc/meminfo` Cached (page cache = стриминг экспертов), температура NVMe (`nvme smart-log`) за 10 мин генерации. Это решает, двигать ли M8b раньше. На стенде (2026-10-18) та же модель дала 13.9 tok/s и персону 4.38 — но из host RAM, не с NVMe.
 
