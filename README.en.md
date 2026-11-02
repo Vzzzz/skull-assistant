@@ -2,7 +2,7 @@
 
 [![tests](https://github.com/Vzzzz/skull-assistant/actions/workflows/tests.yml/badge.svg)](https://github.com/Vzzzz/skull-assistant/actions/workflows/tests.yml) [![license: MIT](https://img.shields.io/github/license/Vzzzz/skull-assistant)](LICENSE) ![python 3.10](https://img.shields.io/badge/python-3.10-blue) ![status: work in progress](https://img.shields.io/badge/status-work_in_progress-orange) ![platform: Jetson Orin Nano 8 GB](https://img.shields.io/badge/platform-Jetson_Orin_Nano_8_GB-76B900)
 
-> **Work in progress** (early November 2026). The bench part is built and measured: the voice loop, the "think hard" mode on a 26B model through the dispatcher, the gaze trigger with a camera, arithmetic outside the model; nothing has been deployed to the device (Jetson Orin Nano Super 8 GB) yet. What works today is listed below; day-by-day state is in `docs/JOURNAL.md` (Russian).
+> **Work in progress** (early November 2026). The bench part is built and measured: the voice loop, the "think hard" mode on a 26B model through the dispatcher, the gaze trigger with a camera, arithmetic outside the model; since November 2 mode A runs on the device (Jetson Orin Nano Super 8 GB): peak memory 6.7 GB of 7.6 under 60 turns over the bus; a live voice dialogue is the next step. What works today is listed below; day-by-day state is in `docs/JOURNAL.md` (Russian).
 
 <p align="center">
   <img src="docs/media/skull-jetson.jpg" width="420" alt="Jetson Orin Nano inside an anatomical skull model">
@@ -39,7 +39,7 @@ The full voice loop runs as a set of systemd units on a Redis Streams bus:
 
 The evaluation set **CTX-1** (60 turns with anchors for memory, arithmetic and "don't make things up") was run on 14 models from 1.7B to 9B; it picked the brain and measured what memory and the router add (`research/eval/`). The memory budget of the whole mode A — voice stack, VLM with projector, embedder, YOLO detector — was measured all at once: **6.3–6.5 GB of the 7.6 GB available on Orin** (bench-based estimate, `docs/MEMORY_BUDGET.md` §2).
 
-Not there yet: running on the Jetson (next milestone), an own wake word on an MCU (sibling project), interrupting the skull while it speaks (barge-in), an object detector for the scene (full M7); fact checking via the network is done as a reference lookup (Wikipedia, D-031) — whole-web search and an agentic mode are not planned before the device. Tests on `core/` — 430+ in seconds, no models or GPU, the same run in CI. Queue: `docs/TASKS.md`; milestone plan: `docs/ROADMAP.md` §7a.
+Not there yet: a live voice dialogue on the Jetson (mode A is resident; sound and the first conversation are day 2), an own wake word on an MCU (sibling project), interrupting the skull while it speaks (barge-in), an object detector for the scene (full M7); fact checking via the network is done as a reference lookup (Wikipedia, D-031) — whole-web search and an agentic mode are not planned before the device. Tests on `core/` — 430+ in seconds, no models or GPU, the same run in CI. Queue: `docs/TASKS.md`; milestone plan: `docs/ROADMAP.md` §7a.
 
 ## How it is made
 
