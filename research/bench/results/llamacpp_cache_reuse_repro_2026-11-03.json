@@ -1,0 +1,387 @@
+{
+ "bin": "/home/valeriy/llama.cpp-master/build-cuda/bin",
+ "tag": "repro",
+ "reuse": 256,
+ "configs": {
+  "mmproj+swa-full": {
+   "args": [
+    "-m",
+    "/home/valeriy/skull-assistant/models/quant/kostyan-e4b-iq4xs-imx.gguf",
+    "--mmproj",
+    "/home/valeriy/skull-assistant/models/hf/gemma-4-E4B-it-GGUF/mmproj-gemma-4-E4B-it-Q8_0.gguf",
+    "-ngl",
+    "99",
+    "-c",
+    "8192",
+    "-fa",
+    "on",
+    "-ctk",
+    "q8_0",
+    "-ctv",
+    "q8_0",
+    "--slot-save-path",
+    "/home/valeriy/skull-assistant/models/quant/slots",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "11440",
+    "--cache-ram",
+    "0",
+    "--ctx-checkpoints",
+    "0",
+    "--lazy-mode",
+    "on",
+    "--cache-reuse",
+    "256",
+    "--swa-full"
+   ],
+   "edit": {
+    "sizes": {
+     "A": 3038,
+     "B": 2946,
+     "C": 2847
+    },
+    "rows": [
+     {
+      "round": 1,
+      "prompt": "A",
+      "n_tokens": 3038,
+      "prompt_n": 3039,
+      "cache_n": 0,
+      "prompt_ms": 1130.7,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов на то, что ты не сможешь использовать"
+     },
+     {
+      "round": 1,
+      "prompt": "B",
+      "n_tokens": 2946,
+      "prompt_n": 1187,
+      "cache_n": 1760,
+      "prompt_ms": 400.6,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов на то, что ты потом будешь жале"
+     },
+     {
+      "round": 1,
+      "prompt": "C",
+      "n_tokens": 2847,
+      "prompt_n": 969,
+      "cache_n": 1879,
+      "prompt_ms": 335.1,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов. Выбирай то, что меньше раздражает"
+     },
+     {
+      "round": 2,
+      "prompt": "A",
+      "n_tokens": 3038,
+      "prompt_n": 3039,
+      "cache_n": 0,
+      "prompt_ms": 908.8,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов на то, что ты не сможешь использовать"
+     },
+     {
+      "round": 2,
+      "prompt": "B",
+      "n_tokens": 2946,
+      "prompt_n": 1187,
+      "cache_n": 1760,
+      "prompt_ms": 397.1,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов на то, что ты потом будешь жале"
+     },
+     {
+      "round": 2,
+      "prompt": "C",
+      "n_tokens": 2847,
+      "prompt_n": 969,
+      "cache_n": 1879,
+      "prompt_ms": 332.1,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов. Выбирай то, что меньше раздражает"
+     },
+     {
+      "round": 3,
+      "prompt": "A",
+      "n_tokens": 3038,
+      "prompt_n": 3039,
+      "cache_n": 0,
+      "prompt_ms": 912.4,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов на то, что ты не сможешь использовать"
+     },
+     {
+      "round": 3,
+      "prompt": "B",
+      "n_tokens": 2946,
+      "prompt_n": 1187,
+      "cache_n": 1760,
+      "prompt_ms": 395.8,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов на то, что ты потом будешь жале"
+     },
+     {
+      "round": 3,
+      "prompt": "C",
+      "n_tokens": 2847,
+      "prompt_n": 969,
+      "cache_n": 1879,
+      "prompt_ms": 330.2,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов. Выбирай то, что меньше раздражает"
+     }
+    ]
+   },
+   "vram_idle_mb": 0,
+   "vram_peak_mb": 3954,
+   "log": [
+    "0.03.679.133 W llama_kv_cache_iswa: using full-size SWA cache (ref: https://github.com/ggml-org/llama.cpp/pull/13194#issuecomment-2868343055)",
+    "0.04.451.886 W srv    load_model: cache_reuse is not supported by multimodal, it will be disabled"
+   ]
+  },
+  "text+swa-full": {
+   "args": [
+    "-m",
+    "/home/valeriy/skull-assistant/models/quant/kostyan-e4b-iq4xs-imx.gguf",
+    "-ngl",
+    "99",
+    "-c",
+    "8192",
+    "-fa",
+    "on",
+    "-ctk",
+    "q8_0",
+    "-ctv",
+    "q8_0",
+    "--slot-save-path",
+    "/home/valeriy/skull-assistant/models/quant/slots",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "11440",
+    "--cache-ram",
+    "0",
+    "--ctx-checkpoints",
+    "0",
+    "--lazy-mode",
+    "on",
+    "--cache-reuse",
+    "256",
+    "--swa-full"
+   ],
+   "edit": {
+    "sizes": {
+     "A": 3038,
+     "B": 2946,
+     "C": 2847
+    },
+    "rows": [
+     {
+      "round": 1,
+      "prompt": "A",
+      "n_tokens": 3038,
+      "prompt_n": 3039,
+      "cache_n": 0,
+      "prompt_ms": 1144.6,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов на то, что ты не сможешь использовать"
+     },
+     {
+      "round": 1,
+      "prompt": "B",
+      "n_tokens": 2946,
+      "prompt_n": 1,
+      "cache_n": 2946,
+      "prompt_ms": 51.4,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов на то, что ты потом забудешь."
+     },
+     {
+      "round": 1,
+      "prompt": "C",
+      "n_tokens": 2847,
+      "prompt_n": 1,
+      "cache_n": 2847,
+      "prompt_ms": 46.3,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов. Выбирай то, что меньше тебя раздра"
+     },
+     {
+      "round": 2,
+      "prompt": "A",
+      "n_tokens": 3038,
+      "prompt_n": 3039,
+      "cache_n": 0,
+      "prompt_ms": 921.1,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов на то, что ты не сможешь использовать"
+     },
+     {
+      "round": 2,
+      "prompt": "B",
+      "n_tokens": 2946,
+      "prompt_n": 1,
+      "cache_n": 2946,
+      "prompt_ms": 43.3,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов на то, что ты потом забудешь."
+     },
+     {
+      "round": 2,
+      "prompt": "C",
+      "n_tokens": 2847,
+      "prompt_n": 1,
+      "cache_n": 2847,
+      "prompt_ms": 48.8,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов. Выбирай то, что меньше тебя раздра"
+     },
+     {
+      "round": 3,
+      "prompt": "A",
+      "n_tokens": 3038,
+      "prompt_n": 3039,
+      "cache_n": 0,
+      "prompt_ms": 920.0,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов на то, что ты не сможешь использовать"
+     },
+     {
+      "round": 3,
+      "prompt": "B",
+      "n_tokens": 2946,
+      "prompt_n": 1,
+      "cache_n": 2946,
+      "prompt_ms": 47.2,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов на то, что ты потом забудешь."
+     },
+     {
+      "round": 3,
+      "prompt": "C",
+      "n_tokens": 2847,
+      "prompt_n": 1,
+      "cache_n": 2847,
+      "prompt_ms": 44.6,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов. Выбирай то, что меньше тебя раздра"
+     }
+    ]
+   },
+   "vram_idle_mb": 0,
+   "vram_peak_mb": 3212,
+   "log": [
+    "0.04.183.310 W llama_kv_cache_iswa: using full-size SWA cache (ref: https://github.com/ggml-org/llama.cpp/pull/13194#issuecomment-2868343055)"
+   ]
+  },
+  "text": {
+   "args": [
+    "-m",
+    "/home/valeriy/skull-assistant/models/quant/kostyan-e4b-iq4xs-imx.gguf",
+    "-ngl",
+    "99",
+    "-c",
+    "8192",
+    "-fa",
+    "on",
+    "-ctk",
+    "q8_0",
+    "-ctv",
+    "q8_0",
+    "--slot-save-path",
+    "/home/valeriy/skull-assistant/models/quant/slots",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "11440",
+    "--cache-ram",
+    "0",
+    "--ctx-checkpoints",
+    "0",
+    "--lazy-mode",
+    "on",
+    "--cache-reuse",
+    "256"
+   ],
+   "edit": {
+    "sizes": {
+     "A": 3038,
+     "B": 2946,
+     "C": 2847
+    },
+    "rows": [
+     {
+      "round": 1,
+      "prompt": "A",
+      "n_tokens": 3038,
+      "prompt_n": 3039,
+      "cache_n": 0,
+      "prompt_ms": 1116.6,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов на то, что ты не сможешь использовать"
+     },
+     {
+      "round": 1,
+      "prompt": "B",
+      "n_tokens": 2946,
+      "prompt_n": 1187,
+      "cache_n": 1760,
+      "prompt_ms": 396.5,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов на то, что ты потом будешь жале"
+     },
+     {
+      "round": 1,
+      "prompt": "C",
+      "n_tokens": 2847,
+      "prompt_n": 969,
+      "cache_n": 1879,
+      "prompt_ms": 309.1,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов. Выбирай то, что меньше тебя раздра"
+     },
+     {
+      "round": 2,
+      "prompt": "A",
+      "n_tokens": 3038,
+      "prompt_n": 3039,
+      "cache_n": 0,
+      "prompt_ms": 892.5,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов на то, что ты не сможешь использовать"
+     },
+     {
+      "round": 2,
+      "prompt": "B",
+      "n_tokens": 2946,
+      "prompt_n": 1187,
+      "cache_n": 1760,
+      "prompt_ms": 386.2,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов на то, что ты потом будешь жале"
+     },
+     {
+      "round": 2,
+      "prompt": "C",
+      "n_tokens": 2847,
+      "prompt_n": 969,
+      "cache_n": 1879,
+      "prompt_ms": 313.4,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов. Выбирай то, что меньше тебя раздра"
+     },
+     {
+      "round": 3,
+      "prompt": "A",
+      "n_tokens": 3038,
+      "prompt_n": 3039,
+      "cache_n": 0,
+      "prompt_ms": 893.6,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов на то, что ты не сможешь использовать"
+     },
+     {
+      "round": 3,
+      "prompt": "B",
+      "n_tokens": 2946,
+      "prompt_n": 1187,
+      "cache_n": 1760,
+      "prompt_ms": 378.3,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов на то, что ты потом будешь жале"
+     },
+     {
+      "round": 3,
+      "prompt": "C",
+      "n_tokens": 2847,
+      "prompt_n": 969,
+      "cache_n": 1879,
+      "prompt_ms": 315.3,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов. Выбирай то, что меньше тебя раздра"
+     }
+    ]
+   },
+   "vram_idle_mb": 0,
+   "vram_peak_mb": 3110,
+   "log": [
+    "0.04.372.098 W srv    load_model: cache_reuse is not supported by this context, it will be disabled"
+   ]
+  }
+ }
+}

@@ -1,0 +1,1107 @@
+{
+ "bin": "/home/valeriy/llama.cpp-master/build-cuda/bin",
+ "tag": "before",
+ "reuse": 256,
+ "configs": {
+  "mmproj+swa-full": {
+   "args": [
+    "-m",
+    "/home/valeriy/skull-assistant/models/quant/kostyan-e4b-iq4xs-imx.gguf",
+    "--mmproj",
+    "/home/valeriy/skull-assistant/models/hf/gemma-4-E4B-it-GGUF/mmproj-gemma-4-E4B-it-Q8_0.gguf",
+    "-ngl",
+    "99",
+    "-c",
+    "8192",
+    "-fa",
+    "on",
+    "-ctk",
+    "q8_0",
+    "-ctv",
+    "q8_0",
+    "--slot-save-path",
+    "/home/valeriy/skull-assistant/models/quant/slots",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "11440",
+    "--cache-ram",
+    "0",
+    "--ctx-checkpoints",
+    "0",
+    "--lazy-mode",
+    "on",
+    "--cache-reuse",
+    "256",
+    "--swa-full"
+   ],
+   "edit": {
+    "sizes": {
+     "A": 3038,
+     "B": 2946,
+     "C": 2847
+    },
+    "rows": [
+     {
+      "round": 1,
+      "prompt": "A",
+      "n_tokens": 3038,
+      "prompt_n": 3039,
+      "cache_n": 0,
+      "prompt_ms": 902.8,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов на то, что ты не сможешь использовать"
+     },
+     {
+      "round": 1,
+      "prompt": "B",
+      "n_tokens": 2946,
+      "prompt_n": 1187,
+      "cache_n": 1760,
+      "prompt_ms": 352.0,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов на то, что ты потом будешь жале"
+     },
+     {
+      "round": 1,
+      "prompt": "C",
+      "n_tokens": 2847,
+      "prompt_n": 969,
+      "cache_n": 1879,
+      "prompt_ms": 290.2,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов. Выбирай то, что меньше раздражает"
+     },
+     {
+      "round": 2,
+      "prompt": "A",
+      "n_tokens": 3038,
+      "prompt_n": 3039,
+      "cache_n": 0,
+      "prompt_ms": 790.5,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов на то, что ты не сможешь использовать"
+     },
+     {
+      "round": 2,
+      "prompt": "B",
+      "n_tokens": 2946,
+      "prompt_n": 1187,
+      "cache_n": 1760,
+      "prompt_ms": 347.1,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов на то, что ты потом будешь жале"
+     },
+     {
+      "round": 2,
+      "prompt": "C",
+      "n_tokens": 2847,
+      "prompt_n": 969,
+      "cache_n": 1879,
+      "prompt_ms": 286.9,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов. Выбирай то, что меньше раздражает"
+     },
+     {
+      "round": 3,
+      "prompt": "A",
+      "n_tokens": 3038,
+      "prompt_n": 3039,
+      "cache_n": 0,
+      "prompt_ms": 792.6,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов на то, что ты не сможешь использовать"
+     },
+     {
+      "round": 3,
+      "prompt": "B",
+      "n_tokens": 2946,
+      "prompt_n": 1187,
+      "cache_n": 1760,
+      "prompt_ms": 346.8,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов на то, что ты потом будешь жале"
+     },
+     {
+      "round": 3,
+      "prompt": "C",
+      "n_tokens": 2847,
+      "prompt_n": 969,
+      "cache_n": 1879,
+      "prompt_ms": 287.0,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов. Выбирай то, что меньше раздражает"
+     }
+    ]
+   },
+   "window": [
+    {
+     "turn": 1,
+     "window_turns": 1,
+     "shift": false,
+     "ttft_s": 0.192,
+     "prompt_tokens": 532
+    },
+    {
+     "turn": 2,
+     "window_turns": 2,
+     "shift": false,
+     "ttft_s": 0.032,
+     "prompt_tokens": 584
+    },
+    {
+     "turn": 3,
+     "window_turns": 3,
+     "shift": false,
+     "ttft_s": 0.03,
+     "prompt_tokens": 648
+    },
+    {
+     "turn": 4,
+     "window_turns": 4,
+     "shift": false,
+     "ttft_s": 0.032,
+     "prompt_tokens": 725
+    },
+    {
+     "turn": 5,
+     "window_turns": 5,
+     "shift": false,
+     "ttft_s": 0.029,
+     "prompt_tokens": 781
+    },
+    {
+     "turn": 6,
+     "window_turns": 6,
+     "shift": false,
+     "ttft_s": 0.032,
+     "prompt_tokens": 843
+    },
+    {
+     "turn": 7,
+     "window_turns": 7,
+     "shift": false,
+     "ttft_s": 0.03,
+     "prompt_tokens": 893
+    },
+    {
+     "turn": 8,
+     "window_turns": 8,
+     "shift": false,
+     "ttft_s": 0.03,
+     "prompt_tokens": 955
+    },
+    {
+     "turn": 9,
+     "window_turns": 9,
+     "shift": false,
+     "ttft_s": 0.031,
+     "prompt_tokens": 1051
+    },
+    {
+     "turn": 10,
+     "window_turns": 10,
+     "shift": false,
+     "ttft_s": 0.028,
+     "prompt_tokens": 1107
+    },
+    {
+     "turn": 11,
+     "window_turns": 9,
+     "shift": true,
+     "ttft_s": 0.207,
+     "prompt_tokens": 1092
+    },
+    {
+     "turn": 12,
+     "window_turns": 10,
+     "shift": false,
+     "ttft_s": 0.028,
+     "prompt_tokens": 1163
+    },
+    {
+     "turn": 13,
+     "window_turns": 10,
+     "shift": true,
+     "ttft_s": 0.21,
+     "prompt_tokens": 1147
+    },
+    {
+     "turn": 14,
+     "window_turns": 11,
+     "shift": false,
+     "ttft_s": 0.029,
+     "prompt_tokens": 1209
+    },
+    {
+     "turn": 15,
+     "window_turns": 11,
+     "shift": true,
+     "ttft_s": 0.212,
+     "prompt_tokens": 1184
+    },
+    {
+     "turn": 16,
+     "window_turns": 11,
+     "shift": true,
+     "ttft_s": 0.217,
+     "prompt_tokens": 1214
+    },
+    {
+     "turn": 17,
+     "window_turns": 1,
+     "shift": true,
+     "ttft_s": 0.03,
+     "prompt_tokens": 553
+    },
+    {
+     "turn": 18,
+     "window_turns": 2,
+     "shift": false,
+     "ttft_s": 0.03,
+     "prompt_tokens": 628
+    },
+    {
+     "turn": 19,
+     "window_turns": 3,
+     "shift": false,
+     "ttft_s": 0.027,
+     "prompt_tokens": 662
+    },
+    {
+     "turn": 20,
+     "window_turns": 4,
+     "shift": false,
+     "ttft_s": 0.028,
+     "prompt_tokens": 698
+    },
+    {
+     "turn": 21,
+     "window_turns": 5,
+     "shift": false,
+     "ttft_s": 0.029,
+     "prompt_tokens": 730
+    },
+    {
+     "turn": 22,
+     "window_turns": 6,
+     "shift": false,
+     "ttft_s": 0.031,
+     "prompt_tokens": 788
+    },
+    {
+     "turn": 23,
+     "window_turns": 7,
+     "shift": false,
+     "ttft_s": 0.03,
+     "prompt_tokens": 896
+    },
+    {
+     "turn": 24,
+     "window_turns": 8,
+     "shift": false,
+     "ttft_s": 0.029,
+     "prompt_tokens": 970
+    },
+    {
+     "turn": 25,
+     "window_turns": 9,
+     "shift": false,
+     "ttft_s": 0.032,
+     "prompt_tokens": 1041
+    },
+    {
+     "turn": 26,
+     "window_turns": 10,
+     "shift": false,
+     "ttft_s": 0.027,
+     "prompt_tokens": 1077
+    },
+    {
+     "turn": 27,
+     "window_turns": 11,
+     "shift": false,
+     "ttft_s": 0.028,
+     "prompt_tokens": 1166
+    },
+    {
+     "turn": 28,
+     "window_turns": 12,
+     "shift": false,
+     "ttft_s": 0.029,
+     "prompt_tokens": 1195
+    },
+    {
+     "turn": 29,
+     "window_turns": 12,
+     "shift": true,
+     "ttft_s": 0.202,
+     "prompt_tokens": 1120
+    },
+    {
+     "turn": 30,
+     "window_turns": 13,
+     "shift": false,
+     "ttft_s": 0.027,
+     "prompt_tokens": 1143
+    },
+    {
+     "turn": 31,
+     "window_turns": 13,
+     "shift": true,
+     "ttft_s": 0.208,
+     "prompt_tokens": 1139
+    },
+    {
+     "turn": 32,
+     "window_turns": 13,
+     "shift": true,
+     "ttft_s": 0.214,
+     "prompt_tokens": 1170
+    },
+    {
+     "turn": 33,
+     "window_turns": 13,
+     "shift": true,
+     "ttft_s": 0.219,
+     "prompt_tokens": 1214
+    },
+    {
+     "turn": 34,
+     "window_turns": 13,
+     "shift": true,
+     "ttft_s": 0.224,
+     "prompt_tokens": 1200
+    },
+    {
+     "turn": 35,
+     "window_turns": 14,
+     "shift": false,
+     "ttft_s": 0.029,
+     "prompt_tokens": 1237
+    },
+    {
+     "turn": 36,
+     "window_turns": 14,
+     "shift": true,
+     "ttft_s": 0.213,
+     "prompt_tokens": 1179
+    },
+    {
+     "turn": 37,
+     "window_turns": 15,
+     "shift": false,
+     "ttft_s": 0.029,
+     "prompt_tokens": 1219
+    },
+    {
+     "turn": 38,
+     "window_turns": 16,
+     "shift": false,
+     "ttft_s": 0.028,
+     "prompt_tokens": 1253
+    },
+    {
+     "turn": 39,
+     "window_turns": 16,
+     "shift": true,
+     "ttft_s": 0.233,
+     "prompt_tokens": 1226
+    },
+    {
+     "turn": 40,
+     "window_turns": 17,
+     "shift": false,
+     "ttft_s": 0.029,
+     "prompt_tokens": 1282
+    },
+    {
+     "turn": 41,
+     "window_turns": 17,
+     "shift": true,
+     "ttft_s": 0.249,
+     "prompt_tokens": 1294
+    },
+    {
+     "turn": 42,
+     "window_turns": 18,
+     "shift": false,
+     "ttft_s": 0.029,
+     "prompt_tokens": 1340
+    },
+    {
+     "turn": 43,
+     "window_turns": 18,
+     "shift": true,
+     "ttft_s": 0.255,
+     "prompt_tokens": 1336
+    },
+    {
+     "turn": 44,
+     "window_turns": 18,
+     "shift": true,
+     "ttft_s": 0.249,
+     "prompt_tokens": 1291
+    },
+    {
+     "turn": 45,
+     "window_turns": 19,
+     "shift": false,
+     "ttft_s": 0.031,
+     "prompt_tokens": 1353
+    },
+    {
+     "turn": 46,
+     "window_turns": 19,
+     "shift": true,
+     "ttft_s": 0.263,
+     "prompt_tokens": 1385
+    },
+    {
+     "turn": 47,
+     "window_turns": 17,
+     "shift": true,
+     "ttft_s": 0.265,
+     "prompt_tokens": 1382
+    },
+    {
+     "turn": 48,
+     "window_turns": 17,
+     "shift": true,
+     "ttft_s": 0.263,
+     "prompt_tokens": 1386
+    },
+    {
+     "turn": 49,
+     "window_turns": 18,
+     "shift": false,
+     "ttft_s": 0.028,
+     "prompt_tokens": 1417
+    },
+    {
+     "turn": 50,
+     "window_turns": 18,
+     "shift": true,
+     "ttft_s": 0.263,
+     "prompt_tokens": 1375
+    },
+    {
+     "turn": 51,
+     "window_turns": 18,
+     "shift": true,
+     "ttft_s": 0.262,
+     "prompt_tokens": 1384
+    },
+    {
+     "turn": 52,
+     "window_turns": 17,
+     "shift": true,
+     "ttft_s": 0.262,
+     "prompt_tokens": 1368
+    },
+    {
+     "turn": 53,
+     "window_turns": 17,
+     "shift": true,
+     "ttft_s": 0.268,
+     "prompt_tokens": 1376
+    },
+    {
+     "turn": 54,
+     "window_turns": 18,
+     "shift": false,
+     "ttft_s": 0.029,
+     "prompt_tokens": 1410
+    },
+    {
+     "turn": 55,
+     "window_turns": 17,
+     "shift": true,
+     "ttft_s": 0.267,
+     "prompt_tokens": 1384
+    },
+    {
+     "turn": 56,
+     "window_turns": 17,
+     "shift": true,
+     "ttft_s": 0.284,
+     "prompt_tokens": 1429
+    },
+    {
+     "turn": 57,
+     "window_turns": 17,
+     "shift": true,
+     "ttft_s": 0.292,
+     "prompt_tokens": 1413
+    },
+    {
+     "turn": 58,
+     "window_turns": 18,
+     "shift": false,
+     "ttft_s": 0.029,
+     "prompt_tokens": 1457
+    },
+    {
+     "turn": 59,
+     "window_turns": 17,
+     "shift": true,
+     "ttft_s": 0.291,
+     "prompt_tokens": 1410
+    },
+    {
+     "turn": 60,
+     "window_turns": 18,
+     "shift": false,
+     "ttft_s": 0.029,
+     "prompt_tokens": 1436
+    }
+   ],
+   "vram_idle_mb": 0,
+   "vram_peak_mb": 3970,
+   "log": [
+    "0.02.190.242 W llama_kv_cache_iswa: using full-size SWA cache (ref: https://github.com/ggml-org/llama.cpp/pull/13194#issuecomment-2868343055)",
+    "0.02.656.198 W srv    load_model: cache_reuse is not supported by multimodal, it will be disabled"
+   ]
+  },
+  "mmproj": {
+   "args": [
+    "-m",
+    "/home/valeriy/skull-assistant/models/quant/kostyan-e4b-iq4xs-imx.gguf",
+    "--mmproj",
+    "/home/valeriy/skull-assistant/models/hf/gemma-4-E4B-it-GGUF/mmproj-gemma-4-E4B-it-Q8_0.gguf",
+    "-ngl",
+    "99",
+    "-c",
+    "8192",
+    "-fa",
+    "on",
+    "-ctk",
+    "q8_0",
+    "-ctv",
+    "q8_0",
+    "--slot-save-path",
+    "/home/valeriy/skull-assistant/models/quant/slots",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "11440",
+    "--cache-ram",
+    "0",
+    "--ctx-checkpoints",
+    "0",
+    "--lazy-mode",
+    "on",
+    "--cache-reuse",
+    "256"
+   ],
+   "edit": {
+    "sizes": {
+     "A": 3038,
+     "B": 2946,
+     "C": 2847
+    },
+    "rows": [
+     {
+      "round": 1,
+      "prompt": "A",
+      "n_tokens": 3038,
+      "prompt_n": 3039,
+      "cache_n": 0,
+      "prompt_ms": 887.5,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов на то, что ты не сможешь использовать"
+     },
+     {
+      "round": 1,
+      "prompt": "B",
+      "n_tokens": 2946,
+      "prompt_n": 1187,
+      "cache_n": 1760,
+      "prompt_ms": 335.9,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов на то, что ты потом будешь жале"
+     },
+     {
+      "round": 1,
+      "prompt": "C",
+      "n_tokens": 2847,
+      "prompt_n": 969,
+      "cache_n": 1879,
+      "prompt_ms": 273.9,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов. Выбирай то, что меньше тебя раздра"
+     },
+     {
+      "round": 2,
+      "prompt": "A",
+      "n_tokens": 3038,
+      "prompt_n": 3039,
+      "cache_n": 0,
+      "prompt_ms": 789.4,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов на то, что ты не сможешь использовать"
+     },
+     {
+      "round": 2,
+      "prompt": "B",
+      "n_tokens": 2946,
+      "prompt_n": 1187,
+      "cache_n": 1760,
+      "prompt_ms": 340.3,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов на то, что ты потом будешь жале"
+     },
+     {
+      "round": 2,
+      "prompt": "C",
+      "n_tokens": 2847,
+      "prompt_n": 969,
+      "cache_n": 1879,
+      "prompt_ms": 288.3,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов. Выбирай то, что меньше тебя раздра"
+     },
+     {
+      "round": 3,
+      "prompt": "A",
+      "n_tokens": 3038,
+      "prompt_n": 3039,
+      "cache_n": 0,
+      "prompt_ms": 801.0,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов на то, что ты не сможешь использовать"
+     },
+     {
+      "round": 3,
+      "prompt": "B",
+      "n_tokens": 2946,
+      "prompt_n": 1187,
+      "cache_n": 1760,
+      "prompt_ms": 339.5,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов на то, что ты потом будешь жале"
+     },
+     {
+      "round": 3,
+      "prompt": "C",
+      "n_tokens": 2847,
+      "prompt_n": 969,
+      "cache_n": 1879,
+      "prompt_ms": 276.4,
+      "content": "\n\nКостян: Оба варианта — очередная трата ресурсов. Выбирай то, что меньше тебя раздра"
+     }
+    ]
+   },
+   "window": [
+    {
+     "turn": 1,
+     "window_turns": 1,
+     "shift": false,
+     "ttft_s": 0.187,
+     "prompt_tokens": 532
+    },
+    {
+     "turn": 2,
+     "window_turns": 2,
+     "shift": false,
+     "ttft_s": 0.031,
+     "prompt_tokens": 584
+    },
+    {
+     "turn": 3,
+     "window_turns": 3,
+     "shift": false,
+     "ttft_s": 0.028,
+     "prompt_tokens": 642
+    },
+    {
+     "turn": 4,
+     "window_turns": 4,
+     "shift": false,
+     "ttft_s": 0.031,
+     "prompt_tokens": 706
+    },
+    {
+     "turn": 5,
+     "window_turns": 5,
+     "shift": false,
+     "ttft_s": 0.027,
+     "prompt_tokens": 745
+    },
+    {
+     "turn": 6,
+     "window_turns": 6,
+     "shift": false,
+     "ttft_s": 0.03,
+     "prompt_tokens": 805
+    },
+    {
+     "turn": 7,
+     "window_turns": 7,
+     "shift": false,
+     "ttft_s": 0.029,
+     "prompt_tokens": 858
+    },
+    {
+     "turn": 8,
+     "window_turns": 8,
+     "shift": false,
+     "ttft_s": 0.026,
+     "prompt_tokens": 913
+    },
+    {
+     "turn": 9,
+     "window_turns": 9,
+     "shift": false,
+     "ttft_s": 0.032,
+     "prompt_tokens": 989
+    },
+    {
+     "turn": 10,
+     "window_turns": 10,
+     "shift": false,
+     "ttft_s": 0.028,
+     "prompt_tokens": 1036
+    },
+    {
+     "turn": 11,
+     "window_turns": 11,
+     "shift": false,
+     "ttft_s": 0.032,
+     "prompt_tokens": 1108
+    },
+    {
+     "turn": 12,
+     "window_turns": 12,
+     "shift": false,
+     "ttft_s": 0.028,
+     "prompt_tokens": 1155
+    },
+    {
+     "turn": 13,
+     "window_turns": 11,
+     "shift": true,
+     "ttft_s": 0.189,
+     "prompt_tokens": 1094
+    },
+    {
+     "turn": 14,
+     "window_turns": 12,
+     "shift": false,
+     "ttft_s": 0.029,
+     "prompt_tokens": 1157
+    },
+    {
+     "turn": 15,
+     "window_turns": 12,
+     "shift": true,
+     "ttft_s": 0.209,
+     "prompt_tokens": 1161
+    },
+    {
+     "turn": 16,
+     "window_turns": 12,
+     "shift": true,
+     "ttft_s": 0.203,
+     "prompt_tokens": 1166
+    },
+    {
+     "turn": 17,
+     "window_turns": 4,
+     "shift": true,
+     "ttft_s": 0.22,
+     "prompt_tokens": 1225
+    },
+    {
+     "turn": 18,
+     "window_turns": 2,
+     "shift": true,
+     "ttft_s": 0.23,
+     "prompt_tokens": 779
+    },
+    {
+     "turn": 19,
+     "window_turns": 3,
+     "shift": false,
+     "ttft_s": 0.028,
+     "prompt_tokens": 884
+    },
+    {
+     "turn": 20,
+     "window_turns": 4,
+     "shift": false,
+     "ttft_s": 0.029,
+     "prompt_tokens": 920
+    },
+    {
+     "turn": 21,
+     "window_turns": 5,
+     "shift": false,
+     "ttft_s": 0.028,
+     "prompt_tokens": 953
+    },
+    {
+     "turn": 22,
+     "window_turns": 6,
+     "shift": false,
+     "ttft_s": 0.028,
+     "prompt_tokens": 1011
+    },
+    {
+     "turn": 23,
+     "window_turns": 7,
+     "shift": false,
+     "ttft_s": 0.03,
+     "prompt_tokens": 1111
+    },
+    {
+     "turn": 24,
+     "window_turns": 8,
+     "shift": false,
+     "ttft_s": 0.028,
+     "prompt_tokens": 1176
+    },
+    {
+     "turn": 25,
+     "window_turns": 8,
+     "shift": true,
+     "ttft_s": 0.166,
+     "prompt_tokens": 1025
+    },
+    {
+     "turn": 26,
+     "window_turns": 9,
+     "shift": false,
+     "ttft_s": 0.025,
+     "prompt_tokens": 1081
+    },
+    {
+     "turn": 27,
+     "window_turns": 10,
+     "shift": false,
+     "ttft_s": 0.027,
+     "prompt_tokens": 1171
+    },
+    {
+     "turn": 28,
+     "window_turns": 11,
+     "shift": false,
+     "ttft_s": 0.026,
+     "prompt_tokens": 1200
+    },
+    {
+     "turn": 29,
+     "window_turns": 12,
+     "shift": false,
+     "ttft_s": 0.032,
+     "prompt_tokens": 1222
+    },
+    {
+     "turn": 30,
+     "window_turns": 12,
+     "shift": true,
+     "ttft_s": 0.196,
+     "prompt_tokens": 1133
+    },
+    {
+     "turn": 31,
+     "window_turns": 13,
+     "shift": false,
+     "ttft_s": 0.029,
+     "prompt_tokens": 1181
+    },
+    {
+     "turn": 32,
+     "window_turns": 12,
+     "shift": true,
+     "ttft_s": 0.205,
+     "prompt_tokens": 1202
+    },
+    {
+     "turn": 33,
+     "window_turns": 12,
+     "shift": true,
+     "ttft_s": 0.216,
+     "prompt_tokens": 1233
+    },
+    {
+     "turn": 34,
+     "window_turns": 12,
+     "shift": true,
+     "ttft_s": 0.202,
+     "prompt_tokens": 1180
+    },
+    {
+     "turn": 35,
+     "window_turns": 13,
+     "shift": false,
+     "ttft_s": 0.03,
+     "prompt_tokens": 1231
+    },
+    {
+     "turn": 36,
+     "window_turns": 14,
+     "shift": false,
+     "ttft_s": 0.031,
+     "prompt_tokens": 1264
+    },
+    {
+     "turn": 37,
+     "window_turns": 14,
+     "shift": true,
+     "ttft_s": 0.221,
+     "prompt_tokens": 1229
+    },
+    {
+     "turn": 38,
+     "window_turns": 15,
+     "shift": false,
+     "ttft_s": 0.026,
+     "prompt_tokens": 1260
+    },
+    {
+     "turn": 39,
+     "window_turns": 15,
+     "shift": true,
+     "ttft_s": 0.216,
+     "prompt_tokens": 1237
+    },
+    {
+     "turn": 40,
+     "window_turns": 16,
+     "shift": false,
+     "ttft_s": 0.027,
+     "prompt_tokens": 1287
+    },
+    {
+     "turn": 41,
+     "window_turns": 16,
+     "shift": true,
+     "ttft_s": 0.22,
+     "prompt_tokens": 1267
+    },
+    {
+     "turn": 42,
+     "window_turns": 17,
+     "shift": false,
+     "ttft_s": 0.025,
+     "prompt_tokens": 1318
+    },
+    {
+     "turn": 43,
+     "window_turns": 17,
+     "shift": true,
+     "ttft_s": 0.23,
+     "prompt_tokens": 1292
+    },
+    {
+     "turn": 44,
+     "window_turns": 17,
+     "shift": true,
+     "ttft_s": 0.239,
+     "prompt_tokens": 1343
+    },
+    {
+     "turn": 45,
+     "window_turns": 17,
+     "shift": true,
+     "ttft_s": 0.246,
+     "prompt_tokens": 1367
+    },
+    {
+     "turn": 46,
+     "window_turns": 17,
+     "shift": true,
+     "ttft_s": 0.246,
+     "prompt_tokens": 1392
+    },
+    {
+     "turn": 47,
+     "window_turns": 16,
+     "shift": true,
+     "ttft_s": 0.244,
+     "prompt_tokens": 1343
+    },
+    {
+     "turn": 48,
+     "window_turns": 17,
+     "shift": false,
+     "ttft_s": 0.027,
+     "prompt_tokens": 1393
+    },
+    {
+     "turn": 49,
+     "window_turns": 18,
+     "shift": false,
+     "ttft_s": 0.029,
+     "prompt_tokens": 1425
+    },
+    {
+     "turn": 50,
+     "window_turns": 18,
+     "shift": true,
+     "ttft_s": 0.248,
+     "prompt_tokens": 1374
+    },
+    {
+     "turn": 51,
+     "window_turns": 19,
+     "shift": false,
+     "ttft_s": 0.029,
+     "prompt_tokens": 1423
+    },
+    {
+     "turn": 52,
+     "window_turns": 18,
+     "shift": true,
+     "ttft_s": 0.247,
+     "prompt_tokens": 1368
+    },
+    {
+     "turn": 53,
+     "window_turns": 18,
+     "shift": true,
+     "ttft_s": 0.25,
+     "prompt_tokens": 1385
+    },
+    {
+     "turn": 54,
+     "window_turns": 19,
+     "shift": false,
+     "ttft_s": 0.028,
+     "prompt_tokens": 1419
+    },
+    {
+     "turn": 55,
+     "window_turns": 17,
+     "shift": true,
+     "ttft_s": 0.244,
+     "prompt_tokens": 1356
+    },
+    {
+     "turn": 56,
+     "window_turns": 18,
+     "shift": false,
+     "ttft_s": 0.031,
+     "prompt_tokens": 1430
+    },
+    {
+     "turn": 57,
+     "window_turns": 18,
+     "shift": true,
+     "ttft_s": 0.265,
+     "prompt_tokens": 1408
+    },
+    {
+     "turn": 58,
+     "window_turns": 18,
+     "shift": true,
+     "ttft_s": 0.265,
+     "prompt_tokens": 1400
+    },
+    {
+     "turn": 59,
+     "window_turns": 19,
+     "shift": false,
+     "ttft_s": 0.03,
+     "prompt_tokens": 1451
+    },
+    {
+     "turn": 60,
+     "window_turns": 19,
+     "shift": true,
+     "ttft_s": 0.281,
+     "prompt_tokens": 1435
+    }
+   ],
+   "vram_idle_mb": 0,
+   "vram_peak_mb": 3868,
+   "log": [
+    "0.02.588.088 W srv    load_model: cache_reuse is not supported by multimodal, it will be disabled"
+   ]
+  }
+ }
+}
