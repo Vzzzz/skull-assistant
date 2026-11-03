@@ -1,0 +1,2918 @@
+[
+{
+"t": 1793724559.716,
+"s": "events:vision",
+"f": {
+"kind": "gaze",
+"dur_s": "1.0",
+"iris_h": "0.53",
+"iris_v": "0.03",
+"nose": "0.33",
+"score": "0.91",
+"yaw": "17.5",
+"pitch": "3.5",
+"frame": "1",
+"ts": "1793724559.715"
+}
+},
+{
+"t": 1793724560.655,
+"s": "events:ambient",
+"f": {
+"text": "",
+"decision": "gaze_drop",
+"why": "repeat",
+"state": "idle",
+"ts": "1793724559.717",
+"reply": "Футболка."
+}
+},
+{
+"t": 1793724561.126,
+"s": "events:ambient",
+"f": {
+"text": "",
+"decision": "gaze_drop",
+"why": "repeat",
+"state": "idle",
+"ts": "1793724559.717",
+"reply": "Футболка."
+}
+},
+{
+"t": 1793724561.587,
+"s": "events:ambient",
+"f": {
+"text": "",
+"decision": "gaze_drop",
+"why": "repeat",
+"state": "idle",
+"ts": "1793724559.717",
+"reply": "Что там?"
+}
+},
+{
+"t": 1793724561.588,
+"s": "events:ambient",
+"f": {
+"text": "",
+"decision": "gaze",
+"why": "look 1.0 s",
+"state": "idle",
+"ts": "1793724559.717",
+"reply": "Ну?",
+"frame": "0"
+}
+},
+{
+"t": 1793724561.587,
+"s": "events:reply",
+"f": {
+"text": "Ну?",
+"reply_id": "6a1df9e32a4b",
+"seq": "0",
+"final": "1",
+"ts": "1793724559.717",
+"meta": "{\"reply\": \"Ну?\", \"ambient\": \"gaze\", \"frame\": 0}"
+}
+},
+{
+"t": 1793724561.618,
+"s": "events:tts",
+"f": {
+"reply_id": "6a1df9e32a4b",
+"phase": "first_audio",
+"t": "1793724561.618",
+"ts": "1793724559.717"
+}
+},
+{
+"t": 1793724561.619,
+"s": "events:tts",
+"f": {
+"reply_id": "6a1df9e32a4b",
+"phase": "end",
+"t": "1793724561.886",
+"ts": "1793724559.717"
+}
+},
+{
+"t": 1793724594.708,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "0.8",
+"audio_id": "1793724593090-0",
+"end_id": "1793724593929-0",
+"end_ts": "1793724593.901"
+}
+},
+{
+"t": 1793724594.784,
+"s": "events:transcript",
+"f": {
+"text": "Костян, ты тут",
+"lang": "ru",
+"ts": "1793724594.710",
+"stt_s": "0.055",
+"trigger": "speech",
+"pause_s": "0.88",
+"pause_wait": "",
+"seg_s": "0.87",
+"speaker": "uncertain",
+"spk_score": "0.308",
+"spk_ms": "17"
+}
+},
+{
+"t": 1793724595.508,
+"s": "events:ambient",
+"f": {
+"text": "Костян, ты тут",
+"decision": "respond",
+"why": "name",
+"state": "idle",
+"ts": "1793724594.710",
+"speaker": "uncertain",
+"spk_raw": "uncertain",
+"spk_score": "0.308",
+"pause_s": "0.88",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.016"
+}
+},
+{
+"t": 1793724596.001,
+"s": "events:reply",
+"f": {
+"text": "Здесь.",
+"reply_id": "39d739dce5f3",
+"seq": "0",
+"final": "1",
+"ts": "1793724594.710",
+"meta": "{\"turn\": 72, \"window_turns\": 71, \"prompt_tokens\": 3152, \"completion_tokens\": 4, \"calc\": null, \"net\": null, \"ttft_s\": 0.031, \"tok_s\": null, \"finish_reason\": \"stop\", \"wall_s\": 1.21, \"max_tokens\": 300, \"reply\": \"Здесь.\", \"sentences\": 1, \"mode\": \"A\", \"llm_calls\": [\"router\", \"chat\"], \"route\": {\"label\": \"chat\", \"raw\": \"chat\", \"probs\": {\"chat\": 0.855, \"command\": 0.1, \"memory\": 0.018, \"aside\": 0.016, \"world\": 0.001}, \"s\": 0.72}, \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793724596.07,
+"s": "events:tts",
+"f": {
+"reply_id": "39d739dce5f3",
+"phase": "first_audio",
+"t": "1793724596.070",
+"ts": "1793724594.710"
+}
+},
+{
+"t": 1793724596.973,
+"s": "events:tts",
+"f": {
+"reply_id": "39d739dce5f3",
+"phase": "end",
+"t": "1793724597.118",
+"ts": "1793724594.710"
+}
+},
+{
+"t": 1793724599.338,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "0.4",
+"audio_id": "1793724598173-0",
+"end_id": "1793724598531-0",
+"end_ts": "1793724598.520"
+}
+},
+{
+"t": 1793724599.374,
+"s": "events:transcript",
+"f": {
+"text": "чно",
+"lang": "ru",
+"ts": "1793724599.339",
+"stt_s": "0.032",
+"trigger": "speech",
+"pause_s": "0.85",
+"pause_wait": "",
+"seg_s": "0.39",
+"speaker": "unknown",
+"spk_score": "",
+"spk_ms": "0"
+}
+},
+{
+"t": 1793724600.563,
+"s": "events:ambient",
+"f": {
+"text": "чно",
+"decision": "silent",
+"why": "engaged duck нет {'нет': 0.966, 'да': 0.03}",
+"state": "engaged",
+"ts": "1793724599.339",
+"speaker": "uncertain",
+"spk_raw": "unknown",
+"spk_score": "",
+"pause_s": "0.85",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.420"
+}
+},
+{
+"t": 1793724602.645,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "1.0",
+"audio_id": "1793724600827-0",
+"end_id": "1793724601840-0",
+"end_ts": "1793724601.826"
+}
+},
+{
+"t": 1793724602.73,
+"s": "events:transcript",
+"f": {
+"text": "Чем занят",
+"lang": "ru",
+"ts": "1793724602.647",
+"stt_s": "0.061",
+"trigger": "speech",
+"pause_s": "0.90",
+"pause_wait": "",
+"seg_s": "1.05",
+"speaker": "other",
+"spk_score": "0.231",
+"spk_ms": "20"
+}
+},
+{
+"t": 1793724603.424,
+"s": "events:ambient",
+"f": {
+"text": "Чем занят",
+"decision": "respond",
+"why": "question",
+"state": "engaged",
+"ts": "1793724602.647",
+"speaker": "uncertain",
+"spk_raw": "other",
+"spk_score": "0.231",
+"pause_s": "0.90",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.004"
+}
+},
+{
+"t": 1793724603.921,
+"s": "events:reply",
+"f": {
+"text": "Стою.",
+"reply_id": "8a0c4162f1e0",
+"seq": "0",
+"final": "1",
+"ts": "1793724602.647",
+"meta": "{\"turn\": 73, \"window_turns\": 72, \"prompt_tokens\": 3168, \"completion_tokens\": 4, \"calc\": null, \"net\": null, \"ttft_s\": 0.036, \"tok_s\": null, \"finish_reason\": \"stop\", \"wall_s\": 1.19, \"max_tokens\": 300, \"reply\": \"Стою.\", \"sentences\": 1, \"mode\": \"A\", \"llm_calls\": [\"router\", \"chat\"], \"route\": {\"label\": \"chat\", \"raw\": \"chat\", \"probs\": {\"chat\": 0.977, \"aside\": 0.004, \"command\": 0.002, \"world\": 0.002, \"memory\": 0.001}, \"s\": 0.691}, \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793724603.967,
+"s": "events:tts",
+"f": {
+"reply_id": "8a0c4162f1e0",
+"phase": "first_audio",
+"t": "1793724603.967",
+"ts": "1793724602.647"
+}
+},
+{
+"t": 1793724603.969,
+"s": "events:tts",
+"f": {
+"reply_id": "8a0c4162f1e0",
+"phase": "end",
+"t": "1793724604.234",
+"ts": "1793724602.647"
+}
+},
+{
+"t": 1793724626.609,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "4.7",
+"audio_id": "1793724621041-0",
+"end_id": "1793724625798-0",
+"end_ts": "1793724625.783"
+}
+},
+{
+"t": 1793724626.921,
+"s": "events:transcript",
+"f": {
+"text": "Капец какой-то. Почему у нас задержка с речью",
+"lang": "ru",
+"ts": "1793724626.612",
+"stt_s": "0.234",
+"trigger": "speech",
+"pause_s": "1.14",
+"pause_wait": "",
+"seg_s": "4.77",
+"speaker": "owner",
+"spk_score": "0.607",
+"bcast": "1",
+"spk_ms": "71"
+}
+},
+{
+"t": 1793724627.695,
+"s": "events:ambient",
+"f": {
+"text": "Капец какой-то. Почему у нас задержка с речью",
+"decision": "respond",
+"why": "question",
+"state": "engaged",
+"ts": "1793724626.612",
+"speaker": "owner",
+"spk_raw": "owner",
+"spk_score": "0.607",
+"pause_s": "1.14",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "1",
+"p_aside": "0.622"
+}
+},
+{
+"t": 1793724628.185,
+"s": "events:reply",
+"f": {
+"text": "Не знаю.",
+"reply_id": "2cd424fcb1d7",
+"seq": "0",
+"final": "0",
+"ts": "1793724626.612"
+}
+},
+{
+"t": 1793724628.278,
+"s": "events:tts",
+"f": {
+"reply_id": "2cd424fcb1d7",
+"phase": "first_audio",
+"t": "1793724628.278",
+"ts": "1793724626.612"
+}
+},
+{
+"t": 1793724628.33,
+"s": "events:reply",
+"f": {
+"text": "Просто говори.",
+"reply_id": "2cd424fcb1d7",
+"seq": "1",
+"final": "1",
+"ts": "1793724626.612",
+"meta": "{\"turn\": 74, \"window_turns\": 73, \"prompt_tokens\": 3197, \"completion_tokens\": 7, \"calc\": null, \"net\": null, \"ttft_s\": 0.032, \"tok_s\": 56.4, \"finish_reason\": \"stop\", \"wall_s\": 1.41, \"max_tokens\": 300, \"reply\": \"Не знаю. Просто говори.\", \"sentences\": 2, \"mode\": \"A\", \"llm_calls\": [\"router\", \"chat\"], \"route\": {\"label\": \"aside\", \"raw\": \"aside\", \"probs\": {\"aside\": 0.622, \"chat\": 0.368, \"world\": 0.005, \"calc\": 0.0}, \"s\": 0.771}, \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793724628.586,
+"s": "events:tts",
+"f": {
+"reply_id": "2cd424fcb1d7",
+"phase": "end",
+"t": "1793724629.973",
+"ts": "1793724626.612"
+}
+},
+{
+"t": 1793724634.641,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "2.8",
+"audio_id": "1793724631061-0",
+"end_id": "1793724633863-0",
+"end_ts": "1793724633.841"
+}
+},
+{
+"t": 1793724634.832,
+"s": "events:transcript",
+"f": {
+"text": "Ао сейчас задержки не было",
+"lang": "ru",
+"ts": "1793724634.643",
+"stt_s": "0.143",
+"trigger": "speech",
+"pause_s": "0.99",
+"pause_wait": "",
+"seg_s": "2.85",
+"speaker": "owner",
+"spk_score": "0.456",
+"spk_ms": "44"
+}
+},
+{
+"t": 1793724636.161,
+"s": "events:ambient",
+"f": {
+"text": "Ао сейчас задержки не было",
+"decision": "ack",
+"why": "engaged duck нет {'нет': 0.654, 'да': 0.337}",
+"state": "engaged",
+"ts": "1793724634.643",
+"speaker": "owner",
+"spk_raw": "owner",
+"spk_score": "0.456",
+"pause_s": "0.99",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793724636.161,
+"s": "events:reply",
+"f": {
+"text": "Ага.",
+"reply_id": "54e54543ab86",
+"seq": "0",
+"final": "1",
+"ts": "1793724634.643",
+"meta": "{\"reply\": \"Ага.\", \"ambient\": \"ack\"}"
+}
+},
+{
+"t": 1793724636.195,
+"s": "events:tts",
+"f": {
+"reply_id": "54e54543ab86",
+"phase": "first_audio",
+"t": "1793724636.196",
+"ts": "1793724634.643"
+}
+},
+{
+"t": 1793724636.197,
+"s": "events:tts",
+"f": {
+"reply_id": "54e54543ab86",
+"phase": "end",
+"t": "1793724636.486",
+"ts": "1793724634.643"
+}
+},
+{
+"t": 1793724641.547,
+"s": "events:vision",
+"f": {
+"kind": "gaze",
+"dur_s": "1.0",
+"iris_h": "0.51",
+"iris_v": "0.03",
+"nose": "0.06",
+"score": "0.92",
+"yaw": "-9.5",
+"pitch": "-4.2",
+"frame": "1",
+"ts": "1793724641.546"
+}
+},
+{
+"t": 1793724666.471,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "1.1",
+"audio_id": "1793724664622-0",
+"end_id": "1793724665665-0",
+"end_ts": "1793724665.650"
+}
+},
+{
+"t": 1793724666.556,
+"s": "events:transcript",
+"f": {
+"text": "Что-то сделать.",
+"lang": "ru",
+"ts": "1793724666.473",
+"stt_s": "0.061",
+"trigger": "speech",
+"pause_s": "0.91",
+"pause_wait": "",
+"seg_s": "1.08",
+"speaker": "other",
+"spk_score": "0.228",
+"spk_ms": "20"
+}
+},
+{
+"t": 1793724667.255,
+"s": "events:ambient",
+"f": {
+"text": "Что-то сделать.",
+"decision": "silent",
+"why": "other voice",
+"state": "idle",
+"ts": "1793724666.473",
+"speaker": "other",
+"spk_raw": "other",
+"spk_score": "0.228",
+"pause_s": "0.91",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793724689.345,
+"s": "events:vision",
+"f": {
+"kind": "gaze",
+"dur_s": "1.0",
+"iris_h": "0.58",
+"iris_v": "-0.05",
+"nose": "0.23",
+"score": "0.93",
+"yaw": "9.7",
+"pitch": "3.9",
+"frame": "1",
+"ts": "1793724689.344"
+}
+},
+{
+"t": 1793724690.097,
+"s": "events:reply",
+"f": {
+"text": "Что тебе надо?",
+"reply_id": "a65f631d7ce1",
+"seq": "0",
+"final": "1",
+"ts": "1793724689.346",
+"meta": "{\"reply\": \"Что тебе надо?\", \"ambient\": \"gaze\", \"frame\": 0}"
+}
+},
+{
+"t": 1793724690.097,
+"s": "events:ambient",
+"f": {
+"text": "",
+"decision": "gaze",
+"why": "look 1.0 s",
+"state": "idle",
+"ts": "1793724689.346",
+"reply": "Что тебе надо?",
+"frame": "0"
+}
+},
+{
+"t": 1793724690.157,
+"s": "events:tts",
+"f": {
+"reply_id": "a65f631d7ce1",
+"phase": "first_audio",
+"t": "1793724690.157",
+"ts": "1793724689.346"
+}
+},
+{
+"t": 1793724690.92,
+"s": "events:tts",
+"f": {
+"reply_id": "a65f631d7ce1",
+"phase": "end",
+"t": "1793724691.040",
+"ts": "1793724689.346"
+}
+},
+{
+"t": 1793724699.255,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "4.6",
+"audio_id": "1793724693914-0",
+"end_id": "1793724698448-0",
+"end_ts": "1793724698.444"
+}
+},
+{
+"t": 1793724699.557,
+"s": "events:transcript",
+"f": {
+"text": "Аа, М мне надо записать красивое демо и показать, как ты работаешь",
+"lang": "ru",
+"ts": "1793724699.258",
+"stt_s": "0.224",
+"trigger": "speech",
+"pause_s": "1.11",
+"pause_wait": "",
+"seg_s": "4.59",
+"speaker": "owner",
+"spk_score": "0.504",
+"spk_ms": "71"
+}
+},
+{
+"t": 1793724700.424,
+"s": "events:ambient",
+"f": {
+"text": "Аа, М мне надо записать красивое демо и показать, как ты работаешь",
+"decision": "respond",
+"why": "question",
+"state": "engaged",
+"ts": "1793724699.258",
+"speaker": "owner",
+"spk_raw": "owner",
+"spk_score": "0.504",
+"pause_s": "1.11",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.014"
+}
+},
+{
+"t": 1793724700.936,
+"s": "events:reply",
+"f": {
+"text": "Записывай.",
+"reply_id": "6b615ec54ba9",
+"seq": "0",
+"final": "0",
+"ts": "1793724699.258"
+}
+},
+{
+"t": 1793724701.114,
+"s": "events:tts",
+"f": {
+"reply_id": "6b615ec54ba9",
+"phase": "first_audio",
+"t": "1793724701.115",
+"ts": "1793724699.258"
+}
+},
+{
+"t": 1793724701.171,
+"s": "events:reply",
+"f": {
+"text": "Мне всё равно.",
+"reply_id": "6b615ec54ba9",
+"seq": "1",
+"final": "1",
+"ts": "1793724699.258",
+"meta": "{\"turn\": 76, \"window_turns\": 75, \"prompt_tokens\": 3252, \"completion_tokens\": 9, \"calc\": null, \"net\": null, \"ttft_s\": 0.032, \"tok_s\": 57.8, \"finish_reason\": \"stop\", \"wall_s\": 1.61, \"max_tokens\": 300, \"reply\": \"Записывай. Мне всё равно.\", \"sentences\": 2, \"mode\": \"A\", \"llm_calls\": [\"router\", \"chat\"], \"route\": {\"label\": \"chat\", \"raw\": \"chat\", \"probs\": {\"chat\": 0.977, \"aside\": 0.014, \"command\": 0.006, \"memory\": 0.001, \"world\": 0.0}, \"s\": 0.864}, \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793724702.124,
+"s": "events:tts",
+"f": {
+"reply_id": "6b615ec54ba9",
+"phase": "end",
+"t": "1793724702.868",
+"ts": "1793724699.258"
+}
+},
+{
+"t": 1793724705.145,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "0.5",
+"audio_id": "1793724703924-0",
+"end_id": "1793724704370-0",
+"end_ts": "1793724704.346"
+}
+},
+{
+"t": 1793724705.186,
+"s": "events:transcript",
+"f": {
+"text": "А.",
+"lang": "ru",
+"ts": "1793724705.147",
+"stt_s": "0.036",
+"trigger": "speech",
+"pause_s": "0.84",
+"pause_wait": "",
+"seg_s": "0.48",
+"speaker": "unknown",
+"spk_score": "",
+"spk_ms": "0"
+}
+},
+{
+"t": 1793724706.497,
+"s": "events:ambient",
+"f": {
+"text": "А.",
+"decision": "ack",
+"why": "engaged duck нет {'нет': 0.588, 'да': 0.391}",
+"state": "engaged",
+"ts": "1793724705.147",
+"speaker": "uncertain",
+"spk_raw": "unknown",
+"spk_score": "",
+"pause_s": "0.84",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.199"
+}
+},
+{
+"t": 1793724706.497,
+"s": "events:reply",
+"f": {
+"text": "Угу.",
+"reply_id": "23ff8e14d912",
+"seq": "0",
+"final": "1",
+"ts": "1793724705.147",
+"meta": "{\"reply\": \"Угу.\", \"ambient\": \"ack\"}"
+}
+},
+{
+"t": 1793724706.523,
+"s": "events:tts",
+"f": {
+"reply_id": "23ff8e14d912",
+"phase": "first_audio",
+"t": "1793724706.523",
+"ts": "1793724705.147"
+}
+},
+{
+"t": 1793724706.524,
+"s": "events:tts",
+"f": {
+"reply_id": "23ff8e14d912",
+"phase": "end",
+"t": "1793724706.698",
+"ts": "1793724705.147"
+}
+},
+{
+"t": 1793724724.288,
+"s": "events:vision",
+"f": {
+"kind": "gaze",
+"dur_s": "1.0",
+"iris_h": "0.47",
+"iris_v": "-0.04",
+"nose": "0.10",
+"score": "0.92",
+"yaw": "-6.7",
+"pitch": "-5.3",
+"frame": "1",
+"ts": "1793724724.287"
+}
+},
+{
+"t": 1793724726.823,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "3.1",
+"audio_id": "1793724722994-0",
+"end_id": "1793724726045-0",
+"end_ts": "1793724726.023"
+}
+},
+{
+"t": 1793724727.027,
+"s": "events:transcript",
+"f": {
+"text": "Мне же надо, чтобы ты сделал это красиво",
+"lang": "ru",
+"ts": "1793724726.825",
+"stt_s": "0.153",
+"trigger": "speech",
+"pause_s": "1.00",
+"pause_wait": "",
+"seg_s": "3.09",
+"speaker": "owner",
+"spk_score": "0.453",
+"spk_ms": "46"
+}
+},
+{
+"t": 1793724728.385,
+"s": "events:ambient",
+"f": {
+"text": "Мне же надо, чтобы ты сделал это красиво",
+"decision": "respond",
+"why": "engaged duck да {'да': 0.514, 'нет': 0.466}",
+"state": "engaged",
+"ts": "1793724726.825",
+"speaker": "owner",
+"spk_raw": "owner",
+"spk_score": "0.453",
+"pause_s": "1.00",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793724728.914,
+"s": "events:reply",
+"f": {
+"text": "Сделаю.",
+"reply_id": "86bed8e16ec7",
+"seq": "0",
+"final": "0",
+"ts": "1793724726.825"
+}
+},
+{
+"t": 1793724729.001,
+"s": "events:tts",
+"f": {
+"reply_id": "86bed8e16ec7",
+"phase": "first_audio",
+"t": "1793724729.001",
+"ts": "1793724726.825"
+}
+},
+{
+"t": 1793724729.05,
+"s": "events:reply",
+"f": {
+"text": "Как положено.",
+"reply_id": "86bed8e16ec7",
+"seq": "1",
+"final": "1",
+"ts": "1793724726.825",
+"meta": "{\"turn\": 78, \"window_turns\": 77, \"prompt_tokens\": 3294, \"completion_tokens\": 9, \"calc\": null, \"net\": null, \"ttft_s\": 0.029, \"tok_s\": 58.5, \"finish_reason\": \"stop\", \"wall_s\": 2.02, \"max_tokens\": 200, \"reply\": \"Сделаю. Как положено.\", \"sentences\": 2, \"mode\": \"A\", \"llm_calls\": [\"router\", \"duck\", \"chat\"], \"route\": {\"label\": \"command\", \"raw\": \"command\", \"probs\": {\"command\": 0.859, \"chat\": 0.13, \"memory\": 0.003, \"calc\": 0.001}, \"s\": 0.817}, \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793724729.697,
+"s": "events:tts",
+"f": {
+"reply_id": "86bed8e16ec7",
+"phase": "end",
+"t": "1793724730.476",
+"ts": "1793724726.825"
+}
+},
+{
+"t": 1793724732.695,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "0.3",
+"audio_id": "1793724731562-0",
+"end_id": "1793724731890-0",
+"end_ts": "1793724731.873"
+}
+},
+{
+"t": 1793724732.729,
+"s": "events:transcript",
+"f": {
+"text": "Д.",
+"lang": "ru",
+"ts": "1793724732.696",
+"stt_s": "0.030",
+"trigger": "speech",
+"pause_s": "0.86",
+"pause_wait": "",
+"seg_s": "0.36",
+"speaker": "unknown",
+"spk_score": "",
+"spk_ms": "0"
+}
+},
+{
+"t": 1793724734.157,
+"s": "events:ambient",
+"f": {
+"text": "Д.",
+"decision": "ack",
+"why": "engaged duck нет {'нет': 0.71, 'да': 0.274}",
+"state": "engaged",
+"ts": "1793724732.696",
+"speaker": "uncertain",
+"spk_raw": "unknown",
+"spk_score": "",
+"pause_s": "0.86",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.191"
+}
+},
+{
+"t": 1793724734.157,
+"s": "events:reply",
+"f": {
+"text": "М-м.",
+"reply_id": "edf57ec22ac0",
+"seq": "0",
+"final": "1",
+"ts": "1793724732.696",
+"meta": "{\"reply\": \"М-м.\", \"ambient\": \"ack\"}"
+}
+},
+{
+"t": 1793724734.194,
+"s": "events:tts",
+"f": {
+"reply_id": "edf57ec22ac0",
+"phase": "first_audio",
+"t": "1793724734.194",
+"ts": "1793724732.696"
+}
+},
+{
+"t": 1793724734.2,
+"s": "events:tts",
+"f": {
+"reply_id": "edf57ec22ac0",
+"phase": "end",
+"t": "1793724734.671",
+"ts": "1793724732.696"
+}
+},
+{
+"t": 1793724740.098,
+"s": "events:vision",
+"f": {
+"kind": "gaze",
+"dur_s": "1.0",
+"iris_h": "0.62",
+"iris_v": "-0.08",
+"nose": "0.36",
+"score": "0.91",
+"yaw": "17.2",
+"pitch": "2.2",
+"frame": "1",
+"ts": "1793724740.098"
+}
+},
+{
+"t": 1793724744.464,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "2.3",
+"audio_id": "1793724741315-0",
+"end_id": "1793724743660-0",
+"end_ts": "1793724743.662"
+}
+},
+{
+"t": 1793724744.684,
+"s": "events:transcript",
+"f": {
+"text": "Что, давай проверять твою память",
+"lang": "ru",
+"ts": "1793724744.466",
+"stt_s": "0.125",
+"trigger": "speech",
+"pause_s": "1.02",
+"pause_wait": "",
+"seg_s": "2.37",
+"speaker": "other",
+"spk_score": "0.282",
+"spk_win": "0.280",
+"spk_ms": "90"
+}
+},
+{
+"t": 1793724745.585,
+"s": "events:ambient",
+"f": {
+"text": "Что, давай проверять твою память",
+"decision": "silent",
+"why": "other voice",
+"state": "engaged",
+"ts": "1793724744.466",
+"speaker": "other",
+"spk_raw": "other",
+"spk_score": "0.282",
+"pause_s": "1.02",
+"pause_wait": "",
+"spk_win": "0.280",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793724750.921,
+"s": "events:vision",
+"f": {
+"kind": "gaze",
+"dur_s": "1.0",
+"iris_h": "0.52",
+"iris_v": "-0.02",
+"nose": "0.12",
+"score": "0.89",
+"yaw": "0.9",
+"pitch": "-10.4",
+"frame": "1",
+"ts": "1793724750.921"
+}
+},
+{
+"t": 1793724755.489,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "3.3",
+"audio_id": "1793724751431-0",
+"end_id": "1793724754678-0",
+"end_ts": "1793724754.679"
+}
+},
+{
+"t": 1793724755.808,
+"s": "events:transcript",
+"f": {
+"text": "Костян, я тут недавно купил синий чайник",
+"lang": "ru",
+"ts": "1793724755.491",
+"stt_s": "0.164",
+"trigger": "speech",
+"pause_s": "1.13",
+"pause_wait": "",
+"seg_s": "3.27",
+"speaker": "uncertain",
+"spk_score": "0.441",
+"bcast": "1",
+"spk_win": "0.336",
+"spk_ms": "150"
+}
+},
+{
+"t": 1793724756.586,
+"s": "events:ambient",
+"f": {
+"text": "Костян, я тут недавно купил синий чайник",
+"decision": "respond",
+"why": "name",
+"state": "engaged",
+"ts": "1793724755.491",
+"speaker": "uncertain",
+"spk_raw": "uncertain",
+"spk_score": "0.441",
+"pause_s": "1.13",
+"pause_wait": "",
+"spk_win": "0.336",
+"spk_region": "",
+"text_full": "",
+"bcast": "1",
+"p_aside": "0.004"
+}
+},
+{
+"t": 1793724757.142,
+"s": "events:reply",
+"f": {
+"text": "Чайник.",
+"reply_id": "8957abdab013",
+"seq": "0",
+"final": "0",
+"ts": "1793724755.491"
+}
+},
+{
+"t": 1793724757.186,
+"s": "events:tts",
+"f": {
+"reply_id": "8957abdab013",
+"phase": "first_audio",
+"t": "1793724757.186",
+"ts": "1793724755.491"
+}
+},
+{
+"t": 1793724757.262,
+"s": "events:reply",
+"f": {
+"text": "Синий.",
+"reply_id": "8957abdab013",
+"seq": "1",
+"final": "1",
+"ts": "1793724755.491",
+"meta": "{\"turn\": 80, \"window_turns\": 79, \"prompt_tokens\": 3341, \"completion_tokens\": 8, \"calc\": null, \"net\": null, \"ttft_s\": 0.032, \"tok_s\": 54.4, \"finish_reason\": \"stop\", \"wall_s\": 1.45, \"max_tokens\": 300, \"reply\": \"Чайник. Синий.\", \"sentences\": 2, \"mode\": \"A\", \"llm_calls\": [\"router\", \"chat\"], \"route\": {\"label\": \"chat\", \"raw\": \"chat\", \"probs\": {\"chat\": 0.994, \"aside\": 0.004, \"memory\": 0.001, \"world\": 0.0}, \"s\": 0.774}, \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793724757.366,
+"s": "events:tts",
+"f": {
+"reply_id": "8957abdab013",
+"phase": "end",
+"t": "1793724758.336",
+"ts": "1793724755.491"
+}
+},
+{
+"t": 1793724760.747,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "0.5",
+"audio_id": "1793724759433-0",
+"end_id": "1793724759940-0",
+"end_ts": "1793724759.937"
+}
+},
+{
+"t": 1793724765.452,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "1.8",
+"audio_id": "1793724762861-0",
+"end_id": "1793724764648-0",
+"end_ts": "1793724764.639"
+}
+},
+{
+"t": 1793724765.585,
+"s": "events:transcript",
+"f": {
+"text": "Какого цвета чайник",
+"lang": "ru",
+"ts": "1793724765.454",
+"stt_s": "0.098",
+"trigger": "speech",
+"pause_s": "0.95",
+"pause_wait": "",
+"seg_s": "1.83",
+"speaker": "uncertain",
+"spk_score": "0.378",
+"bcast": "1",
+"spk_ms": "30"
+}
+},
+{
+"t": 1793724766.397,
+"s": "events:ambient",
+"f": {
+"text": "Какого цвета чайник",
+"decision": "silent",
+"why": "uncertain voice (broadcast)",
+"state": "engaged",
+"ts": "1793724765.454",
+"speaker": "uncertain",
+"spk_raw": "uncertain",
+"spk_score": "0.378",
+"pause_s": "0.95",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "1",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793724776.81,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "2.0",
+"audio_id": "1793724774012-0",
+"end_id": "1793724775973-0",
+"end_ts": "1793724775.991"
+}
+},
+{
+"t": 1793724777.011,
+"s": "events:transcript",
+"f": {
+"text": "Костян, какого цвета чайник",
+"lang": "ru",
+"ts": "1793724776.812",
+"stt_s": "0.111",
+"trigger": "speech",
+"pause_s": "1.02",
+"pause_wait": "",
+"seg_s": "2.01",
+"speaker": "uncertain",
+"spk_score": "0.283",
+"spk_win": "0.388",
+"spk_region": "0.51-2.01",
+"spk_ms": "85"
+}
+},
+{
+"t": 1793724777.831,
+"s": "events:ambient",
+"f": {
+"text": "Костян, какого цвета чайник",
+"decision": "respond",
+"why": "name",
+"state": "engaged",
+"ts": "1793724776.812",
+"speaker": "uncertain",
+"spk_raw": "uncertain",
+"spk_score": "0.283",
+"pause_s": "1.02",
+"pause_wait": "",
+"spk_win": "0.388",
+"spk_region": "0.51-2.01",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793724778.431,
+"s": "events:reply",
+"f": {
+"text": "Синий.",
+"reply_id": "ac8137446adf",
+"seq": "0",
+"final": "1",
+"ts": "1793724776.812",
+"meta": "{\"turn\": 81, \"window_turns\": 80, \"prompt_tokens\": 3366, \"completion_tokens\": 4, \"calc\": null, \"net\": null, \"ttft_s\": 0.034, \"tok_s\": null, \"finish_reason\": \"stop\", \"wall_s\": 1.42, \"max_tokens\": 300, \"reply\": \"Синий.\", \"sentences\": 1, \"mode\": \"A\", \"llm_calls\": [\"router\", \"chat\"], \"route\": {\"label\": \"chat\", \"raw\": \"chat\", \"probs\": {\"chat\": 0.946, \"memory\": 0.038, \"world\": 0.009}, \"s\": 0.817}, \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793724778.506,
+"s": "events:tts",
+"f": {
+"reply_id": "ac8137446adf",
+"phase": "first_audio",
+"t": "1793724778.506",
+"ts": "1793724776.812"
+}
+},
+{
+"t": 1793724778.51,
+"s": "events:tts",
+"f": {
+"reply_id": "ac8137446adf",
+"phase": "end",
+"t": "1793724779.064",
+"ts": "1793724776.812"
+}
+},
+{
+"t": 1793724815.735,
+"s": "events:vision",
+"f": {
+"kind": "gaze",
+"dur_s": "1.0",
+"iris_h": "0.57",
+"iris_v": "-0.03",
+"nose": "0.25",
+"score": "0.92",
+"yaw": "17.1",
+"pitch": "13.6",
+"frame": "1",
+"ts": "1793724815.734"
+}
+},
+{
+"t": 1793724816.647,
+"s": "events:reply",
+"f": {
+"text": "Скучно.",
+"reply_id": "3eefe6ba7010",
+"seq": "0",
+"final": "1",
+"ts": "1793724815.736",
+"meta": "{\"reply\": \"Скучно.\", \"ambient\": \"gaze\", \"frame\": 0}"
+}
+},
+{
+"t": 1793724816.647,
+"s": "events:ambient",
+"f": {
+"text": "",
+"decision": "gaze",
+"why": "look 1.0 s",
+"state": "idle",
+"ts": "1793724815.736",
+"reply": "Скучно.",
+"frame": "0"
+}
+},
+{
+"t": 1793724816.718,
+"s": "events:tts",
+"f": {
+"reply_id": "3eefe6ba7010",
+"phase": "first_audio",
+"t": "1793724816.718",
+"ts": "1793724815.736"
+}
+},
+{
+"t": 1793724817.49,
+"s": "events:tts",
+"f": {
+"reply_id": "3eefe6ba7010",
+"phase": "end",
+"t": "1793724817.491",
+"ts": "1793724815.736"
+}
+},
+{
+"t": 1793724820.731,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "1.6",
+"audio_id": "1793724818332-0",
+"end_id": "1793724819921-0",
+"end_ts": "1793724819.919"
+}
+},
+{
+"t": 1793724820.853,
+"s": "events:transcript",
+"f": {
+"text": "Можно",
+"lang": "ru",
+"ts": "1793724820.733",
+"stt_s": "0.090",
+"trigger": "speech",
+"pause_s": "0.93",
+"pause_wait": "",
+"seg_s": "1.62",
+"speaker": "other",
+"spk_score": "0.127",
+"spk_ms": "28"
+}
+},
+{
+"t": 1793724821.63,
+"s": "events:ambient",
+"f": {
+"text": "Можно",
+"decision": "silent",
+"why": "other voice",
+"state": "engaged",
+"ts": "1793724820.733",
+"speaker": "other",
+"spk_raw": "other",
+"spk_score": "0.127",
+"pause_s": "0.93",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793724823.3,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "0.8",
+"audio_id": "1793724821716-0",
+"end_id": "1793724822523-0",
+"end_ts": "1793724822.501"
+}
+},
+{
+"t": 1793724823.377,
+"s": "events:transcript",
+"f": {
+"text": "Семо.",
+"lang": "ru",
+"ts": "1793724823.302",
+"stt_s": "0.055",
+"trigger": "speech",
+"pause_s": "0.88",
+"pause_wait": "",
+"seg_s": "0.84",
+"speaker": "other",
+"spk_score": "0.036",
+"bcast": "1",
+"spk_ms": "17"
+}
+},
+{
+"t": 1793724824.022,
+"s": "events:ambient",
+"f": {
+"text": "Семо.",
+"decision": "silent",
+"why": "other voice",
+"state": "engaged",
+"ts": "1793724823.302",
+"speaker": "other",
+"spk_raw": "other",
+"spk_score": "0.036",
+"pause_s": "0.88",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "1",
+"p_aside": "0.239"
+}
+},
+{
+"t": 1793724829.152,
+"s": "events:vision",
+"f": {
+"kind": "gaze",
+"dur_s": "1.0",
+"iris_h": "0.60",
+"iris_v": "-0.05",
+"nose": "0.19",
+"score": "0.92",
+"yaw": "11.9",
+"pitch": "9.0",
+"frame": "1",
+"ts": "1793724829.151"
+}
+},
+{
+"t": 1793724831.667,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "3.1",
+"audio_id": "1793724827770-0",
+"end_id": "1793724830863-0",
+"end_ts": "1793724830.853"
+}
+},
+{
+"t": 1793724831.976,
+"s": "events:transcript",
+"f": {
+"text": "Умножь 17 на 23",
+"lang": "ru",
+"ts": "1793724831.669",
+"stt_s": "0.157",
+"trigger": "speech",
+"pause_s": "1.12",
+"pause_wait": "",
+"seg_s": "3.15",
+"speaker": "uncertain",
+"spk_score": "0.433",
+"bcast": "1",
+"spk_win": "0.375",
+"spk_ms": "146"
+}
+},
+{
+"t": 1793724832.676,
+"s": "events:ambient",
+"f": {
+"text": "Умножь 17 на 23",
+"decision": "silent",
+"why": "uncertain voice (broadcast)",
+"state": "idle",
+"ts": "1793724831.669",
+"speaker": "uncertain",
+"spk_raw": "uncertain",
+"spk_score": "0.433",
+"pause_s": "1.12",
+"pause_wait": "",
+"spk_win": "0.375",
+"spk_region": "",
+"text_full": "",
+"bcast": "1",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793724848.84,
+"s": "events:vision",
+"f": {
+"kind": "gaze",
+"dur_s": "1.0",
+"iris_h": "0.43",
+"iris_v": "-0.04",
+"nose": "0.23",
+"score": "0.92",
+"yaw": "12.1",
+"pitch": "6.1",
+"frame": "1",
+"ts": "1793724848.839"
+}
+},
+{
+"t": 1793724849.794,
+"s": "events:ambient",
+"f": {
+"text": "",
+"decision": "gaze_drop",
+"why": "repeat",
+"state": "idle",
+"ts": "1793724848.841",
+"reply": "Твоя футболка."
+}
+},
+{
+"t": 1793724850.37,
+"s": "events:ambient",
+"f": {
+"text": "",
+"decision": "gaze_drop",
+"why": "repeat",
+"state": "idle",
+"ts": "1793724848.841",
+"reply": "Твоя футболка."
+}
+},
+{
+"t": 1793724850.927,
+"s": "events:reply",
+"f": {
+"text": "Что дальше?",
+"reply_id": "f5132322df04",
+"seq": "0",
+"final": "1",
+"ts": "1793724848.841",
+"meta": "{\"reply\": \"Что дальше?\", \"ambient\": \"gaze\", \"frame\": 0}"
+}
+},
+{
+"t": 1793724850.927,
+"s": "events:ambient",
+"f": {
+"text": "",
+"decision": "gaze",
+"why": "look 1.0 s",
+"state": "idle",
+"ts": "1793724848.841",
+"reply": "Что дальше?",
+"frame": "0"
+}
+},
+{
+"t": 1793724851.009,
+"s": "events:tts",
+"f": {
+"reply_id": "f5132322df04",
+"phase": "first_audio",
+"t": "1793724851.009",
+"ts": "1793724848.841"
+}
+},
+{
+"t": 1793724851.01,
+"s": "events:tts",
+"f": {
+"reply_id": "f5132322df04",
+"phase": "end",
+"t": "1793724851.718",
+"ts": "1793724848.841"
+}
+},
+{
+"t": 1793724868.264,
+"s": "events:vision",
+"f": {
+"kind": "gaze",
+"dur_s": "1.0",
+"iris_h": "0.48",
+"iris_v": "-0.06",
+"nose": "0.25",
+"score": "0.91",
+"yaw": "2.7",
+"pitch": "-0.5",
+"frame": "1",
+"ts": "1793724868.263"
+}
+},
+{
+"t": 1793724872.086,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "4.0",
+"audio_id": "1793724867333-0",
+"end_id": "1793724871309-0",
+"end_ts": "1793724871.284"
+}
+},
+{
+"t": 1793724872.511,
+"s": "events:transcript",
+"f": {
+"text": "Костян, умножь17 на 23",
+"lang": "ru",
+"ts": "1793724872.089",
+"stt_s": "0.206",
+"trigger": "speech",
+"pause_s": "1.23",
+"pause_wait": "",
+"seg_s": "4.05",
+"speaker": "uncertain",
+"spk_score": "0.293",
+"spk_win": "0.383",
+"spk_ms": "213"
+}
+},
+{
+"t": 1793724873.309,
+"s": "events:ambient",
+"f": {
+"text": "Костян, умножь17 на 23",
+"decision": "respond",
+"why": "name",
+"state": "idle",
+"ts": "1793724872.089",
+"speaker": "uncertain",
+"spk_raw": "uncertain",
+"spk_score": "0.293",
+"pause_s": "1.23",
+"pause_wait": "",
+"spk_win": "0.383",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793724874.027,
+"s": "events:reply",
+"f": {
+"text": "1. 17 умножить на 23.",
+"reply_id": "2e8e48b70b11",
+"seq": "0",
+"final": "0",
+"ts": "1793724872.089"
+}
+},
+{
+"t": 1793724874.284,
+"s": "events:tts",
+"f": {
+"reply_id": "2e8e48b70b11",
+"phase": "first_audio",
+"t": "1793724874.284",
+"ts": "1793724872.089"
+}
+},
+{
+"t": 1793724874.33,
+"s": "events:reply",
+"f": {
+"text": "2. 17 умножить на 20 = 340.",
+"reply_id": "2e8e48b70b11",
+"seq": "1",
+"final": "0",
+"ts": "1793724872.089"
+}
+},
+{
+"t": 1793724874.568,
+"s": "events:reply",
+"f": {
+"text": "3. 17 умножить на 3 = 51.",
+"reply_id": "2e8e48b70b11",
+"seq": "2",
+"final": "0",
+"ts": "1793724872.089"
+}
+},
+{
+"t": 1793724874.836,
+"s": "events:reply",
+"f": {
+"text": "4. 340 + 51 = 391.",
+"reply_id": "2e8e48b70b11",
+"seq": "3",
+"final": "0",
+"ts": "1793724872.089"
+}
+},
+{
+"t": 1793724875.534,
+"s": "events:reply",
+"f": {
+"text": "Итого 391.",
+"reply_id": "2e8e48b70b11",
+"seq": "4",
+"final": "1",
+"ts": "1793724872.089",
+"meta": "{\"turn\": 82, \"window_turns\": 81, \"prompt_tokens\": 3412, \"completion_tokens\": 69, \"calc\": null, \"net\": null, \"ttft_s\": 0.036, \"tok_s\": 59.7, \"finish_reason\": \"stop\", \"wall_s\": 3.02, \"max_tokens\": 500, \"reply\": \"1. $17 \\\\times 23$\\n2. $17 \\\\times 20 = 340$\\n3. $17 \\\\times 3 = 51$\\n4. $340 + 51 = 391$\\n\\nИтого 391.\", \"sentences\": 5, \"mode\": \"A\", \"llm_calls\": [\"router\", \"chat\"], \"route\": {\"label\": \"calc\", \"raw\": \"calc\", \"probs\": {\"calc\": 1.0, \"chat\": 0.0, \"command\": 0.0}, \"s\": 0.795}, \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793724887.745,
+"s": "events:tts",
+"f": {
+"reply_id": "2e8e48b70b11",
+"phase": "end",
+"t": "1793724888.058",
+"ts": "1793724872.089"
+}
+},
+{
+"t": 1793724889.654,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "0.4",
+"audio_id": "1793724889110-0",
+"end_id": "1793724889528-0",
+"end_ts": "1793724889.530"
+}
+},
+{
+"t": 1793724890.556,
+"s": "events:vision",
+"f": {
+"kind": "gaze",
+"dur_s": "1.0",
+"iris_h": "0.46",
+"iris_v": "-0.00",
+"nose": "0.04",
+"score": "0.92",
+"yaw": "-13.1",
+"pitch": "-6.9",
+"frame": "1",
+"ts": "1793724890.555"
+}
+},
+{
+"t": 1793724895.247,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "1.5",
+"audio_id": "1793724892955-0",
+"end_id": "1793724894472-0",
+"end_ts": "1793724894.447"
+}
+},
+{
+"t": 1793724895.359,
+"s": "events:transcript",
+"f": {
+"text": "нимается.",
+"lang": "ru",
+"ts": "1793724895.248",
+"stt_s": "0.081",
+"trigger": "speech",
+"pause_s": "0.91",
+"pause_wait": "",
+"seg_s": "1.56",
+"speaker": "uncertain",
+"spk_score": "0.368",
+"spk_ms": "27"
+}
+},
+{
+"t": 1793724896.74,
+"s": "events:ambient",
+"f": {
+"text": "нимается.",
+"decision": "silent",
+"why": "engaged duck нет {'нет': 0.843, 'да': 0.147}",
+"state": "engaged",
+"ts": "1793724895.248",
+"speaker": "uncertain",
+"spk_raw": "uncertain",
+"spk_score": "0.368",
+"pause_s": "0.91",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.081"
+}
+},
+{
+"t": 1793724910.578,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "1.1",
+"audio_id": "1793724908627-0",
+"end_id": "1793724909786-0",
+"end_ts": "1793724909.774"
+}
+},
+{
+"t": 1793724910.676,
+"s": "events:transcript",
+"f": {
+"text": "Столица Австралии",
+"lang": "ru",
+"ts": "1793724910.579",
+"stt_s": "0.072",
+"trigger": "speech",
+"pause_s": "0.90",
+"pause_wait": "",
+"seg_s": "1.17",
+"speaker": "uncertain",
+"spk_score": "0.352",
+"spk_ms": "22"
+}
+},
+{
+"t": 1793724912.193,
+"s": "events:ambient",
+"f": {
+"text": "Столица Австралии",
+"decision": "ack",
+"why": "engaged duck нет {'нет': 0.639, 'да': 0.34}",
+"state": "engaged",
+"ts": "1793724910.579",
+"speaker": "uncertain",
+"spk_raw": "uncertain",
+"spk_score": "0.352",
+"pause_s": "0.90",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793724912.193,
+"s": "events:reply",
+"f": {
+"text": "Ага.",
+"reply_id": "df99c732b2cd",
+"seq": "0",
+"final": "1",
+"ts": "1793724910.579",
+"meta": "{\"reply\": \"Ага.\", \"ambient\": \"ack\"}"
+}
+},
+{
+"t": 1793724912.243,
+"s": "events:tts",
+"f": {
+"reply_id": "df99c732b2cd",
+"phase": "first_audio",
+"t": "1793724912.243",
+"ts": "1793724910.579"
+}
+},
+{
+"t": 1793724912.249,
+"s": "events:tts",
+"f": {
+"reply_id": "df99c732b2cd",
+"phase": "end",
+"t": "1793724912.534",
+"ts": "1793724910.579"
+}
+},
+{
+"t": 1793724930.175,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "2.0",
+"audio_id": "1793724927409-0",
+"end_id": "1793724929401-0",
+"end_ts": "1793724929.370"
+}
+},
+{
+"t": 1793724930.319,
+"s": "events:transcript",
+"f": {
+"text": "Костян, назови столицу Австралии.",
+"lang": "ru",
+"ts": "1793724930.177",
+"stt_s": "0.105",
+"trigger": "speech",
+"pause_s": "0.95",
+"pause_wait": "",
+"seg_s": "2.04",
+"speaker": "owner",
+"spk_score": "0.468",
+"spk_ms": "34"
+}
+},
+{
+"t": 1793724931.124,
+"s": "events:ambient",
+"f": {
+"text": "Костян, назови столицу Австралии.",
+"decision": "respond",
+"why": "name",
+"state": "idle",
+"ts": "1793724930.177",
+"speaker": "owner",
+"spk_raw": "owner",
+"spk_score": "0.468",
+"pause_s": "0.95",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793724931.124,
+"s": "events:reply",
+"f": {
+"text": "Глянуть в сети?",
+"reply_id": "02fc78ba9748",
+"seq": "0",
+"final": "1",
+"ts": "1793724930.177",
+"meta": "{\"reply\": \"Глянуть в сети?\", \"net\": \"ask\"}"
+}
+},
+{
+"t": 1793724931.212,
+"s": "events:tts",
+"f": {
+"reply_id": "02fc78ba9748",
+"phase": "first_audio",
+"t": "1793724931.212",
+"ts": "1793724930.177"
+}
+},
+{
+"t": 1793724931.697,
+"s": "events:tts",
+"f": {
+"reply_id": "02fc78ba9748",
+"phase": "end",
+"t": "1793724932.142",
+"ts": "1793724930.177"
+}
+},
+{
+"t": 1793724935.258,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "1.3",
+"audio_id": "1793724933206-0",
+"end_id": "1793724934454-0",
+"end_ts": "1793724934.442"
+}
+},
+{
+"t": 1793724935.364,
+"s": "events:transcript",
+"f": {
+"text": "Да",
+"lang": "ru",
+"ts": "1793724935.259",
+"stt_s": "0.079",
+"trigger": "speech",
+"pause_s": "0.92",
+"pause_wait": "",
+"seg_s": "1.29",
+"speaker": "other",
+"spk_score": "0.119",
+"spk_ms": "23"
+}
+},
+{
+"t": 1793724936.161,
+"s": "events:ambient",
+"f": {
+"text": "Да",
+"decision": "silent",
+"why": "other voice",
+"state": "idle",
+"ts": "1793724935.259",
+"speaker": "other",
+"spk_raw": "other",
+"spk_score": "0.119",
+"pause_s": "0.92",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793724946.189,
+"s": "events:transcript",
+"f": {
+"text": "Костян, назови столицу Австралии.",
+"trigger": "wakeword",
+"speaker": "owner",
+"deferred": "1",
+"net": "no",
+"ts": "1793724946.189"
+}
+},
+{
+"t": 1793724947.596,
+"s": "events:reply",
+"f": {
+"text": "Канберра.",
+"reply_id": "bca181061e9f",
+"seq": "0",
+"final": "1",
+"ts": "1793724946.189",
+"meta": "{\"turn\": 84, \"window_turns\": 83, \"prompt_tokens\": 3546, \"completion_tokens\": 6, \"calc\": null, \"net\": null, \"ttft_s\": 0.05, \"tok_s\": 54.4, \"finish_reason\": \"stop\", \"wall_s\": 1.41, \"max_tokens\": 300, \"reply\": \"Канберра.\", \"sentences\": 1, \"mode\": \"A\", \"llm_calls\": [\"router\", \"chat\"], \"route\": {\"label\": \"world\", \"raw\": \"world\", \"probs\": {\"world\": 1.0, \"memory\": 0.0, \"chat\": 0.0, \"calc\": 0.0, \"command\": 0.0}, \"s\": 0.738}, \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793724947.688,
+"s": "events:tts",
+"f": {
+"reply_id": "bca181061e9f",
+"phase": "first_audio",
+"t": "1793724947.688",
+"ts": "1793724946.189"
+}
+},
+{
+"t": 1793724947.689,
+"s": "events:tts",
+"f": {
+"reply_id": "bca181061e9f",
+"phase": "end",
+"t": "1793724948.420",
+"ts": "1793724946.189"
+}
+},
+{
+"t": 1793724972.2,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "1.3",
+"audio_id": "1793724970079-0",
+"end_id": "1793724971371-0",
+"end_ts": "1793724971.378"
+}
+},
+{
+"t": 1793724972.302,
+"s": "events:transcript",
+"f": {
+"text": "Какая сегодня погода",
+"lang": "ru",
+"ts": "1793724972.202",
+"stt_s": "0.074",
+"trigger": "speech",
+"pause_s": "0.92",
+"pause_wait": "",
+"seg_s": "1.29",
+"speaker": "uncertain",
+"spk_score": "0.445",
+"spk_ms": "23"
+}
+},
+{
+"t": 1793724973.152,
+"s": "events:ambient",
+"f": {
+"text": "Какая сегодня погода",
+"decision": "silent",
+"why": "uncertain voice",
+"state": "idle",
+"ts": "1793724972.202",
+"speaker": "uncertain",
+"spk_raw": "uncertain",
+"spk_score": "0.445",
+"pause_s": "0.92",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793724979.368,
+"s": "events:vision",
+"f": {
+"kind": "gaze",
+"dur_s": "1.0",
+"iris_h": "0.52",
+"iris_v": "-0.04",
+"nose": "0.08",
+"score": "0.93",
+"yaw": "-2.8",
+"pitch": "-2.3",
+"frame": "1",
+"ts": "1793724979.367"
+}
+},
+{
+"t": 1793724980.181,
+"s": "events:ambient",
+"f": {
+"text": "",
+"decision": "gaze_drop",
+"why": "repeat",
+"state": "idle",
+"ts": "1793724979.369",
+"reply": "Что там?"
+}
+},
+{
+"t": 1793724980.792,
+"s": "events:ambient",
+"f": {
+"text": "",
+"decision": "gaze_drop",
+"why": "repeat",
+"state": "idle",
+"ts": "1793724979.369",
+"reply": "Что ты там думаешь?"
+}
+},
+{
+"t": 1793724981.0,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "1.6",
+"audio_id": "1793724978593-0",
+"end_id": "1793724980201-0",
+"end_ts": "1793724980.186"
+}
+},
+{
+"t": 1793724981.121,
+"s": "events:transcript",
+"f": {
+"text": "Какая сегодня погода",
+"lang": "ru",
+"ts": "1793724981.001",
+"stt_s": "0.091",
+"trigger": "speech",
+"pause_s": "0.94",
+"pause_wait": "",
+"seg_s": "1.65",
+"speaker": "uncertain",
+"spk_score": "0.400",
+"spk_ms": "27"
+}
+},
+{
+"t": 1793724981.388,
+"s": "events:ambient",
+"f": {
+"text": "",
+"decision": "gaze_drop",
+"why": "repeat",
+"state": "idle",
+"ts": "1793724979.369",
+"reply": "Скучно."
+}
+},
+{
+"t": 1793724981.389,
+"s": "events:reply",
+"f": {
+"text": "Что?",
+"reply_id": "3228839c89d9",
+"seq": "0",
+"final": "1",
+"ts": "1793724979.369",
+"meta": "{\"reply\": \"Что?\", \"ambient\": \"gaze\", \"frame\": 0}"
+}
+},
+{
+"t": 1793724981.389,
+"s": "events:ambient",
+"f": {
+"text": "",
+"decision": "gaze",
+"why": "look 1.0 s",
+"state": "idle",
+"ts": "1793724979.369",
+"reply": "Что?",
+"frame": "0"
+}
+},
+{
+"t": 1793724981.427,
+"s": "events:tts",
+"f": {
+"reply_id": "3228839c89d9",
+"phase": "first_audio",
+"t": "1793724981.427",
+"ts": "1793724979.369"
+}
+},
+{
+"t": 1793724981.427,
+"s": "events:tts",
+"f": {
+"reply_id": "3228839c89d9",
+"phase": "end",
+"t": "1793724981.590",
+"ts": "1793724979.369"
+}
+},
+{
+"t": 1793724982.047,
+"s": "events:ambient",
+"f": {
+"text": "Какая сегодня погода",
+"decision": "respond",
+"why": "question",
+"state": "engaged",
+"ts": "1793724981.001",
+"speaker": "uncertain",
+"spk_raw": "uncertain",
+"spk_score": "0.400",
+"pause_s": "0.94",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793724982.047,
+"s": "events:reply",
+"f": {
+"text": "Глянуть в сети?",
+"reply_id": "c53fffedf955",
+"seq": "0",
+"final": "1",
+"ts": "1793724981.001",
+"meta": "{\"reply\": \"Глянуть в сети?\", \"net\": \"ask\"}"
+}
+},
+{
+"t": 1793724982.147,
+"s": "events:tts",
+"f": {
+"reply_id": "c53fffedf955",
+"phase": "first_audio",
+"t": "1793724982.147",
+"ts": "1793724981.001"
+}
+},
+{
+"t": 1793724982.793,
+"s": "events:tts",
+"f": {
+"reply_id": "c53fffedf955",
+"phase": "end",
+"t": "1793724983.556",
+"ts": "1793724981.001"
+}
+},
+{
+"t": 1793724985.763,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "0.4",
+"audio_id": "1793724984596-0",
+"end_id": "1793724984955-0",
+"end_ts": "1793724984.949"
+}
+},
+{
+"t": 1793724990.378,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "1.2",
+"audio_id": "1793724988413-0",
+"end_id": "1793724989574-0",
+"end_ts": "1793724989.555"
+}
+},
+{
+"t": 1793724990.469,
+"s": "events:transcript",
+"f": {
+"text": "Да, глянь в сети.",
+"lang": "ru",
+"ts": "1793724990.380",
+"stt_s": "0.065",
+"trigger": "speech",
+"pause_s": "0.91",
+"pause_wait": "",
+"seg_s": "1.20",
+"speaker": "uncertain",
+"spk_score": "0.321",
+"spk_ms": "21"
+}
+},
+{
+"t": 1793724990.47,
+"s": "events:transcript",
+"f": {
+"text": "Какая сегодня погода",
+"trigger": "wakeword",
+"speaker": "owner",
+"deferred": "1",
+"net": "yes",
+"ts": "1793724990.471"
+}
+},
+{
+"t": 1793724991.186,
+"s": "events:reply",
+"f": {
+"text": "Сейчас гляну.",
+"reply_id": "5480e65bb2e4",
+"seq": "0",
+"final": "1",
+"ts": "1793724990.471",
+"meta": "{\"reply\": \"Сейчас гляну.\", \"net\": \"look\"}"
+}
+},
+{
+"t": 1793724991.186,
+"s": "events:net",
+"f": {
+"phase": "begin",
+"ts": "1793724991.187"
+}
+},
+{
+"t": 1793724991.286,
+"s": "events:tts",
+"f": {
+"reply_id": "5480e65bb2e4",
+"phase": "first_audio",
+"t": "1793724991.286",
+"ts": "1793724990.471"
+}
+},
+{
+"t": 1793724991.288,
+"s": "events:tts",
+"f": {
+"reply_id": "5480e65bb2e4",
+"phase": "end",
+"t": "1793724992.158",
+"ts": "1793724990.471"
+}
+},
+{
+"t": 1793724991.98,
+"s": "events:net",
+"f": {
+"phase": "done",
+"n": "3",
+"ts": "1793724991.980"
+}
+},
+{
+"t": 1793724992.795,
+"s": "events:reply",
+"f": {
+"text": "В сети не нашёл.",
+"reply_id": "8925d0bb1f8a",
+"seq": "0",
+"final": "1",
+"ts": "1793724990.471",
+"meta": "{\"turn\": 85, \"window_turns\": 84, \"prompt_tokens\": 3937, \"completion_tokens\": 7, \"calc\": null, \"net\": [\"Ну, погоди!\", \"Погода\", \"На Дерибасовской хорошая погода, или На Брайтон-Бич опять идут дожди\"], \"ttft_s\": 0.159, \"tok_s\": 58.8, \"finish_reason\": \"stop\", \"wall_s\": 2.32, \"max_tokens\": 300, \"reply\": \"В сети не нашёл.\", \"sentences\": 1, \"mode\": \"A\", \"llm_calls\": [\"router\", \"chat\"], \"route\": {\"label\": \"world\", \"raw\": \"world\", \"probs\": {\"world\": 0.998, \"chat\": 0.001, \"command\": 0.0}, \"s\": 0.713}, \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793724992.884,
+"s": "events:tts",
+"f": {
+"reply_id": "8925d0bb1f8a",
+"phase": "first_audio",
+"t": "1793724992.885",
+"ts": "1793724990.471"
+}
+},
+{
+"t": 1793724993.009,
+"s": "events:tts",
+"f": {
+"reply_id": "8925d0bb1f8a",
+"phase": "end",
+"t": "1793724993.837",
+"ts": "1793724990.471"
+}
+},
+{
+"t": 1793725017.612,
+"s": "events:vision",
+"f": {
+"kind": "gaze",
+"dur_s": "1.0",
+"iris_h": "0.65",
+"iris_v": "-0.05",
+"nose": "0.27",
+"score": "0.92",
+"yaw": "13.7",
+"pitch": "4.2",
+"frame": "1",
+"ts": "1793725017.611"
+}
+},
+{
+"t": 1793725018.435,
+"s": "events:ambient",
+"f": {
+"text": "",
+"decision": "gaze_drop",
+"why": "repeat",
+"state": "idle",
+"ts": "1793725017.613",
+"reply": "Скучно."
+}
+},
+{
+"t": 1793725019.039,
+"s": "events:ambient",
+"f": {
+"text": "",
+"decision": "gaze_drop",
+"why": "repeat",
+"state": "idle",
+"ts": "1793725017.613",
+"reply": "Опять."
+}
+},
+{
+"t": 1793725019.77,
+"s": "events:reply",
+"f": {
+"text": "Очки.",
+"reply_id": "1c124f335fb3",
+"seq": "0",
+"final": "1",
+"ts": "1793725017.613",
+"meta": "{\"reply\": \"Очки.\", \"ambient\": \"gaze\", \"frame\": 1}"
+}
+},
+{
+"t": 1793725019.771,
+"s": "events:ambient",
+"f": {
+"text": "",
+"decision": "gaze",
+"why": "look 1.0 s",
+"state": "idle",
+"ts": "1793725017.613",
+"reply": "Очки.",
+"frame": "1"
+}
+},
+{
+"t": 1793725019.859,
+"s": "events:tts",
+"f": {
+"reply_id": "1c124f335fb3",
+"phase": "first_audio",
+"t": "1793725019.860",
+"ts": "1793725017.613"
+}
+},
+{
+"t": 1793725019.861,
+"s": "events:tts",
+"f": {
+"reply_id": "1c124f335fb3",
+"phase": "end",
+"t": "1793725020.499",
+"ts": "1793725017.613"
+}
+},
+{
+"t": 1793725026.112,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "3.8",
+"audio_id": "1793725021569-0",
+"end_id": "1793725025309-0",
+"end_ts": "1793725025.301"
+}
+},
+{
+"t": 1793725026.36,
+"s": "events:transcript",
+"f": {
+"text": "Какого цвета мой чайник и зачем он свистит",
+"lang": "ru",
+"ts": "1793725026.115",
+"stt_s": "0.185",
+"trigger": "speech",
+"pause_s": "1.06",
+"pause_wait": "",
+"seg_s": "3.81",
+"speaker": "owner",
+"spk_score": "0.555",
+"spk_ms": "57"
+}
+},
+{
+"t": 1793725027.3,
+"s": "events:ambient",
+"f": {
+"text": "Какого цвета мой чайник и зачем он свистит",
+"decision": "respond",
+"why": "question",
+"state": "engaged",
+"ts": "1793725026.115",
+"speaker": "owner",
+"spk_raw": "owner",
+"spk_score": "0.555",
+"pause_s": "1.06",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793725027.906,
+"s": "events:reply",
+"f": {
+"text": "Синий.",
+"reply_id": "24e122006df6",
+"seq": "0",
+"final": "0",
+"ts": "1793725026.115"
+}
+},
+{
+"t": 1793725027.982,
+"s": "events:tts",
+"f": {
+"reply_id": "24e122006df6",
+"phase": "first_audio",
+"t": "1793725027.983",
+"ts": "1793725026.115"
+}
+},
+{
+"t": 1793725028.136,
+"s": "events:reply",
+"f": {
+"text": "Свистит, потому что ты его поставил.",
+"reply_id": "24e122006df6",
+"seq": "1",
+"final": "1",
+"ts": "1793725026.115",
+"meta": "{\"turn\": 86, \"window_turns\": 85, \"prompt_tokens\": 3546, \"completion_tokens\": 16, \"calc\": null, \"net\": null, \"ttft_s\": 0.032, \"tok_s\": 59.4, \"finish_reason\": \"stop\", \"wall_s\": 1.77, \"max_tokens\": 300, \"reply\": \"Синий. Свистит, потому что ты его поставил.\", \"sentences\": 2, \"mode\": \"A\", \"llm_calls\": [\"router\", \"chat\"], \"route\": {\"label\": \"chat\", \"raw\": \"chat\", \"probs\": {\"chat\": 0.877, \"world\": 0.069, \"calc\": 0.004, \"memory\": 0.003}, \"s\": 0.937}, \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793725030.152,
+"s": "events:tts",
+"f": {
+"reply_id": "24e122006df6",
+"phase": "end",
+"t": "1793725030.479",
+"ts": "1793725026.115"
+}
+},
+{
+"t": 1793725035.983,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "1.4",
+"audio_id": "1793725033679-0",
+"end_id": "1793725035150-0",
+"end_ts": "1793725035.159"
+}
+},
+{
+"t": 1793725036.097,
+"s": "events:transcript",
+"f": {
+"text": "Подумай как следует",
+"lang": "ru",
+"ts": "1793725035.984",
+"stt_s": "0.085",
+"trigger": "speech",
+"pause_s": "0.94",
+"pause_wait": "",
+"seg_s": "1.47",
+"speaker": "uncertain",
+"spk_score": "0.414",
+"spk_ms": "25"
+}
+},
+{
+"t": 1793725037.106,
+"s": "events:ambient",
+"f": {
+"text": "Подумай как следует",
+"decision": "respond",
+"why": "question",
+"state": "engaged",
+"ts": "1793725035.984",
+"speaker": "uncertain",
+"spk_raw": "uncertain",
+"spk_score": "0.414",
+"pause_s": "0.94",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793725037.89,
+"s": "events:reply",
+"f": {
+"text": "Он свистит, потому что вода кипит.",
+"reply_id": "ae2a51cfba34",
+"seq": "0",
+"final": "1",
+"ts": "1793725035.984",
+"meta": "{\"turn\": 87, \"window_turns\": 86, \"prompt_tokens\": 3576, \"completion_tokens\": 12, \"calc\": null, \"net\": null, \"ttft_s\": 0.029, \"tok_s\": 57.6, \"finish_reason\": \"stop\", \"wall_s\": 1.79, \"max_tokens\": 200, \"reply\": \"Он свистит, потому что вода кипит.\", \"sentences\": 1, \"mode\": \"A\", \"llm_calls\": [\"router\", \"chat\"], \"route\": {\"label\": \"command\", \"raw\": \"command\", \"probs\": {\"command\": 0.68, \"chat\": 0.228, \"world\": 0.007, \"calc\": 0.006}, \"s\": 1.005}, \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793725038.097,
+"s": "events:tts",
+"f": {
+"reply_id": "ae2a51cfba34",
+"phase": "first_audio",
+"t": "1793725038.097",
+"ts": "1793725035.984"
+}
+},
+{
+"t": 1793725038.306,
+"s": "events:tts",
+"f": {
+"reply_id": "ae2a51cfba34",
+"phase": "end",
+"t": "1793725040.002",
+"ts": "1793725035.984"
+}
+},
+{
+"t": 1793725056.229,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "2.3",
+"audio_id": "1793725053132-0",
+"end_id": "1793725055424-0",
+"end_ts": "1793725055.409"
+}
+},
+{
+"t": 1793725056.389,
+"s": "events:transcript",
+"f": {
+"text": "Ещё раз говорю, как следует подумай",
+"lang": "ru",
+"ts": "1793725056.231",
+"stt_s": "0.120",
+"trigger": "speech",
+"pause_s": "0.98",
+"pause_wait": "",
+"seg_s": "2.34",
+"speaker": "owner",
+"spk_score": "0.484",
+"spk_ms": "35"
+}
+},
+{
+"t": 1793725057.311,
+"s": "events:ambient",
+"f": {
+"text": "Ещё раз говорю, как следует подумай",
+"decision": "respond",
+"why": "question",
+"state": "engaged",
+"ts": "1793725056.231",
+"speaker": "owner",
+"spk_raw": "owner",
+"spk_score": "0.484",
+"pause_s": "0.98",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793725058.095,
+"s": "events:reply",
+"f": {
+"text": "Он свистит, потому что ты его поставил.",
+"reply_id": "c4e3e3086938",
+"seq": "0",
+"final": "1",
+"ts": "1793725056.231",
+"meta": "{\"turn\": 88, \"window_turns\": 87, \"prompt_tokens\": 3606, \"completion_tokens\": 13, \"calc\": null, \"net\": null, \"ttft_s\": 0.029, \"tok_s\": 64.8, \"finish_reason\": \"stop\", \"wall_s\": 1.7, \"max_tokens\": 200, \"reply\": \"Он свистит, потому что ты его поставил.\", \"sentences\": 1, \"mode\": \"A\", \"llm_calls\": [\"router\", \"chat\"], \"route\": {\"label\": \"command\", \"raw\": \"command\", \"probs\": {\"command\": 0.976, \"chat\": 0.003, \"calc\": 0.001, \"world\": 0.0}, \"s\": 0.919}, \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793725058.257,
+"s": "events:tts",
+"f": {
+"reply_id": "c4e3e3086938",
+"phase": "first_audio",
+"t": "1793725058.258",
+"ts": "1793725056.231"
+}
+},
+{
+"t": 1793725059.679,
+"s": "events:tts",
+"f": {
+"reply_id": "c4e3e3086938",
+"phase": "end",
+"t": "1793725060.382",
+"ts": "1793725056.231"
+}
+},
+{
+"t": 1793725071.258,
+"s": "events:vision",
+"f": {
+"kind": "gaze",
+"dur_s": "1.0",
+"iris_h": "0.50",
+"iris_v": "-0.03",
+"nose": "0.37",
+"score": "0.80",
+"yaw": "3.8",
+"pitch": "-12.7",
+"frame": "1",
+"ts": "1793725071.258"
+}
+},
+{
+"t": 1793725083.681,
+"s": "events:vision",
+"f": {
+"kind": "gaze",
+"dur_s": "1.0",
+"iris_h": "0.50",
+"iris_v": "-0.04",
+"nose": "0.07",
+"score": "0.93",
+"yaw": "-8.2",
+"pitch": "-2.9",
+"frame": "1",
+"ts": "1793725083.680"
+}
+},
+{
+"t": 1793725085.621,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "2.0",
+"audio_id": "1793725082821-0",
+"end_id": "1793725084817-0",
+"end_ts": "1793725084.808"
+}
+},
+{
+"t": 1793725085.81,
+"s": "events:transcript",
+"f": {
+"text": "Спасибо, на сегодня всё.",
+"lang": "ru",
+"ts": "1793725085.623",
+"stt_s": "0.104",
+"trigger": "speech",
+"pause_s": "1.00",
+"pause_wait": "",
+"seg_s": "2.04",
+"speaker": "uncertain",
+"spk_score": "0.424",
+"spk_win": "0.424",
+"spk_ms": "80"
+}
+},
+{
+"t": 1793725087.357,
+"s": "events:ambient",
+"f": {
+"text": "Спасибо, на сегодня всё.",
+"decision": "silent",
+"why": "engaged duck нет {'нет': 0.75, 'да': 0.239}",
+"state": "engaged",
+"ts": "1793725085.623",
+"speaker": "uncertain",
+"spk_raw": "uncertain",
+"spk_score": "0.424",
+"pause_s": "1.00",
+"pause_wait": "",
+"spk_win": "0.424",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793725195.069,
+"s": "events:vision",
+"f": {
+"kind": "gaze",
+"dur_s": "1.0",
+"iris_h": "0.51",
+"iris_v": "-0.05",
+"nose": "0.32",
+"score": "0.91",
+"yaw": "17.5",
+"pitch": "7.0",
+"frame": "1",
+"ts": "1793725195.067"
+}
+},
+{
+"t": 1793725196.156,
+"s": "events:reply",
+"f": {
+"text": "Твоя футболка.",
+"reply_id": "d6c7f1fd0a03",
+"seq": "0",
+"final": "1",
+"ts": "1793725195.070",
+"meta": "{\"reply\": \"Твоя футболка.\", \"ambient\": \"gaze\", \"frame\": 1}"
+}
+},
+{
+"t": 1793725196.156,
+"s": "events:ambient",
+"f": {
+"text": "",
+"decision": "gaze",
+"why": "look 1.0 s",
+"state": "idle",
+"ts": "1793725195.070",
+"reply": "Твоя футболка.",
+"frame": "1"
+}
+},
+{
+"t": 1793725196.217,
+"s": "events:tts",
+"f": {
+"reply_id": "d6c7f1fd0a03",
+"phase": "first_audio",
+"t": "1793725196.217",
+"ts": "1793725195.070"
+}
+},
+{
+"t": 1793725196.223,
+"s": "events:tts",
+"f": {
+"reply_id": "d6c7f1fd0a03",
+"phase": "end",
+"t": "1793725197.193",
+"ts": "1793725195.070"
+}
+}
+]
