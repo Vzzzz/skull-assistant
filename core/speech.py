@@ -36,6 +36,7 @@ def _markdown(s: str) -> str:
     s = re.sub(r"(?<![\w*])\*(?!\s)([^*\n]+?)(?<!\s)\*(?![\w*])", r"\1", s)   # italic
     s = re.sub(r"^\s{0,3}#{1,6}\s*", "", s, flags=re.M)            # headings
     s = re.sub(r"^\s*[-*•+]\s+", "", s, flags=re.M)                # bullets
+    s = re.sub(r"^\s*\d{1,2}[.)]\s+", "", s, flags=re.M)            # list numbers «1. », «2) » (T-060: not «один точка»)
     s = re.sub(r"^\s*>\s?", "", s, flags=re.M)                     # quotes
     s = re.sub(r"^\s*\|?\s*:?-{3,}.*$", "", s, flags=re.M)         # table rule lines
     s = re.sub(r"^[ \t]*\|(.*)\|[ \t]*$", _table_row, s, flags=re.M)   # | a | b | -> «a, b.»

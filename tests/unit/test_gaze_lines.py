@@ -4,7 +4,7 @@ import base64
 
 import pytest
 
-from core.gaze_lines import frame_message, is_repeat, stems
+from core.gaze_lines import frame_message, is_repeat, stems, turn_circle
 
 RECENT = ["Твоя куртка всё ещё здесь.", "Устал.", "Что задумал?"]
 
@@ -39,3 +39,11 @@ def test_frame_message():
     url = image["image_url"]["url"]
     assert image["type"] == "image_url" and url.startswith("data:image/jpeg;base64,")
     assert base64.b64decode(url.split(",", 1)[1]) == jpeg
+
+
+def test_turn_circle_frame_first_and_every_other():
+    """T-060 (9): with a frame — frame, ask, frame, complain (gaze:turn from 0 after /reset); without — ask, complain."""
+    c = turn_circle(True, "F", "ask", "complain")
+    assert [c[k % len(c)] for k in range(6)] == ["F", "ask", "F", "complain", "F", "ask"]
+    c = turn_circle(False, "F", "ask", "complain")
+    assert [c[k % len(c)] for k in range(3)] == ["ask", "complain", "ask"]

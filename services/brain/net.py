@@ -3,7 +3,8 @@
 search(q)        -> [{title, snippet, url}] (k=3), [] on a timeout or any error; one log line per outgoing request
 excerpts(res)    -> «Выдержки из сети (…): 1) Заголовок: текст (домен) …», at most MAX_CHARS (~600 tokens)
 query_of(text)   -> the search words of a question (question words, the name, fillers dropped)
-personal(text)   -> a question about the owner himself (мой / мне / у меня…): never to the net
+personal(text)   -> a question about the owner himself (мой / мне / у меня…) or the skull's memory / opinion: never to the net
+window_answer()  -> what a turn means while «Глянуть в сети?» waits: yes / no / model / new_turn / ignore (T-060)
 Gate             -> Net(params, redis): the policy (T-054) `always | ask | never` — Redis net:policy over the manifest's
                     params.net.policy (switch without a restart: skull-stand.sh net …), the old `enabled` migrates
                     (true -> always, false -> ask); Net.decide() -> search / ask / offline / refuse; a one-shot phrase
@@ -57,12 +58,15 @@ def query_of(text):
 
 
 _PERSONAL = re.compile(r"\b(?:я|мне|меня|мной|мой|моя|моё|мое|мои|моего|моей|моему|моим|моих|мою|нам|наш|наша|наше|наши)\b", re.I)
+# T-060 (3): the skull's own memory and opinion — «что ты помнишь про чайник?», «напомни…», «что ты думаешь о…»
+_SKULL_OWN = re.compile(r"\b(?:за|на|при|вс)?помн\w*|\bчто\s+ты\s+(?:думаешь|считаешь)|\bтво[её]\s+мнение", re.I)
 
 
 def personal(text):
-    """A question about the owner himself («какого цвета мой новый чайник?») is answered from the dialog and the memory,
-    never from a reference book (T-051: the gate's B question went to the net and the answer would be «не нашёл»)."""
-    return bool(_PERSONAL.search(text))
+    """A question about the owner himself («какого цвета мой новый чайник?») or the skull's own memory and opinion
+    («что ты помнишь про чайник?») is answered from the dialog and the memory, never from a reference book (T-051: the
+    gate's B question went to the net and the answer would be «не нашёл»; T-060: the deferred B question did too)."""
+    return bool(_PERSONAL.search(text) or _SKULL_OWN.search(text))
 
 
 def _domain(url):
@@ -139,6 +143,25 @@ def yesno(text):
     no = any(f" {w.replace('ё', 'е')} " in t for w in _NO)
     yes = any(f" {w} " in t for w in _YES)
     return "no" if no else "yes" if yes else None
+
+
+OTHER_YES_S = 1.0             # T-060 (5): an `other` shorter than this is no broadcast (bcast_min_speech_s): a yes / no counts
+NEW_TURN_WORDS = 4            # T-060 (2): an unclear answer this long (or a question) is a new turn, not an answer
+
+
+def window_answer(text, speaker, seg_s, thinking, question):
+    """A turn while «Глянуть в сети?» waits (T-054 `ask`, T-060): -> 'yes' | 'no' (rules, or B's short unclear one)
+    | 'model' (a short unclear one in A: the cheap yes/no call) | 'new_turn' (the owner went on: drop the waiting
+    question, handle the turn) | 'ignore' (another voice: the turn goes its usual way, the question keeps waiting).
+    question — the turn is a question (core.router.is_question)."""
+    v = yesno(text)
+    if speaker == "other":
+        return v if v and seg_s is not None and seg_s < OTHER_YES_S else "ignore"
+    if v:
+        return v
+    if question or len(_WORD.findall(text)) >= NEW_TURN_WORDS:
+        return "new_turn"
+    return "no" if thinking else "model"     # B: 26B, ~7 s per call — an unclear short answer is a no
 
 
 class Net:

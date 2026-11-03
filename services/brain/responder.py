@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 from core.ambient import (OPEN_KEY, Ambient, engaged_until, gaze_skip, has_name, idle_since, open_window, reply_end,
                           turn_prior, voice_class)
-from core.gaze_lines import RECENT as GAZE_RECENT_N, frame_message, is_repeat
+from core.gaze_lines import RECENT as GAZE_RECENT_N, frame_message, is_repeat, turn_circle
 from core.memory import SYSTEM_RULE, AssocMemory, clean_reply, format_note
 from core.modes import accepts_exit, deferred_question, find_phrase
 from core.speech import for_speech
@@ -23,7 +23,7 @@ from core.router import (CALC_DONE, NET_PREFIX, POLICY, POLICY_B, _yesno_probs, 
                          policy_prefix,
                          route_llamaserver)
 from tools import note as calc_note     # services/brain/tools.py (T-015)
-from net import ASK_S, Net, excerpts, note_for_memory, personal, yesno   # services/brain/net.py (T-051, T-054)
+from net import ASK_S, Net, excerpts, note_for_memory, personal, window_answer, yesno   # services/brain/net.py (T-051, T-054)
 
 P = yaml.safe_load(Path(__file__).with_name("manifest.yaml").read_text(encoding="utf-8"))["params"]
 HOST = P["host"]
@@ -304,7 +304,7 @@ def on_gaze_frame(fields):
     window, _ = build_window(history, sys_tokens, 400)
     recent = [x.decode() for x in r.lrange(GAZE_LINES, 0, GAZE_RECENT_N - 1)]
     jpg = gaze_frame(fields)
-    turns = GAZE_TURNS_1V + ((GAZE_FRAME_TURN,) if jpg else ())
+    turns = turn_circle(jpg is not None, GAZE_FRAME_TURN, *GAZE_TURNS_1V)     # T-060 (9): the frame first, every other
     k = r.incr(GAZE_TURN) - 1
     line, turn, used_frame, prompt_tokens = None, None, False, None
     for attempt, turn in enumerate([turns[k % len(turns)]] * 2 + [turns[(k + 1) % len(turns)]], 1):
@@ -449,7 +449,9 @@ while True:
     ts = float(fields[b'ts']) if b'ts' in fields else time.time()
     print(f"brain: << {text}")
     if text.strip() == "/reset":
-        r.delete(HISTORY, VECS)
+        # T-060 (9): the look circle starts again from the frame; the last look lines go too — a new conversation does
+        # not remember them, and the frame line of a rehearsal («Твоя толстовка.») would block the first look as a repeat
+        r.delete(HISTORY, VECS, GAZE_TURN, GAZE_LINES)
         mem = AssocMemory(MEM["embed_host"], mode=MEM["mode"]) if MEM else None
         amb.reset()                                    # a new conversation starts idle
         r.delete(OPEN_KEY)
@@ -470,24 +472,34 @@ while True:
     speaker = voice_class(spk_raw, score, seg_s, window_open)                                   # I-19
     end = reply_end(r, last_reply)
     speaker = turn_prior(speaker, seg_s, window_open, ts - end if end else None, fields.get(b'bcast') == b'1')   # T-050
-    if net_pending and not deferred and speaker != "other":   # T-054: the answer to «Глянуть в сети?»
-        decision = net_consent(text)
-        print(f"brain: net ask answered {text!r} -> {decision}")
-        net_republish(net_pending["q"], decision)
-        net_pending = None
-        continue
     owner = speaker == "owner"
-    # in B the owner's short turns often come `uncertain` (T-046 gate): they count, and may say the exit phrase (a wrong
-    # exit costs a phrase; a wrong entry costs 20-30 s of silence, so entering stays the owner's voice only)
+    # in B the owner's short turns often come `uncertain` (T-046 gate): they count, and may say the exit phrase.
+    # T-060 (4): entering B is the owner's or an uncertain voice too (live: «подумай как следует» came uncertain 0.41);
+    # other / unknown — never (a wrong entry costs 20-30 s of silence)
     owner_b = thinking and speaker in ("owner", "uncertain")
-    if MODES and not deferred and (owner or (thinking and speaker in ("uncertain", "unknown"))):
+    if MODES and not deferred and (speaker in ("owner", "uncertain") or (thinking and speaker == "unknown")):
         span = find_phrase(text, MODES["enter"]) if mode == "A" else find_phrase(text, MODES["exit"])
-        if span and mode == "A":
-            fixed_line("wait", ts)
-            ask_mode("B", f"voice:{span[0]}", deferred_question(text, span))
+        enter_b = span and mode == "A"
+        if enter_b or (span and accepts_exit(speaker, text, span, seg_s)):
+            if net_pending:            # T-060 (1): a mode phrase comes before the net window, the question is dropped
+                print(f"brain: net ask dropped (mode phrase): {net_pending['q']!r}")
+                net_pending = None
+            if enter_b:
+                fixed_line("wait", ts)
+                ask_mode("B", f"voice:{span[0]}", deferred_question(text, span))
+            else:
+                ask_mode("A", f"voice:{span[0]}")
             continue
-        if span and accepts_exit(speaker, text, span, seg_s):
-            ask_mode("A", f"voice:{span[0]}")
+    if net_pending and not deferred:   # T-054 / T-060: is this the answer to «Глянуть в сети?»
+        ans = window_answer(text, speaker, seg_s, thinking, is_question(text))
+        if ans == "new_turn":          # T-060 (2): the owner went on — the waiting question is dropped, the turn goes on
+            print(f"brain: net ask dropped (new turn): {net_pending['q']!r}")
+            net_pending = None
+        elif ans != "ignore":
+            decision = net_consent(text) if ans == "model" else ans
+            print(f"brain: net ask answered {text!r} -> {decision}{' (model)' if ans == 'model' else ''}")
+            net_republish(net_pending["q"], decision)
+            net_pending = None
             continue
     net_forced = False
     if NETP and (owner or owner_b) and not deferred and (span_n := net.once_phrase(text)):
@@ -577,6 +589,8 @@ while True:
     net_res, net_note = None, ""
     consent = "yes" if net_forced else {b"yes": "yes", b"no": "no"}.get(fields.get(b"net"))
     world_q = (label == "world" and not thinking) or (thinking and is_question(text))
+    if deferred and b"net" not in fields:    # T-060 (3): the deferred question of the entry to B, not a net answer
+        world_q = False
     act = net.decide(world_q, personal(text), consent) if NETP else "offline"
     if act == "ask":                # T-054 `ask`: the question waits for the owner's yes / no (ASK_S)
         say(uuid.uuid4().hex[:12], 0, NET_LINES["ask_net"], "", ts, final=True, meta={"reply": NET_LINES["ask_net"], "net": "ask"})
