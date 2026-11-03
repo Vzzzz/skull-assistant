@@ -39,6 +39,19 @@
 
 Сводка — `research/bench/results/llamacpp_cache_reuse_2026-11-03.md` (стенд, §1–5; §6 — числа для PR); строки Orin — `research/bench/results/llamacpp_cache_reuse_orin_2026-11-04.md` (T-059 шаг 4 на устройстве, 2026-11-04: до — прод платы 098ce52, после — форк 2d41788; там же гейт переезда прода платы на форк, шаг 6). В PR — только таблица и ссылка на репозиторий проекта (он публичный). Ветка: `Vzzzz/llama.cpp` `server-cache-reuse-mtmd`, коммит `2d41788` поверх master `9309bf1` — перед отправкой rebase.
 
+### 4a. Таблица чисел для PR (данные из сводок; прозу вокруг неё пишет автор)
+
+| Scenario | before | with the patch |
+|---|---|---|
+| Jetson Orin Nano Super 8 GB (JetPack 6.2.1, sm_87), Gemma 4 E4B IQ4_XS + mmproj, `--cache-reuse 256 --swa-full`: 3k-token text prompt, then the same prompt with one paragraph removed in the middle — tokens re-evaluated / prompt time | 1187 / 1.90 s (full 3k prefill: 4.5 s) | 1 / 0.21 s |
+| Orin: 60-turn dialog with a sliding token window @2048 (23–28 turns shift the window), prompt time on the shifted turns, median / max | 1.20 / 1.40 s | 0.25 / 0.28 s (unshifted turn: 0.10 s) |
+| RTX 3080 Laptop 8 GB (sm_86), same model and flags, the edit scenario | 1187 / 0.35 s | 1 / 0.04 s |
+| RTX 3080 Laptop, shifted turns, median / max | 0.25 / 0.29 s | 0.05 / 0.05 s |
+| Control: same server without `--mmproj` (reuse already works), the edit scenario, RTX 3080 | 1 / 0.05 s | 1 / 0.04 s |
+| Cost of `--swa-full` (required for KV shifting with iSWA, Gemma 4), E4B @8k ctx, KV q8_0 | RTX 3080: +88…102 MB VRAM; Orin: +95…108 MB (unified, nvmap) | — |
+
+Примечания для автора: «before» на стенде — master `9309bf1` (база патча); на Orin «before» — прод-сборка платы `098ce52` (master от 2026-10-2x), «with the patch» — форк `2d41788`; это стоит сказать в описании одной фразой. Лог «before»: `cache_reuse is not supported by multimodal, it will be disabled`; «with the patch»: `cache_reuse with multimodal: enabled for prompts without media`. Полные сводки: `research/bench/results/llamacpp_cache_reuse_2026-11-03.md` (стенд) и `llamacpp_cache_reuse_orin_2026-11-04.md` (Orin), в репозитории проекта.
+
 ## 5. Как оформить PR, по шагам
 
 1. **Форк и ветка.** На GitHub: Fork `ggml-org/llama.cpp` → `Vzzzz/llama.cpp`. В WSL: `git clone git@github.com:Vzzzz/llama.cpp.git ~/llama.cpp-pr && cd ~/llama.cpp-pr && git remote add upstream https://github.com/ggml-org/llama.cpp.git && git fetch upstream && git checkout -b server-cache-reuse-mtmd upstream/master`. Исполнитель делает правку и тест в этой ветке (T-059 шаги 2–3) и коммитит; автор коммитов — вы (`git config user.name/email` как в проекте).
