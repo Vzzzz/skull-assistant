@@ -64,6 +64,8 @@ Takeaways: the budget held, but by compensation — voice, embedder and system c
 
 Two commit authors. The **human** — hardware, the bench, running every measurement, listening to voices, architectural decisions and acceptance of results. The **AI assistant** (Claude Code in three roles — researcher, executor, reviewer, see `docs/agents/`) — measurement scripts, service code against task cards, paper and repo reviews, documentation. Yes, it is vibe coding — with a journal that shows what was tried, where it broke and why this option was chosen; every number is reproducible with the scripts in `research/`.
 
+A side result: a **PR to llama.cpp**, [#31621](https://github.com/ggml-org/llama.cpp/pull/31621). With a vision projector loaded, `llama-server` disabled KV-cache reuse for every prompt, text-only ones included; on the Orin that is 1.2 s of extra prefill on each shift of the dialog window, 0.25 s with the patch. Code and measurements with AI assistance, disclosed in the PR; the description and the discussion are the author's own, per the project's policy. Until the merge, the device runs on a fork with this patch (`deploy/build_llama.sh`, D-033).
+
 ## Layout
 
 ```
