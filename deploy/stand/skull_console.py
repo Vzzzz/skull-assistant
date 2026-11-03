@@ -86,9 +86,20 @@ class Console:
         self.demo, self.width, self.expect_tts = demo, width, expect_tts
         self.state = {"mode": "A", "transition": "", "net": "?", "speaking": False, "engaged_s": None, "frame": False,
                       "mem": "", "vu": 0.0}
+        self.mem_peak = None                          # (used, total) MB: the session's peak for the header
         self.turns, self.done, self.last_wake_end, self.reply_turn = {}, [], None, {}
 
     # -- helpers
+    def set_mem(self, text):
+        """«GPU 3812/8192 MB» -> the header string with the session's peak and what is left of the total."""
+        m = re.search(r"(\d+)/(\d+) MB", text)
+        if m:
+            used, total = int(m.group(1)), int(m.group(2))
+            if not self.mem_peak or used > self.mem_peak[0]:
+                self.mem_peak = (used, total)
+            text += f" · peak {self.mem_peak[0]} · free {total - self.mem_peak[0]}"
+        self.state["mem"] = text
+
     def _turn(self, ts):
         if not ts:
             return None
@@ -158,9 +169,11 @@ class Console:
                 parts.append(f"route {r.get('label')}" + (f" {max((r.get('probs') or {}).values() or [0]):.2f}" if r.get("probs") else ""))
             if m.get("mode") in ("A", "B"):
                 parts.append(f"mode {m['mode']}")
+            elif m.get("ambient") == "gaze":            # a look line is the model's, with or without the frame
+                parts.append("look line, " + ("with the frame" if m.get("frame") else "no frame"))
             elif m.get("mode") or "turn" not in m and m.get("reply"):
                 parts.append("fixed line")              # brain's constants (mode switch, net, transition hold)
-            if m.get("ambient"):
+            if m.get("ambient") and m["ambient"] != "gaze":
                 parts.append(m["ambient"])
             if m.get("mem_hits"):
                 parts.append(f"mem {len(m['mem_hits'])} ({max(h.get('score', 0) for h in m['mem_hits']):.2f})")
@@ -208,11 +221,25 @@ class Console:
             self.state["transition"] = ""
             if ph == "done":
                 self.state["mode"] = f.get("to", self.state["mode"])
-        if self.demo and ph not in ("begin", "done", "failed"):
-            return []
+        if self.demo:
+            return self._mode_demo(t, f, ph)
         dt = f" {f['dt_ms']} ms" if f.get("dt_ms") else ""
         return [self._line(t, "events:mode", f"{f.get('from')}→{f.get('to')} {ph} {f.get('service', '')}{dt} (t {f.get('t_ms', '?')} ms)"
                            + (f" {f['reason']}" if f.get("reason") and ph == "begin" else ""))]
+
+    def _mode_demo(self, t, f, ph):
+        """--demo: the switch as a viewer reads it — slot saved, the model unloaded, the other one loaded, slot restored."""
+        tr, sec = f"{f.get('from')}→{f.get('to')}", f"{int(f['dt_ms']) / 1000:.1f} s" if f.get("dt_ms") else ""
+        text = {"begin": f"{tr} begin" + (f" {f['reason']}" if f.get("reason") else ""),
+                "save": "slot saved (KV of the dialog)",
+                "stop": f"unload {f.get('unit') or f.get('service', '')} {sec}",
+                "restore": "slot restored",
+                "restore_skipped": f"slot not restored ({f.get('reason', '')})",
+                "done": f"{tr} done in {int(f.get('t_ms', 0)) / 1000:.1f} s",
+                "failed": f"{tr} FAILED {f.get('reason', '')}"}.get(ph)
+        if ph == "health" and f.get("service") == "brain":
+            text = f"load model for {f.get('to')} {sec}"
+        return [self._line(t, "events:mode", text)] if text else []
 
     def _cmd_mode(self, t, f):
         return [self._line(t, "cmd:mode", f"→ {f.get('mode')} ({f.get('reason', '')})")]
@@ -287,7 +314,7 @@ def live(con, rec, draw):
             con.state["frame"] = bool(r.exists("vision:frame"))
             next_keys = now + 0.5
         if now >= next_res:
-            con.state["mem"] = resources(); next_res = now + 2.0
+            con.set_mem(resources()); next_res = now + 2.0
         for s, items in r.xread(ids, block=100, count=50) or []:
             s = s.decode()
             for i, f in items:

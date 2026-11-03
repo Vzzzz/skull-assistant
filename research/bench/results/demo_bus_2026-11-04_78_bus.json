@@ -1,0 +1,184 @@
+[
+{
+"t": 1793726181.583,
+"s": "events:vision",
+"f": {
+"kind": "gaze",
+"dur_s": "1.2",
+"frame": "1",
+"ts": "1793726181.583"
+}
+},
+{
+"t": 1793726182.482,
+"s": "events:reply",
+"f": {
+"text": "Опять эта твоя одежда.",
+"reply_id": "dfcca111952f",
+"seq": "0",
+"final": "1",
+"ts": "1793726181.584",
+"meta": "{\"reply\": \"Опять эта твоя одежда.\", \"ambient\": \"gaze\", \"frame\": 0}"
+}
+},
+{
+"t": 1793726182.482,
+"s": "events:ambient",
+"f": {
+"text": "",
+"decision": "gaze",
+"why": "look 1.2 s",
+"state": "idle",
+"ts": "1793726181.584",
+"reply": "Опять эта твоя одежда.",
+"frame": "0"
+}
+},
+{
+"t": 1793726182.596,
+"s": "events:tts",
+"f": {
+"reply_id": "dfcca111952f",
+"phase": "first_audio",
+"t": "1793726182.596",
+"ts": "1793726181.584"
+}
+},
+{
+"t": 1793726182.714,
+"s": "events:tts",
+"f": {
+"reply_id": "dfcca111952f",
+"phase": "end",
+"t": "1793726184.152",
+"ts": "1793726181.584"
+}
+},
+{
+"t": 1793726186.906,
+"s": "events:transcript",
+"f": {
+"text": "Костян, спасибо, на сегодня всё",
+"lang": "ru",
+"ts": "1793726186.906",
+"trigger": "speech",
+"pause_s": "0.85",
+"seg_s": "1.80",
+"speaker": "owner",
+"spk_score": "0.62"
+}
+},
+{
+"t": 1793726187.302,
+"s": "events:ambient",
+"f": {
+"text": "Костян, спасибо, на сегодня всё",
+"decision": "respond",
+"why": "name",
+"state": "engaged",
+"ts": "1793726186.906",
+"speaker": "owner",
+"spk_raw": "owner",
+"spk_score": "0.62",
+"pause_s": "0.85",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793726187.4,
+"s": "events:reply",
+"f": {
+"text": "Иди.",
+"reply_id": "e88d75a1c486",
+"seq": "0",
+"final": "0",
+"ts": "1793726186.906"
+}
+},
+{
+"t": 1793726187.556,
+"s": "events:tts",
+"f": {
+"reply_id": "e88d75a1c486",
+"phase": "first_audio",
+"t": "1793726187.556",
+"ts": "1793726186.906"
+}
+},
+{
+"t": 1793726187.677,
+"s": "events:reply",
+"f": {
+"text": "Одежду с себя сними, она мне не к лицу.",
+"reply_id": "e88d75a1c486",
+"seq": "1",
+"final": "1",
+"ts": "1793726186.906",
+"meta": "{\"turn\": 1, \"window_turns\": 0, \"prompt_tokens\": 613, \"completion_tokens\": 18, \"calc\": null, \"net\": null, \"ttft_s\": 0.036, \"tok_s\": 60.2, \"finish_reason\": \"stop\", \"wall_s\": 0.77, \"max_tokens\": 200, \"reply\": \"Иди. Одежду с себя сними, она мне не к лицу.\", \"sentences\": 2, \"mode\": \"A\", \"llm_calls\": [\"router\", \"chat\"], \"route\": {\"label\": \"command\", \"raw\": \"Command\", \"probs\": {\"command\": 0.811, \"chat\": 0.173}, \"s\": 0.391}, \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793726189.839,
+"s": "events:tts",
+"f": {
+"reply_id": "e88d75a1c486",
+"phase": "end",
+"t": "1793726190.490",
+"ts": "1793726186.906"
+}
+},
+{
+"t": 1793726193.018,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "0.7",
+"audio_id": "1793726191545-0",
+"end_id": "1793726192206-0",
+"end_ts": "1793726192.205"
+}
+},
+{
+"t": 1793726193.108,
+"s": "events:transcript",
+"f": {
+"text": "Спаси",
+"lang": "ru",
+"ts": "1793726193.020",
+"stt_s": "0.057",
+"trigger": "speech",
+"pause_s": "0.90",
+"pause_wait": "",
+"seg_s": "0.69",
+"speaker": "other",
+"spk_score": "0.147",
+"spk_ms": "16"
+}
+},
+{
+"t": 1793726193.373,
+"s": "events:ambient",
+"f": {
+"text": "Спаси",
+"decision": "silent",
+"why": "other voice",
+"state": "engaged",
+"ts": "1793726193.020",
+"speaker": "other",
+"spk_raw": "other",
+"spk_score": "0.147",
+"pause_s": "0.90",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+}
+]
