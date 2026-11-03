@@ -51,9 +51,11 @@
 .venv/bin/python deploy/stand/skull_console.py --record rec.json           # отладка + запись шины в дамп
 .venv/bin/python deploy/stand/skull_console.py --replay research/bench/results/mode_gate_2026-10-31_2_bus.json --speed 4 [--from 20:28:40]
 ssh -t jetson 'cd skull-assistant && .venv/bin/python deploy/stand/skull_console.py --demo'   # на устройстве: tegrastats в шапке
+deploy/stand/demo_prep.sh [--no-warm] [--record]                           # перед дублем (исполнитель): fresh, сеть ask, прогрев B, камера, сводка
+.venv/bin/python research/bench/demo_bus.py [--scenes 7 8 --tag _78]       # 8 сцен по шине без владельца → demo_bus_<дата>.md
 ```
 
-Шапка — хост, режим и фаза перехода, политика сети, окно ENGAGED, `tts:speaking`, память (стенд — `nvidia-smi`, устройство — `tegrastats`), уровень микрофона. Строка `⏱` после каждой реплики — задержки по этапам: `→STT` (конец сегмента VAD → транскрипт), `→gate`, `→1st` (первый фрагмент ответа), `→sound` (первый звук, `events:tts` от `skull-tts`), длина речи, итог до звука. Дамп записи — тот же формат, что `research/bench/results/mode_gate_*_bus.json`; запись, прерванная `kill`, закрывается.
+Шапка — хост, режим и фаза перехода, политика сети, окно ENGAGED, `tts:speaking`, память (стенд — `nvidia-smi`, устройство — `tegrastats`) с пиком за сессию и остатком (`peak … · free …`, сцена 8), уровень микрофона. В `--demo` переход режима — по шагам: слот сохранён, выгрузка, загрузка модели (с), слот восстановлен, итог. Строка `⏱` после каждой реплики — задержки по этапам: `→STT` (конец сегмента VAD → транскрипт), `→gate`, `→1st` (первый фрагмент ответа), `→sound` (первый звук, `events:tts` от `skull-tts`), длина речи, итог до звука. Дамп записи — тот же формат, что `research/bench/results/mode_gate_*_bus.json`; запись, прерванная `kill`, закрывается.
 
 ## Как записать
 

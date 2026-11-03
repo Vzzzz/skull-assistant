@@ -52,3 +52,23 @@ def test_record_and_replay_roundtrip(tmp_path):
     shown.clear()
     sc.replay(sc.Console(), p, 0, None, shown.extend)
     assert len(shown) == 2
+
+
+def test_demo_shows_switch_phases_peak_and_look_line():
+    """DEMO scenes 6-8: the switch reads as save / unload / load / done; the header keeps the session's memory peak;
+    a look line is the model's (with or without the frame), not a fixed line."""
+    con = sc.Console(demo=True)
+    phases = [{"phase": "begin", "reason": "voice:подумай как следует"}, {"phase": "save", "service": "brain"},
+              {"phase": "stop", "service": "brain", "unit": "skull-llm", "dt_ms": "400"},
+              {"phase": "start", "service": "brain", "dt_ms": "38"}, {"phase": "health", "service": "brain", "dt_ms": "17000"},
+              {"phase": "health", "service": "vision", "dt_ms": "37"}, {"phase": "done", "t_ms": "17653"}]
+    out = [line for p in phases for line in con.feed(1.0, "events:mode", {"from": "A", "to": "B", **p})]
+    text = "\n".join(out)
+    assert len(out) == 5 and "unload skull-llm 0.4 s" in text and "load model for B 17.0 s" in text and "done in 17.7 s" in text
+    assert con.state["mode"] == "B"
+    for used in (3900, 6600, 3800):
+        con.set_mem(f"GPU {used}/8192 MB")
+    assert con.state["mem"].endswith("peak 6600 · free 1592")
+    meta = json.dumps({"reply": "Опять эта твоя одежда.", "ambient": "gaze", "frame": 1})
+    line = "\n".join(con.feed(2.0, "events:reply", {"text": "Опять эта твоя одежда.", "final": "1", "meta": meta}))
+    assert "with the frame" in line and "fixed line" not in line

@@ -1,0 +1,1967 @@
+[
+{
+"t": 1793725448.071,
+"s": "events:mode",
+"f": {
+"id": "a880e4f5",
+"from": "A",
+"to": "B",
+"phase": "begin",
+"service": "",
+"t_ms": "0",
+"ts": "1793725448.071",
+"reason": "manual",
+"rollback": "0"
+}
+},
+{
+"t": 1793725448.069,
+"s": "cmd:mode",
+"f": {
+"mode": "B",
+"reason": "manual",
+"id": "a880e4f5"
+}
+},
+{
+"t": 1793725448.155,
+"s": "events:mode",
+"f": {
+"id": "a880e4f5",
+"from": "A",
+"to": "B",
+"phase": "save",
+"service": "brain",
+"t_ms": "85",
+"ts": "1793725448.155",
+"dt_ms": "55",
+"file": "A-c6b4c3145d7c.bin"
+}
+},
+{
+"t": 1793725448.724,
+"s": "events:mode",
+"f": {
+"id": "a880e4f5",
+"from": "A",
+"to": "B",
+"phase": "stop",
+"service": "brain",
+"t_ms": "653",
+"ts": "1793725448.724",
+"dt_ms": "568",
+"unit": "skull-llm"
+}
+},
+{
+"t": 1793725448.752,
+"s": "events:mode",
+"f": {
+"id": "a880e4f5",
+"from": "A",
+"to": "B",
+"phase": "stop",
+"service": "vision",
+"t_ms": "682",
+"ts": "1793725448.752",
+"dt_ms": "28",
+"unit": "skull-vision"
+}
+},
+{
+"t": 1793725448.753,
+"s": "events:mode",
+"f": {
+"id": "a880e4f5",
+"from": "A",
+"to": "B",
+"phase": "switch",
+"service": "",
+"t_ms": "682",
+"ts": "1793725448.753"
+}
+},
+{
+"t": 1793725448.782,
+"s": "events:mode",
+"f": {
+"id": "a880e4f5",
+"from": "A",
+"to": "B",
+"phase": "start",
+"service": "brain",
+"t_ms": "712",
+"ts": "1793725448.783",
+"dt_ms": "26"
+}
+},
+{
+"t": 1793725472.212,
+"s": "events:mode",
+"f": {
+"id": "a880e4f5",
+"from": "A",
+"to": "B",
+"phase": "health",
+"service": "brain",
+"t_ms": "24142",
+"ts": "1793725472.212",
+"dt_ms": "23456",
+"budget_s": "10",
+"over": "1"
+}
+},
+{
+"t": 1793725472.213,
+"s": "events:mode",
+"f": {
+"id": "a880e4f5",
+"from": "A",
+"to": "B",
+"phase": "restore_skipped",
+"service": "brain",
+"t_ms": "24143",
+"ts": "1793725472.214",
+"reason": "history changed"
+}
+},
+{
+"t": 1793725472.226,
+"s": "events:mode",
+"f": {
+"id": "a880e4f5",
+"from": "A",
+"to": "B",
+"phase": "done",
+"service": "",
+"t_ms": "24156",
+"ts": "1793725472.227"
+}
+},
+{
+"t": 1793725472.413,
+"s": "cmd:mode",
+"f": {
+"mode": "A",
+"reason": "manual",
+"id": "eeea7d58"
+}
+},
+{
+"t": 1793725472.414,
+"s": "events:mode",
+"f": {
+"id": "eeea7d58",
+"from": "B",
+"to": "A",
+"phase": "begin",
+"service": "",
+"t_ms": "0",
+"ts": "1793725472.415",
+"reason": "manual",
+"rollback": "0"
+}
+},
+{
+"t": 1793725472.442,
+"s": "events:mode",
+"f": {
+"id": "eeea7d58",
+"from": "B",
+"to": "A",
+"phase": "save",
+"service": "brain",
+"t_ms": "28",
+"ts": "1793725472.443",
+"dt_ms": "3",
+"file": "B-c6b4c3145d7c.bin"
+}
+},
+{
+"t": 1793725472.928,
+"s": "events:mode",
+"f": {
+"id": "eeea7d58",
+"from": "B",
+"to": "A",
+"phase": "stop",
+"service": "brain",
+"t_ms": "513",
+"ts": "1793725472.928",
+"dt_ms": "485",
+"unit": "skull-llm"
+}
+},
+{
+"t": 1793725472.928,
+"s": "events:mode",
+"f": {
+"id": "eeea7d58",
+"from": "B",
+"to": "A",
+"phase": "switch",
+"service": "",
+"t_ms": "514",
+"ts": "1793725472.929"
+}
+},
+{
+"t": 1793725472.961,
+"s": "events:mode",
+"f": {
+"id": "eeea7d58",
+"from": "B",
+"to": "A",
+"phase": "start",
+"service": "brain",
+"t_ms": "546",
+"ts": "1793725472.961",
+"dt_ms": "29"
+}
+},
+{
+"t": 1793725478.33,
+"s": "events:mode",
+"f": {
+"id": "eeea7d58",
+"from": "B",
+"to": "A",
+"phase": "health",
+"service": "brain",
+"t_ms": "5916",
+"ts": "1793725478.331",
+"dt_ms": "5398",
+"budget_s": "7",
+"over": "0"
+}
+},
+{
+"t": 1793725478.357,
+"s": "events:mode",
+"f": {
+"id": "eeea7d58",
+"from": "B",
+"to": "A",
+"phase": "restore",
+"service": "brain",
+"t_ms": "5943",
+"ts": "1793725478.357",
+"dt_ms": "25",
+"file": "A-c6b4c3145d7c.bin"
+}
+},
+{
+"t": 1793725478.405,
+"s": "events:mode",
+"f": {
+"id": "eeea7d58",
+"from": "B",
+"to": "A",
+"phase": "start",
+"service": "vision",
+"t_ms": "5991",
+"ts": "1793725478.405",
+"dt_ms": "29"
+}
+},
+{
+"t": 1793725478.413,
+"s": "events:mode",
+"f": {
+"id": "eeea7d58",
+"from": "B",
+"to": "A",
+"phase": "health",
+"service": "vision",
+"t_ms": "5999",
+"ts": "1793725478.414",
+"dt_ms": "38",
+"budget_s": "1",
+"over": "0"
+}
+},
+{
+"t": 1793725478.414,
+"s": "events:mode",
+"f": {
+"id": "eeea7d58",
+"from": "B",
+"to": "A",
+"phase": "done",
+"service": "",
+"t_ms": "6000",
+"ts": "1793725478.414"
+}
+},
+{
+"t": 1793725478.451,
+"s": "events:transcript",
+"f": {
+"text": "/reset"
+}
+},
+{
+"t": 1793725481.46,
+"s": "events:transcript",
+"f": {
+"text": "Костян, ты тут?",
+"lang": "ru",
+"ts": "1793725481.461",
+"trigger": "speech",
+"pause_s": "0.85",
+"seg_s": "1.20",
+"speaker": "owner",
+"spk_score": "0.62"
+}
+},
+{
+"t": 1793725482.171,
+"s": "events:ambient",
+"f": {
+"text": "Костян, ты тут?",
+"decision": "respond",
+"why": "name",
+"state": "idle",
+"ts": "1793725481.461",
+"speaker": "owner",
+"spk_raw": "owner",
+"spk_score": "0.62",
+"pause_s": "0.85",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793725482.265,
+"s": "events:reply",
+"f": {
+"text": "Да.",
+"reply_id": "b1f1b596043e",
+"seq": "0",
+"final": "0",
+"ts": "1793725481.461"
+}
+},
+{
+"t": 1793725482.304,
+"s": "events:tts",
+"f": {
+"reply_id": "b1f1b596043e",
+"phase": "first_audio",
+"t": "1793725482.304",
+"ts": "1793725481.461"
+}
+},
+{
+"t": 1793725482.49,
+"s": "events:reply",
+"f": {
+"text": "Стою.",
+"reply_id": "b1f1b596043e",
+"seq": "1",
+"final": "1",
+"ts": "1793725481.461",
+"meta": "{\"turn\": 1, \"window_turns\": 0, \"prompt_tokens\": 611, \"completion_tokens\": 6, \"calc\": null, \"net\": null, \"ttft_s\": 0.028, \"tok_s\": 46.6, \"finish_reason\": \"stop\", \"wall_s\": 1.03, \"max_tokens\": 300, \"reply\": \"Да. Стою.\", \"sentences\": 2, \"mode\": \"A\", \"llm_calls\": [\"router\", \"chat\"], \"route\": {\"label\": \"chat\", \"raw\": \"chat\", \"probs\": {\"chat\": 0.45, \"command\": 0.537, \"memory\": 0.001}, \"s\": 0.708, \"label_raw\": \"command\", \"guard\": \"low-confidence\"}, \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793725482.55,
+"s": "events:tts",
+"f": {
+"reply_id": "b1f1b596043e",
+"phase": "end",
+"t": "1793725482.828",
+"ts": "1793725481.461"
+}
+},
+{
+"t": 1793725485.501,
+"s": "events:transcript",
+"f": {
+"text": "Чем занят?",
+"lang": "ru",
+"ts": "1793725485.502",
+"trigger": "speech",
+"pause_s": "0.85",
+"seg_s": "0.90",
+"speaker": "owner",
+"spk_score": "0.62"
+}
+},
+{
+"t": 1793725485.763,
+"s": "events:ambient",
+"f": {
+"text": "Чем занят?",
+"decision": "respond",
+"why": "question",
+"state": "engaged",
+"ts": "1793725485.502",
+"speaker": "owner",
+"spk_raw": "owner",
+"spk_score": "0.62",
+"pause_s": "0.85",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793725486.109,
+"s": "events:reply",
+"f": {
+"text": "Жду, пока ты решишь, что мне делать с твоей одеждой.",
+"reply_id": "4eb02533e867",
+"seq": "0",
+"final": "1",
+"ts": "1793725485.502",
+"meta": "{\"turn\": 2, \"window_turns\": 1, \"prompt_tokens\": 630, \"completion_tokens\": 19, \"calc\": null, \"net\": null, \"ttft_s\": 0.032, \"tok_s\": 69.3, \"finish_reason\": \"stop\", \"wall_s\": 0.61, \"max_tokens\": 300, \"reply\": \"Жду, пока ты решишь, что мне делать с твоей одеждой.\", \"sentences\": 1, \"mode\": \"A\", \"llm_calls\": [\"router\", \"chat\"], \"route\": {\"label\": \"chat\", \"raw\": \"chat\", \"probs\": {\"chat\": 0.987, \"world\": 0.002}, \"s\": 0.26}, \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793725486.378,
+"s": "events:tts",
+"f": {
+"reply_id": "4eb02533e867",
+"phase": "first_audio",
+"t": "1793725486.378",
+"ts": "1793725485.502"
+}
+},
+{
+"t": 1793725487.878,
+"s": "events:tts",
+"f": {
+"reply_id": "4eb02533e867",
+"phase": "end",
+"t": "1793725488.933",
+"ts": "1793725485.502"
+}
+},
+{
+"t": 1793725491.628,
+"s": "events:transcript",
+"f": {
+"text": "…и вот тогда, говорит он, мы и поняли, что рынок перегрет, а инвесторы просто не замечают сигналов",
+"lang": "ru",
+"ts": "1793725491.628",
+"trigger": "speech",
+"pause_s": "0.85",
+"seg_s": "5.50",
+"speaker": "other",
+"spk_score": "0.08",
+"bcast": "1"
+}
+},
+{
+"t": 1793725492.023,
+"s": "events:ambient",
+"f": {
+"text": "…и вот тогда, говорит он, мы и поняли, что рынок перегрет, а инвесторы просто не замечают сигналов",
+"decision": "silent",
+"why": "other voice",
+"state": "engaged",
+"ts": "1793725491.628",
+"speaker": "other",
+"spk_raw": "other",
+"spk_score": "0.08",
+"pause_s": "0.85",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "1",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793725492.207,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "1.4",
+"audio_id": "1793725489992-0",
+"end_id": "1793725491398-0",
+"end_ts": "1793725491.380"
+}
+},
+{
+"t": 1793725492.32,
+"s": "events:transcript",
+"f": {
+"text": "Ха.",
+"lang": "ru",
+"ts": "1793725492.209",
+"stt_s": "0.081",
+"trigger": "speech",
+"pause_s": "0.94",
+"pause_wait": "",
+"seg_s": "1.44",
+"speaker": "other",
+"spk_score": "0.160",
+"spk_ms": "26"
+}
+},
+{
+"t": 1793725492.366,
+"s": "events:ambient",
+"f": {
+"text": "Ха.",
+"decision": "silent",
+"why": "other voice",
+"state": "engaged",
+"ts": "1793725492.209",
+"speaker": "other",
+"spk_raw": "other",
+"spk_score": "0.160",
+"pause_s": "0.94",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793725493.632,
+"s": "events:transcript",
+"f": {
+"text": "Знаете, в девяностые всё было иначе, никто не думал о долгосрочных последствиях",
+"lang": "ru",
+"ts": "1793725493.632",
+"trigger": "speech",
+"pause_s": "0.85",
+"seg_s": "4.80",
+"speaker": "other",
+"spk_score": "0.08",
+"bcast": "1"
+}
+},
+{
+"t": 1793725493.683,
+"s": "events:ambient",
+"f": {
+"text": "Знаете, в девяностые всё было иначе, никто не думал о долгосрочных последствиях",
+"decision": "silent",
+"why": "other voice",
+"state": "engaged",
+"ts": "1793725493.632",
+"speaker": "other",
+"spk_raw": "other",
+"spk_score": "0.08",
+"pause_s": "0.85",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "1",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793725495.291,
+"s": "events:transcript",
+"f": {
+"text": "так, это надо переделать",
+"lang": "ru",
+"ts": "1793725495.291",
+"trigger": "speech",
+"pause_s": "0.85",
+"seg_s": "1.60",
+"speaker": "uncertain",
+"spk_score": "0.38"
+}
+},
+{
+"t": 1793725495.644,
+"s": "events:ambient",
+"f": {
+"text": "так, это надо переделать",
+"decision": "ack",
+"why": "engaged duck нет {'нет': 0.513, 'да': 0.475}",
+"state": "engaged",
+"ts": "1793725495.291",
+"speaker": "uncertain",
+"spk_raw": "uncertain",
+"spk_score": "0.38",
+"pause_s": "0.85",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793725495.645,
+"s": "events:reply",
+"f": {
+"text": "Угу.",
+"reply_id": "b6802a15e991",
+"seq": "0",
+"final": "1",
+"ts": "1793725495.291",
+"meta": "{\"reply\": \"Угу.\", \"ambient\": \"ack\"}"
+}
+},
+{
+"t": 1793725495.708,
+"s": "events:tts",
+"f": {
+"reply_id": "b6802a15e991",
+"phase": "first_audio",
+"t": "1793725495.709",
+"ts": "1793725495.291"
+}
+},
+{
+"t": 1793725495.709,
+"s": "events:tts",
+"f": {
+"reply_id": "b6802a15e991",
+"phase": "end",
+"t": "1793725495.907",
+"ts": "1793725495.291"
+}
+},
+{
+"t": 1793725498.655,
+"s": "events:transcript",
+"f": {
+"text": "Костян, я купил синий чайник, он свистит громче старого",
+"lang": "ru",
+"ts": "1793725498.656",
+"trigger": "speech",
+"pause_s": "0.85",
+"seg_s": "3.10",
+"speaker": "owner",
+"spk_score": "0.62"
+}
+},
+{
+"t": 1793725498.915,
+"s": "events:ambient",
+"f": {
+"text": "Костян, я купил синий чайник, он свистит громче старого",
+"decision": "respond",
+"why": "name",
+"state": "engaged",
+"ts": "1793725498.656",
+"speaker": "owner",
+"spk_raw": "owner",
+"spk_score": "0.62",
+"pause_s": "0.85",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793725499.034,
+"s": "events:reply",
+"f": {
+"text": "Свистит.",
+"reply_id": "a67d23d7ff7f",
+"seq": "0",
+"final": "0",
+"ts": "1793725498.656"
+}
+},
+{
+"t": 1793725499.124,
+"s": "events:reply",
+"f": {
+"text": "Значит, он работает.",
+"reply_id": "a67d23d7ff7f",
+"seq": "1",
+"final": "0",
+"ts": "1793725498.656"
+}
+},
+{
+"t": 1793725499.139,
+"s": "events:tts",
+"f": {
+"reply_id": "a67d23d7ff7f",
+"phase": "first_audio",
+"t": "1793725499.139",
+"ts": "1793725498.656"
+}
+},
+{
+"t": 1793725499.176,
+"s": "events:reply",
+"f": {
+"text": "Синий.",
+"reply_id": "a67d23d7ff7f",
+"seq": "2",
+"final": "0",
+"ts": "1793725498.656"
+}
+},
+{
+"t": 1793725499.512,
+"s": "events:reply",
+"f": {
+"text": "Как и всё, что ты покупаешь.",
+"reply_id": "a67d23d7ff7f",
+"seq": "3",
+"final": "1",
+"ts": "1793725498.656",
+"meta": "{\"turn\": 4, \"window_turns\": 3, \"prompt_tokens\": 697, \"completion_tokens\": 24, \"calc\": null, \"net\": null, \"ttft_s\": 0.031, \"tok_s\": 64.1, \"finish_reason\": \"stop\", \"wall_s\": 0.85, \"max_tokens\": 300, \"reply\": \"Свистит. Значит, он работает. Синий. Как и всё, что ты покупаешь.\", \"sentences\": 4, \"mode\": \"A\", \"llm_calls\": [\"router\", \"chat\"], \"route\": {\"label\": \"chat\", \"raw\": \"chat\", \"probs\": {\"chat\": 0.992, \"world\": 0.003}, \"s\": 0.257}, \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793725502.651,
+"s": "events:tts",
+"f": {
+"reply_id": "a67d23d7ff7f",
+"phase": "end",
+"t": "1793725503.134",
+"ts": "1793725498.656"
+}
+},
+{
+"t": 1793725505.941,
+"s": "events:transcript",
+"f": {
+"text": "Почему зимой рано темнеет?",
+"lang": "ru",
+"ts": "1793725505.941",
+"trigger": "speech",
+"pause_s": "0.85",
+"seg_s": "1.60",
+"speaker": "owner",
+"spk_score": "0.62"
+}
+},
+{
+"t": 1793725506.349,
+"s": "events:ambient",
+"f": {
+"text": "Почему зимой рано темнеет?",
+"decision": "respond",
+"why": "question",
+"state": "engaged",
+"ts": "1793725505.941",
+"speaker": "owner",
+"spk_raw": "owner",
+"spk_score": "0.62",
+"pause_s": "0.85",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793725506.35,
+"s": "events:reply",
+"f": {
+"text": "Глянуть в сети?",
+"reply_id": "e70d6491240b",
+"seq": "0",
+"final": "1",
+"ts": "1793725505.941",
+"meta": "{\"reply\": \"Глянуть в сети?\", \"net\": \"ask\"}"
+}
+},
+{
+"t": 1793725506.49,
+"s": "events:tts",
+"f": {
+"reply_id": "e70d6491240b",
+"phase": "first_audio",
+"t": "1793725506.489",
+"ts": "1793725505.941"
+}
+},
+{
+"t": 1793725506.496,
+"s": "events:tts",
+"f": {
+"reply_id": "e70d6491240b",
+"phase": "end",
+"t": "1793725507.502",
+"ts": "1793725505.941"
+}
+},
+{
+"t": 1793725510.166,
+"s": "events:transcript",
+"f": {
+"text": "А кошки правда видят в темноте?",
+"lang": "ru",
+"ts": "1793725510.166",
+"trigger": "speech",
+"pause_s": "0.85",
+"seg_s": "1.70",
+"speaker": "owner",
+"spk_score": "0.62"
+}
+},
+{
+"t": 1793725510.436,
+"s": "events:transcript",
+"f": {
+"text": "Почему зимой рано темнеет?",
+"trigger": "wakeword",
+"speaker": "owner",
+"deferred": "1",
+"net": "no",
+"ts": "1793725510.436"
+}
+},
+{
+"t": 1793725510.708,
+"s": "events:reply",
+"f": {
+"text": "Из-за наклона оси Земли.",
+"reply_id": "e66540acd747",
+"seq": "0",
+"final": "1",
+"ts": "1793725510.436",
+"meta": "{\"turn\": 5, \"window_turns\": 4, \"prompt_tokens\": 785, \"completion_tokens\": 10, \"calc\": null, \"net\": null, \"ttft_s\": 0.04, \"tok_s\": 63.4, \"finish_reason\": \"stop\", \"wall_s\": 0.27, \"max_tokens\": 300, \"reply\": \"Из-за наклона оси Земли.\", \"sentences\": 1, \"mode\": \"A\", \"llm_calls\": [\"router\", \"chat\"], \"route\": {\"label\": \"world\", \"raw\": \"world\", \"probs\": {\"world\": 0.998, \"explain\": 0.001, \"chat\": 0.0, \"calc\": 0.0}, \"s\": 0.033}, \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793725510.884,
+"s": "events:tts",
+"f": {
+"reply_id": "e66540acd747",
+"phase": "first_audio",
+"t": "1793725510.884",
+"ts": "1793725510.436"
+}
+},
+{
+"t": 1793725511.8,
+"s": "events:tts",
+"f": {
+"reply_id": "e66540acd747",
+"phase": "end",
+"t": "1793725512.615",
+"ts": "1793725510.436"
+}
+},
+{
+"t": 1793725515.324,
+"s": "events:transcript",
+"f": {
+"text": "Ладно, а что ты думаешь про понедельники?",
+"lang": "ru",
+"ts": "1793725515.324",
+"trigger": "speech",
+"pause_s": "0.85",
+"seg_s": "2.00",
+"speaker": "owner",
+"spk_score": "0.62"
+}
+},
+{
+"t": 1793725515.621,
+"s": "events:ambient",
+"f": {
+"text": "Ладно, а что ты думаешь про понедельники?",
+"decision": "respond",
+"why": "question",
+"state": "engaged",
+"ts": "1793725515.324",
+"speaker": "owner",
+"spk_raw": "owner",
+"spk_score": "0.62",
+"pause_s": "0.85",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793725515.759,
+"s": "events:reply",
+"f": {
+"text": "Они всегда одинаковые.",
+"reply_id": "dbbfae15232f",
+"seq": "0",
+"final": "0",
+"ts": "1793725515.324"
+}
+},
+{
+"t": 1793725515.951,
+"s": "events:tts",
+"f": {
+"reply_id": "dbbfae15232f",
+"phase": "first_audio",
+"t": "1793725515.952",
+"ts": "1793725515.324"
+}
+},
+{
+"t": 1793725516.221,
+"s": "events:reply",
+"f": {
+"text": "Начинаются с того, что ты не хочешь, и заканчиваются тем, что ты их не запомнишь.",
+"reply_id": "dbbfae15232f",
+"seq": "1",
+"final": "1",
+"ts": "1793725515.324",
+"meta": "{\"turn\": 6, \"window_turns\": 5, \"prompt_tokens\": 769, \"completion_tokens\": 32, \"calc\": null, \"net\": null, \"ttft_s\": 0.03, \"tok_s\": 64.4, \"finish_reason\": \"stop\", \"wall_s\": 0.89, \"max_tokens\": 300, \"reply\": \"Они всегда одинаковые. Начинаются с того, что ты не хочешь, и заканчиваются тем, что ты их не запомнишь.\", \"sentences\": 2, \"mode\": \"A\", \"llm_calls\": [\"router\", \"chat\"], \"route\": {\"label\": \"chat\", \"raw\": \"chat\", \"probs\": {\"chat\": 0.998, \"world\": 0.001}, \"s\": 0.294}, \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793725520.919,
+"s": "events:tts",
+"f": {
+"reply_id": "dbbfae15232f",
+"phase": "end",
+"t": "1793725521.420",
+"ts": "1793725515.324"
+}
+},
+{
+"t": 1793725524.15,
+"s": "events:transcript",
+"f": {
+"text": "Напомни, какого цвета чайник?",
+"lang": "ru",
+"ts": "1793725524.150",
+"trigger": "speech",
+"pause_s": "0.85",
+"seg_s": "1.70",
+"speaker": "owner",
+"spk_score": "0.62"
+}
+},
+{
+"t": 1793725524.222,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "1.0",
+"audio_id": "1793725522486-0",
+"end_id": "1793725523443-0",
+"end_ts": "1793725523.416"
+}
+},
+{
+"t": 1793725524.271,
+"s": "events:vision",
+"f": {
+"kind": "gaze",
+"dur_s": "1.0",
+"nose": "0.15",
+"score": "0.65",
+"yaw": "1.6",
+"pitch": "-20.2",
+"frame": "1",
+"ts": "1793725524.267"
+}
+},
+{
+"t": 1793725524.338,
+"s": "events:transcript",
+"f": {
+"text": "Помощь",
+"lang": "ru",
+"ts": "1793725524.224",
+"stt_s": "0.087",
+"trigger": "speech",
+"pause_s": "0.92",
+"pause_wait": "",
+"seg_s": "0.99",
+"speaker": "other",
+"spk_score": "0.018",
+"spk_ms": "24"
+}
+},
+{
+"t": 1793725524.469,
+"s": "events:ambient",
+"f": {
+"text": "Напомни, какого цвета чайник?",
+"decision": "respond",
+"why": "question",
+"state": "engaged",
+"ts": "1793725524.150",
+"speaker": "owner",
+"spk_raw": "owner",
+"spk_score": "0.62",
+"pause_s": "0.85",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793725524.599,
+"s": "events:reply",
+"f": {
+"text": "Синий.",
+"reply_id": "9940a03e3c11",
+"seq": "0",
+"final": "1",
+"ts": "1793725524.150",
+"meta": "{\"turn\": 7, \"window_turns\": 6, \"prompt_tokens\": 819, \"completion_tokens\": 4, \"calc\": null, \"net\": null, \"ttft_s\": 0.033, \"tok_s\": null, \"finish_reason\": \"stop\", \"wall_s\": 0.45, \"max_tokens\": 300, \"reply\": \"Синий.\", \"sentences\": 1, \"mode\": \"A\", \"llm_calls\": [\"router\", \"chat\"], \"route\": {\"label\": \"memory\", \"raw\": \"memory\", \"probs\": {\"memory\": 0.93, \"command\": 0.069, \"chat\": 0.0, \"calc\": 0.0}, \"s\": 0.316}, \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793725524.752,
+"s": "events:tts",
+"f": {
+"reply_id": "9940a03e3c11",
+"phase": "first_audio",
+"t": "1793725524.752",
+"ts": "1793725524.150"
+}
+},
+{
+"t": 1793725524.753,
+"s": "events:tts",
+"f": {
+"reply_id": "9940a03e3c11",
+"phase": "end",
+"t": "1793725525.275",
+"ts": "1793725524.150"
+}
+},
+{
+"t": 1793725524.785,
+"s": "events:ambient",
+"f": {
+"text": "Помощь",
+"decision": "silent",
+"why": "other voice",
+"state": "engaged",
+"ts": "1793725524.224",
+"speaker": "other",
+"spk_raw": "other",
+"spk_score": "0.018",
+"pause_s": "0.92",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793725528.015,
+"s": "events:transcript",
+"f": {
+"text": "Костян, сколько будет семнадцать умножить на двадцать три?",
+"lang": "ru",
+"ts": "1793725528.015",
+"trigger": "speech",
+"pause_s": "0.85",
+"seg_s": "2.60",
+"speaker": "owner",
+"spk_score": "0.62"
+}
+},
+{
+"t": 1793725528.192,
+"s": "events:ambient",
+"f": {
+"text": "Костян, сколько будет семнадцать умножить на двадцать три?",
+"decision": "respond",
+"why": "name",
+"state": "engaged",
+"ts": "1793725528.015",
+"speaker": "owner",
+"spk_raw": "owner",
+"spk_score": "0.62",
+"pause_s": "0.85",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793725528.533,
+"s": "events:reply",
+"f": {
+"text": "Твоя попытка заставить меня считать.",
+"reply_id": "0ca03c6a6e20",
+"seq": "0",
+"final": "0",
+"ts": "1793725528.015"
+}
+},
+{
+"t": 1793725528.792,
+"s": "events:tts",
+"f": {
+"reply_id": "0ca03c6a6e20",
+"phase": "first_audio",
+"t": "1793725528.793",
+"ts": "1793725528.015"
+}
+},
+{
+"t": 1793725528.866,
+"s": "events:reply",
+"f": {
+"text": "Итого 391.",
+"reply_id": "0ca03c6a6e20",
+"seq": "1",
+"final": "1",
+"ts": "1793725528.015",
+"meta": "{\"turn\": 8, \"window_turns\": 7, \"prompt_tokens\": 901, \"completion_tokens\": 18, \"calc\": \"(вычислено: 17 × 23 = 391)\", \"net\": null, \"ttft_s\": 0.164, \"tok_s\": 62.0, \"finish_reason\": \"stop\", \"wall_s\": 0.85, \"max_tokens\": 500, \"reply\": \"Твоя попытка заставить меня считать. Итого 391.\", \"sentences\": 2, \"mode\": \"A\", \"llm_calls\": [\"router\", \"chat\"], \"route\": {\"label\": \"calc\", \"raw\": \"calc\", \"probs\": {\"calc\": 1.0, \"chat\": 0.0, \"command\": 0.0}, \"s\": 0.175}, \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793725532.657,
+"s": "events:tts",
+"f": {
+"reply_id": "0ca03c6a6e20",
+"phase": "end",
+"t": "1793725532.717",
+"ts": "1793725528.015"
+}
+},
+{
+"t": 1793725534.281,
+"s": "events:vision",
+"f": {
+"kind": "gaze",
+"dur_s": "2.6",
+"nose": "0.09",
+"score": "0.73",
+"yaw": "-1.2",
+"pitch": "-21.1",
+"frame": "1",
+"ts": "1793725534.280"
+}
+},
+{
+"t": 1793725534.972,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "0.5",
+"audio_id": "1793725533754-0",
+"end_id": "1793725534198-0",
+"end_ts": "1793725534.164"
+}
+},
+{
+"t": 1793725535.489,
+"s": "events:transcript",
+"f": {
+"text": "Если выйду в восемь сорок и ехать час тридцать пять, во сколько приеду?",
+"lang": "ru",
+"ts": "1793725535.489",
+"trigger": "speech",
+"pause_s": "0.85",
+"seg_s": "3.40",
+"speaker": "owner",
+"spk_score": "0.62"
+}
+},
+{
+"t": 1793725535.807,
+"s": "events:ambient",
+"f": {
+"text": "Если выйду в 08:40 и ехать час тридцать пять, во сколько приеду?",
+"decision": "respond",
+"why": "question",
+"state": "engaged",
+"ts": "1793725535.489",
+"speaker": "owner",
+"spk_raw": "owner",
+"spk_score": "0.62",
+"pause_s": "0.85",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793725536.021,
+"s": "events:reply",
+"f": {
+"text": "10:15.",
+"reply_id": "9e09474495c5",
+"seq": "0",
+"final": "1",
+"ts": "1793725535.489",
+"meta": "{\"turn\": 9, \"window_turns\": 8, \"prompt_tokens\": 959, \"completion_tokens\": 7, \"calc\": \"(вычислено: 08:40 + 1:35 = 10:15)\", \"net\": null, \"ttft_s\": 0.05, \"tok_s\": 64.2, \"finish_reason\": \"stop\", \"wall_s\": 0.53, \"max_tokens\": 500, \"reply\": \"10:15.\", \"sentences\": 1, \"mode\": \"A\", \"llm_calls\": [\"router\", \"chat\"], \"route\": {\"label\": \"calc\", \"raw\": \"calc\", \"probs\": {\"calc\": 0.999, \"world\": 0.001, \"command\": 0.0, \"chat\": 0.0}, \"s\": 0.315}, \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793725536.133,
+"s": "events:tts",
+"f": {
+"reply_id": "9e09474495c5",
+"phase": "first_audio",
+"t": "1793725536.133",
+"ts": "1793725535.489"
+}
+},
+{
+"t": 1793725536.715,
+"s": "events:tts",
+"f": {
+"reply_id": "9e09474495c5",
+"phase": "end",
+"t": "1793725537.167",
+"ts": "1793725535.489"
+}
+},
+{
+"t": 1793725539.837,
+"s": "events:transcript",
+"f": {
+"text": "Костян, какой город столица Австралии?",
+"lang": "ru",
+"ts": "1793725539.838",
+"trigger": "speech",
+"pause_s": "0.85",
+"seg_s": "2.00",
+"speaker": "owner",
+"spk_score": "0.62"
+}
+},
+{
+"t": 1793725540.125,
+"s": "events:ambient",
+"f": {
+"text": "Костян, какой город столица Австралии?",
+"decision": "respond",
+"why": "name",
+"state": "engaged",
+"ts": "1793725539.838",
+"speaker": "owner",
+"spk_raw": "owner",
+"spk_score": "0.62",
+"pause_s": "0.85",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793725540.126,
+"s": "events:reply",
+"f": {
+"text": "Глянуть в сети?",
+"reply_id": "d6c3f8d399c1",
+"seq": "0",
+"final": "1",
+"ts": "1793725539.838",
+"meta": "{\"reply\": \"Глянуть в сети?\", \"net\": \"ask\"}"
+}
+},
+{
+"t": 1793725540.207,
+"s": "events:tts",
+"f": {
+"reply_id": "d6c3f8d399c1",
+"phase": "first_audio",
+"t": "1793725540.207",
+"ts": "1793725539.838"
+}
+},
+{
+"t": 1793725540.208,
+"s": "events:tts",
+"f": {
+"reply_id": "d6c3f8d399c1",
+"phase": "end",
+"t": "1793725541.160",
+"ts": "1793725539.838"
+}
+},
+{
+"t": 1793725543.94,
+"s": "events:transcript",
+"f": {
+"text": "Да",
+"lang": "ru",
+"ts": "1793725543.941",
+"trigger": "speech",
+"pause_s": "0.85",
+"seg_s": "0.60",
+"speaker": "owner",
+"spk_score": "0.62"
+}
+},
+{
+"t": 1793725543.942,
+"s": "events:transcript",
+"f": {
+"text": "Костян, какой город столица Австралии?",
+"trigger": "wakeword",
+"speaker": "owner",
+"deferred": "1",
+"net": "yes",
+"ts": "1793725543.942"
+}
+},
+{
+"t": 1793725544.07,
+"s": "events:reply",
+"f": {
+"text": "Сейчас гляну.",
+"reply_id": "b555c9825dd9",
+"seq": "0",
+"final": "1",
+"ts": "1793725543.942",
+"meta": "{\"reply\": \"Сейчас гляну.\", \"net\": \"look\"}"
+}
+},
+{
+"t": 1793725544.07,
+"s": "events:net",
+"f": {
+"phase": "begin",
+"ts": "1793725544.070"
+}
+},
+{
+"t": 1793725544.901,
+"s": "events:tts",
+"f": {
+"reply_id": "b555c9825dd9",
+"phase": "first_audio",
+"t": "1793725544.901",
+"ts": "1793725543.942"
+}
+},
+{
+"t": 1793725544.902,
+"s": "events:tts",
+"f": {
+"reply_id": "b555c9825dd9",
+"phase": "end",
+"t": "1793725545.871",
+"ts": "1793725543.942"
+}
+},
+{
+"t": 1793725544.984,
+"s": "events:net",
+"f": {
+"phase": "done",
+"n": "3",
+"ts": "1793725544.985"
+}
+},
+{
+"t": 1793725545.519,
+"s": "events:reply",
+"f": {
+"text": "Канберра.",
+"reply_id": "0537fc44175f",
+"seq": "0",
+"final": "1",
+"ts": "1793725543.942",
+"meta": "{\"turn\": 10, \"window_turns\": 9, \"prompt_tokens\": 1548, \"completion_tokens\": 6, \"calc\": null, \"net\": [\"Города Австралии\", \"Канберра\", \"Рига\"], \"ttft_s\": 0.377, \"tok_s\": 64.4, \"finish_reason\": \"stop\", \"wall_s\": 1.58, \"max_tokens\": 300, \"reply\": \"Канберра.\", \"sentences\": 1, \"mode\": \"A\", \"llm_calls\": [\"router\", \"chat\"], \"route\": {\"label\": \"world\", \"raw\": \"world\", \"probs\": {\"world\": 0.987, \"explain\": 0.011, \"chat\": 0.0, \"calc\": 0.0}, \"s\": 0.126}, \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793725545.92,
+"s": "events:tts",
+"f": {
+"reply_id": "0537fc44175f",
+"phase": "first_audio",
+"t": "1793725545.920",
+"ts": "1793725543.942"
+}
+},
+{
+"t": 1793725545.921,
+"s": "events:tts",
+"f": {
+"reply_id": "0537fc44175f",
+"phase": "end",
+"t": "1793725546.791",
+"ts": "1793725543.942"
+}
+},
+{
+"t": 1793725549.015,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "0.3",
+"audio_id": "1793725547886-0",
+"end_id": "1793725548212-0",
+"end_ts": "1793725548.195"
+}
+},
+{
+"t": 1793725549.492,
+"s": "events:transcript",
+"f": {
+"text": "Костян, какая сегодня погода?",
+"lang": "ru",
+"ts": "1793725549.493",
+"trigger": "speech",
+"pause_s": "0.85",
+"seg_s": "1.50",
+"speaker": "owner",
+"spk_score": "0.62"
+}
+},
+{
+"t": 1793725549.802,
+"s": "events:ambient",
+"f": {
+"text": "Костян, какая сегодня погода?",
+"decision": "respond",
+"why": "name",
+"state": "engaged",
+"ts": "1793725549.493",
+"speaker": "owner",
+"spk_raw": "owner",
+"spk_score": "0.62",
+"pause_s": "0.85",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793725549.803,
+"s": "events:reply",
+"f": {
+"text": "Глянуть в сети?",
+"reply_id": "ebf739df0056",
+"seq": "0",
+"final": "1",
+"ts": "1793725549.493",
+"meta": "{\"reply\": \"Глянуть в сети?\", \"net\": \"ask\"}"
+}
+},
+{
+"t": 1793725549.929,
+"s": "events:tts",
+"f": {
+"reply_id": "ebf739df0056",
+"phase": "first_audio",
+"t": "1793725549.929",
+"ts": "1793725549.493"
+}
+},
+{
+"t": 1793725549.931,
+"s": "events:tts",
+"f": {
+"reply_id": "ebf739df0056",
+"phase": "end",
+"t": "1793725550.928",
+"ts": "1793725549.493"
+}
+},
+{
+"t": 1793725553.617,
+"s": "events:transcript",
+"f": {
+"text": "Нет",
+"lang": "ru",
+"ts": "1793725553.617",
+"trigger": "speech",
+"pause_s": "0.85",
+"seg_s": "0.60",
+"speaker": "owner",
+"spk_score": "0.62"
+}
+},
+{
+"t": 1793725553.618,
+"s": "events:transcript",
+"f": {
+"text": "Костян, какая сегодня погода?",
+"trigger": "wakeword",
+"speaker": "owner",
+"deferred": "1",
+"net": "no",
+"ts": "1793725553.619"
+}
+},
+{
+"t": 1793725553.98,
+"s": "events:reply",
+"f": {
+"text": "Не знаю.",
+"reply_id": "a7d8a46e2fbf",
+"seq": "0",
+"final": "0",
+"ts": "1793725553.619"
+}
+},
+{
+"t": 1793725554.129,
+"s": "events:tts",
+"f": {
+"reply_id": "a7d8a46e2fbf",
+"phase": "first_audio",
+"t": "1793725554.130",
+"ts": "1793725553.619"
+}
+},
+{
+"t": 1793725554.219,
+"s": "events:reply",
+"f": {
+"text": "Я — череп, а не метеостанция.",
+"reply_id": "a7d8a46e2fbf",
+"seq": "1",
+"final": "1",
+"ts": "1793725553.619",
+"meta": "{\"turn\": 11, \"window_turns\": 10, \"prompt_tokens\": 996, \"completion_tokens\": 16, \"calc\": null, \"net\": null, \"ttft_s\": 0.062, \"tok_s\": 59.5, \"finish_reason\": \"stop\", \"wall_s\": 0.6, \"max_tokens\": 300, \"reply\": \"Не знаю. Я — череп, а не метеостанция.\", \"sentences\": 2, \"mode\": \"A\", \"llm_calls\": [\"router\", \"chat\"], \"route\": {\"label\": \"world\", \"raw\": \"world\", \"probs\": {\"world\": 0.999, \"explain\": 0.0, \"chat\": 0.0, \"aside\": 0.0}, \"s\": 0.222}, \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793725557.587,
+"s": "events:tts",
+"f": {
+"reply_id": "a7d8a46e2fbf",
+"phase": "end",
+"t": "1793725558.020",
+"ts": "1793725553.619"
+}
+},
+{
+"t": 1793725560.443,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "0.6",
+"audio_id": "1793725559096-0",
+"end_id": "1793725559634-0",
+"end_ts": "1793725559.621"
+}
+},
+{
+"t": 1793725560.736,
+"s": "events:transcript",
+"f": {
+"text": "Костян, подумай как следует: что ты помнишь про чайник и зачем он свистит?",
+"lang": "ru",
+"ts": "1793725560.737",
+"trigger": "speech",
+"pause_s": "0.85",
+"seg_s": "4.20",
+"speaker": "owner",
+"spk_score": "0.62"
+}
+},
+{
+"t": 1793725560.738,
+"s": "events:reply",
+"f": {
+"text": "Сейчас.",
+"reply_id": "2461296bad20",
+"seq": "0",
+"final": "1",
+"ts": "1793725560.737",
+"meta": "{\"reply\": \"Сейчас.\", \"mode\": \"mode\"}"
+}
+},
+{
+"t": 1793725560.739,
+"s": "cmd:mode",
+"f": {
+"mode": "B",
+"reason": "voice:подумай как следует",
+"id": "brc290c8"
+}
+},
+{
+"t": 1793725560.74,
+"s": "events:mode",
+"f": {
+"id": "brc290c8",
+"from": "A",
+"to": "B",
+"phase": "begin",
+"service": "",
+"t_ms": "0",
+"ts": "1793725560.740",
+"reason": "voice:подумай как следует",
+"rollback": "0"
+}
+},
+{
+"t": 1793725560.857,
+"s": "events:tts",
+"f": {
+"reply_id": "2461296bad20",
+"phase": "first_audio",
+"t": "1793725560.857",
+"ts": "1793725560.737"
+}
+},
+{
+"t": 1793725560.892,
+"s": "events:mode",
+"f": {
+"id": "brc290c8",
+"from": "A",
+"to": "B",
+"phase": "save",
+"service": "brain",
+"t_ms": "152",
+"ts": "1793725560.892",
+"dt_ms": "61",
+"file": "A-6920e5f7c92c.bin"
+}
+},
+{
+"t": 1793725561.315,
+"s": "events:mode",
+"f": {
+"id": "brc290c8",
+"from": "A",
+"to": "B",
+"phase": "stop",
+"service": "brain",
+"t_ms": "576",
+"ts": "1793725561.316",
+"dt_ms": "423",
+"unit": "skull-llm"
+}
+},
+{
+"t": 1793725561.345,
+"s": "events:mode",
+"f": {
+"id": "brc290c8",
+"from": "A",
+"to": "B",
+"phase": "stop",
+"service": "vision",
+"t_ms": "605",
+"ts": "1793725561.345",
+"dt_ms": "29",
+"unit": "skull-vision"
+}
+},
+{
+"t": 1793725561.346,
+"s": "events:mode",
+"f": {
+"id": "brc290c8",
+"from": "A",
+"to": "B",
+"phase": "switch",
+"service": "",
+"t_ms": "606",
+"ts": "1793725561.346"
+}
+},
+{
+"t": 1793725561.377,
+"s": "events:mode",
+"f": {
+"id": "brc290c8",
+"from": "A",
+"to": "B",
+"phase": "start",
+"service": "brain",
+"t_ms": "637",
+"ts": "1793725561.377",
+"dt_ms": "27"
+}
+},
+{
+"t": 1793725561.676,
+"s": "events:tts",
+"f": {
+"reply_id": "2461296bad20",
+"phase": "end",
+"t": "1793725561.958",
+"ts": "1793725560.737"
+}
+},
+{
+"t": 1793725578.378,
+"s": "events:mode",
+"f": {
+"id": "brc290c8",
+"from": "A",
+"to": "B",
+"phase": "health",
+"service": "brain",
+"t_ms": "17638",
+"ts": "1793725578.378",
+"dt_ms": "17028",
+"budget_s": "10",
+"over": "1"
+}
+},
+{
+"t": 1793725578.379,
+"s": "events:mode",
+"f": {
+"id": "brc290c8",
+"from": "A",
+"to": "B",
+"phase": "restore_skipped",
+"service": "brain",
+"t_ms": "17639",
+"ts": "1793725578.380",
+"reason": "history changed"
+}
+},
+{
+"t": 1793725578.393,
+"s": "events:mode",
+"f": {
+"id": "brc290c8",
+"from": "A",
+"to": "B",
+"phase": "done",
+"service": "",
+"t_ms": "17653",
+"ts": "1793725578.393"
+}
+},
+{
+"t": 1793725578.393,
+"s": "events:transcript",
+"f": {
+"text": "что ты помнишь про чайник и зачем он свистит?",
+"trigger": "wakeword",
+"speaker": "owner",
+"deferred": "1",
+"ts": "1793725578.394"
+}
+},
+{
+"t": 1793725578.396,
+"s": "events:reply",
+"f": {
+"text": "Глянуть в сети?",
+"reply_id": "7516141490a9",
+"seq": "0",
+"final": "1",
+"ts": "1793725578.394",
+"meta": "{\"reply\": \"Глянуть в сети?\", \"net\": \"ask\"}"
+}
+},
+{
+"t": 1793725578.684,
+"s": "events:tts",
+"f": {
+"reply_id": "7516141490a9",
+"phase": "first_audio",
+"t": "1793725578.684",
+"ts": "1793725578.394"
+}
+},
+{
+"t": 1793725579.683,
+"s": "events:tts",
+"f": {
+"reply_id": "7516141490a9",
+"phase": "end",
+"t": "1793725579.887",
+"ts": "1793725578.394"
+}
+},
+{
+"t": 1793725582.619,
+"s": "events:transcript",
+"f": {
+"text": "Хватит думать",
+"lang": "ru",
+"ts": "1793725582.619",
+"trigger": "speech",
+"pause_s": "0.85",
+"seg_s": "1.10",
+"speaker": "owner",
+"spk_score": "0.62"
+}
+},
+{
+"t": 1793725589.996,
+"s": "events:transcript",
+"f": {
+"text": "что ты помнишь про чайник и зачем он свистит?",
+"trigger": "wakeword",
+"speaker": "owner",
+"deferred": "1",
+"net": "no",
+"ts": "1793725589.996"
+}
+},
+{
+"t": 1793725597.407,
+"s": "events:reply",
+"f": {
+"text": "Чайник синий.",
+"reply_id": "d97c4cd252c0",
+"seq": "0",
+"final": "0",
+"ts": "1793725589.996"
+}
+},
+{
+"t": 1793725597.564,
+"s": "events:tts",
+"f": {
+"reply_id": "d97c4cd252c0",
+"phase": "first_audio",
+"t": "1793725597.565",
+"ts": "1793725589.996"
+}
+},
+{
+"t": 1793725599.214,
+"s": "events:reply",
+"f": {
+"text": "Свистит, когда вода закипает, чтобы ты не забыл про него и не устроил пожар.",
+"reply_id": "d97c4cd252c0",
+"seq": "1",
+"final": "1",
+"ts": "1793725589.996",
+"meta": "{\"turn\": 12, \"window_turns\": 11, \"prompt_tokens\": 1040, \"completion_tokens\": 33, \"calc\": null, \"net\": null, \"ttft_s\": 7.041, \"tok_s\": 16.6, \"finish_reason\": \"stop\", \"wall_s\": 9.22, \"max_tokens\": 900, \"reply\": \"Чайник синий. Свистит, когда вода закипает, чтобы ты не забыл про него и не устроил пожар.\", \"sentences\": 2, \"mode\": \"B\", \"llm_calls\": [\"chat\"], \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793725602.645,
+"s": "events:tts",
+"f": {
+"reply_id": "d97c4cd252c0",
+"phase": "end",
+"t": "1793725603.504",
+"ts": "1793725589.996"
+}
+},
+{
+"t": 1793725606.013,
+"s": "events:wakeword",
+"f": {
+"word": "speech",
+"score": "0.7",
+"audio_id": "1793725604558-0",
+"end_id": "1793725605210-0",
+"end_ts": "1793725605.198"
+}
+},
+{
+"t": 1793725734.385,
+"s": "events:vision",
+"f": {
+"kind": "gaze",
+"dur_s": "1.2",
+"frame": "1",
+"ts": "1793725734.385"
+}
+},
+{
+"t": 1793725797.083,
+"s": "events:transcript",
+"f": {
+"text": "Костян, спасибо, на сегодня всё",
+"lang": "ru",
+"ts": "1793725797.084",
+"trigger": "speech",
+"pause_s": "0.85",
+"seg_s": "1.80",
+"speaker": "owner",
+"spk_score": "0.62"
+}
+},
+{
+"t": 1793725797.085,
+"s": "events:ambient",
+"f": {
+"text": "Костян, спасибо, на сегодня всё",
+"decision": "respond",
+"why": "name",
+"state": "engaged",
+"ts": "1793725797.084",
+"speaker": "owner",
+"spk_raw": "owner",
+"spk_score": "0.62",
+"pause_s": "0.85",
+"pause_wait": "",
+"spk_win": "",
+"spk_region": "",
+"text_full": "",
+"bcast": "",
+"p_aside": "0.000"
+}
+},
+{
+"t": 1793725803.39,
+"s": "events:reply",
+"f": {
+"text": "Пожалуйста.",
+"reply_id": "3bff72ca9a44",
+"seq": "0",
+"final": "0",
+"ts": "1793725797.084"
+}
+},
+{
+"t": 1793725803.58,
+"s": "events:tts",
+"f": {
+"reply_id": "3bff72ca9a44",
+"phase": "first_audio",
+"t": "1793725803.580",
+"ts": "1793725797.084"
+}
+},
+{
+"t": 1793725804.465,
+"s": "events:reply",
+"f": {
+"text": "Снимай с меня свою футболку, когда будешь уходить.",
+"reply_id": "3bff72ca9a44",
+"seq": "1",
+"final": "1",
+"ts": "1793725797.084",
+"meta": "{\"turn\": 13, \"window_turns\": 12, \"prompt_tokens\": 1091, \"completion_tokens\": 19, \"calc\": null, \"net\": null, \"ttft_s\": 6.077, \"tok_s\": 15.1, \"finish_reason\": \"stop\", \"wall_s\": 7.38, \"max_tokens\": 900, \"reply\": \"Пожалуйста. Снимай с меня свою футболку, когда будешь уходить.\", \"sentences\": 2, \"mode\": \"B\", \"llm_calls\": [\"chat\"], \"mem_hits\": [], \"note\": \"\", \"guard\": []}"
+}
+},
+{
+"t": 1793725806.923,
+"s": "events:tts",
+"f": {
+"reply_id": "3bff72ca9a44",
+"phase": "end",
+"t": "1793725807.404",
+"ts": "1793725797.084"
+}
+}
+]
