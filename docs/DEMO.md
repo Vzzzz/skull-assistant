@@ -32,6 +32,17 @@
 
 Та же консоль без `--demo`: все поля событий, задержки по этапам (VAD → STT → роутер → первый токен → первый звук → конец речи), `why` каждого решения, `spk_score`/окна voice id, `prompt_tokens`/`window_turns`, `mem_hits`, `llm_calls`, фазы диспетчера с `dt_ms`, `events:net`, `events:vision`; строка ресурсов — `nvidia-smi` на стенде, `tegrastats` на устройстве. `--replay <bus.json> [--speed 2]` проигрывает дамп шины (как `mode_gate_*_bus.json`) без стенда — разбор гейтов и приёмка по записи; `--record <file>` пишет дамп сессии. Запуск на устройстве — `ssh -t jetson 'cd skull-assistant && .venv/bin/python deploy/stand/skull_console.py'`.
 
+Команды (T-058, `deploy/stand/skull_console.py`, stdlib + `redis`, без curses):
+
+```bash
+.venv/bin/python deploy/stand/skull_console.py --demo                      # демо: крупно, без служебных полей
+.venv/bin/python deploy/stand/skull_console.py --record rec.json           # отладка + запись шины в дамп
+.venv/bin/python deploy/stand/skull_console.py --replay research/bench/results/mode_gate_2026-10-31_2_bus.json --speed 4 [--from 20:28:40]
+ssh -t jetson 'cd skull-assistant && .venv/bin/python deploy/stand/skull_console.py --demo'   # на устройстве: tegrastats в шапке
+```
+
+Шапка — хост, режим и фаза перехода, политика сети, окно ENGAGED, `tts:speaking`, память (стенд — `nvidia-smi`, устройство — `tegrastats`), уровень микрофона. Строка `⏱` после каждой реплики — задержки по этапам: `→STT` (конец сегмента VAD → транскрипт), `→gate`, `→1st` (первый фрагмент ответа), `→sound` (первый звук, `events:tts` от `skull-tts`), длина речи, итог до звука. Дамп записи — тот же формат, что `research/bench/results/mode_gate_*_bus.json`; запись, прерванная `kill`, закрывается.
+
 ## Как записать
 
 Телефон на штативе: череп, стол, владелец в кадре по пояс; звук — с телефона (слышно и владельца, и динамик). Экран — любая запись экрана (OBS или встроенная Win+G), окно консоли ≥ 100 колонок, шрифт 16+. Синхронизация — хлопок перед сценой 1. Хранение — не в git (`docs/media/` только финальный короткий ролик ≤ 20 МБ или ссылка).

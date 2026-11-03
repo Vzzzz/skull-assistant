@@ -92,6 +92,13 @@ def synth():
                 pending -= 1
 
 
+def tts_event(reply_id, phase, t, ts):
+    """events:tts {reply_id, phase: first_audio | end, t, ts} — t: when (end: when the audio handed to the card ends),
+    ts: the turn's ts copied by brain (the console links the latency chain by it; T-058)."""
+    r.xadd("events:tts", {"reply_id": reply_id, "phase": phase, "t": f"{t:.3f}", "ts": f"{ts:.3f}" if ts else ""},
+           maxlen=1000, approximate=True)
+
+
 def play():
     speaking, first, last, until = False, set(), None, 0.0   # until: when the audio handed to the card ends
     with sc.default_speaker().player(samplerate=RATE, channels=1) as player:
@@ -111,6 +118,8 @@ def play():
             if audio is None:       # the reply's last chunk has been handed to the card: it ends at `until`
                 r.hset('tts:end', reply_id, f"{max(until, time.time()):.3f}")
                 r.expire('tts:end', 3600)
+                if reply_id != "sfx":   # T-058: the console's latency chain (first sound / end of speech)
+                    tts_event(reply_id, "end", max(until, time.time()), ts)
                 continue
             r.set('tts:speaking', 1, ex=SPEAKING_TTL_S)
             speaking = True
@@ -118,6 +127,8 @@ def play():
                 first.add(reply_id)
                 if ts:
                     print(f"tts: first audio +{time.time() - ts:.2f}s", flush=True)
+                if reply_id != "sfx":
+                    tts_event(reply_id, "first_audio", time.time(), ts)
             elif speaking and reply_id != "sfx" and time.time() - until > 0.03:   # the card ran dry inside a reply: audible gap
                 print(f"tts: gap {(time.time() - until) * 1000:.0f} ms before {reply_id} #{seq} "
                       f"(chunk {len(audio) / RATE:.2f} s, queued {pcm.qsize()})", flush=True)
