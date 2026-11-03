@@ -21,6 +21,13 @@ def path(p):
     return str(ROOT / p)
 
 
+def llama_bin(p):
+    # SKULL_LLAMA_DIR (unit environment) replaces ~/llama.cpp: one machine on another build without touching the other
+    # (T-059: the Orin on the fork with the cache_reuse patch before the stand moves; drop-in, D-033)
+    d = os.environ.get("SKULL_LLAMA_DIR")
+    return os.path.expanduser(p.replace("~/llama.cpp", d, 1) if d else p)
+
+
 def current_mode():
     try:
         return (redis.Redis().get("mode:current") or b"A").decode()
@@ -32,19 +39,20 @@ def args(role, mode="A"):
     if role == "llm":
         port = urlparse(P["host"]).port
         o = {**P, **{k: v for k, v in ((M.get("modes") or {}).get(mode) or {}).items() if k != "budget"}}
-        return [os.path.expanduser(P["bin"]), "-m", path(o["gguf"])] + (["--mmproj", path(o["mmproj"])] if o.get("mmproj") else []) + [
+        return [llama_bin(P["bin"]), "-m", path(o["gguf"])] + (["--mmproj", path(o["mmproj"])] if o.get("mmproj") else []) + [
                 "-ngl", "99", "-c", str(o["num_ctx"]), "-fa", "on", "-ctk", "q8_0", "-ctv", "q8_0",
                 "--slot-save-path", path(P["slot_save_path"]), "--host", "127.0.0.1", "--port", str(port),
                 # no host-RAM prompt cache / SWA checkpoints: with the defaults (8192 MiB, 32 per slot) RSS kept growing
                 # (10.5 GB after three CTX-1 runs @2048); without them it plateaus at ~3.55 GB, prefill not slower
                 "--cache-ram", "0", "--ctx-checkpoints", "0",
                 # per-layer embedding tables of Gemma E-models read from disk on demand, not kept resident
-                "--lazy-mode", "on"] + [str(x) for x in o.get("extra_args", [])]
+                "--lazy-mode", "on"] + [str(x) for x in o.get("extra_args", [])] + \
+               (os.environ.get("SKULL_LLM_EXTRA_ARGS", "").split() if mode == "A" else [])   # per machine, mode A only
     if role == "embed":
         m = P["memory"]
         port = urlparse(m["embed_host"]).port
         # whole exchange in one batch: embeddings need n_ubatch >= input tokens (default 512 rejects long replies)
-        return [os.path.expanduser(m["embed_bin"]), "-m", path(m["embed_gguf"]), "--embedding",
+        return [llama_bin(m["embed_bin"]), "-m", path(m["embed_gguf"]), "--embedding",
                 "-c", "2048", "-b", "2048", "-ub", "2048", "--host", "127.0.0.1", "--port", str(port)]
     raise SystemExit(f"unknown role {role!r}: llm | embed")
 
