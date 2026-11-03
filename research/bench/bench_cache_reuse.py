@@ -11,7 +11,7 @@ on/off, --swa-full on/off), on its own port. Two scenarios:
           ledger drops the oldest exchanges -> the prefix changes right after the system prompt (D-026). TTFT of the
           turns with a shift vs without.
 
-Per configuration also: the reuse / SWA lines of the server log, VRAM peak (nvidia-smi).
+Per configuration also: the reuse / SWA lines of the server log, VRAM peak (nvidia-smi; on Jetson — nvmap total).
 
   .venv/bin/python research/bench/bench_cache_reuse.py --bin ~/llama.cpp-master/build-cuda/bin --tag before
   .venv/bin/python research/bench/bench_cache_reuse.py --bin ~/llama.cpp-mtmd/build-cuda/bin --tag after
@@ -20,6 +20,7 @@ The stand must be down (EXECUTOR §2). -> results/llamacpp_cache_reuse_<tag>_<da
 import argparse
 import json
 import re
+import shutil
 import subprocess
 import sys
 import threading
@@ -46,8 +47,13 @@ WARN = re.compile(r"cache.reuse|cache_reuse|kv_cache.*size|KV self size|llama_kv
 
 
 def vram():
-    out = subprocess.run(["nvidia-smi", "--query-gpu=memory.used", "--format=csv,noheader,nounits"], capture_output=True, text=True)
-    return int(out.stdout.split()[0])
+    if shutil.which("nvidia-smi"):
+        out = subprocess.run(["nvidia-smi", "--query-gpu=memory.used", "--format=csv,noheader,nounits"], capture_output=True, text=True)
+        if out.stdout.split() and out.stdout.split()[0].isdigit():
+            return int(out.stdout.split()[0])
+    # Jetson (unified memory; nvidia-smi of JetPack 6 prints [N/A]): GPU allocations of all processes from nvmap, MB (T-056)
+    out = subprocess.run(["sudo", "-n", "cat", "/sys/kernel/debug/nvmap/iovmm/clients"], capture_output=True, text=True)
+    return int(out.stdout.split("total")[-1].split()[0].rstrip("K")) // 1024
 
 
 def server_args(bin_dir, mmproj, swa_full, reuse):
