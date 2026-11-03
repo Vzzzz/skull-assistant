@@ -75,6 +75,14 @@ _HMM = re.compile(r"\s*(\d{1,2})\s*:\s*(\d{2})\b")
 _OPWORDS = [(r"умножить\s+на|умножить|помножить\s+на|×|\*|\bх\b|\bx\b", "*"), (r"разделить\s+на|делить\s+на|поделить\s+на|÷|/", "/"),
             (r"плюс|\+|прибавить", "+"), (r"минус|отнять|вычесть", "-"), (r"в\s+степени", "**")]
 _SHOW = {"*": "×", "/": ":", "+": "+", "-": "−", "**": "^"}
+# T-060 (6): the imperative, with the operand order of the phrase («вычти 5 из 20» = 20 − 5); applied before _OPWORDS
+_IMPERATIVE = [(rf"(?:умножь|помножь)\s*({NUM})\s*на\s*({NUM})", r"\1 * \2"),
+               (rf"(?:раздели|подели)\s*({NUM})\s*на\s*({NUM})", r"\1 / \2"),
+               (rf"(?:прибавь|добавь)\s*({NUM})\s*к\s*({NUM})", r"\2 + \1"),
+               (rf"\bк\s*({NUM})\s*(?:прибавь|добавь)\s*({NUM})", r"\1 + \2"),
+               (rf"(?:отними|вычти)\s*({NUM})\s*(?:из|от)\s*({NUM})", r"\2 - \1"),
+               (rf"\b(?:из|от)\s*({NUM})\s*(?:отними|вычти)\s*({NUM})", r"\1 - \2"),
+               (r"\b(?:посчитай|сосчитай|подсчитай|вычисли)\b", " ")]
 
 
 def _num(s):
@@ -117,6 +125,8 @@ def extract(text):
         end = (start + mins) % (24 * 60)
         return f"{c.group(1)}:{c.group(2)} + {mins // 60}:{mins % 60:02d}", f"{end // 60}:{end % 60:02d}"
     e = t.lower().replace("ё", "е")
+    for pat, rep in _IMPERATIVE:
+        e = re.sub(pat, rep, e)
     for pat, op in _OPWORDS:
         e = re.sub(pat, f" {op} ", e)
     best = None

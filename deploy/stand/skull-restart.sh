@@ -5,7 +5,7 @@
 #   deploy/stand/skull-restart.sh [--mode A|B] [--drop-caches] [--fresh]
 #     --mode B        поднять сразу режим B (mode:current до старта; reconcile диспетчера и llm_server читают его)
 #     --drop-caches   сбросить кэш страниц (нужен sudo без пароля; иначе подсказка и дальше)
-#     --fresh         очистить dialog:history и dialog:vec (по умолчанию история и память не трогаются)
+#     --fresh         очистить dialog:history, dialog:vec, gaze:turn и gaze:lines (по умолчанию история и память не трогаются)
 #     --check-sound   только проверить pulse WSLg (skull-stand.sh status), ничего не перезапуская
 #
 # Коды выхода: 0 — стенд поднят; 1 — не поднялся за 120 с; 2 — сервисный режим (флаг) или неверные аргументы;
@@ -82,7 +82,7 @@ T1=$(date +%s%3N)
 
 redis-cli set mode:current "$MODE" >/dev/null
 redis-cli del mode:transition mode:llm tts:speaking >/dev/null
-[ $FRESH = 1 ] && redis-cli del dialog:history dialog:vec >/dev/null && echo "история диалога и память очищены"
+[ $FRESH = 1 ] && redis-cli del dialog:history dialog:vec gaze:turn gaze:lines >/dev/null && echo "история диалога, память и реплики на взгляд очищены"
 if [ $DROP = 1 ]; then
   if sudo -n true 2>/dev/null; then sync; echo 3 | sudo tee /proc/sys/vm/drop_caches >/dev/null; echo "кэш страниц сброшен"
   else echo "--drop-caches: нужен sudo без пароля (sudo sh -c 'sync; echo 3 > /proc/sys/vm/drop_caches'), пропускаю"; fi

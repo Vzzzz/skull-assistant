@@ -1,4 +1,5 @@
-"""Lines on a silent look (T-031 step 1в, T-053): the repeat check over the whole line and the message with a frame.
+"""Lines on a silent look (T-031 step 1в, T-053): the repeat check over the whole line, the message with a frame and the
+circle of turns (T-060: the frame first and every other look).
 
 Repeat (core's answer to the 1г gate): the first word was too coarse — «Что в планах?» was dropped after «Что задумал?»
 and both attempts went silent. Now the stems of all the words of the line are compared with each of the last RECENT
@@ -26,6 +27,12 @@ def is_repeat(line, recent, overlap=OVERLAP):
         if s and t and len(s & t) / min(len(s), len(t)) >= overlap:
             return True
     return False
+
+
+def turn_circle(has_frame, frame_turn, ask, complain):
+    """The look lines' circle (T-060 (9)): with a frame the frame comes first and every other look — (frame, ask, frame,
+    complain); without one — (ask, complain). The caller takes circle[k % len] by its Redis counter (gaze:turn)."""
+    return (frame_turn, ask, frame_turn, complain) if has_frame else (ask, complain)
 
 
 def frame_message(text, jpeg):

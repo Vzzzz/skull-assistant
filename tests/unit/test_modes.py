@@ -41,6 +41,9 @@ def test_imperative(word, forms):
     ("Подумайте как следует", "подумай как следует", ""),                  # the plural imperative
     ("Костян, ну, подумай серьезно", "подумай серьёзно", ""),             # ё / е, fillers and the name are no question
     ("Костян, а почему трава зелёная, подумай серьёзно", "подумай серьёзно", "почему трава зелёная"),
+    # T-060 (4): the reversed order (live: «Ещё раз говорю, как следует подумай»)
+    ("Костян, как следует подумай: почему небо синее?", "как следует подумай", "почему небо синее?"),
+    ("Как следует подумай", "как следует подумай", ""),
 ])
 def test_enter_phrase_and_deferred_question(text, phrase, question):
     span = find_phrase(text, ENTER)

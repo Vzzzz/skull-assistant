@@ -173,6 +173,27 @@ def test_yesno(text, answer):
 @pytest.mark.parametrize("text, own", [
     ("Какого цвета мой новый чайник?", True), ("Что ты помнишь про моего брата?", True), ("Где у меня ключи?", True),
     ("Почему чайники свистят", False), ("Какая высота Эльбруса?", False), ("При какой погоде комфортнее бегать", False),
+    # T-060 (3): the skull's own memory and opinion — the deferred B question of the demo went to the net
+    ("что ты помнишь про чайник и зачем он свистит?", True), ("Напомни, какого цвета чайник?", True),
+    ("Запомнил, как зовут кота?", True), ("Что ты думаешь про понедельники?", True), ("Какое твоё мнение о джазе?", True),
+    ("Что думают учёные о чёрных дырах?", False), ("Кто написал «Помню чудное мгновенье»?", True),
 ])
 def test_personal_questions_stay_offline(text, own):
     assert personal(text) is own
+
+
+@pytest.mark.parametrize("text, speaker, seg_s, thinking, question, ans", [
+    ("Да", "owner", 0.6, False, False, "yes"), ("Не надо", "uncertain", 0.9, True, False, "no"),
+    ("Ну хм", "owner", 0.7, False, False, "model"),                 # short and unclear in A: the cheap yes/no call
+    ("Ну хм", "owner", 0.7, True, False, "no"),                     # in B: no 26B call, an unclear short one is a no
+    # T-060 (2): the owner went on — a question or a long turn is not an answer (the demo's «А кошки…» was eaten)
+    ("А кошки правда видят в темноте?", "owner", 1.7, False, True, "new_turn"),
+    ("Ладно, расскажи лучше про понедельники", "owner", 2.1, False, False, "new_turn"),
+    ("Хватит думать", "owner", 1.1, True, False, "no"),     # never reaches here: the mode phrase is checked first (step 1)
+    # T-060 (5): a short yes / no of an `other` counts (the live «Да», other 0.12, 0.6 s); long or unclear — ignored
+    ("Да", "other", 0.6, False, False, "yes"), ("Нет", "other", 0.8, True, False, "no"),
+    ("Да", "other", 1.4, False, False, "ignore"), ("Хм", "other", 0.5, False, False, "ignore"),
+    ("Да, это правда интересно", "other", 3.0, False, False, "ignore"),
+])
+def test_window_answer(text, speaker, seg_s, thinking, question, ans):
+    assert net.window_answer(text, speaker, seg_s, thinking, question) == ans

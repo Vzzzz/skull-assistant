@@ -1,7 +1,10 @@
 """Voice ID data and enrollment (T-039, D-029). Audio stays in models/voice/ (not in git: it is the owner's voice).
 
   record  --label enroll_A --seconds 30   3-s segments with speech from audio:mic -> models/voice/data/<label>/NNN.wav
-  enroll  --label enroll_A [--model M]    mean L2-normalised embedding of the label's segments -> models/voice/owner.npy
+  enroll  --label enroll_A [--label enroll_demo ...] [--model M]
+                                          mean L2-normalised embedding of all segments of the labels -> models/voice/owner.npy
+                                          (T-060: several places / days in one vector; the previous file is kept as
+                                          owner_<its date>.npy unless that exists already)
 
 The mic path is the same as in production (skull-capture -> audio:mic); stop skull-wakeword/stt/brain/tts while
 recording so nothing answers. A segment is 3 s of voiced frames (pauses skipped).
@@ -65,12 +68,22 @@ def record(label, seconds, voiced_rms, hangover=3):
     print(f"record {label}: kept {kept} segments ({n} in {out.relative_to(ROOT)})", flush=True)
 
 
-def owner_vector(ex, label):
-    files = sorted((DATA / label).glob("*.wav"))
+def owner_vector(ex, labels):
+    files = [f for label in labels for f in sorted((DATA / label).glob("*.wav"))]
     if not files:
-        raise SystemExit(f"no segments in {DATA / label}")
+        raise SystemExit(f"no segments in {', '.join(str(DATA / l) for l in labels)}")
     v = np.mean([embed(ex, sf.read(f, dtype="float32")[0]) for f in files], axis=0)
     return v / np.linalg.norm(v), len(files)
+
+
+def keep_previous(out):
+    """The vector being replaced -> owner_<its date>.npy next to it (once: an existing copy is not overwritten)."""
+    out = Path(out)
+    if out.exists():
+        old = out.with_name(f"{out.stem}_{time.strftime('%Y-%m-%d', time.localtime(out.stat().st_mtime))}.npy")
+        if not old.exists():
+            old.write_bytes(out.read_bytes())
+            print(f"enroll: previous vector kept as {old.name}")
 
 
 def main():
@@ -81,16 +94,18 @@ def main():
     rec.add_argument("--seconds", type=float, default=30)
     rec.add_argument("--voiced-rms", type=float, default=200, help="frame RMS (int16) counted as voiced")
     en = sub.add_parser("enroll")
-    en.add_argument("--label", default="enroll_A")
+    en.add_argument("--label", action="append", help="repeat for several labels (default enroll_A)")
     en.add_argument("--model", default=DEFAULT_MODEL)
     en.add_argument("--out", default=str(VOICE / "owner.npy"))
     a = ap.parse_args()
     if a.cmd == "record":
         record(a.label, a.seconds, a.voiced_rms)
     else:
-        v, n = owner_vector(extractor(a.model), a.label)
+        labels = a.label or ["enroll_A"]
+        v, n = owner_vector(extractor(a.model), labels)
+        keep_previous(a.out)
         np.save(a.out, v)
-        print(f"enroll: {n} segments of {a.label} with {a.model} -> {a.out} (dim {v.size})")
+        print(f"enroll: {n} segments of {' + '.join(labels)} with {a.model} -> {a.out} (dim {v.size})")
 
 
 if __name__ == "__main__":
